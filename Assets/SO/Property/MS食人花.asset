@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "MS\u98DF\u4EBA\u82B1"
+  m_EditorClassIdentifier: 
+  baseProperty:
+    attack: 100
+    spell: 0
+    crit: 0
+    critDamage: 1.3
+    extraDamge: 0
+    AR: 0
+    MR: 0
+    extraDefence: 0
+    MP: 0
+    Hp: 750
+    HpMax: 750
+    shiledNum: 0
+    speed: 2
+    slowDownRate: 1
+    acceleRate: 1
+    lifeStealing: 0
+    healRate: 1
+    attackSpeed: 2.5
+    baseAttackSpeed: 0.25
+    attacRange: 1.5
+    price: 50
+    rarity: 4000
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 3238012078321615291, guid: 2d23471cb2b229b4bb2847df28cb6bfd, type: 3}
+  chessSprite: {fileID: -1350126593993804924, guid: 7c4e7f25eee260a44b26dbe09d23a839, type: 3}

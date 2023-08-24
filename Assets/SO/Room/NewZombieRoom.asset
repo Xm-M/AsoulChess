@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cf40a0667bd6db428b4ebdd9f1362b2, type: 3}
+  m_Name: NewZombieRoom
+  m_EditorClassIdentifier: 
+  sceneName: "\u524D\u9662"
+  roomName: "\u6D4B\u8BD5\u5173\u5361"
+  zombies:
+  - {fileID: 11400000, guid: 2c13a1cb6c902724289a1d0667d34a5a, type: 2}
+  - {fileID: 11400000, guid: 767c2450390881844b83c2907ca3c814, type: 2}
+  - {fileID: 11400000, guid: e163f29965d22064799bf2ae74d21670, type: 2}
+  - {fileID: 11400000, guid: 50ba009d65baa0349ba7ca9d715a4f0b, type: 2}
+  - {fileID: 11400000, guid: d2cf95be370c25f478db218302047303, type: 2}
+  - {fileID: 11400000, guid: cf8965492d3a1f64fac0b3c1d29e6097, type: 2}
+  zombiesWave:
+    WaveZombie: []
+    fateList: []
+    waitTime: 6
+    minTimeRange: {x: 6, y: 7}
+    maxTimeRange: {x: 25, y: 31}
+    waveIndex: 3
+    waveAdditionPrice: 60
+    LastWave: 30
+    currentWave: 0
+    CurrentPrice: 0
+    minTime: 6.2636924
+    maxTime: 25.03018
+  zombieInterval: 0.75
+  startTime: 0
+  liveZombies: []

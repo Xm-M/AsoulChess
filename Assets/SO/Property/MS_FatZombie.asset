@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: MS_FatZombie
+  m_EditorClassIdentifier: 
+  baseProperty:
+    attack: 50
+    spell: 0
+    crit: 0
+    critDamage: 1.3
+    extraDamge: 0
+    AR: 0
+    MR: 0
+    extraDefence: 0
+    MP: 0
+    Hp: 400
+    HpMax: 400
+    shiledNum: 0
+    speed: 1
+    slowDownRate: 1
+    acceleRate: 1
+    lifeStealing: 0
+    healRate: 1
+    attackSpeed: 1.5
+    baseAttackSpeed: 0.25
+    attacRange: 3
+    price: 50
+    rarity: 4000
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 2863698412477661930, guid: 1b00620428bb0cf4bb1667ff56620b80, type: 3}
+  chessSprite: {fileID: -1467978929499945962, guid: f22c1242a929a6b4c942e0af2720bbe1, type: 3}

@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 617b5540c42d6d84fb6b7cf991f066b8, type: 3}
+  m_Name: NewFetterMessege
+  m_EditorClassIdentifier: 
+  fetters:
+  - fetterType: 3
+    FetterIcon: {fileID: 2012603403740337808, guid: aa50036c26883df4ab2ddfbd31547317, type: 3}
+    chineseName: "\u7CBE\u7075"
+    fetter:
+      id: 0
+  - fetterType: 2
+    FetterIcon: {fileID: 4037386846454389401, guid: aa50036c26883df4ab2ddfbd31547317, type: 3}
+    chineseName: "\u5766\u514B"
+    fetter:
+      id: 1
+  - fetterType: 4
+    FetterIcon: {fileID: 3131462886605394980, guid: aa50036c26883df4ab2ddfbd31547317, type: 3}
+    chineseName: "\u9A91\u58EB"
+    fetter:
+      id: 2
+  - fetterType: 6
+    FetterIcon: {fileID: -7891146628521642482, guid: aa50036c26883df4ab2ddfbd31547317, type: 3}
+    chineseName: "\u50F5\u5C38"
+    fetter:
+      id: 3
+  references:
+    version: 1
+    00000000:
+      type: {class: Elf, ns: , asm: Assembly-CSharp}
+      data:
+        self: {fileID: 0}
+        fetterName: Elf
+        a: 0
+        extraMagic: 0
+    00000001:
+      type: {class: Tank, ns: , asm: Assembly-CSharp}
+      data:
+        self: {fileID: 0}
+        fetterName: Tank
+        extraHp: 0
+    00000002:
+      type: {class: Knights, ns: , asm: Assembly-CSharp}
+      data:
+        self: {fileID: 0}
+        fetterName: Knights
+        extraArmor: 0
+    00000003:
+      type: {class: Zombies, ns: , asm: Assembly-CSharp}
+      data:
+        self: {fileID: 0}
+        fetterName: Zombies
+        comeBackHp: 0.5

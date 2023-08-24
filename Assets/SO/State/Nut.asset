@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1ff76dd6f3c6ab44bbad763dbcc3a33, type: 3}
+  m_Name: Nut
+  m_EditorClassIdentifier: 
+  States:
+  - state:
+      id: 0
+    transitions:
+    - transition:
+        id: 1
+      targetState: 5
+    - transition:
+        id: 2
+      targetState: 3
+  - state:
+      id: 3
+    transitions: []
+  - state:
+      id: 4
+    transitions: []
+  - state:
+      id: 5
+    transitions: []
+  references:
+    version: 1
+    00000000:
+      type: {class: IdleState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 4
+        chess: {fileID: 0}
+    00000001:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+      data:
+        transitionName: 0
+    00000002:
+      type: {class: ManaEnough, ns: , asm: Assembly-CSharp}
+      data:
+        transitionName: 1
+    00000003:
+      type: {class: SkillState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 3
+        chess: {fileID: 0}
+    00000004:
+      type: {class: DeathState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 5
+        chess: {fileID: 0}
+    00000005:
+      type: {class: PrepareState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 2
+        chess: {fileID: 0}

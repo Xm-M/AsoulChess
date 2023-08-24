@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: MS_MarkZombie
+  m_EditorClassIdentifier: 
+  baseProperty:
+    attack: 20
+    spell: 0
+    crit: 0
+    critDamage: 1.3
+    extraDamge: 0
+    AR: 30
+    MR: 30
+    extraDefence: 0
+    MP: 0
+    Hp: 500
+    HpMax: 500
+    shiledNum: 0
+    speed: 0.5
+    slowDownRate: 1
+    acceleRate: 1
+    lifeStealing: 0
+    healRate: 1
+    attackSpeed: 3
+    baseAttackSpeed: 0.25
+    attacRange: 4
+    price: 50
+    rarity: 4000
+  chessPre: {fileID: 2126721722868398282, guid: 0af26483c215807458a0788cbdcb35b4, type: 3}
+  chessSprite: {fileID: -1985441381287100147, guid: ca473894428796043aa1849162e57700, type: 3}

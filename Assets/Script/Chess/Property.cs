@@ -27,12 +27,14 @@ public class PropertyController:Controller
 
     public void WhenControllerEnterWar()
     {
-        Data.ResetAllProperty(creator.baseProperty); 
+        Data.ResetAllProperty(creator.baseProperty);
+        creator.WhenChessEnterWar(chess);
     }
     public void WhenControllerLeaveWar()
     {
         onGetDamage?.RemoveAllListeners();
         onTakeDamage?.RemoveAllListeners();
+        creator.WhenChessLeaveWar(chess);
     }
     public void Update()
     {

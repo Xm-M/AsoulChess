@@ -13,24 +13,22 @@ public class Chess : MonoBehaviour
     [FoldoutGroup(groupName: "controller", GroupID = "controller")]
     public PropertyController propertyController;//属性是肯定没问题的东西对吧
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
-    public Weapon equipWeapon;
-
+    public Weapon equipWeapon;//装备
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
-    public StateController stateController;
+    public StateController stateController;//状态
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
-    public SkillController skillController;
+    public SkillController skillController;//技能
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
-    public ItemController itemController;
-    
+    public ItemController itemController;//道具 这个暂时不考虑
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
-    public BuffController buffController;
+    public BuffController buffController;//Buff
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
-    public MoveController moveController;
+    public MoveController moveController;//移动
    
     [FoldoutGroup(groupName:"Event",GroupID ="Event")]
-    public UnityEvent<Chess> EnterWarEvent, DeathEvent,HitEvent;
+    public UnityEvent<Chess> EnterWarEvent, DeathEvent,HitEvent;//进入战场事件 死亡事件 碰撞事件
     public Animator animator;
-    bool FacingRight = true;
+    bool FacingRight = true;//朝向
     //public AnimationCurve curve;
     public bool IfDeath{get;private set;}
     public void InitChess(){
@@ -50,7 +48,6 @@ public class Chess : MonoBehaviour
         stateController.WhenControllerEnterWar();
         moveController.WhenControllerEnterWar();
         buffController.WhenControllerEnterWar();
-         
         EnterWarEvent?.Invoke(this);
         EventController.Instance.TriggerEvent<Chess>(EventName.WhenChessEnterWar.ToString(), this);
     }
@@ -64,7 +61,6 @@ public class Chess : MonoBehaviour
     /// </summary>
     public virtual void Death()
     {
-         
         if (IfDeath == true) return;
         IfDeath = true;
         DeathEvent?.Invoke(this);

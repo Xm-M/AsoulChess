@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class ChessAnimatorController : MonoBehaviour,Controller
 {
-    public Animator animator;
-
+    public Animator animator;//这个是动画器 没有什么问题哈
+    public StateName CurrentState { get; set; }
     [Serializable]
     public class HpAnimatorLevel
     {
@@ -57,7 +57,7 @@ public class ChessAnimatorController : MonoBehaviour,Controller
     //答案是直接用animator.Play()的方法更好 那我就要根据不同的
     //需要的是 当前状态->对应的动画名 然后还要一个改变当前状态和动画名的方法
     //就下面两个是绑定在一起使用的 要改变某个动画的默认状态就要下面两个一起改
-    public StateName CurrentState { get; set; }
+    
     public void ChangeStateAnimation(string animationName)
     {
 

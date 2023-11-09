@@ -134,10 +134,7 @@ public class MapManage : MonoBehaviour
         for (int i = 0; i < mapSize.x ; i++)
             for (int j = 0; j < mapSize.y; j++)
             {
-                if (tiles[i, j].IfMoveable)
-                {
-                    tiles[i, j].GetComponent<Collider2D>().enabled = true;
-                }
+                tiles[i, j].GetComponent<Collider2D>().enabled = true;
             }
     }
     public virtual void SleepTile()
@@ -145,11 +142,7 @@ public class MapManage : MonoBehaviour
         for (int i = 0; i < mapSize.x ; i++)
             for (int j = 0; j < mapSize.y; j++)
             {
-                if (tiles[i, j].IfMoveable)
-                {
-                    tiles[i, j].GetComponent<Collider2D>().enabled = false;
- 
-                }
+                tiles[i, j].GetComponent<Collider2D>().enabled = false;
             }
     }
     public virtual void RoundTile(Tile tile,List<Tile> newlist )
@@ -175,7 +168,6 @@ public class MapManage : MonoBehaviour
     }
     public Tile GetPreTile(){
         foreach(var tile in preTiles){
-            if(tile.IfMoveable)
                 return tile;
         }
         return null;

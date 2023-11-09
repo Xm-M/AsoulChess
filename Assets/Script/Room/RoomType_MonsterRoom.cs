@@ -58,10 +58,10 @@ public class RoomType_MonsterRoom : RoomType
         
         for(int i = 0; i < dy.Length; i+=1)
         {
-            if (MapManage.instance.tiles[x, dy[i]].IfMoveable) { 
-                y=dy[i];
-                break;
-            }
+            //if (MapManage.instance.tiles[x, dy[i]].IfMoveable) { 
+            //    y=dy[i];
+            //    break;
+            //}
         }
         return new Vector2Int(x, y);
     }

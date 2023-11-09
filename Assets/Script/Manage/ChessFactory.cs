@@ -31,8 +31,6 @@ public class ChessFactory : MonoBehaviour
         //EventController.Instance.AddListener(EventName.GameOver.ToString(),LoadAllChessMessage);
     }
     public Chess ChessCreate(Chess chessPre,Tile standTile,string tag){
-        // GameObject c=ObjectPool.instance.Create(chessPre.gameObject);
-        ////GameObject c = Instantiate(chessPre.gameObject, transform);
         Chess chess=Create(chessPre);
         if (!teams.ContainsKey(tag)) teams.Add(tag, new List<Chess>());
         teams[tag].Add(chess);
@@ -50,7 +48,6 @@ public class ChessFactory : MonoBehaviour
             chess.gameObject.layer = LayerMask.NameToLayer(tag);
             standTile.ChessEnter(chess);
         }
-        //chess.InitChess();
         chess.instanceID=instanceID;
         instanceID++;
         return chess;
@@ -60,7 +57,7 @@ public class ChessFactory : MonoBehaviour
         //如果调用了这个 说明c已经寄了
         if(teams[c.tag].Contains(c))
             teams[c.tag].Remove(c);
-         Recycle(c);
+        Recycle(c);
         
          
     }
@@ -82,7 +79,7 @@ public class ChessFactory : MonoBehaviour
         }
         creat = Instantiate(c.gameObject,transform).GetComponent<Chess>();
         creat.InitChess();
-        //SceneManager.MoveGameObjectToScene(creat, poolScene);
+ 
         return creat;
     }
     public void Recycle(Chess a)
@@ -117,30 +114,7 @@ public class ChessFactory : MonoBehaviour
             chessMessages[chess].LoadMessage(chess);
         }
     }
-    public void SaveAllChessMessage(){
-        //Debug.Log("SaveMessage");
-        //foreach(var chess in teams["Player"].teamInDesk){
-        //    SaveMessage(chess);
-        //}
-        //foreach(var team in teams){
-        //    foreach(var chess in team.Value.teamInDesk){{
-        //        chess.stateController.WhenControllerEnterWar();
-        //    }}
-        //}
-    }
-    public void LoadAllChessMessage(){
-        //teams["Player"].DeathPool.Clear();
-        //for(int i=0;i<teams["Player"].teamInDesk.Count;i++){
-        //    Chess c=teams["Player"].teamInDesk[i];
-        //    if(!teams["Player"].teamHold.Contains(c)){
-        //        Destroy(c.gameObject);
-        //    }
-        //}
-        //teams["Player"].teamInDesk.Clear();
-        //foreach(var chess in chessMessages){
-        //    LoadMessage(chess.Key);
-        //}
-    }
+ 
     public void ClearTeam(string tag){
 
         if(!teams.ContainsKey(tag)){
@@ -166,20 +140,4 @@ public class ChessDate{
         standTile.ChessEnter(chess);
     }
 }
-//public class ChessTeam{
-//    public List<Chess> teamHold;
-//    public List<Chess> teamInDesk;
-//    public List<Chess> DeathPool;
-    
-
-//    public ChessTeam(){
-//        teamHold=new List<Chess>();
-//        teamInDesk=new List<Chess>();
-//        DeathPool=new List<Chess>();
-//    }
-//    public void Clear(){
-//        teamHold.Clear();
-//        teamInDesk.Clear();
-//        DeathPool.Clear();
-//    }
-//}
+ 

@@ -6,72 +6,54 @@ public class Tile : MonoBehaviour
 {
     public Vector3Int cubePos;
     public Vector2Int mapPos;
-    //public Color baseColor;
-
-    public AudioSource au ;
+    public AudioSource au ;//音乐的问题我们之后再考虑
     public bool ifPrePareTile;
+    public TileType baseTileType;
+    public Stack<TileType> typeStack;
+    
+    List<Chess> standers;
+    List<byte> chessLayers;
 
-    [SerializeField]bool ifMoveable;
-    public bool IfMoveable { get
-        {
-            return ifMoveable;
-        }
-        protected set
-        {
-            ifMoveable = value;
-        }
-    }
-    public Chess Stander { get;private set; }
     private void Awake()
     {
-        //baseColor = Color.white;
-        GetComponent<Collider2D>().enabled = false;
-        IfMoveable = true;
-        EventController.Instance.AddListener(EventName.GameOver.ToString(), () =>
-        {
-            IfMoveable = true;
-            Stander = null;
-        });
+        standers = new List<Chess>();
+        chessLayers = new List<byte>();
+        typeStack = new Stack<TileType>();
+        typeStack.Push(baseTileType);
     }
     public void ChessMoveIn(Chess chess)
     {
         chess.moveController.standTile = this;
         chess.transform.position = transform.position;
     }
- 
-
     public void ChessEnter(Chess chess )
     {
-        IfMoveable = false;
-        if (Stander == null) 
-            Stander = chess;
+        standers.Add(chess);
+        chessLayers.Add(chess.propertyController.creator.chessLayer);
         chess.moveController.standTile=this;
         chess.transform.position = transform.position;
     }
     public void ChessLeave(Chess chess)
     {
-        if (chess == Stander)
+        if (standers.Contains(chess))
         {
-            Debug.Log("chessLeave"+chess.name);
-            IfMoveable = true;
-            Stander = null;
+            standers.Remove(chess);
+            chessLayers.Remove(chess.propertyController.creator.chessLayer);
         }
     }
-    public void SetColor()
+    public TileType GetTileType()
     {
-        GetComponent<SpriteRenderer>().color = Color.red;
+        return TileType.Grass;
     }
-    public void SetColor(Color color)
+    public bool IfContainsLayer(byte layer)
     {
-        GetComponent<SpriteRenderer>().color = color;
+        return chessLayers.Contains(layer);
     }
-    void OnMouseDown()
-    {
-        if(Stander==null){
-            MapManage.instance.SleepTile();
-            PlantsShop.instance.BuyPlant(this);
-            au?.Play();
-            //要改的其实是这里，就是能不能占用的判断依据不是直接用ifMoveAble
-        } 
-    }
+}
+public enum TileType
+{
+    Grass,
+    Water,
+    Stone,
+    All,
 }

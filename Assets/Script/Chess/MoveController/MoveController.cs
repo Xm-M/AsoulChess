@@ -14,7 +14,6 @@ public class MoveController:Controller
     public virtual void InitController(Chess chess)
     {
         this.chess = chess;
-        
         //tileMethod.FindNextTile(chess);
     }
     public void WhenControllerEnterWar()

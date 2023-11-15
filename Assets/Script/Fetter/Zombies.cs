@@ -49,7 +49,7 @@ public class Zombies : Fetter
         //self.property.GetValue(ValueType.Hp).currentValue = self.property.GetValue(ValueType.Hp).startValue*comeBackHp;
         ifcomeBack = true;
         self.StartCoroutine(ImmuneTime());
-        self.animator.Play("revive");
+        //self.animator.Play("revive");
     }
     IEnumerator ImmuneTime()
     {

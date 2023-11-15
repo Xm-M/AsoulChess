@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6863624729009067701}
   - component: {fileID: 1213265305038784464}
   - component: {fileID: 4758264057750145191}
+  - component: {fileID: 3080808739262781466}
   m_Layer: 3
   m_Name: keli
   m_TagString: Untagged
@@ -169,6 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
+  equipWeapon: {fileID: 1213265305038784464}
   propertyController:
     creator: {fileID: 11400000, guid: 68dd9cf77ca575c48b0ec52f13ee81a6, type: 2}
     chess: {fileID: 0}
@@ -178,7 +180,6 @@ MonoBehaviour:
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
-  equipWeapon: {fileID: 1213265305038784464}
   stateController:
     self: {fileID: 0}
     currentState:
@@ -218,6 +219,7 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 2
+  animController: {fileID: 0}
   EnterWarEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -454,6 +456,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3080808739262781466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4495999877054438879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 981bbd0de1fdb5a40bb0365e24168ab6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  stateList: []
 --- !u!1 &6283188527745335011
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,6 +480,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2848688961325280760}
   - component: {fileID: 2675827337489371533}
+  - component: {fileID: 2561403681334367726}
   m_Layer: 0
   m_Name: shootPos
   m_TagString: Untagged
@@ -581,6 +598,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2561403681334367726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6283188527745335011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cb11ae55d6a7c4c9440a27b7f2aca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: 
+  audioSource: {fileID: 0}
+  clipList: []
 --- !u!1 &6670079093582774189
 GameObject:
   m_ObjectHideFlags: 0

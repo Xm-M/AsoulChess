@@ -11,9 +11,9 @@ public class Chess : MonoBehaviour
 
     [HideInInspector]public int instanceID;
     [FoldoutGroup(groupName: "controller", GroupID = "controller")]
-    public PropertyController propertyController;//属性是肯定没问题的东西对吧
-    [FoldoutGroup(groupName:"controller",GroupID ="controller")]
     public Weapon equipWeapon;//装备
+    [FoldoutGroup(groupName: "controller", GroupID = "controller")]
+    public PropertyController propertyController;//属性是肯定没问题的东西对
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
     public StateController stateController;//状态
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
@@ -24,7 +24,10 @@ public class Chess : MonoBehaviour
     public BuffController buffController;//Buff
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
     public MoveController moveController;//移动
-   
+    [FoldoutGroup(groupName: "controller", GroupID = "controller")]
+    public ChessAnimatorController animController;//动画
+    [FoldoutGroup(groupName: "controller", GroupID = "controller")]
+    public AudioController audioController;//音效
     [FoldoutGroup(groupName:"Event",GroupID ="Event")]
     public UnityEvent<Chess> EnterWarEvent, DeathEvent,HitEvent;//进入战场事件 死亡事件 碰撞事件
     public Animator animator;
@@ -32,13 +35,15 @@ public class Chess : MonoBehaviour
     //public AnimationCurve curve;
     public bool IfDeath{get;private set;}
     public void InitChess(){
-        if (animator == null) { animator = GetComponent<Animator>(); }
+  
         propertyController.InitController(this);
         equipWeapon.InitController(this);
         stateController.InitController(this);
         skillController.InitController(this);
         moveController.InitController(this);
         buffController.InitController(this);
+        //animController.InitController(this);
+        audioController.InitController(this);
     }
     public void WhenChessEnterWar(){
         IfDeath = false;
@@ -48,14 +53,12 @@ public class Chess : MonoBehaviour
         stateController.WhenControllerEnterWar();
         moveController.WhenControllerEnterWar();
         buffController.WhenControllerEnterWar();
+        //animController.WhenControllerEnterWar();
+        audioController.WhenControllerEnterWar();
         EnterWarEvent?.Invoke(this);
         EventController.Instance.TriggerEvent<Chess>(EventName.WhenChessEnterWar.ToString(), this);
     }
-    public void Update()
-    {
-        stateController.StateUpdate();
-        propertyController.Update();
-    }
+    
     /// <summary>
     /// 无论如何 死亡时应该清楚所有的绑定事件
     /// </summary>
@@ -70,6 +73,8 @@ public class Chess : MonoBehaviour
         skillController.WhenControllerLeaveWar();
         moveController.WhenControllerLeaveWar();
         buffController.WhenControllerLeaveWar();
+        audioController.WhenControllerLeaveWar();
+        //animController.WhenControllerLeaveWar();
         ChessFactory.instance.RecycleChess(this);
         EventController.Instance.TriggerEvent<Chess>(EventName.WhenDeath.ToString(), this);
         EnterWarEvent?.RemoveAllListeners();
@@ -86,9 +91,15 @@ public class Chess : MonoBehaviour
         skillController.WhenControllerLeaveWar();
         moveController.WhenControllerLeaveWar();
         buffController.WhenControllerLeaveWar();
+        audioController?.WhenControllerLeaveWar();
         ChessFactory.instance.RecycleChess(this);
         EnterWarEvent?.RemoveAllListeners();
         DeathEvent?.RemoveAllListeners();
+    }
+    public void Update()
+    {
+        stateController.StateUpdate();
+        propertyController.Update();
     }
     public void Flap()
     {

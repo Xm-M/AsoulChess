@@ -32,6 +32,11 @@ public class Tile : MonoBehaviour
         chessLayers.Add(chess.propertyController.creator.chessLayer);
         chess.moveController.standTile=this;
         chess.transform.position = transform.position;
+        if (chess.propertyController.creator.chessTileType != TileType.None)
+        {
+            typeStack.Push(chess.propertyController.creator.chessTileType);
+        }
+        au.Play();
     }
     public void ChessLeave(Chess chess)
     {
@@ -39,11 +44,15 @@ public class Tile : MonoBehaviour
         {
             standers.Remove(chess);
             chessLayers.Remove(chess.propertyController.creator.chessLayer);
+            if (chess.propertyController.creator.chessTileType != TileType.None)
+            {
+                typeStack.Pop();
+            }
         }
     }
     public TileType GetTileType()
     {
-        return TileType.Grass;
+        return typeStack.Peek();
     }
     public bool IfContainsLayer(byte layer)
     {
@@ -56,4 +65,6 @@ public enum TileType
     Water,
     Stone,
     All,
+    None,
+    Occupation,
 }

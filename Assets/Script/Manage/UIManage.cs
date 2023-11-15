@@ -10,8 +10,6 @@ public class UIManage : MonoBehaviour
 
     public BaseButton RoomButton;
 
-    public Shop shop;
-
     public WeaponWindow ItemWindow;
     public UITabbedWindow gameOver;
     //public ChessMessage chessMessage;

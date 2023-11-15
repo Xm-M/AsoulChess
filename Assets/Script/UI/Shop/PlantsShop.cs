@@ -20,7 +20,7 @@ public class PlantsShop : MonoBehaviour
     public Chess selectChess;
     public int sunLight{get;private set;}
 
-    ShopIcon currentPlant;
+    public ShopIcon currentPlant;//当前选择的植物卡
 
     void Awake()
     {

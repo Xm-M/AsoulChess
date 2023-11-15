@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 阳光 就是天上掉的 向日葵产的那种阳光
+/// </summary>
 public class SunLight : MonoBehaviour
 {
-    public int SunLightNum;
-    public float fallSpeed;
-    public float disapearTime;
-    public AudioSource au;
-    bool ifPick;
+    public int SunLightNum;//阳光数值
+    public float fallSpeed;//掉落速度
+    public float disapearTime;//消失时间
+    public AudioSource au;//为什么你也有音效 
+    bool ifPick;//是否被捡起来
     Vector2 target;
     Vector2 recyclePos;
     float t;

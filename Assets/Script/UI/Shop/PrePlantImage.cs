@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class PrePlantImage : MonoBehaviour
 {
     public Image image;
-    public bool ifShovel;
+    public bool ifShovel;//这个是铲子的意思
+    public LayerMask ground;
     void Update()
     {
         transform.position= Input.mousePosition;
@@ -20,8 +21,27 @@ public class PrePlantImage : MonoBehaviour
             PlantsShop.instance.CancelShovel();
             if(PlantsShop.instance.selectChess)
                 PlantsShop.instance.selectChess.RemoveChess();
+        }else if (Input.GetMouseButtonDown(0))
+        {
+            Check();
         }
     }
-     
+    public void Check()
+    {
+        Collider2D collider= Physics2D.OverlapCircle(Camera.main.ScreenToWorldPoint(Input.mousePosition)
+            , 0.2f, ground);
+        Debug.Log(transform.position);
+        Debug.Log(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        Debug.Log(collider);
+        if(collider != null)
+        {
+            Debug.Log(collider);
+            Tile tile = collider.gameObject.GetComponent<Tile>();
+            if (PlantsShop.instance.currentPlant.good.IfCanPlant(tile))
+            {
+                PlantsShop.instance.BuyPlant(tile);
+            }
+        }
+    }
      
 }

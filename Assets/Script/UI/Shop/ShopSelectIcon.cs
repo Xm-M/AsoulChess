@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+/// <summary>
+/// 
+/// </summary>
 public class ShopSelectIcon : MonoBehaviour
 {
     public PropertyCreator select;
@@ -11,7 +15,6 @@ public class ShopSelectIcon : MonoBehaviour
     public Text price;
 
     public AudioSource Audio;
-    //public int l;
     public bool ifSelect;
     private void OnEnable()
     {

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+/// <summary>
+/// 铲子面板 关于铲子 这个肯定也是要重新做的 因为可能一格内有多种植物
+/// </summary>
 public class ShovelPanel : MonoBehaviour
 {
     public Image shovelImage;

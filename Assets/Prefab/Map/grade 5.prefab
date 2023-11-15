@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7000920715407861187}
   - component: {fileID: 2729969307140054517}
   - component: {fileID: 8751636850787671658}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: grade 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,8 +98,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubePos: {x: 0, y: 0, z: 0}
   mapPos: {x: 0, y: 0}
-  baseColor: {r: 0, g: 0, b: 0, a: 0}
-  ifMoveable: 0
+  au: {fileID: 0}
+  ifPrePareTile: 0
+  baseTileType: 0
 --- !u!61 &8751636850787671658
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -117,7 +118,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5, y: 1}
+    oldSize: {x: 2, y: 1.3333334}
     newSize: {x: 1.0625, y: 1.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

@@ -11,7 +11,7 @@ using UnityEngine.Events;
 
 //属性控制类，负责属性的更改修正等
 [Serializable]
-public class PropertyController:Controller
+public class PropertyController:Controller 
 {
     public PropertyCreator creator;//这个就是一个基本数据
     public Chess chess;//拥有该属性的棋子
@@ -206,7 +206,10 @@ public class PropertyController:Controller
     {
         return Data.Size;
     }
-   
+    public float GetHpPerCent()
+    {
+        return Data.Hp / Data.HpMax;
+    }
 }
 //属性类，每个单位都有自己的属性 
 [Serializable]
@@ -303,5 +306,24 @@ public enum ElementType
     Plant,//草
     Rock,//岩
     Fire,//火
+    
+}
+public class ShiledNum
+{
+    public float shiled;
+    public Chess shiledFrom;
+    public virtual float GetDamage(DamageMessege mes)
+    {
+        if (shiled > mes.damage)
+        {
+            shiled -= mes.damage;
+            return 0;
+        }
+        else
+        {
+            shiled = 0;
+            return mes.damage - shiled;
+        }
+    }
     
 }

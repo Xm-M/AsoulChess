@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioController : MonoBehaviour
+[Serializable]
+public class AudioController : Controller
 {
     public List<AudioPlayer> audioPlayers;
     public Dictionary<string, AudioPlayer> playerMap;
-    AudioPlayer currentPlay;
-    public void InitController()
+ 
+    public void InitController(Chess chess)
     {
         playerMap = new Dictionary<string, AudioPlayer>();
         for(int i = 0; i < audioPlayers.Count; i++)
@@ -16,21 +17,26 @@ public class AudioController : MonoBehaviour
             playerMap.Add(audioPlayers[i].playerName, audioPlayers[i]);
         }
     }
-    public void SetCurrentPlayer(string name)
-    {
-        currentPlay = playerMap[name];
-    }
     public void PlayAudio(string name)
     {
-        currentPlay.PlayAudio(name);
+        playerMap[name].PlayAudio();
     }
-    public void PlayAudio()
+   
+
+    public void WhenControllerEnterWar()
     {
-        currentPlay.audioSource.Play();
+         
+            
+    }
+
+    public void WhenControllerLeaveWar()
+    {
+        throw new NotImplementedException();
     }
 }
-[Serializable]
-public class AudioPlayer
+
+
+public class AudioPlayer : MonoBehaviour
 {
     public string playerName;
     public AudioSource audioSource;
@@ -52,5 +58,20 @@ public class AudioPlayer
                 return;
             }
         }
+    }
+    public void ChangeAudio(string name)
+    {
+        for (int i = 0; i < clipList.Count; i++)
+        {
+            if (name == clipList[i].name)
+            {
+                audioSource.clip = clipList[i].clip;
+                return;
+            }
+        }
+    }
+    public void PlayAudio()
+    {
+        audioSource.Play();
     }
 }

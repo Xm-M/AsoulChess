@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2729969307140054517}
   - component: {fileID: 8751636850787671658}
   - component: {fileID: 6206570528074799356}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: grade 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,10 +99,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubePos: {x: 0, y: 0, z: 0}
   mapPos: {x: 0, y: 0}
-  baseColor: {r: 0, g: 0, b: 0, a: 0}
   au: {fileID: 6206570528074799356}
   ifPrePareTile: 0
-  ifMoveable: 0
+  baseTileType: 0
 --- !u!61 &8751636850787671658
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -110,7 +109,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4057372595257492823}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1

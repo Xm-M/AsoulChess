@@ -2209,6 +2209,12 @@ MonoBehaviour:
   mapSize: {x: 9, y: 5}
   tileSize: {x: 1.65, y: 2}
   dir: {fileID: 1401791535}
+  WhenMapLoad:
+    m_PersistentCalls:
+      m_Calls: []
+  WhenMapLeave:
+    m_PersistentCalls:
+      m_Calls: []
   sunLightRecyclePos: {fileID: 997539203}
   zombiePreTile:
   - {fileID: 110122919}

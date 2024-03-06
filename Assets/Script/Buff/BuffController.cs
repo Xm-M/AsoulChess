@@ -9,13 +9,12 @@ public class BuffController:Controller
 {
     public Dictionary<string, Buff> buffDic;
     public Chess chess;
-    public UnityEvent buffUpdate;
+    //public UnityEvent buffUpdate;
     public void InitController(Chess chess)
     {
         buffDic = new Dictionary<string, Buff>();
         this.chess = chess;
     }
-
     public void WhenControllerEnterWar()
     {
          
@@ -23,13 +22,11 @@ public class BuffController:Controller
 
     public void WhenControllerLeaveWar()
     {
-         ResetList();
-        buffUpdate.RemoveAllListeners();
+        ResetList();
     }
     public void Update()
     {
-        if (!GameManage.instance.ifGameStart||chess.IfDeath) return;
-        buffUpdate?.Invoke();
+ 
     }
     public void ResetList()
     {
@@ -46,7 +43,7 @@ public class BuffController:Controller
     /// </summary>
     /// <param name="buffUser"></param>
     /// <param name="buff"></param>
-    public void AddBuff(Chess buffFrom,Buff buff)
+    public void AddBuff(Buff buff)
     {
         if (buffDic.ContainsKey(buff.buffName))
         {
@@ -54,19 +51,16 @@ public class BuffController:Controller
         }
         else
         {
-            Buff newBuff=buff.Clone();
+            Buff newBuff=GameManage.instance.buffManage.CreateBuff(buff);
             buffDic.Add(buff.buffName, newBuff);
-            newBuff.BuffEffect(buffFrom,chess);
+            newBuff.BuffEffect(chess);
         }
     }
-    public void RemoveBuff(string buffName)
+    public void RemoveBuff(Buff buff)
     {
-        Debug.Log("removeBuff");
-        if (buffDic.ContainsKey(buffName))
+        if (buffDic.ContainsKey(buff.buffName))
         {
-            buffDic[buffName].BuffOver();
-            ObjectPool.instance.ReycleObject(buffDic[buffName]);
-            buffDic.Remove(buffName);
+            buffDic.Remove(buff.buffName);
         }
         else
         {

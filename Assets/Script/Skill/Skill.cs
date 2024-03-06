@@ -3,31 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [Serializable]
-public class Skill  
+public class Skill  :ScriptableObject
 {
-    [SerializeField]private float interval = 1f;
-    public string skillName;
-    public float Interval { 
-        get { return interval; }
-    }
-    //public AudioClip clip;
-    public virtual void SkillEffect(Chess user)
-    {
- 
-    }
-    public virtual void OnSkillEnter(Chess user) { 
-
-    }
-    public virtual void OnSkillExit(Chess user)
-    {
-         
-    }
-    public virtual bool ifSkilOver(Chess chess)
-    {
-        if(chess.animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.99)
-        {
-            return true;
-        }return false;
-    }
-    
+    public int skillid;//不知道有什么用
+    public string skillName;//可能有点用，可以在显示面板
+    [Multiline]
+    public string skillDescription;//可以用在显示面板 
+    //public List<string> attackTargetTags;//技能作用对象
+    public string AnimationName;//技能对应的动画
+    [SerializeReference]
+    public ISkillEffect skillEffect;
+    [SerializeReference]
+    public ISkillOver skillOver;
 }
+

@@ -32,7 +32,6 @@ public class StateController:Controller
     }
     public void ChangeState(StateDate newState)
     {
-        //Debug.Log("ChangeTo"+newState.state);
         if(currentState.state!=null)
             currentState.state.Exit(self);
         preState = currentState;
@@ -56,7 +55,7 @@ public class StateController:Controller
             currentState.state.Execute(self);
             foreach(var transition in currentState.transitions){
                 if(transition.transition.ifReach(self)){
-                    //Debug.Log(currentState.state.stateName+" "+transition.transition+" "+transition.targetState);
+                     
                     ChangeState(stateDic[transition.targetState]);
                     return;
                 }

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Unity.Collections;
+using Unity.Jobs;
 
 public class FindTileMethod{
     public virtual Tile FindNextTile(Chess c){return null;}
@@ -148,5 +150,46 @@ public class AStart:FindTileMethod
     //}
 
    
+}
+public class ZombieController
+{
+    public List<Chess> zombies;
+    public LayerMask layer;
+    float t = 0;
+    float interval = 0.1f;
+    public void Check()
+    {
+        NativeArray<RaycastCommand> commands = new NativeArray<RaycastCommand>(zombies.Count, Allocator.TempJob);
+        NativeArray<RaycastHit> results = new NativeArray<RaycastHit>(zombies.Count, Allocator.TempJob);
+        for (int i = 0; i < zombies.Count; i++)
+        {
+            commands[i] = new RaycastCommand(zombies[i].transform.position, zombies[i].transform.right, 1f, layer);
+        }
+        JobHandle handle = RaycastCommand.ScheduleBatch(commands, results, 1);
+        handle.Complete();
+        for(int i=0;i< zombies.Count; i++)
+        {
+            if (results[i].collider != null)
+            {
+                zombies[i].stateController.ChangeState(StateName.AttackState);
+            }
+        }
+        commands.Dispose();
+        results.Dispose();
+    }
+    public void Update()
+    {
+        t += Time.deltaTime;
+        if (t > interval)
+        {
+            Check();
+            t = 0;
+        }
+    }
+    public void AddZombie(Chess zombie)
+    {
+        if(!zombies.Contains(zombie))
+            zombies.Add(zombie);    
+    }
 }
 

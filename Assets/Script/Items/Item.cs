@@ -33,7 +33,7 @@ public class FireSword:Item{
         FireAttack);
     }
     public void FireAttack(DamageMessege messege){
-        messege.damageTo.buffController.AddBuff(messege.damageFrom,FireBuff);
+        messege.damageTo.buffController.AddBuff(FireBuff);
     }
 }
 public enum ItemNames{

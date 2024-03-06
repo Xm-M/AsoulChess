@@ -19,19 +19,7 @@ public class SkillState : State
     public override void Execute(Chess chess)
     {
         base.Execute(chess);
-        if (t >=0)
-        {
-            t += Time.deltaTime;
-            if (t > chess.skillController.currentSkill.Interval) {
-                t = -1;
-                chess.skillController.UseSkll();
-            }
-        }
-        if (chess.skillController.currentSkill.ifSkilOver(chess))
-        {
-            chess.stateController.RevertToPreState();
-            chess.skillController.SkillOver();
-        }
+        
     }
     public override void Exit(Chess chess)
     {

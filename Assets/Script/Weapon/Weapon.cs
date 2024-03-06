@@ -3,92 +3,105 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.Events;
-
-public class Weapon : MonoBehaviour,Controller
+[Serializable]
+public class Weapon :  Controller
 {
-    public Chess master;//这个就是武器的拥有者
-    public Chess target;//这个是攻击目标
-    public Animator animator;
-    public DamageMessege DM;
-    protected float timer = 0;//攻击计时器
-    protected bool ifAttack = false;//是否攻击
+    public Transform weaponPos;
     public UnityEvent<Weapon> OnWeaponAttack;
+    [SerializeReference]
+    public IFindTarget FindTarget;
+    [SerializeReference]
+    public IAttackFunction attack;
+    float attackSpeed;
+    Timer timer;
+    Chess master;//这个就是武器的拥有者
+    List<Chess> target;//这个是攻击目标
+    Animator animator;
     public virtual void InitController(Chess chess)
     {
         master=chess;
+        animator = master.animator;
     }
     public virtual void WhenControllerEnterWar()
     {
-        ifAttack = false;
-        timer = 0;
+        attackSpeed = master.propertyController.GetAttackSpeed();
     }
     public virtual void WhenControllerLeaveWar()
     {
-
+        timer.Stop();
+        timer = null;
     }
+    /// <summary>
+    /// attack是播放动画，Takedamage是实际上造成伤害（或者发射子弹）是绑定在动画上的
+    /// </summary>
+    /// <param name="atk"></param>
     public virtual void Attack(string atk="attack") {
-        
-        if (ifAttack == false)
-        {
-            animator.Play(atk);
-            ifAttack = true;
-        }
+
+        timer = GameManage.instance.timerManage.AddTimer(
+            () =>
+            {
+                animator.Play(atk);
+            }
+            ,attackSpeed,true);
     }
-    public virtual void TakeDamage(Chess target)
+    public void StartAttack(string atk)
     {
-        if (target == null) return;
-        OnWeaponAttack?.Invoke(this);
-        DM.damageFrom = master;
-        DM.damageTo = target;
-        DM.damage = master.propertyController.GetAttack();
-        master.propertyController.TakeDamage(DM);
+        animator.Play(atk);
+        //这里要改变攻击速度;
+        //动画的播放速度应该在property改变
+        if (target.Count > 0)
+        {
+            master.Flap(target[0].transform);
+        }
+        float newSpeed = master.propertyController.GetAttackSpeed();
+        if (newSpeed != attackSpeed)
+        {
+            attackSpeed = newSpeed;
+            timer.ChangeDelayTime(attackSpeed);
+        }
     }
     public virtual void TakeDamages()
     {
-        TakeDamage(target);
-    }
-    public virtual void WeaponUpdate()
-    {
-        if (ifAttack)
+        if (IfFindEnemy())
         {
-            timer += Time.deltaTime;
-            if (timer > master.propertyController.GetAttackSpeed())
-            {
-                ifAttack=false;
-                timer = 0;
-                Attack();
-            }
+            attack.Attack(master, target);
         }
-    }
-    public virtual void FindTarget(){
-        Chess chess=null;
-        int minDistance;
-        List<Chess> enemyTeam=ChessFactory.instance.FindEnemyList(tag);
-        if (enemyTeam.Count > 0)
+        else
         {
-            chess =null;
-            minDistance = 100;
-            for (int i = 0; i < enemyTeam.Count; i++){
-                int dis=MapManage.instance.Distance(master.moveController. standTile,enemyTeam[i].moveController.standTile);
-                if (!enemyTeam[i].IfDeath&&dis < minDistance)
+            //这里是负责状态转换的
+        }
+    } 
+    public bool IfFindEnemy()
+    {
+        FindTarget.FindTarget(master, target);
+        return target.Count > 0;
+    }
+}
+public interface IAttackFunction
+{
+    public void Attack(Chess user, List<Chess> targets);
+}
+public class CloseAttack : IAttackFunction
+{
+    public void Attack(Chess user, List<Chess> targets )
+    {
+        if (targets != null && targets.Count > 0)
+        {
+            DamageMessege DM;
+            float damage = user.propertyController.GetAttack();
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (!targets[i].IfDeath)
                 {
-                    minDistance = dis;
-                    chess = enemyTeam[i];
-                }else  if(dis==minDistance&& MapManage.instance.RealDis(chess.moveController.standTile.mapPos,master.moveController. standTile.mapPos)>
-                    MapManage.instance.RealDis(enemyTeam[i].moveController.standTile.mapPos,master.moveController. standTile.mapPos)) {
-                    chess=enemyTeam[i];
+                    DM = new DamageMessege();
+                    DM.damageFrom = user;
+                    DM.damageTo = targets[i];
+                    DM.damage = damage;
+                    user.propertyController.TakeDamage(DM);
                 }
             }
-        }//
-        target = chess;
+             
+        }        
     }
-    public virtual bool IfInRange()
-    {
-        if(target&&MapManage.instance.Distance(master.moveController.standTile, target.moveController.standTile) <= master.propertyController.GetAttackRange())
-        {
-            return true;
-        }
-        return false;
-    }   
 }
  

@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a55f10c610bd5aa49ba5e15e58e6e440, type: 3}
+  m_Name: NewAttackSkill
+  m_EditorClassIdentifier: 
+  skillid: 0
+  skillName: 
+  skillDescription: 
+  attackTargetTags: []
+  AnimationName: 
+  skillEffect:
+    id: 0
+  skillOver:
+    id: 1
+  maxAttackNum: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: Summon_AttackSkill, ns: , asm: Assembly-CSharp}
+      data:
+        pre: {fileID: 0}
+        tileOffset: {x: 0, y: 0}
+        moveSpeed: 0
+        moveCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        maxHeight: 0
+    00000001:
+      type: {class: , ns: , asm: }

@@ -6,55 +6,34 @@ using UnityEngine;
 [Serializable]
 public class Buff  
 {
-    public string buffName;
-    public Chess target;
-    public Chess buffFrom;
+    public string buffName;//这个buff的名字
+    public Chess target;//buff的作用对象
     public virtual void BuffReset()
     {
          
     }
-    public virtual void BuffEffect(Chess buffFrom,Chess target)
+    public virtual void BuffEffect( Chess target)
     {
         this.target = target;
-        this.buffFrom = buffFrom;
     }
     public virtual void BuffOver()
     {
-
+        target.buffController.RemoveBuff(this);
+        GameManage.instance.buffManage.RecycleBuff(this);
     }
     public virtual Buff Clone()
     {
-        return this;
+        return new Buff();
     }
 }
 public class TimeBuff : Buff
 {
     public float continueTime;
-    float t;
+    protected Timer timer;
     public override void BuffReset()
     {
         base.BuffReset();
-        t = 0;
-    }
-    public override void BuffEffect(Chess buffFrom, Chess target)
-    {
-        base.BuffEffect(buffFrom, target);
-        target.buffController.buffUpdate.AddListener(TimeAdd);
-        t = 0;
-    }
-    public override void BuffOver()
-    {
-        base.BuffOver();
-    }
-
-    public void TimeAdd()
-    {
-        t += Time.deltaTime;
-        if (t > continueTime)
-        {
-            target.buffController.RemoveBuff(buffName);
-            target.buffController.buffUpdate.RemoveListener(TimeAdd);
-        }
+        timer.ResetTime();
     }
 }
 /// <summary>
@@ -63,11 +42,14 @@ public class TimeBuff : Buff
 public class ColdBuff : TimeBuff
 {
     public float slowDownRate;
-    public override void BuffEffect(Chess buffFrom, Chess target)
+    public override void BuffEffect(Chess target)
     {
-        base.BuffEffect(buffFrom, target);
+        base.BuffEffect( target);
         target.propertyController.SlowDown(slowDownRate);
         target.GetComponent<SpriteRenderer>().color = Color.blue;
+        timer = GameManage.instance.timerManage.AddTimer(
+            BuffOver, continueTime
+            );
     }
     public override void BuffOver()
     {

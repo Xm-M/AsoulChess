@@ -5,6 +5,7 @@ using System;
 [CreateAssetMenu(fileName ="NewProperty",menuName ="Message/Property")]
 public class PropertyCreator : ScriptableObject
 {
+    public string chessName;
     public Property baseProperty;
     public Chess chessPre;
     public Sprite chessSprite;

@@ -15,7 +15,6 @@ public class PropertyController:Controller
 {
     public PropertyCreator creator;//这个就是一个基本数据
     public Chess chess;//拥有该属性的棋子
-    //public class OnGetDamage : UnityEvent<DamageMessege> { }
     public UnityEvent<DamageMessege> onGetDamage;//造成伤害的事件
     public UnityEvent<DamageMessege> onTakeDamage;//收到伤害的事件
     Property Data;
@@ -131,7 +130,7 @@ public class PropertyController:Controller
     {
         Data.attackSpeed = Mathf.Min(0.5f, Data.attackSpeed - Data.baseAttackSpeed * value);
     }
-    public void ChangeAttackRange(int value) => Data.attacRange = Mathf.Max(1, Data.attacRange + value);
+    public void ChangeAttackRange(int value) => Data.attackRange = Mathf.Max(1, Data.attackRange + value);
     public void SlowDown(float value)
     {
         Data.slowDownRate = Data.slowDownRate * (1 - value);
@@ -184,7 +183,7 @@ public class PropertyController:Controller
     }
     public float GetAttackRange()
     {
-        return Data.attacRange;
+        return Data.attackRange;
     }
     public int GetPrice(){
         return Data.price;
@@ -204,7 +203,7 @@ public class PropertyController:Controller
     {
         return Data.Size;
     }
-   
+     
 }
 //属性类，每个单位都有自己的属性 
 [Serializable]
@@ -232,7 +231,7 @@ public class Property
     public float healRate=1f;//回复增益
     public float attackSpeed = 1f;//攻击速度
     public float baseAttackSpeed=0.25f;
-    public float attacRange=1;//攻击距离
+    public float attackRange=1;//攻击距离
 
     public int price=50;//价格
     public int rarity=4000;
@@ -263,7 +262,7 @@ public class Property
         healRate = property.healRate;
         attackSpeed = property.attackSpeed;
         baseAttackSpeed = property.baseAttackSpeed;
-        attacRange = property.attacRange;
+        attackRange = property.attackRange;
         price = property.price;
         rarity = property.rarity;
         CD = property.CD;

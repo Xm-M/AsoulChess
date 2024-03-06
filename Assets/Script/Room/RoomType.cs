@@ -16,7 +16,7 @@ public class RoomType : ScriptableObject
         
     }
     public virtual void WhenLeaveRoom(){
-        ChessFactory.instance.SaveAllChessMessage();//?
+        //ChessFactory.instance.SaveAllChessMessage();//?
     }
     
     public virtual void WhenStayRoom(){

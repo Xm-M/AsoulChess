@@ -2209,6 +2209,12 @@ MonoBehaviour:
   mapSize: {x: 9, y: 5}
   tileSize: {x: 1.65, y: 2}
   dir: {fileID: 1401791535}
+  WhenMapLoad:
+    m_PersistentCalls:
+      m_Calls: []
+  WhenMapLeave:
+    m_PersistentCalls:
+      m_Calls: []
   sunLightRecyclePos: {fileID: 997539203}
   zombiePreTile:
   - {fileID: 110122919}
@@ -2369,11 +2375,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1780611825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4fd4f5a0ae83ce4f9ff08844a927d52, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b80dbd2d46e7ad47ac3f55842349b98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interval: 12
-  sunLight: {fileID: 8923776283095234733, guid: beffaae4a861c4d40b33bd4fac735d48, type: 3}
+  creator: {fileID: 11400000, guid: 50ba009d65baa0349ba7ca9d715a4f0b, type: 2}
+  mask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1001 &2029671206
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -25,13 +25,11 @@ public class SkillController:Controller
 
     public void InitController(Chess c){
         this.user=c;
-        
     }
     public void WhenControllerEnterWar()
     {
         if (timeSkill != null)
         {
-             
             timer= GameManage.instance.timerManage.AddTimer(UseTimeSkill, timeSkill.coldDown ,true);
         }
         if (hurtSkill != null)
@@ -42,22 +40,20 @@ public class SkillController:Controller
         {
             user.equipWeapon.OnWeaponAttack.AddListener(WhenTakeDamage);
         }
-        passive?.SkillEffect(user);
+        passive?.skillEffect.UseSkill(user);
     }
 
     public void WhenControllerLeaveWar()
     {
         if (timeSkill != null)
-        {
-             
+        {    
             timer.Stop();
         }
-
     }
 
     public void UseSkll()
     {
-        currentSkill.SkillEffect(user);
+        currentSkill.skillEffect.UseSkill(user);
         OnUseSkill?.Invoke(user);
     }
     public void SkillOver()

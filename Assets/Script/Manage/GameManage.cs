@@ -6,20 +6,20 @@ using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 public class GameManage : MonoBehaviour
 {
-    public ItemManage itemManage;
+    //public ItemManage itemManage;
+    //public FetterManage EnemyFetterM,PlayerFetterM;
     public UIManage UIManage;
-    public FetterManage EnemyFetterM,PlayerFetterM;
     public TimerManage timerManage;
     public AudioManage audioManage;
+    public CheckObjectPoolManage checObjectPoolManage;
+    public BuffManage buffManage;
+    public ChessFactory chessFactory;//这个要在最后的时候销毁
+    public ChessManage playerManage, enemyManage; 
     public static GameManage instance;
-
     public Camera mainCamera;
     public Chess HandChess;
-    Queue<Chess> moveQueue;
     public List<PropertyCreator> allChess;
     public List<GameObject> PlayerChess;
-
-
     public UnityEvent WhenGameOver,WhenGameStart;
     public bool ifGameStart{get;private set;}
     private void Awake()
@@ -31,14 +31,33 @@ public class GameManage : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
-        itemManage=GetComponent<ItemManage>();
         timerManage = new TimerManage();
         audioManage = new AudioManage();
-        EnemyFetterM=new FetterManage("Enemy");
-        PlayerFetterM=new FetterManage("Player");
-        
-        moveQueue = new Queue<Chess>();
-
+        checObjectPoolManage = new CheckObjectPoolManage();
+        buffManage = new BuffManage();
+        chessFactory = new ChessFactory();
+        //playerManage = new ChessManage();
+        //enemyManage = new ChessManage();
+    }
+    private void Start()
+    {
+        timerManage.InitManage();
+        //checObjectPoolManage.
+        buffManage.InitManage();
+        chessFactory.InitManage();
+        playerManage.InitManage();
+        enemyManage.InitManage(); 
+    }
+    public void RecycleChess(Chess chess)
+    {
+        if (chess.CompareTag(playerManage.playerTag))
+        {
+            playerManage.RecycleChess(chess);
+        }
+        else
+        {
+            enemyManage.RecycleChess(chess);
+        }
     }
     private void Update()
     {
@@ -57,13 +76,6 @@ public class GameManage : MonoBehaviour
     }
     
 
-    public void AddMoveChess(Chess chess)
-    {
-        if (!moveQueue.Contains(chess))
-        {
-            moveQueue.Enqueue(chess);
-        }
-    }
     public void GameOver(string tag)
     {
         if (ifGameStart)

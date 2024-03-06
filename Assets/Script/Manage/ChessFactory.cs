@@ -4,182 +4,62 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
-public class ChessFactory : MonoBehaviour
+/// <summary>
+/// 这个类就只负责生成，具体的初始化由具体的类来做
+/// </summary>
+public class ChessFactory : IManager
 {
-    public Dictionary<string,List<Chess>> teams;
     Dictionary<string, Stack<Chess>> chessPool;
-    public Dictionary<Chess,ChessDate> chessMessages;
-    public static ChessFactory instance;
-    public LayerMask playerLayer, enemyLayer;
-
-    public Color[] colors;
-    public int instanceID;
-    void Awake()
-    {
-        if(instance==null){
-            instance=this;
-        }else{
-            Destroy(gameObject);
-            return;
-        }
-        chessPool = new Dictionary<string, Stack<Chess>>();
-        teams=new Dictionary<string, List<Chess>>();
-        chessMessages=new Dictionary<Chess, ChessDate>();
-        teams.Add("Player",new List<Chess>());
-        teams.Add("Enemy",new List<Chess>());
-        //EventController.Instance.AddListener(EventName.GameStart.ToString(),SaveAllChessMessage);
-        //EventController.Instance.AddListener(EventName.GameOver.ToString(),LoadAllChessMessage);
-    }
-    public Chess ChessCreate(Chess chessPre,Tile standTile,string tag){
-        // GameObject c=ObjectPool.instance.Create(chessPre.gameObject);
-        ////GameObject c = Instantiate(chessPre.gameObject, transform);
-        Chess chess=Create(chessPre);
-        if (!teams.ContainsKey(tag)) teams.Add(tag, new List<Chess>());
-        teams[tag].Add(chess);
-        chess.tag = tag;
-        if (chess.CompareTag("Enemy"))
+    public Scene chessScene;
+    int instanceID;
+    public Chess ChessCreate(Chess chess,string chessName) {
+        if (chessPool.ContainsKey(chessName))
         {
-            chess.transform.right=Vector2.left;
-            chess.gameObject.layer = LayerMask.NameToLayer(tag);
-            chess.GetComponent<SpriteRenderer>().material.SetColor("_color", colors[1]);
-            standTile.ChessMoveIn(chess);
+            if (chessPool[chessName].Count > 0)
+                return chessPool[chessName].Pop();
         }
         else
         {
-            chess.GetComponent<SpriteRenderer>().material.SetColor("_color", colors[0]);
-            chess.gameObject.layer = LayerMask.NameToLayer(tag);
-            standTile.ChessEnter(chess);
+            chessPool.Add(chessName, new Stack<Chess>());
         }
-        //chess.InitChess();
-        chess.instanceID=instanceID;
+        GameObject c = GameObject.Instantiate(chess.gameObject);
+        SceneManager.MoveGameObjectToScene(c, chessScene);
+        Chess newchess = c.GetComponent<Chess>();
+        newchess.InitChess();
+        newchess.instanceID = instanceID;
         instanceID++;
-        return chess;
+        return newchess;
     }
-   
-    public void RecycleChess(Chess c){
-        //如果调用了这个 说明c已经寄了
-        if(teams[c.tag].Contains(c))
-            teams[c.tag].Remove(c);
-         Recycle(c);
-        
-         
-    }
-    public Chess Create(Chess c)
+    public void RecycleChess(Chess c,string chessName)
     {
-        Chess creat;
-        if (chessPool.ContainsKey(c.name))
+        if (chessPool.ContainsKey(chessName))
         {
-            if (chessPool[c.name].Count != 0)
+            chessPool[chessName].Push(c);
+        }
+        else
+        {
+            Debug.LogWarning("Cant Recycle This Chess" + c.name);
+        }
+    }
+    public void InitManage()
+    {
+        chessScene = SceneManager.CreateScene("ChessScene");
+        chessPool=new Dictionary<string, Stack<Chess>>();
+    }
+
+    public void OnGameStart()
+    {
+         instanceID = 0;
+    }
+    public void OnGameOver()
+    {
+         foreach(var stack in chessPool.Values)
+        {
+            foreach(var chess in stack)
             {
-                creat = chessPool[c.name].Pop();
-                creat.gameObject.SetActive(true);
-                return creat;
+                GameObject.Destroy(chess.gameObject);
             }
         }
-        else
-        {
-            chessPool.Add(c.name, new Stack<Chess>());
-        }
-        creat = Instantiate(c.gameObject,transform).GetComponent<Chess>();
-        creat.InitChess();
-        //SceneManager.MoveGameObjectToScene(creat, poolScene);
-        return creat;
-    }
-    public void Recycle(Chess a)
-    {
-        string name = a.name.Replace("(Clone)", "");
-        if (!chessPool[name].Contains(a))
-        {
-            chessPool[name].Push(a);
-        }
-        else
-        {
-            Debug.LogWarning("bug了" + a.name);
-        }
-        a.gameObject.SetActive(false);
-    }
-    public List<Chess> FindEnemyList(string tag){
-        if(tag=="Player")return teams["Enemy"] ;
-        else return teams["Player"] ;
-    }
-
-    public void SaveMessage(Chess chess){
-        if(!chessMessages.ContainsKey(chess)){
-            chessMessages.Add(chess,new ChessDate());
-        }
-        chessMessages[chess].SaveMessage(chess);
-    }
-    public void LoadMessage(Chess chess){
-        if(!chessMessages.ContainsKey(chess))Destroy(chess.gameObject);
-        else {
-            chess.gameObject.SetActive(true);
-            teams[chess.tag] .Add(chess);
-            chessMessages[chess].LoadMessage(chess);
-        }
-    }
-    public void SaveAllChessMessage(){
-        //Debug.Log("SaveMessage");
-        //foreach(var chess in teams["Player"].teamInDesk){
-        //    SaveMessage(chess);
-        //}
-        //foreach(var team in teams){
-        //    foreach(var chess in team.Value.teamInDesk){{
-        //        chess.stateController.WhenControllerEnterWar();
-        //    }}
-        //}
-    }
-    public void LoadAllChessMessage(){
-        //teams["Player"].DeathPool.Clear();
-        //for(int i=0;i<teams["Player"].teamInDesk.Count;i++){
-        //    Chess c=teams["Player"].teamInDesk[i];
-        //    if(!teams["Player"].teamHold.Contains(c)){
-        //        Destroy(c.gameObject);
-        //    }
-        //}
-        //teams["Player"].teamInDesk.Clear();
-        //foreach(var chess in chessMessages){
-        //    LoadMessage(chess.Key);
-        //}
-    }
-    public void ClearTeam(string tag){
-
-        if(!teams.ContainsKey(tag)){
-            Debug.Log("不存在这队伍");
-            return;
-        }
-        for(int i = 0; i < teams[tag].Count;i++){
-            //Debug.Log(chess);
-            RecycleChess(teams[tag][i]);
-        }
-        EventController.Instance.TriggerEvent<string>(EventName.TeamDeath.ToString(),tag);
-        teams[tag].Clear();
     }
 }
-public class ChessDate{
-    public Tile standTile;   
-    public void SaveMessage(Chess chess){{
-        standTile=chess.moveController.standTile;
-    }}
-    public void LoadMessage(Chess chess){
-        Debug.Log(chess.name);
-        //chess.ResetAll();
-        standTile.ChessEnter(chess);
-    }
-}
-//public class ChessTeam{
-//    public List<Chess> teamHold;
-//    public List<Chess> teamInDesk;
-//    public List<Chess> DeathPool;
-    
-
-//    public ChessTeam(){
-//        teamHold=new List<Chess>();
-//        teamInDesk=new List<Chess>();
-//        DeathPool=new List<Chess>();
-//    }
-//    public void Clear(){
-//        teamHold.Clear();
-//        teamInDesk.Clear();
-//        DeathPool.Clear();
-//    }
-//}
+ 

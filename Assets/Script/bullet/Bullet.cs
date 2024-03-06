@@ -9,44 +9,44 @@ using UnityEngine.Events;
 /// </summary>
 public class Bullet : MonoBehaviour
 {
-    public Chess shooter;
-    public float moveSpeed = 10;
-    public float maxHeight, maxLength;
     public int MaxHitNum;
     public UnityEvent<Bullet> WhenBulletHit;
-    public AnimationCurve moveCurve;
-    public Chess hitChess;
+    [SerializeReference]
+    public IBulletMove bulletMove;   
+    protected Chess shooter;
+    protected Chess hitChess;
     protected Vector2 startPos;
     protected int current;
-    protected LayerMask targerLayer;
 
-    public virtual void InitBullet(Chess chess)
+    public virtual void InitBullet(Chess chess,Vector3 position)
     {
         this.shooter = chess;
-        startPos = transform.position;
+        startPos = position;
         this.tag = chess.tag;
-
-        current = 0;
+        current = MaxHitNum;
+        transform.position = startPos;
     } 
     protected virtual void Update()
     {
-
-    }
-    protected virtual void FixedUpdate()
-    {
-        
-        
+        bulletMove.MoveBullet(this);    
     }
     public virtual void RecycleBullet() {
         ObjectPool.instance.Recycle(gameObject);
     }
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.name);
+        //Debug.Log(collision.name);
         if (!CompareTag(collision.tag))
         {
-            shooter.equipWeapon.TakeDamage(collision.GetComponent<Chess>());
+            current--;
+            if (current >= 0)
+            {
+                shooter.equipWeapon.TakeDamages();
+            }else if(current == -1)
+            {
+                RecycleBullet();
+            }
         }
-        RecycleBullet();
+        
     }
 }

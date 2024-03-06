@@ -20,22 +20,22 @@ public class ZombieRoom : RoomType{
         base.WhenEnterRoom();
         t=startTime;
         zt=0;
-        liveZombies = ChessFactory.instance.teams["Enemy"];
+        liveZombies =GameManage.instance.enemyManage.chesses;
         zombiesWave.InitWave();
         GameManage.instance.WhenGameStart.AddListener(EnterWar);
         for (int i = 0; i < zombies.Count; i++)
         {
-            ChessFactory.instance.ChessCreate(zombies[i].chessPre, (MapManage.instance as MapManage_PVZ).zombiePreTile[i], "Enemy");
+            GameManage.instance.enemyManage.CreateChess(zombies[i] , (MapManage.instance as MapManage_PVZ).zombiePreTile[i] );
         }
     }
     public void EnterWar()
     {
-        ChessFactory.instance.ClearTeam("Enemy");
+        //ChessFactory.instance.ClearTeam("Enemy");
     }
     public override void WhenLeaveRoom()
     {
         base.WhenLeaveRoom();
-        ChessFactory.instance.ClearTeam("Enemy");
+        //ChessFactory.instance.ClearTeam("Enemy");
         GameManage.instance.WhenGameStart.RemoveListener(EnterWar);
     }
 
@@ -157,6 +157,6 @@ public class ZombiesWave{
         }
         
          
-        return ChessFactory.instance.ChessCreate(c,standTile,"Enemy");
+        return GameManage.instance.enemyManage.CreateChess(c.propertyController.creator,standTile );
     }
 }

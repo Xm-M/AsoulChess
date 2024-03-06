@@ -10,7 +10,7 @@ public class OutRangeTransition : Transition
     public override bool ifReach(Chess chess)
     {
          
-        return !chess.equipWeapon.IfInRange();
+        return !chess.equipWeapon.IfFindEnemy();
     }
     public override Transition Clone()
     {

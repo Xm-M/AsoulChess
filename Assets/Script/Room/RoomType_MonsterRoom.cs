@@ -12,16 +12,16 @@ public class RoomType_MonsterRoom : RoomType
    int[] dy = { 4, 2, 6, 0, 3, 5, 7, 1 };
     public override void WhenEnterRoom()
     {
-        base.WhenEnterRoom();
-        foreach(var chess in monsters){
-            Vector2Int pos=SelectPos(chess);
-            Tile standTile=MapManage.instance.tiles[pos.x,pos.y];
-            Chess c=ChessFactory.instance.ChessCreate(chess,standTile,"Enemy");
-            EventController.Instance.TriggerEvent<Chess>(EventName.ChessEnterDesk.ToString(),c);
-        }
-        //EventController.Instance.AddListener(EventName.TeamDeath.ToString(),RoomClear);   
-        EventController.Instance.AddListener(EventName.GameOver.ToString(),WhenGameOver);
-        UIManage.instance.RoomButton.AddListener(EnterWar,"ATTACK!");    
+        //base.WhenEnterRoom();
+        //foreach(var chess in monsters){
+        //    Vector2Int pos=SelectPos(chess);
+        //    Tile standTile=MapManage.instance.tiles[pos.x,pos.y];
+        //    Chess c=GameManage.instance.enemyManage.CreateChess(chess,standTile,"Enemy");
+        //    EventController.Instance.TriggerEvent<Chess>(EventName.ChessEnterDesk.ToString(),c);
+        //}
+        ////EventController.Instance.AddListener(EventName.TeamDeath.ToString(),RoomClear);   
+        //EventController.Instance.AddListener(EventName.GameOver.ToString(),WhenGameOver);
+        //UIManage.instance.RoomButton.AddListener(EnterWar,"ATTACK!");    
     }
     public void EnterWar(){
         Debug.Log("EnterWar");
@@ -31,7 +31,7 @@ public class RoomType_MonsterRoom : RoomType
     public override void WhenLeaveRoom()
     {
         base.WhenLeaveRoom();
-        ChessFactory.instance.ClearTeam("Enemy");
+        //ChessFactory.instance.ClearTeam("Enemy");
     }
 
     public void WhenGameOver(){

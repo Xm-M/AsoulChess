@@ -19,7 +19,6 @@ public class MoveController:Controller
     }
     public void WhenControllerEnterWar()
     {
-        //throw new NotImplementedException();
     }
 
     public void WhenControllerLeaveWar()
@@ -27,15 +26,12 @@ public class MoveController:Controller
         standTile.ChessLeave(chess);
         standTile = null;
         nextTile = null;
-        
     }
     
     public virtual void StartMoving(string anim="run")
     {
-        //Debug.Log(chess);
         chess.animator.Play(anim);
         nextTile=tileMethod.FindNextTile(chess);
-        //Debug.Log(nextTile);
         tileMethod.StartMoving();
     }
     public virtual void WhenMoving()

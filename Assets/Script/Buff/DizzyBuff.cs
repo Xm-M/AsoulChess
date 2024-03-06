@@ -6,9 +6,9 @@ public class DizzyBuff : Buff
 {
     public float dizzyTime;
     Timer timer;
-    public override void BuffEffect(Chess buffFrom, Chess target)
+    public override void BuffEffect(Chess target)
     {
-        base.BuffEffect(buffFrom, target);
+        base.BuffEffect(target);
         target.stateController.ChangeState(StateName.DizzyState);
         this.timer= GameManage.instance.timerManage.AddTimer(BuffOver, dizzyTime);
     }
@@ -31,9 +31,9 @@ public class DizzyBuff : Buff
 }
 public class AirborneBuff : DizzyBuff
 {
-    public override void BuffEffect(Chess buffFrom, Chess target)
+    public override void BuffEffect(Chess target)
     {
-        base.BuffEffect(buffFrom, target);
+        base.BuffEffect(target);
     }
     public override void BuffOver()
     {

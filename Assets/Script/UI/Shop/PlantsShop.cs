@@ -68,7 +68,7 @@ public class PlantsShop : MonoBehaviour
         }
     }
     public void BuyPlant(Tile t){
-        Chess c=ChessFactory.instance.ChessCreate(currentPlant.good.chessPre,t,"Player");
+        Chess c=GameManage.instance.playerManage.CreateChess(currentPlant.good,t);
         c.WhenChessEnterWar();
         EventController.Instance.TriggerEvent<Chess>(EventName.ChessEnterDesk.ToString(),c);
         ChangeSunLight(-c.propertyController.creator.baseProperty.price);

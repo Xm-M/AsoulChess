@@ -2891,7 +2891,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &519420030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3249,7 +3249,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7752244801236586099, guid: e40bcc2c54ac86143ab047ca7a7dce41, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -8
+      value: -7.9999695
       objectReference: {fileID: 0}
     - target: {fileID: 7752244801236586099, guid: e40bcc2c54ac86143ab047ca7a7dce41, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -8938,7 +8938,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &789732188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11614,8 +11614,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1335504422}
   - component: {fileID: 1335504421}
-  - component: {fileID: 1335504423}
-  - component: {fileID: 1335504425}
   m_Layer: 0
   m_Name: GameManage
   m_TagString: Untagged
@@ -11635,8 +11633,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb789ecc5a94cc4478daa4aa011e99b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemManage: {fileID: 0}
   UIManage: {fileID: 760385008}
+  playerManage:
+    playerMask:
+      serializedVersion: 2
+      m_Bits: 128
+    playerTag: Player
+    chesses: []
+  enemyManage:
+    playerMask:
+      serializedVersion: 2
+      m_Bits: 256
+    playerTag: Enemy
+    chesses: []
   mainCamera: {fileID: 519420031}
   HandChess: {fileID: 0}
   allChess:
@@ -11681,49 +11690,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1335504423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1335504420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84dbe83e3f4a1354599f7a1cb7d0fd72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AllItemSprite:
-  - itemName: 0
-    itemSprite: {fileID: 4797985456115717453, guid: aa50036c26883df4ab2ddfbd31547317, type: 3}
-    item:
-      ItemName: 0
-      ItemSprite: {fileID: 0}
-      user: {fileID: 0}
-      instanceID: 0
---- !u!114 &1335504425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1335504420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a611a00d68f08c408cafc22ea32221c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  colors:
-  - {r: 1, g: 0.8853924, b: 0.07843137, a: 1}
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0.9768805, g: 1, b: 0.2679245, a: 0}
-  instanceID: 0
 --- !u!1 &1354570892
 GameObject:
   m_ObjectHideFlags: 0
@@ -13283,7 +13249,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -996.99994, y: -540}
+  m_AnchoredPosition: {x: -997.0001, y: -540}
   m_SizeDelta: {x: 936, y: 886.3}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1765789977

@@ -26,7 +26,7 @@ public class ShopSelectIcon : MonoBehaviour
     {
         if (select != null && !ifSelect)
         {
-            PlantsShop.instance.AddSelection(this);
+            UIManage.GetView<PlantsShop>().AddSelection(this);
             selfImage.color=selectColor;
             chessImage.color=selectColor;
             ifSelect=true;

@@ -12,6 +12,7 @@ public class UIRoot : MonoBehaviour
         {
             if (!m_views.ContainsKey(view.name))
             {
+                Debug.Log(view.name);
                 Transform prefab = Instantiate(view, transform);
                 prefab.name = prefab.name.Replace("(Clone)", "");//去除实例化物体的(Clone)后缀，和预制体名字统一
                 m_views.Add(prefab.name, prefab.GetComponent<View>());//存入字典

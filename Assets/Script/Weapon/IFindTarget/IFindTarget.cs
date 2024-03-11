@@ -11,18 +11,20 @@ public class StraightFindTarget:IFindTarget
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
-        RaycastHit2D[] hits = GameManage.instance.checObjectPoolManage.GetHitArray(100);
-        int i = Physics2D.RaycastNonAlloc(user.transform.position, user.transform.right,
-            hits,100,user.gameObject.layer);
-        for(int n = 0; n < i; n++)
+        LayerMask enemyLayer=GameManage.instance.GetEnemyLayer(user.gameObject);
+        RaycastHit2D hit=Physics2D.Raycast(user.transform.position,user.transform.right,
+            user.propertyController.GetAttackRange(),enemyLayer);
+        //if (user.CompareTag("Enemy"))
+        //{
+        //    //Debug.Log(user.gameObject.name+" "+hit.collider+" "+enemyLayer.value);
+        //}
+        //if (hit.collider == null)
+        //    Debug.DrawLine(user.transform.position, user.transform.position + user.transform.right, Color.red);
+        //else
+        //    Debug.DrawLine(user.transform.position, hit.point, Color.green);
+        if (hit.collider != null)
         {
-            Chess t = hits[n].collider.GetComponent<Chess>();
-            if ( t!= null && !t.CompareTag(user.tag))
-            {
-                targets.Add(t);
-                break;
-            }
+            targets.Add(hit.collider.GetComponent<Chess>());
         }
-        GameManage.instance.checObjectPoolManage.ReleaseArray(100, hits);
     }
 }

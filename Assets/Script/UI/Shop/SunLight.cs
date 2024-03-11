@@ -38,7 +38,7 @@ public class SunLight : MonoBehaviour
     {
         if (!ifPick)
         {
-            PlantsShop.instance.ChangeSunLight(SunLightNum);
+            UIManage.GetView<PlantsShop>().ChangeSunLight(SunLightNum);
             StartCoroutine(Recycle());
             ifPick = true;
         }
@@ -58,7 +58,7 @@ public class SunLight : MonoBehaviour
     {
         if (!ifPick)
         {
-            PlantsShop.instance.ChangeSunLight(SunLightNum);
+            UIManage.GetView<PlantsShop>().ChangeSunLight(SunLightNum);
             StartCoroutine(Recycle());
             ifPick = true;
         }

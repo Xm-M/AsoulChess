@@ -61,16 +61,10 @@ MonoBehaviour:
         chess: {fileID: 0}
     00000001:
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
-      data:
-        transitionName: 0
     00000002:
       type: {class: InRangeTransition, ns: , asm: Assembly-CSharp}
-      data:
-        transitionName: 0
     00000003:
       type: {class: ManaEnough, ns: , asm: Assembly-CSharp}
-      data:
-        transitionName: 1
     00000004:
       type: {class: AttackState, ns: , asm: Assembly-CSharp}
       data:
@@ -78,16 +72,10 @@ MonoBehaviour:
         chess: {fileID: 0}
     00000005:
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
-      data:
-        transitionName: 0
     00000006:
       type: {class: OutRangeTransition, ns: , asm: Assembly-CSharp}
-      data:
-        transitionName: 3
     00000007:
       type: {class: ManaEnough, ns: , asm: Assembly-CSharp}
-      data:
-        transitionName: 1
     00000008:
       type: {class: SkillState, ns: , asm: Assembly-CSharp}
       data:
@@ -95,16 +83,12 @@ MonoBehaviour:
         chess: {fileID: 0}
     00000009:
       type: {class: ManaLacking, ns: , asm: Assembly-CSharp}
-      data:
-        transitionName: 2
     0000000A:
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
-      data:
-        transitionName: 0
     0000000B:
       type: {class: DeathState, ns: , asm: Assembly-CSharp}
       data:
-        stateName: 0
+        stateName: 5
         chess: {fileID: 0}
     0000000C:
       type: {class: PrepareState, ns: , asm: Assembly-CSharp}

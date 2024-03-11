@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class InRangeTransition : Transition
 {
-    public InRangeTransition(){
-        transitionName=TransitionName.InRangeTransition;
-    }
+     
     public override bool ifReach(Chess chess)
     {
         return chess.equipWeapon.IfFindEnemy();

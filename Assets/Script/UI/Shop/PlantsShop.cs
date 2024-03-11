@@ -3,45 +3,60 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Playables;
-public class PlantsShop : MonoBehaviour
+/// <summary>
+/// 这个是上方的那个栏，懂我意思吧
+/// 包括旁边的栏，反正这个就是整个选牌体系都放在这了
+/// 我说实话，铲子不应该放在这个体系里
+/// </summary>
+public class PlantsShop : View
 {
-    public static PlantsShop instance;
-    public GameObject shopSelectIconPre;
+    //public static PlantsShop instance;
+    public GameObject shopSelectIconPre;//这个是选牌的时候的那个栏
     public Transform selectIconParent;
-    public GameObject shopIconPre;
+    public GameObject shopIconPre;//这个是游戏开始的时候上面的那个牌
     public Transform shopIconParent;
-
     public PrePlantImage prePlant;
-    public PlayableDirector director;
     List<ShopSelectIcon> allSelectIcons;
     List<ShopSelectIcon> currentSelectIcons;
     public Text sunLightText;
-    public ShovelPanel shovel;
+    //public ShovelPanel shovel;//不知道为什么这tm还有一个铲子的panel
     public Chess selectChess;
     public int sunLight{get;private set;}
-
+    public Animator anim;
     ShopIcon currentPlant;
-
-    void Awake()
+    public override void Init()
     {
-        if(instance==null){
-            instance=this;
-            FirstOpenShop();
-            //EventController.Instance.AddListener(EventName.GameStart.ToString(),()=>director.Resume());
-        }else{
-            Destroy(gameObject);
-        }
+        //初始化要做什么呢？
+        currentSelectIcons = new List<ShopSelectIcon>();
+        allSelectIcons = new List<ShopSelectIcon>();
     }
-    void FirstOpenShop(){
-        sunLight=1000;
-        currentSelectIcons=new List<ShopSelectIcon>();
-        allSelectIcons=new List<ShopSelectIcon>();
-        for(int i=0;i<GameManage.instance.allChess.Count;i++){
-            ShopSelectIcon selectIcon=Instantiate(shopSelectIconPre,selectIconParent).GetComponent<ShopSelectIcon>();
+    public override void Show()
+    {
+        base.Show();
+        sunLight = 1000;
+        currentSelectIcons.Clear();
+        allSelectIcons.Clear();
+        for (int i = 0; i < GameManage.instance.allChess.Count; i++)
+        {
+            ShopSelectIcon selectIcon = Instantiate(shopSelectIconPre, selectIconParent).GetComponent<ShopSelectIcon>();
             selectIcon.InitSelectIcon(GameManage.instance.allChess[i]);
             allSelectIcons.Add(selectIcon);
         }
     }
+    public override void Hide()
+    {
+        base.Hide();
+        if (currentSelectIcons .Count==0) return;
+        for(int i = 0; i < allSelectIcons.Count; i++)
+        {
+            Destroy(allSelectIcons[i].gameObject);
+        }
+        for(int i = 0; i < currentSelectIcons.Count; i++)
+        {
+            Destroy(currentSelectIcons[i].gameObject);
+        }
+    }
+
     public void ChangeSunLight(int num){
         sunLight+=num;
         sunLightText.text=sunLight.ToString();
@@ -51,11 +66,10 @@ public class PlantsShop : MonoBehaviour
         //Debug.Log(c);
         //int price=c.baseProperty.price;
         if(c.IfCanBuyCard(sunLight)){
-            shovel.Cancle();
             prePlant.transform.position= Input.mousePosition;
             prePlant.gameObject.SetActive(true);
             prePlant.image.sprite=c.chessSprite;
-            prePlant.ifShovel = false;
+            //prePlant.ifShovel = false;
             
             return true;
         }
@@ -81,12 +95,8 @@ public class PlantsShop : MonoBehaviour
         prePlant.gameObject.SetActive(false);
         currentPlant=null;
     }
-    public void CancelShovel()
-    {
-        shovel.Cancle();
-    }
     public void AddSelection(ShopSelectIcon selectIcon){
-        Debug.Log(currentSelectIcons.Count);
+        //Debug.Log(currentSelectIcons.Count);
         if(!currentSelectIcons.Contains(selectIcon)){
             Debug.Log("?");
             currentSelectIcons.Add(selectIcon);
@@ -99,7 +109,9 @@ public class PlantsShop : MonoBehaviour
     }
 
     public void GameStart(){
-        director.Resume();
         GameManage.instance.GameStart();
+        anim.Play("gameStart");
     }
+
+    
 }

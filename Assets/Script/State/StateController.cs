@@ -5,7 +5,7 @@ using System;
 [Serializable]
 public class StateController:Controller
 {
-    public Chess self;
+    protected Chess self;
     public StateDate currentState;
     public StateDate preState;
     public StateGraph stateGraph;

@@ -18,13 +18,14 @@ public class Bullet : MonoBehaviour
     protected Vector2 startPos;
     protected int current;
 
-    public virtual void InitBullet(Chess chess,Vector3 position)
+    public virtual void InitBullet(Chess shooter,Vector3 position)
     {
-        this.shooter = chess;
+        this.shooter = shooter;
         startPos = position;
-        this.tag = chess.tag;
+        this.tag = shooter.tag;
         current = MaxHitNum;
         transform.position = startPos;
+        transform.right=shooter.transform.right;
     } 
     protected virtual void Update()
     {
@@ -36,13 +37,17 @@ public class Bullet : MonoBehaviour
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         //Debug.Log(collision.name);
-        if (!CompareTag(collision.tag))
+        
+        if (!CompareTag(collision.tag) )
         {
+            Chess c = collision.GetComponent<Chess>();
+            if(c==null)return;
+            DamageMessege damage=new DamageMessege(shooter,c ,
+                    shooter.propertyController.GetAttack());
+            if(current>0)
+                shooter.propertyController.TakeDamage( damage);
             current--;
-            if (current >= 0)
-            {
-                shooter.equipWeapon.TakeDamages();
-            }else if(current == -1)
+            if (current == 0)
             {
                 RecycleBullet();
             }

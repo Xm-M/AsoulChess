@@ -23,7 +23,7 @@ public class ChessFactory : IManager
             chessPool.Add(chessName, new Stack<Chess>());
         }
         GameObject c = GameObject.Instantiate(chess.gameObject);
-        SceneManager.MoveGameObjectToScene(c, chessScene);
+        //SceneManager.MoveGameObjectToScene(c, chessScene);
         Chess newchess = c.GetComponent<Chess>();
         newchess.InitChess();
         newchess.instanceID = instanceID;
@@ -34,6 +34,7 @@ public class ChessFactory : IManager
     {
         if (chessPool.ContainsKey(chessName))
         {
+            c.gameObject.SetActive(false);
             chessPool[chessName].Push(c);
         }
         else

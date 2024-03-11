@@ -14,7 +14,7 @@ using UnityEngine.Events;
 public class PropertyController:Controller
 {
     public PropertyCreator creator;//这个就是一个基本数据
-    public Chess chess;//拥有该属性的棋子
+    protected Chess chess;//拥有该属性的棋子
     public UnityEvent<DamageMessege> onGetDamage;//造成伤害的事件
     public UnityEvent<DamageMessege> onTakeDamage;//收到伤害的事件
     Property Data;
@@ -33,18 +33,7 @@ public class PropertyController:Controller
         onGetDamage?.RemoveAllListeners();
         onTakeDamage?.RemoveAllListeners();
     }
-    public void Update()
-    {
-        if (GameManage.instance.ifGameStart)
-        {
-            float flash = chess.GetComponent<SpriteRenderer>().material.GetFloat("_FlashAmount");
-            if (flash > 0)
-            {
-                flash -= Time.deltaTime;
-                chess.GetComponent<SpriteRenderer>().material.SetFloat("_FlashAmount", flash);
-            }
-        }
-    }
+     
     //受到伤害的函数
     public void GetDamage(DamageMessege mes)
     {
@@ -64,7 +53,7 @@ public class PropertyController:Controller
             Data.Hp -= mes.damage;
         }
         onGetDamage?.Invoke(mes);
-        chess.GetComponent<SpriteRenderer>().material.SetFloat("_FlashAmount", 0.3f);
+        //chess.GetComponent<SpriteRenderer>().material.SetFloat("_FlashAmount", 0.3f);
         //UIManage.instance.CreateDamage(mes);
         //chess.StartCoroutine(ColorChange(1f));
         //Debug.Log("受到" + mes.damage + "伤害");
@@ -279,6 +268,15 @@ public struct DamageMessege
     public float damage;//伤害的数值
     public DamageType damageType;//伤害的类型
     public ElementType damageElementType;//元素的类型
+    
+    public DamageMessege(Chess user,Chess target,float damage,DamageType damageType=DamageType.Physical,ElementType elementType = ElementType.None)
+    {
+        damageFrom = user;
+        damageTo = target;
+        this.damage = damage;
+        this.damageType = damageType;
+        this.damageElementType = elementType;
+    }
 }
 //一个伤害信息包括伤害类型和元素类型两个信息
 //伤害类型

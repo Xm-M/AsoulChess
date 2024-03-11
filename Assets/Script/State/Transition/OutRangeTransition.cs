@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class OutRangeTransition : Transition
 {
-    public OutRangeTransition(){
-        transitionName=TransitionName.OutRangeTransition;
-    }
+     
     public override bool ifReach(Chess chess)
     {
          

@@ -14,10 +14,13 @@ public class ZombieRoom : RoomType{
     public float startTime=-10;
     float t;
     float zt;
+    bool gameStart;
     public List<Chess> liveZombies;
+    public string preparePanelName;
     public override void WhenEnterRoom()
     {
         base.WhenEnterRoom();
+        Debug.Log("谁调用的");
         t=startTime;
         zt=0;
         liveZombies =GameManage.instance.enemyManage.chesses;
@@ -25,24 +28,41 @@ public class ZombieRoom : RoomType{
         GameManage.instance.WhenGameStart.AddListener(EnterWar);
         for (int i = 0; i < zombies.Count; i++)
         {
-            GameManage.instance.enemyManage.CreateChess(zombies[i] , (MapManage.instance as MapManage_PVZ).zombiePreTile[i] );
+            Chess zombie= GameManage.instance.enemyManage.CreateChess(zombies[i] , (MapManage.instance as MapManage_PVZ).zombiePreTile[i] );
+            liveZombies.Add(zombie);
         }
+        UIManage.Show(preparePanelName);
     }
     public void EnterWar()
     {
-        //ChessFactory.instance.ClearTeam("Enemy");
+        //UIManage.Close(preparePanelName);
+        for(int i=0;i<liveZombies.Count;i++)
+        {
+            liveZombies[i].RemoveChess();
+        }
+        liveZombies.Clear();
+        UIManage.Show<ProgressBar>();
+        //zombiesWave.EnterNextWave();
+    }
+    public void StartCreateZombie()
+    {
+        UIManage.Show<TextPanel>();
+        gameStart = true;
     }
     public override void WhenLeaveRoom()
     {
         base.WhenLeaveRoom();
-        //ChessFactory.instance.ClearTeam("Enemy");
         GameManage.instance.WhenGameStart.RemoveListener(EnterWar);
+        gameStart = false;
+        UIManage.Close<TextPanel>() ;
+        UIManage.Close<ProgressBar>();
+        UIManage.Close(preparePanelName);
     }
 
     public override void WhenStayRoom()
     {
         base.WhenStayRoom();
-        if(GameManage.instance.ifGameStart){
+        if(GameManage.instance.ifGameStart&&gameStart){
             if(zombiesWave.CurrentPrice>0){
                 zt+=Time.deltaTime;
                 if(zt>zombieInterval){
@@ -56,8 +76,8 @@ public class ZombieRoom : RoomType{
             if(t>zombiesWave.minTime){   
                 if((t>zombiesWave.maxTime&&zombiesWave.currentWave<zombiesWave.LastWave)|| liveZombies.Count==0){
                     t=0;
-                    if (liveZombies.Count == 0) Debug.Log("死完了");
                     zombiesWave.EnterNextWave();
+                    if (liveZombies.Count == 0) Debug.Log("死完了");
                     for(int i=0;i<zombies.Count;i++){
                         if(zombies[i].baseProperty.price<=zombiesWave.CurrentPrice&&
                         !zombiesWave.WaveZombie.Contains(zombies[i])){
@@ -95,13 +115,13 @@ public class ZombiesWave{
         maxTime=UnityEngine.Random.Range(maxTimeRange.x,maxTimeRange.y);
         WaveZombie.Clear();
         fateList.Clear();
-        UIManage.instance.zombieBar.SetValue(currentWave, LastWave);
-        UIManage.instance.SetFlag(LastWave / 10);
+        //UIManage.instance.zombieBar.SetValue(currentWave, LastWave);
+        UIManage.GetView<ProgressBar>().SetFlag(LastWave / 10);
     }
 
     public void EnterNextWave(){
         currentWave++;
-        UIManage.instance.zombieBar.SetValue(currentWave, LastWave);
+        UIManage.GetView<ProgressBar>().MoveBar(currentWave, LastWave);
         if (currentWave > LastWave)
         {
             GameManage.instance.GameOver("Player");
@@ -109,6 +129,8 @@ public class ZombiesWave{
         else if (currentWave == 1)
         {
             CurrentPrice = ((currentWave / waveIndex) + 1) * waveAdditionPrice;
+            UIManage.GetView<TextPanel>().FirstZombieCom();
+            Debug.Log("first");
             EventController.Instance.TriggerEvent(EventName.FirstZombieComming.ToString());
         }
         else if (currentWave % 10 == 0)
@@ -116,6 +138,7 @@ public class ZombiesWave{
             Debug.Log("一大波僵尸即将来袭");
             EventController.Instance.TriggerEvent(EventName.WaveZombieComming.ToString()); 
             GameManage.instance.StartCoroutine(Wait());
+            UIManage.GetView<TextPanel>().ZombieWave();
         }
         else
         {
@@ -128,7 +151,10 @@ public class ZombiesWave{
         CurrentPrice = ((currentWave / waveIndex) + 1) * waveAdditionPrice;
         CurrentPrice = (int)(CurrentPrice * 2.5f);
         if (currentWave == LastWave)
+        {
             EventController.Instance.TriggerEvent(EventName.LastWaveZombie.ToString());
+            UIManage.GetView<TextPanel>().LastWave();
+        }
     }
     public void AddNewZombie(PropertyCreator zombie){
         if(!WaveZombie.Contains(zombie)){
@@ -148,6 +174,7 @@ public class ZombiesWave{
         float fate= UnityEngine.Random.Range(0,1f);
         //Debug.Log(fate);
         Chess c=WaveZombie[0].chessPre;
+        //Debug.Log(fateList.Count);
         for(int i=0;i<fateList.Count;i++){
             if(fate<fateList[i]){
                 c=WaveZombie[i].chessPre;
@@ -155,8 +182,7 @@ public class ZombiesWave{
                 break;
             }
         }
-        
-         
+        //Debug.Log(c.propertyController.creator.chessName);
         return GameManage.instance.enemyManage.CreateChess(c.propertyController.creator,standTile );
     }
 }

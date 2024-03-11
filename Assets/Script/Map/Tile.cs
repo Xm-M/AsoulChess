@@ -6,8 +6,6 @@ public class Tile : MonoBehaviour
 {
     public Vector3Int cubePos;
     public Vector2Int mapPos;
-    //public Color baseColor;
-
     public AudioSource au ;
     public bool ifPrePareTile;
 
@@ -52,7 +50,7 @@ public class Tile : MonoBehaviour
     {
         if (chess == Stander)
         {
-            Debug.Log("chessLeave"+chess.name);
+            //Debug.Log("chessLeave"+chess.name);
             IfMoveable = true;
             Stander = null;
         }
@@ -69,7 +67,7 @@ public class Tile : MonoBehaviour
     {
         if(Stander==null){
             MapManage.instance.SleepTile();
-            PlantsShop.instance.BuyPlant(this);
+            UIManage.GetView<PlantsShop>().BuyPlant(this);
             au?.Play();
             //要改的其实是这里，就是能不能占用的判断依据不是直接用ifMoveAble
         } 

@@ -18,8 +18,8 @@ public class Chess : MonoBehaviour
     public StateController stateController;
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
     public SkillController skillController;
-    [FoldoutGroup(groupName:"controller",GroupID ="controller")]
-    public ItemController itemController;
+    //[FoldoutGroup(groupName:"controller",GroupID ="controller")]
+    //public ItemController itemController;
     
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
     public BuffController buffController;
@@ -59,7 +59,7 @@ public class Chess : MonoBehaviour
     public void Update()
     {
         stateController.StateUpdate();
-        propertyController.Update();
+        //propertyController.Update();
     }
     /// <summary>
     /// 无论如何 死亡时应该清除所有的绑定事件
@@ -95,6 +95,7 @@ public class Chess : MonoBehaviour
         EnterWarEvent?.RemoveAllListeners();
         DeathEvent?.RemoveAllListeners();
     }
+
     public void Flap(Transform target)
     {
         if ((FacingRight && target .position.x < transform.position.x) || (!FacingRight && target .position.x > transform.position.x))
@@ -103,22 +104,10 @@ public class Chess : MonoBehaviour
             FacingRight = !FacingRight;
         }
     }
-     
-    private void OnMouseEnter()
+    public void TakeDamage()
     {
-        if (CompareTag("Player"))
-        {
-            PlantsShop.instance.selectChess = this;
-        }
+        equipWeapon.TakeDamages();
     }
-    private void OnMouseExit()
-    {
-        if (CompareTag("Player"))
-        {
-            PlantsShop.instance.selectChess = null;
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (HitEvent != null)
@@ -128,38 +117,5 @@ public class Chess : MonoBehaviour
                 HitEvent.Invoke(collision.GetComponent<Chess>());
             }
         }
-    }
-}
-
-
-
-
-
-
-public class ItemController{
-    public List<Item> items;
-    public Chess chess;
-    public ItemController(Chess chess){
-        this.chess=chess;
-        items=new List<Item>();
-    }
-
-    //装备武器时触发对应的效果
-    public void AddItem(Item item){
-        items.Add(item);
-        item.SetUser(chess);
-        item.ItemEffect();
-        UIManage.instance.ShowChessMessage(chess);
-    }
-    //卖出棋子后要归还所有武器
-    public void SellChess(){
-        //归还所有的武器
-        foreach(var item in items)
-            item.ResetItemAll();
-    }
-    public void ResetAllItem(){
-        //重置所有的装备
-        foreach(var item in items)
-            item.ResetItem();
     }
 }

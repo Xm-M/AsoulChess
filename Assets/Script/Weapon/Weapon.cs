@@ -21,6 +21,7 @@ public class Weapon :  Controller
     {
         master=chess;
         animator = master.animator;
+        target = new List<Chess>();
     }
     public virtual void WhenControllerEnterWar()
     {
@@ -28,7 +29,7 @@ public class Weapon :  Controller
     }
     public virtual void WhenControllerLeaveWar()
     {
-        timer.Stop();
+        timer?.Stop();
         timer = null;
     }
     /// <summary>
@@ -40,15 +41,21 @@ public class Weapon :  Controller
         timer = GameManage.instance.timerManage.AddTimer(
             () =>
             {
+                //Debug.Log("attack");
                 animator.Play(atk);
             }
             ,attackSpeed,true);
     }
+    public virtual void StopAttack()
+    {
+        timer.Stop();
+        timer=null;
+    }
+
+
     public void StartAttack(string atk)
     {
         animator.Play(atk);
-        //这里要改变攻击速度;
-        //动画的播放速度应该在property改变
         if (target.Count > 0)
         {
             master.Flap(target[0].transform);
@@ -62,6 +69,7 @@ public class Weapon :  Controller
     }
     public virtual void TakeDamages()
     {
+        
         if (IfFindEnemy())
         {
             attack.Attack(master, target);
@@ -81,27 +89,3 @@ public interface IAttackFunction
 {
     public void Attack(Chess user, List<Chess> targets);
 }
-public class CloseAttack : IAttackFunction
-{
-    public void Attack(Chess user, List<Chess> targets )
-    {
-        if (targets != null && targets.Count > 0)
-        {
-            DamageMessege DM;
-            float damage = user.propertyController.GetAttack();
-            for (int i = 0; i < targets.Count; i++)
-            {
-                if (!targets[i].IfDeath)
-                {
-                    DM = new DamageMessege();
-                    DM.damageFrom = user;
-                    DM.damageTo = targets[i];
-                    DM.damage = damage;
-                    user.propertyController.TakeDamage(DM);
-                }
-            }
-             
-        }        
-    }
-}
- 

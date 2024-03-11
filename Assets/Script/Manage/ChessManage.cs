@@ -5,8 +5,9 @@ using System;
 [Serializable]
 public class ChessManage : IManager
 {
-    public LayerMask playerMask;
+    public string playerMask;
     public string playerTag;
+    public LayerMask layerMask;
     public List<Chess> chesses;
     public void InitManage()
     {
@@ -24,22 +25,34 @@ public class ChessManage : IManager
     {
          
     }
-    public Chess CreateChess(PropertyCreator creator,Tile tile)
+    public virtual Chess CreateChess(PropertyCreator creator,Tile tile)
     {
         Chess chess = GameManage.instance.chessFactory.ChessCreate(creator.chessPre,creator.chessName);
         chesses.Add(chess);
         tile.ChessEnter(chess);
         chess.tag=playerTag;
-        //chess.gameObject.layer=playerMask;
+        chess.gameObject.layer=LayerMask.NameToLayer( playerMask);
         chess.gameObject.SetActive(true);
         return chess;
     }
-    public void RecycleChess(Chess chess)
+    public virtual void RecycleChess(Chess chess)
     {
         if (chesses.Contains(chess))
         {
+            //Debug.Log("ªÿ ’" + chess.name);
             chesses.Remove(chess);
             GameManage.instance.chessFactory.RecycleChess(chess, chess.propertyController.creator.chessName);
         }
+    }
+}
+[Serializable]
+public class EnemyManage:ChessManage
+{
+    public override Chess CreateChess(PropertyCreator creator, Tile tile)
+    {
+        Chess c= base.CreateChess(creator, tile);
+        c.transform.right = Vector2.left;
+        //Debug.Log("Create Enemy" + c.name);
+        return c;
     }
 }

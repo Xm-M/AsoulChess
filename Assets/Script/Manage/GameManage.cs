@@ -6,15 +6,15 @@ using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 public class GameManage : MonoBehaviour
 {
-    //public ItemManage itemManage;
-    //public FetterManage EnemyFetterM,PlayerFetterM;
+    public SceneManage sceneManage;
     public UIManage UIManage;
     public TimerManage timerManage;
     public AudioManage audioManage;
     public CheckObjectPoolManage checObjectPoolManage;
     public BuffManage buffManage;
     public ChessFactory chessFactory;//这个要在最后的时候销毁
-    public ChessManage playerManage, enemyManage; 
+    public ChessManage playerManage;
+    public EnemyManage enemyManage;
     public static GameManage instance;
     public Camera mainCamera;
     public Chess HandChess;
@@ -47,6 +47,7 @@ public class GameManage : MonoBehaviour
         chessFactory.InitManage();
         playerManage.InitManage();
         enemyManage.InitManage(); 
+        UIManage=new UIManage();
     }
     public void RecycleChess(Chess chess)
     {
@@ -100,7 +101,17 @@ public class GameManage : MonoBehaviour
         EventController.Instance.TriggerEvent(EventName.RestartGame.ToString());
          
     }
-     
+    public LayerMask GetEnemyLayer(GameObject gameObject)
+    {
+        if (gameObject.CompareTag(playerManage.playerTag))
+        {
+            return LayerMask.GetMask( enemyManage.playerMask);
+        }
+        else
+        {
+            return LayerMask.GetMask(playerManage.playerMask);
+        }
+    }
     public void QuitGame()
     {
         Application.Quit();

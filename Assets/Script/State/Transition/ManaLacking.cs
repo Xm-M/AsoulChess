@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class ManaLacking : Transition
 {
-    public ManaLacking(){
-        transitionName=TransitionName.ManaLacking;
-    }
+     
     public override bool ifReach(Chess chess)
     {
          

@@ -6,22 +6,27 @@ using UnityEngine.UI;
 public class PrePlantImage : MonoBehaviour
 {
     public Image image;
-    public bool ifShovel;
     void Update()
     {
-        transform.position= Input.mousePosition;
-        if(Input.GetMouseButtonDown(1)){
-            if (!ifShovel)
-                PlantsShop.instance.CancelBuyCard();
-            else
-                PlantsShop.instance.CancelShovel();
-        }else if (ifShovel&&Input.GetMouseButtonUp(0))
+        transform.position = Input.mousePosition;
+        if (Input.GetMouseButtonDown(1))
         {
-            PlantsShop.instance.CancelShovel();
-            if(PlantsShop.instance.selectChess)
-                PlantsShop.instance.selectChess.RemoveChess();
+            UIManage.GetView<PlantsShop>().CancelBuyCard();
         }
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    if (!ifShovel)
+        //        UIManage.GetView<PlantsShop>().CancelBuyCard();
+        //    else
+        //        UIManage.GetView<PlantsShop>().CancelShovel();
+        //}
+        //else if (ifShovel && Input.GetMouseButtonUp(0))
+        //{
+        //    UIManage.GetView<PlantsShop>().CancelShovel();
+        //    if (UIManage.GetView<PlantsShop>().selectChess)
+        //        UIManage.GetView<PlantsShop>().selectChess.RemoveChess();
+        //}
     }
-     
-     
+
+
 }

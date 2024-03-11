@@ -13,7 +13,7 @@ public class MapManage_Qua : MapManage
         {
             for (int j = 0; j < mapSize.y; j++)
             {
-                Debug.Log(j);
+                //Debug.Log(j);
                 GameObject t = Instantiate(tile, tileFather);
                 tiles[i, j] = t.GetComponent<Tile>();
                 tiles[i, j].mapPos = new Vector2Int(i,j);

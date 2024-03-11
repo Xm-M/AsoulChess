@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 using System;
 [CreateAssetMenu(fileName ="NewProperty",menuName ="Message/Property")]
 public class PropertyCreator : ScriptableObject
@@ -11,6 +12,7 @@ public class PropertyCreator : ScriptableObject
     public byte chessLayer;
     public List<TileType> plantType;
     public List<string> plantTags;
+    //[EnumFlag]
     public TileType chessTileType;
     public Property GetClone()
     {

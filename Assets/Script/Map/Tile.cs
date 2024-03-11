@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 using UnityEngine.EventSystems;
+using System;
+
 public class Tile : MonoBehaviour
 {
     public Vector3Int cubePos;
@@ -32,7 +35,7 @@ public class Tile : MonoBehaviour
         chessLayers.Add(chess.propertyController.creator.chessLayer);
         chess.moveController.standTile=this;
         chess.transform.position = transform.position;
-        if (chess.propertyController.creator.chessTileType != TileType.None)
+        if (chess.propertyController.creator.chessTileType != 0)
         {
             typeStack.Push(chess.propertyController.creator.chessTileType);
         }
@@ -44,7 +47,7 @@ public class Tile : MonoBehaviour
         {
             standers.Remove(chess);
             chessLayers.Remove(chess.propertyController.creator.chessLayer);
-            if (chess.propertyController.creator.chessTileType != TileType.None)
+            if (chess.propertyController.creator.chessTileType != 0)
             {
                 typeStack.Pop();
             }
@@ -59,12 +62,28 @@ public class Tile : MonoBehaviour
         return chessLayers.Contains(layer);
     }
 }
+[Flags]
 public enum TileType
 {
-    Grass,
-    Water,
-    Stone,
+    Grass=1<<0,
+    Water=1<<1,
+    Stone=1<<2,
+    Occupation=1<<3,
     All,
-    None,
-    Occupation,
+}
+
+public enum PlantType
+{
+
+}
+public class TileManage
+{
+    public bool ifCanPlant(TileType plant,TileType tile)
+    {
+        return (plant & tile)!=0;
+    }
+    public bool ifCanPut()
+    {
+        return false;
+    }
 }

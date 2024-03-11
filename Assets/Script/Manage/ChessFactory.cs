@@ -28,7 +28,8 @@ public class ChessFactory : MonoBehaviour
         teams.Add("Player",new List<Chess>());
         teams.Add("Enemy",new List<Chess>());
         //EventController.Instance.AddListener(EventName.GameStart.ToString(),SaveAllChessMessage);
-        //EventController.Instance.AddListener(EventName.GameOver.ToString(),LoadAllChessMessage);
+        //EventController.Instance.AddListener(EventName.GameStart.ToString(),SaveAllChessMessage);
+        //EventController.Instance.TriggerEvent(EventName.GameStart.ToString);
     }
     public Chess ChessCreate(Chess chessPre,Tile standTile,string tag){
         Chess chess=Create(chessPre);

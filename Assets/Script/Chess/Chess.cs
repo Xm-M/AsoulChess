@@ -28,6 +28,8 @@ public class Chess : MonoBehaviour
     public ChessAnimatorController animController;//动画
     [FoldoutGroup(groupName: "controller", GroupID = "controller")]
     public AudioController audioController;//音效
+    [FoldoutGroup(groupName: "controller", GroupID = "controller")]
+    public ChessAnimatorController animatorController;
     [FoldoutGroup(groupName:"Event",GroupID ="Event")]
     public UnityEvent<Chess> EnterWarEvent, DeathEvent,HitEvent;//进入战场事件 死亡事件 碰撞事件
     public Animator animator;

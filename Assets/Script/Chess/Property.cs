@@ -298,14 +298,14 @@ public enum DamageType
 //元素类型 
 public enum ElementType
 {
-    None,//无
-    Windy,//风
-    Aqua,//水
-    Ice,//冰
-    Thunder,//雷电
-    Plant,//草
-    Rock,//岩
-    Fire,//火
+    None=0,//无
+    Windy=1,//风
+    Aqua=2,//水
+    Ice=3,//冰
+    Thunder=4,//雷电
+    Plant=5,//草
+    Rock=6,//岩
+    Fire=7,//火
     
 }
 public class ShiledNum

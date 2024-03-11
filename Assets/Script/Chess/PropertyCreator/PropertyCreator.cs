@@ -10,6 +10,7 @@ public class PropertyCreator : ScriptableObject
     public Sprite chessSprite;
     public byte chessLayer;
     public List<TileType> plantType;
+    public List<string> plantTags;
     public TileType chessTileType;
     public Property GetClone()
     {

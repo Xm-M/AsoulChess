@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class OutRangeTransition : Transition
 {
-    public OutRangeTransition(){
-        transitionName=TransitionName.OutRangeTransition;
-    }
+     
     public override bool ifReach(Chess chess)
     {
          
-        return !chess.equipWeapon.IfInRange();
+        return !chess.equipWeapon.IfFindEnemy();
     }
     public override Transition Clone()
     {

@@ -1,33 +1,36 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [Serializable]
-public class Skill  
+public class Skill
 {
-    [SerializeField]private float interval = 1f;
-    public string skillName;
-    public float Interval { 
-        get { return interval; }
-    }
-    //public AudioClip clip;
-    public virtual void SkillEffect(Chess user)
+    [HideInInspector]public Chess user;
+    [LabelText("技能动画")]
+    public string AnimationName;//技能对应的动画
+    public float coldDown;//实际cd
+    public float startTime;//起始cd
+    public Timer timer;
+    public bool loop = true;//被动skill为false
+    public List<Chess> targets;
+    [SerializeReference]
+    public ISkill skillEffect;
+    public void InitSkill()
     {
- 
+        skillEffect.InitSkill(this);
     }
-    public virtual void OnSkillEnter(Chess user) { 
-
-    }
-    public virtual void OnSkillExit(Chess user)
+    public bool IfSkillReady()
     {
-         
+        return skillEffect.ifSkillReady(this);
     }
-    public virtual bool ifSkilOver(Chess chess)
+    public void WhenSkillLeave()
     {
-        if(chess.animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.99)
-        {
-            return true;
-        }return false;
+        skillEffect.LeaveSkill(this);
     }
-    
+    public void UseSkill()
+    {
+        skillEffect.UseSkill(this);
+    }
 }
+

@@ -29,7 +29,7 @@ public class MapManage_Qua : MapManage
                 Tile ti = t.GetComponent<Tile>();
                 tiles[mapSize.x-1, i] = ti;
                 ti.mapPos= new Vector2Int(mapSize.x - 1, i);
-                ti.ifPrePareTile = true;
+                //ti.ifPrePareTile = true;
                 preTiles.Add(ti);
                 t.transform.position = new Vector2(mapSize.x * tileSize.x, tileSize.y * i);
             }

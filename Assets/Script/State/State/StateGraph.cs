@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Sirenix.OdinInspector;
 public enum StateName{
     AttackState,
     MoveState,
@@ -12,18 +12,25 @@ public enum StateName{
     DeathState,
     DizzyState,
 }
-public enum TransitionName{
-    InRangeTransition,
-    ManaEnough,
-    ManaLacking,
-    OutRangeTransition,
-    
-}
 [CreateAssetMenu(fileName = "StateGraph", menuName = "State/StateGraph")]
 public class StateGraph : ScriptableObject
 {
     public List<StateDate> States;
-    public State s;
+    //public State s;
+    private void OnEnable()
+    {
+        if (States == null)
+        {
+            States = new List<StateDate>();
+            State Death = new DeathState();
+            StateDate deathData= new StateDate();
+            deathData.state=new DeathState();
+            StateDate dizzyDate=new StateDate();
+            dizzyDate.state=new DizzinessState();
+            States.Add(deathData);
+            States.Add(dizzyDate);
+        }
+    }
 }
 [Serializable]
 public class StateDate{
@@ -43,7 +50,11 @@ public class StateDate{
 [Serializable]
 public class TransitionDate{
     [SerializeReference]
+    [HideLabel]
+    [HorizontalGroup(group:"hor",width:0.8f)]
     public Transition transition;
+    [HorizontalGroup(group: "hor", width: 0.2f)]
+    [HideLabel]
     public StateName targetState;
     public TransitionDate Clone(){
         TransitionDate ans = new TransitionDate();

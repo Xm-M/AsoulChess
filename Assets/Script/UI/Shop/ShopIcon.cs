@@ -44,7 +44,7 @@ public class ShopIcon : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        if(good.IfCanBuyCard(PlantsShop.instance.sunLight)){
+        if(good.IfCanBuyCard(UIManage.GetView<PlantsShop>().sunLight)){
             selfImage.color=Color.white;
             goodImage.color=Color.white;
         }else{
@@ -60,13 +60,15 @@ public class ShopIcon : MonoBehaviour
     }
     
     public void BuyPlant(){
-        if(t>coldDown&&GameManage.instance.ifGameStart&&PlantsShop.instance.IfCanBuyCard(good)){
-            PlantsShop.instance.SelectPlant(this);
-            Audio?.Play();
-        }else if(!GameManage.instance.ifGameStart){
+        if (!GameManage.instance.ifGameStart)
+        {
             selectIcon.UnselectCard();
-            PlantsShop.instance.RemoveSelection(selectIcon);
+            UIManage.GetView<PlantsShop>().RemoveSelection(selectIcon);
             Destroy(gameObject);
+        }
+        else if (t>coldDown&& UIManage.GetView<PlantsShop>().IfCanBuyCard(good)){
+            UIManage.GetView<PlantsShop>().SelectPlant(this);
+            Audio?.Play();
         }
     }
     public void ColdDown(){

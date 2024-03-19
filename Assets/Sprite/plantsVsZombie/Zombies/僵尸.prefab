@@ -223,7 +223,6 @@ GameObject:
   - component: {fileID: 6150686782853288027}
   - component: {fileID: 1567215255877315134}
   - component: {fileID: 1371354246567923111}
-  - component: {fileID: 5700364670794375811}
   m_Layer: 3
   m_Name: "\u50F5\u5C38"
   m_TagString: Untagged
@@ -330,7 +329,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instanceID: 0
-  equipWeapon: {fileID: 5700364670794375811}
+  propertyController:
+    creator: {fileID: 11400000, guid: 50ba009d65baa0349ba7ca9d715a4f0b, type: 2}
+    chess: {fileID: 6150686782853288027}
+    onGetDamage:
+      m_PersistentCalls:
+        m_Calls: []
+    onTakeDamage:
+      m_PersistentCalls:
+        m_Calls: []
+  equipWeapon: {fileID: 0}
   stateController:
     self: {fileID: 6150686782853288027}
     currentState:
@@ -345,41 +353,32 @@ MonoBehaviour:
     EnterWarState: 1
   skillController:
     user: {fileID: 0}
-    passive: {fileID: 11400000, guid: 27b84021d936c8648a87bb83a42a6286, type: 2}
-    attackSkill: {fileID: 11400000, guid: a860abafc44cba84f9a5bedf26d5fff7, type: 2}
+    passive: {fileID: 0}
+    attackSkill: {fileID: 0}
     hurtSkill: {fileID: 0}
     timeSkill: {fileID: 0}
     OnUseSkill:
       m_PersistentCalls:
         m_Calls: []
     currentSkill: {fileID: 0}
-  propertyController:
-    creator: {fileID: 11400000, guid: 50ba009d65baa0349ba7ca9d715a4f0b, type: 2}
-    chess: {fileID: 6150686782853288027}
-    onGetDamage:
-      m_PersistentCalls:
-        m_Calls: []
-    onTakeDamage:
-      m_PersistentCalls:
-        m_Calls: []
   buffController:
     chess: {fileID: 0}
-    buffUpdate:
-      m_PersistentCalls:
-        m_Calls: []
   moveController:
     chess: {fileID: 6150686782853288027}
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
       id: 2
-  animator: {fileID: 6181388787633876163}
   EnterWarEvent:
     m_PersistentCalls:
       m_Calls: []
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  HitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  animator: {fileID: 6181388787633876163}
   references:
     version: 1
     00000000:
@@ -438,32 +437,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5700364670794375811
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8935427114352480259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd4df836e158e0e40befb2c7f26bb127, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  master: {fileID: 6150686782853288027}
-  target: {fileID: 0}
-  animator: {fileID: 6181388787633876163}
-  DM:
-    damageFrom: {fileID: 0}
-    damageTo: {fileID: 0}
-    damage: 0
-    damageType: 0
-    damageElementType: 0
-  OnWeaponAttack:
-    m_PersistentCalls:
-      m_Calls: []
-  bullet: {fileID: 0}
-  shootPos: {fileID: 0}
-  chessLayer:
-    serializedVersion: 2
-    m_Bits: 8

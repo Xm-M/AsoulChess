@@ -7,88 +7,76 @@ using UnityEngine.Events;
 [Serializable]
 public class SkillController:Controller
 {
-    public Chess user;
-    [SerializeReference]
-    public PassiveSkill passive;
-    [SerializeReference]
-    public AttackSkill attackSkill;
-    [SerializeReference]
-    public HurtSkill hurtSkill;
-    [SerializeReference]
-    public TimeSkill timeSkill;
-    public UnityEvent<Chess> OnUseSkill;
-    public bool IfUseSkill{get;private set;}
-    float damagePool;
-    float damageTimes;
-    Timer timer;
-    public Skill currentSkill;
-
+    [HideInInspector]public Chess user;
+    public List<Skill> skillList;
+    [HideInInspector]public Skill currentSkill;
+    List<Skill> prepareSkill;
     public void InitController(Chess c){
         this.user=c;
-        
+        prepareSkill=new List<Skill>();
+        for(int i = 0; i < skillList.Count; i++)
+        {
+            skillList[i].user=user;
+        }
     }
     public void WhenControllerEnterWar()
     {
-        if (timeSkill != null)
+        for(int i = 0; i < skillList.Count; i++)
         {
-             
-            timer= GameManage.instance.timerManage.AddTimer(UseTimeSkill, timeSkill.coldDown ,true);
+            skillList[i].InitSkill();
+            if (skillList[i].loop)
+            {
+                int n = i;
+                skillList[i].timer = GameManage.instance.timerManage.AddTimer(
+                    ()=> {AddPrepareSkill(skillList[n]); }, skillList[i].coldDown);
+                skillList[i].timer.ResetTime(skillList[i].startTime);
+            }
+            else
+            {
+                skillList[i].UseSkill();
+            }
         }
-        if (hurtSkill != null)
-        {
-            user.propertyController.onGetDamage.AddListener(WhenGetDamage);
-        }
-        if (attackSkill != null)
-        {
-            user.equipWeapon.OnWeaponAttack.AddListener(WhenTakeDamage);
-        }
-        passive?.SkillEffect(user);
+    }
+    public void AddPrepareSkill(Skill skill)
+    {
+        prepareSkill.Add(skill);
     }
 
     public void WhenControllerLeaveWar()
     {
-        if (timeSkill != null)
+        for (int i = 0; i < skillList.Count; i++)
         {
-             
-            timer.Stop();
-        }
-
-    }
-
-    public void UseSkll()
-    {
-        currentSkill.SkillEffect(user);
-        OnUseSkill?.Invoke(user);
-    }
-    public void SkillOver()
-    {
-        IfUseSkill = false;
-    }
-    public void UseTimeSkill()
-    {
-        IfUseSkill = true;
-        currentSkill = timeSkill;
-    }
-     
-    public void WhenGetDamage(DamageMessege dm){
-        damagePool+=dm.damage;
-        if(damagePool>hurtSkill.hurtDamage){
-            IfUseSkill=true;
-            currentSkill=hurtSkill;
-            damagePool = 0;
+            skillList[i].WhenSkillLeave();
+            if (skillList[i].loop)
+            {
+                skillList[i].timer.Stop();
+            }
         }
     }
-    public void WhenTakeDamage(Weapon weapon){
-        damageTimes += 1;
-         
-        if (damageTimes > attackSkill.maxAttackNum)
+
+    public void UseSkill()
+    {
+        currentSkill.UseSkill();
+    }
+    public void LoopSkill()
+    {
+        prepareSkill.Remove(currentSkill);
+        int n = skillList.IndexOf(currentSkill);
+        currentSkill.timer= GameManage.instance.timerManage.AddTimer(
+                    () => { AddPrepareSkill(skillList[n]); }, currentSkill.coldDown);
+        currentSkill = null;
+    }
+
+    public bool IfSkillReady()
+    {
+        for(int i=0;i<prepareSkill.Count; i++)
         {
-             
-            damageTimes = 0;
-            currentSkill = attackSkill;
-            IfUseSkill = true;
+            if (prepareSkill[i].IfSkillReady())
+            {
+                currentSkill = prepareSkill[i];
+                return true;
+            }
         }
+        return false;
     }
-
-    
 }

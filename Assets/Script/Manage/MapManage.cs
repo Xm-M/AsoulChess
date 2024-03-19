@@ -52,7 +52,7 @@ public class MapManage : MonoBehaviour
             GameObject t = Instantiate(tile, tileFather);
             t.GetComponent<Collider2D>().enabled=true;
             Tile ti=t.GetComponent<Tile>();
-            ti.ifPrePareTile=true;
+            //ti.ifPrePareTile=true;
             preTiles.Add(ti);
             t.transform.position=new Vector2(-1.5f*tileSize.x,tileSize.y*i);
         }}

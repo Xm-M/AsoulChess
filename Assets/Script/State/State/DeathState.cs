@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class DeathState : State
 {
-    
+    public DeathState()
+    {
+        stateName = StateName.DeathState;
+    }
     public override void Enter(Chess chess)
     {
         chess.animator.Play("death");
-        chess.GetComponent<Collider2D>().enabled = false;
+        //亡语是在死亡状态触发的，所以没有进入死亡状态就不会触发
+        chess.DeathEvent?.Invoke(chess);
+        chess.SetCol(false);
         base.Enter(chess);
     }
     public override void Execute(Chess chess)
@@ -17,7 +22,7 @@ public class DeathState : State
     }
     public override void Exit(Chess chess)
     {
-        chess.GetComponent<Collider2D>().enabled = true;
+        chess.SetCol(true);
         base.Exit(chess);
     }
     public override State Clone()

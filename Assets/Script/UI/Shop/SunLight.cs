@@ -10,7 +10,7 @@ public class SunLight : MonoBehaviour
     public int SunLightNum;//阳光数值
     public float fallSpeed;//掉落速度
     public float disapearTime;//消失时间
-    public AudioSource au;//为什么你也有音效 
+    //public AudioSource au;//为什么你也有音效 
     bool ifPick;//是否被捡起来
     Vector2 target;
     Vector2 recyclePos;
@@ -21,6 +21,11 @@ public class SunLight : MonoBehaviour
         recyclePos = (MapManage.instance as MapManage_PVZ).sunLightRecyclePos.position;
         ifPick = false;
         t = 0;
+    }
+    public void InitSunLight(Tile target,int num)
+    {
+        InitSunLight(target);
+        SunLightNum = num;//这里其实还有一个根据num大小改变阳光大小的函数
     }
     private void FixedUpdate()
     {
@@ -41,14 +46,15 @@ public class SunLight : MonoBehaviour
     {
         if (!ifPick)
         {
-            PlantsShop.instance.ChangeSunLight(SunLightNum);
+            UIManage.GetView<PlantsShop>().ChangeSunLight(SunLightNum);
             StartCoroutine(Recycle());
             ifPick = true;
         }
     }
     public IEnumerator Recycle()
     {
-        au.Play();
+        //au.Play();
+        UIManage.GetView<PlantsShop>().shopAudio.PlayAudio("SunLight");
         while (Vector2.Distance(transform.position,recyclePos) > 1f)
         {
             transform.position = Vector2.MoveTowards(transform.position, recyclePos, fallSpeed * Time.fixedDeltaTime);
@@ -61,7 +67,7 @@ public class SunLight : MonoBehaviour
     {
         if (!ifPick)
         {
-            PlantsShop.instance.ChangeSunLight(SunLightNum);
+            UIManage.GetView<PlantsShop>().ChangeSunLight(SunLightNum);
             StartCoroutine(Recycle());
             ifPick = true;
         }

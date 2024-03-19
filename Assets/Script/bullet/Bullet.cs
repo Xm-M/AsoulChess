@@ -9,44 +9,53 @@ using UnityEngine.Events;
 /// </summary>
 public class Bullet : MonoBehaviour
 {
-    public Chess shooter;
-    public float moveSpeed = 10;
-    public float maxHeight, maxLength;
     public int MaxHitNum;
     public UnityEvent<Bullet> WhenBulletHit;
-    public AnimationCurve moveCurve;
-    public Chess hitChess;
-    protected Vector2 startPos;
+    [SerializeReference]
+    public IBulletMove bulletMove;   
+    public Chess shooter;
+    public Vector2 startPos;
+    public Vector2 targetPos;
+    protected Chess hitChess;
+    
     protected int current;
-    protected LayerMask targerLayer;
 
-    public virtual void InitBullet(Chess chess)
+    public virtual void InitBullet(Chess shooter,Vector3 position,Vector2 target,Vector2 moveDir)
     {
-        this.shooter = chess;
-        startPos = transform.position;
-        this.tag = chess.tag;
-
-        current = 0;
+        this.shooter = shooter;
+        startPos = position;
+        targetPos = target;
+        this.tag = shooter.tag;
+        current = MaxHitNum;
+        transform.position = startPos;
+        transform.right=moveDir;
+        bulletMove.InitMove(this);
     } 
     protected virtual void Update()
     {
-
-    }
-    protected virtual void FixedUpdate()
-    {
-        
-        
+        bulletMove.MoveBullet(this);    
     }
     public virtual void RecycleBullet() {
         ObjectPool.instance.Recycle(gameObject);
     }
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.name);
-        if (!CompareTag(collision.tag))
+        //Debug.Log(collision.name);
+        
+        if (!CompareTag(collision.tag) )
         {
-            shooter.equipWeapon.TakeDamage(collision.GetComponent<Chess>());
+            Chess c = collision.GetComponent<Chess>();
+            if(c==null)return;
+            DamageMessege damage=new DamageMessege(shooter,c ,
+                    shooter.propertyController.GetAttack());
+            if(current>0)
+                shooter.propertyController.TakeDamage( damage);
+            current--;
+            if (current == 0)
+            {
+                RecycleBullet();
+            }
         }
-        RecycleBullet();
+        
     }
 }

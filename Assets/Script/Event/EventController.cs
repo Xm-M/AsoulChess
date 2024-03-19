@@ -39,6 +39,8 @@ public enum EventName
     LastWaveZombie,
     FirstZombieComming,
     GameSuccess,
+    WhenPlantChess,
+    WhenSweetChange,
 }
 
 

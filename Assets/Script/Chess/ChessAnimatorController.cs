@@ -42,7 +42,7 @@ public class ChessAnimatorController : MonoBehaviour,Controller
 
     public void InitController(Chess chess)
     {
-         audioController=chess.audioController;
+         //audioController=chess.audioController;
     }
 
     public void WhenControllerEnterWar()

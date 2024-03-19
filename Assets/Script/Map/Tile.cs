@@ -2,66 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-using UnityEngine.EventSystems;
 using System;
+using UnityEngine.Events;
 
+/// <summary>
+/// 那么tile到底需不需要考虑那么多事情呢？他应该只提供信息，不提供任何其他东西
+/// 就chess应该只能访问tile但是不能修改tile
+/// </summary>
 public class Tile : MonoBehaviour
 {
     public Vector3Int cubePos;
     public Vector2Int mapPos;
-    public AudioSource au ;//音乐的问题我们之后再考虑
-    public bool ifPrePareTile;
-    public TileType baseTileType;
-    public Stack<TileType> typeStack;
-    
-    List<Chess> standers;
-    List<byte> chessLayers;
-
-    private void Awake()
+    public TileType tileType;
+    public Chess stander;//只考虑主植物
+    public UnityEvent<Chess> OnPlant;
+    public List<Chess> chessesIntile { get;protected set; }
+    protected virtual void Awake()
     {
-        standers = new List<Chess>();
-        chessLayers = new List<byte>();
-        typeStack = new Stack<TileType>();
-        typeStack.Push(baseTileType);
+        chessesIntile = new List<Chess>();
     }
-    public void ChessMoveIn(Chess chess)
+    public virtual void ChessEnter(Chess chess )
     {
-        chess.moveController.standTile = this;
-        chess.transform.position = transform.position;
-    }
-    public void ChessEnter(Chess chess )
-    {
-        standers.Add(chess);
-        chessLayers.Add(chess.propertyController.creator.chessLayer);
         chess.moveController.standTile=this;
         chess.transform.position = transform.position;
-        if (chess.propertyController.creator.chessTileType != 0)
-        {
-            typeStack.Push(chess.propertyController.creator.chessTileType);
-        }
-        au.Play();
+        chessesIntile.Add(chess);
     }
-    public void ChessLeave(Chess chess)
+    public virtual void ChessLeave(Chess chess)
     {
-        if (standers.Contains(chess))
-        {
-            standers.Remove(chess);
-            chessLayers.Remove(chess.propertyController.creator.chessLayer);
-            if (chess.propertyController.creator.chessTileType != 0)
-            {
-                typeStack.Pop();
-            }
-        }
+        if(stander==chess)stander=null;
+        if(chessesIntile.Contains(chess))chessesIntile.Remove(chess);
+        chess.moveController.standTile=null;
     }
-    public TileType GetTileType()
+    
+    protected virtual void OnMouseDown()
     {
-        return typeStack.Peek();
+        EventController.Instance.TriggerEvent<Tile>(EventName.WhenPlantChess.ToString(), this);
     }
-    public bool IfContainsLayer(byte layer)
+    public void PlantChess(Chess chess)
     {
-        return chessLayers.Contains(layer);
+        if (chess.propertyController.creator.plantType!=PlantType.SupportPlant) stander = chess;
+        OnPlant?.Invoke(chess);
     }
 }
+
 [Flags]
 public enum TileType
 {
@@ -71,19 +54,10 @@ public enum TileType
     Occupation=1<<3,
     All,
 }
-
+[Flags]
 public enum PlantType
 {
-
-}
-public class TileManage
-{
-    public bool ifCanPlant(TileType plant,TileType tile)
-    {
-        return (plant & tile)!=0;
-    }
-    public bool ifCanPut()
-    {
-        return false;
-    }
+    MainPlant=1<<0,
+    SupportPlant=1<<1,
+    PotPlant=1<<2,
 }

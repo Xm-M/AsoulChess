@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-using System.Security.Cryptography.X509Certificates;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,8 +12,7 @@ using UnityEngine.Events;
 public class PropertyController:Controller 
 {
     public PropertyCreator creator;//这个就是一个基本数据
-    public Chess chess;//拥有该属性的棋子
-    //public class OnGetDamage : UnityEvent<DamageMessege> { }
+    protected Chess chess;//拥有该属性的棋子
     public UnityEvent<DamageMessege> onGetDamage;//造成伤害的事件
     public UnityEvent<DamageMessege> onTakeDamage;//收到伤害的事件
     Property Data;
@@ -28,26 +25,13 @@ public class PropertyController:Controller
     public void WhenControllerEnterWar()
     {
         Data.ResetAllProperty(creator.baseProperty);
-        creator.WhenChessEnterWar(chess);
     }
     public void WhenControllerLeaveWar()
     {
         onGetDamage?.RemoveAllListeners();
         onTakeDamage?.RemoveAllListeners();
-        creator.WhenChessLeaveWar(chess);
     }
-    public void Update()
-    {
-        if (GameManage.instance.ifGameStart)
-        {
-            float flash = chess.GetComponent<SpriteRenderer>().material.GetFloat("_FlashAmount");
-            if (flash > 0)
-            {
-                flash -= Time.deltaTime;
-                chess.GetComponent<SpriteRenderer>().material.SetFloat("_FlashAmount", flash);
-            }
-        }
-    }
+     
     //受到伤害的函数
     public void GetDamage(DamageMessege mes)
     {
@@ -67,7 +51,7 @@ public class PropertyController:Controller
             Data.Hp -= mes.damage;
         }
         onGetDamage?.Invoke(mes);
-        chess.GetComponent<SpriteRenderer>().material.SetFloat("_FlashAmount", 0.3f);
+        //chess.GetComponent<SpriteRenderer>().material.SetFloat("_FlashAmount", 0.3f);
         //UIManage.instance.CreateDamage(mes);
         //chess.StartCoroutine(ColorChange(1f));
         //Debug.Log("受到" + mes.damage + "伤害");
@@ -133,7 +117,7 @@ public class PropertyController:Controller
     {
         Data.attackSpeed = Mathf.Min(0.5f, Data.attackSpeed - Data.baseAttackSpeed * value);
     }
-    public void ChangeAttackRange(int value) => Data.attacRange = Mathf.Max(1, Data.attacRange + value);
+    public void ChangeAttackRange(int value) => Data.attackRange = Mathf.Max(1, Data.attackRange + value);
     public void SlowDown(float value)
     {
         Data.slowDownRate = Data.slowDownRate * (1 - value);
@@ -186,7 +170,7 @@ public class PropertyController:Controller
     }
     public float GetAttackRange()
     {
-        return Data.attacRange;
+        return Data.attackRange;
     }
     public int GetPrice(){
         return Data.price;
@@ -237,7 +221,7 @@ public class Property
     public float healRate=1f;//回复增益
     public float attackSpeed = 1f;//攻击速度
     public float baseAttackSpeed=0.25f;
-    public float attacRange=1;//攻击距离
+    public float attackRange=1;//攻击距离
 
     public int price=50;//价格
     public int rarity=4000;
@@ -268,7 +252,7 @@ public class Property
         healRate = property.healRate;
         attackSpeed = property.attackSpeed;
         baseAttackSpeed = property.baseAttackSpeed;
-        attacRange = property.attacRange;
+        attackRange = property.attackRange;
         price = property.price;
         rarity = property.rarity;
         CD = property.CD;
@@ -285,6 +269,15 @@ public struct DamageMessege
     public float damage;//伤害的数值
     public DamageType damageType;//伤害的类型
     public ElementType damageElementType;//元素的类型
+    
+    public DamageMessege(Chess user,Chess target,float damage,DamageType damageType=DamageType.Physical,ElementType elementType = ElementType.None)
+    {
+        damageFrom = user;
+        damageTo = target;
+        this.damage = damage;
+        this.damageType = damageType;
+        this.damageElementType = elementType;
+    }
 }
 //一个伤害信息包括伤害类型和元素类型两个信息
 //伤害类型

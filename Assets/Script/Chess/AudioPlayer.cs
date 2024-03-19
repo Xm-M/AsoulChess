@@ -19,7 +19,7 @@ public class AudioController : Controller
     }
     public void PlayAudio(string name)
     {
-        playerMap[name].PlayAudio();
+        playerMap[name].Play ();
     }
    
 
@@ -70,7 +70,7 @@ public class AudioPlayer : MonoBehaviour
             }
         }
     }
-    public void PlayAudio()
+    public void Play()
     {
         audioSource.Play();
     }

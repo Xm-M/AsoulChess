@@ -43,7 +43,7 @@ public class Zombies : Fetter
         //self.unSelectable = true;
         self.gameObject.SetActive(true);
         //self.stateController.ChangeState(dizziness.instance);
-        dizziness.instance.AddChess(self,2);
+        //DizzinessState.instance.AddChess(self,2);
         standTile.ChessEnter(self);
         //GameManage.instance.teams[self.tag].AddMember(self);
         //self.property.GetValue(ValueType.Hp).currentValue = self.property.GetValue(ValueType.Hp).startValue*comeBackHp;

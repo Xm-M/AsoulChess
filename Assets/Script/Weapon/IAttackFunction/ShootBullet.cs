@@ -12,7 +12,7 @@ public class ShootBullet : IAttackFunction
     {
          GameObject b=ObjectPool.instance.Create(bullet);
         Bullet zidan=b.GetComponent<Bullet>();
-        zidan.InitBullet(user, user.equipWeapon.weaponPos.position, targets[0].transform.position,user.transform.right);
+        zidan.InitBullet(user, user.equipWeapon.weaponPos.position, targets[0] ,user.transform.right);
     }
 }
 public class ShootBulletByDir : IAttackFunction
@@ -23,7 +23,7 @@ public class ShootBulletByDir : IAttackFunction
     {
         GameObject b = ObjectPool.instance.Create(bullet);
         Bullet zidan = b.GetComponent<Bullet>();
-        zidan.InitBullet(user, shooter.transform.position, targets[0].transform.position, shooter.transform.right);
+        zidan.InitBullet(user, shooter.transform.position, targets[0] , shooter.transform.right);
     }
 }
 public class MultiAttack : IAttackFunction

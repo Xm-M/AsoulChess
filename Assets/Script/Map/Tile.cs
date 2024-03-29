@@ -11,7 +11,6 @@ using UnityEngine.Events;
 /// </summary>
 public class Tile : MonoBehaviour
 {
-    public Vector3Int cubePos;
     public Vector2Int mapPos;
     public TileType tileType;
     public Chess stander;//只考虑主植物
@@ -34,10 +33,10 @@ public class Tile : MonoBehaviour
         chess.moveController.standTile=null;
     }
     
-    protected virtual void OnMouseDown()
-    {
-        EventController.Instance.TriggerEvent<Tile>(EventName.WhenPlantChess.ToString(), this);
-    }
+    //protected virtual void OnMouseDown()
+    //{
+    //    //EventController.Instance.TriggerEvent<Tile>(EventName.WhenPlantChess.ToString(), this);
+    //}
     public void PlantChess(Chess chess)
     {
         if (chess.propertyController.creator.plantType!=PlantType.SupportPlant) stander = chess;

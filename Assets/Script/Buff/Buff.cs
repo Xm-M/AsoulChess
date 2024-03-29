@@ -19,7 +19,7 @@ public class Buff
     public virtual void BuffOver()
     {
         target.buffController.RemoveBuff(this);
-        GameManage.instance.buffManage.RecycleBuff(this);
+        //GameManage.instance.buffManage.RecycleBuff(this);
     }
     public virtual Buff Clone()
     {
@@ -30,6 +30,11 @@ public class TimeBuff : Buff
 {
     public float continueTime;
     protected Timer timer;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+
+    }
     public override void BuffReset()
     {
         base.BuffReset();
@@ -45,8 +50,9 @@ public class ColdBuff : TimeBuff
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect( target);
-        target.propertyController.SlowDown(slowDownRate);
-        target.GetComponent<SpriteRenderer>().color = Color.blue;
+        Debug.Log("减速");
+        target.propertyController.ChangeAcceleRate(slowDownRate);
+        target.sprite.color = Color.blue;
         timer = GameManage.instance.timerManage.AddTimer(
             BuffOver, continueTime
             );
@@ -54,14 +60,45 @@ public class ColdBuff : TimeBuff
     public override void BuffOver()
     {
         base.BuffOver();
-        target.propertyController.ResumeSlowDown(slowDownRate);
-        target.GetComponent<SpriteRenderer>().color = Color.white;
+        target.propertyController.ChangeAcceleRate(-slowDownRate);
+        target.sprite.color = Color.white;
     }
     public override Buff Clone()
     {
         ColdBuff cold = new ColdBuff();
         cold.buffName = buffName;
         cold.slowDownRate = slowDownRate;
+        cold.continueTime = continueTime;
         return cold;
+    }
+}
+
+public class AccelerateBuff:TimeBuff
+{
+    public float accelerateRate;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        Debug.Log("开始加速");
+        target.propertyController.ChangeAcceleRate(accelerateRate);
+        target.sprite.color = Color.red;
+        timer = GameManage.instance.timerManage.AddTimer(
+            BuffOver, continueTime
+            );
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        Debug.Log("结束加速");
+        target.propertyController.ChangeAcceleRate(-accelerateRate);
+        target.sprite.color = Color.white;
+    }
+    public override Buff Clone()
+    {
+        AccelerateBuff accelerateBuff = new AccelerateBuff();
+        accelerateBuff.accelerateRate = accelerateRate;
+        accelerateBuff.continueTime = continueTime;
+        accelerateBuff.buffName = buffName;
+        return accelerateBuff;
     }
 }

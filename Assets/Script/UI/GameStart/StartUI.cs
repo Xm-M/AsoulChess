@@ -23,9 +23,9 @@ public class StartUI : View
     {
 
     }
-    public void LoadScene(RoomType roomType)
+    public void LoadScene(LevelData roomType)
     {
-        GameManage.instance.sceneManage.LoadScene(roomType);
+        LevelManage.instance.ChangeLevel(roomType);
         Hide();
     }
 }

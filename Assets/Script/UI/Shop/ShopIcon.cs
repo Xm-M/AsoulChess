@@ -31,7 +31,7 @@ public class ShopIcon : MonoBehaviour
         //good=chess;
         goodImage.color=new Color(255,255,255,255);
          
-    }}
+    }}//
     public void InitShopIcon(ShopSelectIcon s){
         this.selectIcon=s;
         good=selectIcon.select;
@@ -44,7 +44,7 @@ public class ShopIcon : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        if(good.IfCanBuyCard(UIManage.GetView<PlantsShop>().sunLight)){
+        if(good.IfCanBuyCard(SunLightPanel.instance.sunLight)){
             selfImage.color=Color.white;
             goodImage.color=Color.white;
         }else{
@@ -53,14 +53,15 @@ public class ShopIcon : MonoBehaviour
         }
     }
     private void Update() {
-        if(GameManage.instance.ifGameStart){
+        if(LevelManage.instance.IfGameStart)
+        {
             this.t+=Time.deltaTime;
             bar.SetValue(coldDown-t, coldDown);
         }
     }
     
     public void BuyPlant(){
-        if (!GameManage.instance.ifGameStart)
+        if (!LevelManage.instance.IfGameStart)
         {
             selectIcon.UnselectCard();
             UIManage.GetView<PlantsShop>().RemoveSelection(selectIcon);

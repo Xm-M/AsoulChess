@@ -12,7 +12,7 @@ public class StraightFindTarget:IFindTarget
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
-        LayerMask enemyLayer=GameManage.instance.GetEnemyLayer(user.gameObject);
+        LayerMask enemyLayer=ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         RaycastHit2D hit=Physics2D.Raycast(user.transform.position,user.transform.right,
             user.propertyController.GetAttackRange(),enemyLayer);
         if (hit.collider != null)
@@ -27,7 +27,7 @@ public class StraightFindTargetByDir : IFindTarget
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
-        LayerMask enemyLayer = GameManage.instance.GetEnemyLayer(user.gameObject);
+        LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         RaycastHit2D hit = Physics2D.Raycast(user.transform.position, shooter.transform.right,
             user.propertyController.GetAttackRange(), enemyLayer);
         if (hit.collider != null)
@@ -46,7 +46,7 @@ public class StraightLaser : IFindTarget
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
-        LayerMask enemyLayer = GameManage.instance.GetEnemyLayer(user.gameObject);
+        LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         RaycastHit2D[] hits= CheckObjectPoolManage.GetHitArray(100);
         int num = Physics2D.RaycastNonAlloc(user.transform.position, user.transform.right,
             hits,user.propertyController.GetAttackRange(), enemyLayer);

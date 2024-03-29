@@ -12,9 +12,11 @@ using UnityEngine.Events;
 public class PropertyController:Controller 
 {
     public PropertyCreator creator;//这个就是一个基本数据
-    protected Chess chess;//拥有该属性的棋子
-    public UnityEvent<DamageMessege> onGetDamage;//造成伤害的事件
-    public UnityEvent<DamageMessege> onTakeDamage;//收到伤害的事件
+    [HideInInspector]protected Chess chess;//拥有该属性的棋子
+    //这几个都是只能在战斗中添加事件 因为结束的时候会被清除 所以不能在游戏开始前在Inspector面板添加事件
+    [HideInInspector] public UnityEvent<DamageMessege> onGetDamage;//造成伤害的事件
+    [HideInInspector] public UnityEvent<DamageMessege> onSetDamage;//受到伤害前的事件(主要是增伤或者缓和，还有护甲抵挡等问题)
+    [HideInInspector] public UnityEvent<DamageMessege> onTakeDamage;//受到伤害的事件
     Property Data;
     public void InitController(Chess chess)
     {
@@ -30,28 +32,37 @@ public class PropertyController:Controller
     {
         onGetDamage?.RemoveAllListeners();
         onTakeDamage?.RemoveAllListeners();
+        onSetDamage?.RemoveAllListeners();
     }
      
     //受到伤害的函数
     public void GetDamage(DamageMessege mes)
     {
+        onSetDamage?.Invoke(mes);
+        Debug.Log("基础伤害" + mes.damage);
+        if (mes.takeBuff != null)
+        {
+            chess.buffController.AddBuff(mes.takeBuff);
+        }
         if (mes.damageType == DamageType.Physical)
-            mes.damage *= (1-(Data.AR / (Data.AR + 100)));
+        {
+            //Debug.Log("倍率" + (1 - (Data.AR / (Data.AR + 100))));
+            mes.damage *= (1 - (Data.AR / (Data.AR + 100)));
+        }
         else if (mes.damageType == DamageType.Magic)
-            mes.damage *= (1-(Data.MR / (Data.MR + 100)));
+            mes.damage *= (1 - (Data.MR / (Data.MR + 100)));
         else if (mes.damageType == DamageType.Miss)
             mes.damage = 0;
         //Debug.Log("当前伤害" + mes.damage);
         mes.damage *= (1 - Data.extraDefence);
-        if (Data.shiledNum > mes.damage) Data.shiledNum -= mes.damage;
-        else
+        if (mes.damage > 0)
         {
-            mes.damage -= Data.shiledNum;
-            Data.shiledNum = 0;
             Data.Hp -= mes.damage;
+            //Debug.Log(creator.name + "受到了" + mes.damage);
+            //chess.animator.SetFloat();
+            onGetDamage?.Invoke(mes);
         }
-        onGetDamage?.Invoke(mes);
-        //chess.GetComponent<SpriteRenderer>().material.SetFloat("_FlashAmount", 0.3f);
+        chess.sprite?.material.SetFloat("_FlashAmount", Time.time);
         //UIManage.instance.CreateDamage(mes);
         //chess.StartCoroutine(ColorChange(1f));
         //Debug.Log("受到" + mes.damage + "伤害");
@@ -60,14 +71,16 @@ public class PropertyController:Controller
     //造成伤害的函数
     public void TakeDamage(DamageMessege mes)
     {
-        mes.damage = UnityEngine.Random.Range(0, 1f) > Data.crit ? mes.damage * Data.critDamage : mes.damage;
-        //Debug.Log("造成" + mes.damage + "伤害");
-        mes.damage *= (1 + Data.extraDamge);
-        //然后这里应该还有一段元素计算，但我就先不管了
-        
-        mes.damageTo.propertyController.GetDamage(mes);
-        onTakeDamage?.Invoke(mes);
-        float heal = mes.damage *= Data.lifeStealing;
+        if (mes.damageTo != null && !mes.damageTo.IfDeath)
+        {
+            mes.damage = UnityEngine.Random.Range(0, 1f) < Data.crit ? mes.damage * Data.critDamage : mes.damage;
+            //Debug.Log("造成" + mes.damage + "伤害");
+            mes.damage *= (1 + Data.extraDamge);
+            //然后这里应该还有一段元素计算，但我就先不管了
+            mes.damageTo.propertyController.GetDamage(mes);
+            onTakeDamage?.Invoke(mes);
+            float heal = mes.damage *= Data.lifeStealing;
+        }
     }
     //下面的是各种属性的修改函数
     public void Heal(float heal)
@@ -75,17 +88,6 @@ public class PropertyController:Controller
         heal *= Data.healRate;
         Data.Hp = Mathf.Min(Data.HpMax, Data.Hp + heal);
     }
-    IEnumerator ColorChange(float time)
-    {
-        float times = 0;
-        
-        while (times < time)
-        {
-            times += Time.deltaTime;
-            yield return null;
-        }
-        chess.GetComponent<SpriteRenderer>().material.SetFloat("_FlashAmount", 0);
-    }   
     public void ChangeHPMax(float value) => Data.HpMax += value;
     public void ChangeAttack(float value) => Data.attack = Mathf.Max(0, Data.attack + value);
     public void ChangeSpell(float value) => Data.spell = Mathf.Max(0, Data.spell + value);
@@ -110,31 +112,21 @@ public class PropertyController:Controller
     public void ChangeMR(float value) => Data.MR += value;
     public void ChangeExtraDamage(float value) => Data.extraDamge *= (1 + value);
     public void ChangeExtraDefence(float value) => Data.extraDefence *= (1 + value);
-    public void ChangeShiled(float value) => Data.shiledNum += value;//改变护盾肯定有问题
+    //public void ChangeShiled(float value) => Data.shiledNum += value;//改变护盾肯定有问题
     public void ChangeLifeSteeling(float value) => Data.lifeStealing = Mathf.Max(0, Data.lifeStealing + value);
     public void ChangeHealRate(float value) => Data.healRate = Mathf.Max(0, Data.healRate + value);
-    public void ChangeAttackSpeed(float value)
+    public void ChangeAcceleRate(float value)
     {
-        Data.attackSpeed = Mathf.Min(0.5f, Data.attackSpeed - Data.baseAttackSpeed * value);
+        Data.acceleRated += value;
+        chess.animator.speed = Data.acceleRated;
     }
     public void ChangeAttackRange(int value) => Data.attackRange = Mathf.Max(1, Data.attackRange + value);
-    public void SlowDown(float value)
-    {
-        Data.slowDownRate = Data.slowDownRate * (1 - value);
-    }
-    public void ResumeSlowDown(float value)
-    {
-        Data.slowDownRate = Data.slowDownRate / (1 - value);
-    }
-    public void Accelerate(float value)
-    {
-        Data.acceleRate += value;
-        Data.acceleRate = Mathf.Max(Data.acceleRate, 1);
-    }
+     
 
     public float GetMoveSpeed()
     {
-        return Data.speed * Data.slowDownRate * Data.acceleRate;
+
+        return Data.speed * Mathf.Max(0, Data.acceleRated);
     }
     public float GetAttack()
     {
@@ -160,14 +152,20 @@ public class PropertyController:Controller
     {
         return Data.HpMax;
     }
-    public float GetShiledNum()
+    //public float GetShiledNum()
+    //{
+    //    return Data.shiledNum;
+    //}
+    public float GetAttackInterval()
     {
-        return Data.shiledNum;
+        if (Data.acceleRated <= 0) return 1000;
+        return 1/(Data.attackSpeed*Data.acceleRated);
     }
-    public float GetAttackSpeed()
+    public float GetAccelerate()
     {
-        return Data.attackSpeed;
+        return Data.acceleRated;
     }
+
     public float GetAttackRange()
     {
         return Data.attackRange;
@@ -201,33 +199,38 @@ public class Property
 {
     public float attack;//基础攻击
     public float spell;//基础法强
+    
     public float crit;//暴击率
     public float critDamage=1.3f;//暴击伤害
+    
     public float extraDamge=0f;//额外增伤
     public float AR;//护甲
     public float MR;//魔抗
     [Range(0,1)]
     public float extraDefence=0;//额外减伤
     
-    public float MP=0f;//蓝条
+    
     public float Hp=500;
     public float HpMax=500f;//最大生命值
-    public float shiledNum=0f;//护盾值
+    //public float shiledNum=0f;//护盾值
 
-    public float speed=2f;//移动速度
-    public float slowDownRate = 1;//减速效率
-    public float acceleRate = 1;//加速效率
+
     public float lifeStealing=0f;//生命偷取
     public float healRate=1f;//回复增益
+
+    public float speed = 2f;//移动速度
     public float attackSpeed = 1f;//攻击速度
-    public float baseAttackSpeed=0.25f;
+    public float acceleRated=1f;//攻速移速的加成都取决于这个属性
+
+    public float spellHaste=0f;//技能急速
+    
     public float attackRange=1;//攻击距离
 
     public int price=50;//价格
-    public int rarity=4000;
+    public int rarity=4000;//稀有度
 
     public float CD=7.5f;
-    public int Size = 1;
+    public int Size = 1;//体型
     public Property()
     {
 
@@ -243,15 +246,16 @@ public class Property
         crit = property.crit;
         critDamage = property.critDamage;
         extraDefence = property.extraDefence;
-        MP = property.MP;
+        spellHaste = property.spellHaste;
         Hp = property.Hp;
         HpMax = property.HpMax;
-        shiledNum = property.shiledNum;
+
         speed = property.speed;
         lifeStealing = property.lifeStealing;
         healRate = property.healRate;
         attackSpeed = property.attackSpeed;
-        baseAttackSpeed = property.baseAttackSpeed;
+        acceleRated = property.acceleRated;
+        
         attackRange = property.attackRange;
         price = property.price;
         rarity = property.rarity;
@@ -262,13 +266,19 @@ public class Property
 }
 //造成伤害时传递的信息
 [Serializable]
-public struct DamageMessege
+public class DamageMessege
 {
     public Chess damageFrom;//造成伤害的对象
     public Chess damageTo;//受到伤害的对象
     public float damage;//伤害的数值
     public DamageType damageType;//伤害的类型
     public ElementType damageElementType;//元素的类型
+    [SerializeReference]
+    public Buff takeBuff;
+    public DamageMessege()
+    {
+
+    }
     
     public DamageMessege(Chess user,Chess target,float damage,DamageType damageType=DamageType.Physical,ElementType elementType = ElementType.None)
     {
@@ -288,18 +298,16 @@ public enum DamageType
     Real,//真实伤害
     Miss,//未命中
 }
-//元素类型 
+//元素类型,其实是额外信息
+[Flags]
 public enum ElementType
 {
     None=0,//无
-    Windy=1,//风
-    Aqua=2,//水
-    Ice=3,//冰
-    Thunder=4,//雷电
-    Plant=5,//草
-    Rock=6,//岩
-    Fire=7,//火
-    
+    CloseAttack=1<<0,//近战
+    Bullet=1<<1,//子弹 这两种是最基本的伤害类型了
+    AOE=1<<2,//AOE 范围伤害
+    Puncture=1<<3,//穿刺 仙人掌是Bullet Puncture;地刺是CloseAttack Puncture
+
 }
 public class ShiledNum
 {

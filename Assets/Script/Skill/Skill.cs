@@ -9,6 +9,8 @@ public class Skill
     [HideInInspector]public Chess user;
     [LabelText("技能动画")]
     public string AnimationName;//技能对应的动画
+    [LabelText("技能准备动画")]
+    public string prepareName;
     public float coldDown;//实际cd
     public float startTime;//起始cd
     public Timer timer;

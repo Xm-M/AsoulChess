@@ -6,7 +6,7 @@ public class IfGameOver : Transition
 {
     public override bool ifReach(Chess chess)
     {
-        if (GameManage.instance.ifGameStart )
+        if (LevelManage.instance.IfGameStart)
             return false;
         return true;
     }

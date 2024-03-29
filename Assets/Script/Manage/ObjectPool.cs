@@ -54,7 +54,7 @@ public class ObjectPool : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("���ظ���������" + a.name);
+            Debug.LogWarning("没有这个物体" + a.name);
         }
         a.SetActive(false);
     }

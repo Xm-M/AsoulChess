@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8500033583158436597}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.35, y: 0.82, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7928838705538601799}
@@ -50,7 +50,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 9a011275880fcc94c8bbbdfc0f3bbcfc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -71,9 +71,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0.5038746, g: 0, b: 0.5849056, a: 1}
-  m_FlipX: 0
+  m_Sprite: {fileID: 21300000, guid: a5bd127511d2d7f44adf3a311fc6e50b, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -111,7 +111,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8632946131564120234}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.3112826, y: -0.14662482, z: -1113.8995}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7004469698061884576}
@@ -134,10 +134,10 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3.0625, y: 3}
+    newSize: {x: 3.0625, y: 3}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
@@ -172,6 +172,9 @@ MonoBehaviour:
     onGetDamage:
       m_PersistentCalls:
         m_Calls: []
+    onSetDamage:
+      m_PersistentCalls:
+        m_Calls: []
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
@@ -181,6 +184,7 @@ MonoBehaviour:
     currentSkill:
       user: {fileID: 0}
       AnimationName: 
+      prepareName: 
       coldDown: 0
       startTime: 0
       loop: 1
@@ -206,14 +210,14 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 3
-  DeathEvent:
-    m_PersistentCalls:
-      m_Calls: []
   WhenEnterGame:
     m_PersistentCalls:
       m_Calls: []
+  DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
   animator: {fileID: 5258043826439203457}
-  sprite: {fileID: 0}
+  sprite: {fileID: 340550653585186923}
   references:
     version: 1
     00000000:
@@ -222,6 +226,14 @@ MonoBehaviour:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
+        DM:
+          damageFrom: {fileID: 0}
+          damageTo: {fileID: 0}
+          damage: 0
+          damageType: 0
+          damageElementType: 0
+          takeBuff:
+            id: 2
     00000002:
       type: {class: , ns: , asm: }
     00000003:
@@ -259,7 +271,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

@@ -26,7 +26,6 @@ public class DizzinessState : State
     }
     public override State Clone()
     {
- 
         return new DizzinessState();
     }
 }

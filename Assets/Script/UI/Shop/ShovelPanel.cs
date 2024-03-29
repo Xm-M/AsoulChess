@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,28 +9,60 @@ using UnityEngine.UI;
 public class ShovelPanel : MonoBehaviour
 {
     public Image shovelImage;
-    public Sprite shovelSprite;
+    public Image shove;
+    public AudioPlayer au;
     bool ifSelect;
+    [LabelText("取消音效")]
+    public string cancel;
+    [LabelText("铲除音效")]
+    public string dig;
+    private void Awake()
+    {
+        ifSelect = false;
+    }
     public void SelectImage()
     {
-        if (!ifSelect&&GameManage.instance.ifGameStart)
+        if (!ifSelect&& LevelManage.instance.IfGameStart)
         {
-            PrePlantImage prePlantImage = UIManage.GetView<PlantsShop>().prePlant;
-            UIManage.GetView<PlantsShop>().CancelBuyCard();
+            EventController.Instance.TriggerEvent(EventName.WhenShovel.ToString());
             shovelImage.gameObject.SetActive(false);
-            prePlantImage.transform.position = Input.mousePosition;
-            prePlantImage.gameObject.SetActive(true);
-            //prePlantImage.image.sprite = shovelSprite;
-            //prePlantImage.ifShovel = true;
+            shove.gameObject.SetActive(true);
+            shove.transform.position = Input.mousePosition;
             ifSelect = true;
         }
-         
+    }
+    public void Update()
+    {
+        if (ifSelect)
+        {
+            shove.transform.position = Input.mousePosition;
+            if (Input.GetMouseButtonDown(1))
+            {
+                Cancle();
+                au.PlayAudio(cancel);
+            }
+            else if (Input.GetMouseButtonDown(0))
+            {
+                Vector2 rayPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(rayPos, Vector2.zero, 0, 1 << 7);
+                if (hit.collider != null)
+                {
+                    Debug.Log(hit.collider.gameObject.name);
+                    au.PlayAudio(dig);
+                    hit.collider.GetComponent<Chess>().Death();
+                }
+                else
+                {
+                    au.PlayAudio(cancel);
+                }
+                Cancle();
+            }
+        }
     }
     public void Cancle()
     {
         shovelImage.gameObject.SetActive(true);
+        shove.gameObject.SetActive(false);
         ifSelect = false;
-        UIManage.GetView<PlantsShop>().prePlant.gameObject.SetActive(false);
-        //PlantsShop.instance.prePlant.image.color = new Color(255, 255, 255, 125);
     }
 }

@@ -25,20 +25,20 @@ public class Passive_FireDragonDiana : ISkillPassive
         switch (n)
         {
             case 0:
-                user.equipWeapon.FindTarget = straightFindSingle;
-                user.equipWeapon.attack = shoot;
+                user.equipWeapon.ChangeWeapon(shoot,straightFindSingle);
+                //user.equipWeapon.attack = shoot;
                 break;
             case 1:
-                user.equipWeapon.FindTarget = straightFindSingle;
-                user.equipWeapon.attack = close;
+                user.equipWeapon.ChangeWeapon(close,straightFindSingle) ;
+                //user.equipWeapon.attack = close;
                 break;
             case 2:
-                user.equipWeapon.FindTarget = straightFindMuty;
-                user.equipWeapon.attack = laser;
+                user.equipWeapon.ChangeWeapon(laser,straightFindMuty);
+                //user.equipWeapon.attack = laser;
                 break;
             default:
-                user.equipWeapon.FindTarget = triangleFind;
-                user.equipWeapon.attack = laser;
+                user.equipWeapon.ChangeWeapon(laser, triangleFind);
+                //user.equipWeapon.attack = laser;
                 break;
         }
     }

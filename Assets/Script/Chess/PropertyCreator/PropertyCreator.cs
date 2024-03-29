@@ -41,6 +41,7 @@ public class MainPlant : IPlantFunction
 {
     public bool ifCanPlant(PropertyCreator creator, Tile tile)
     {
+        Debug.Log(tile.name);
         return !tile.stander&&CompairTile(creator.chessTileType,tile);
     }
     public static bool CompairTile(TileType chess,Tile tile)
@@ -69,7 +70,6 @@ public class SupportPlant : IPlantFunction
         return true;
     }
 }
-
 public class PotPlant : IPlantFunction
 {
     public bool ifCanPlant(PropertyCreator creator, Tile tile)
@@ -95,5 +95,22 @@ public class NonePlant : IPlantFunction
     public bool ifCanPlant(PropertyCreator creator, Tile tile)
     {
         return true;
+    }
+}
+
+public class ExclusivePlant : IPlantFunction
+{
+    public string targetTag;
+    public bool ifCanPlant(PropertyCreator creator, Tile tile)
+    {
+        if (tile.stander==null||
+            !tile.stander.propertyController.creator.plantTags.Contains(targetTag))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }

@@ -41,6 +41,8 @@ public enum EventName
     GameSuccess,
     WhenPlantChess,
     WhenSweetChange,
+    WhenLeaveLevel,
+    WhenShovel,
 }
 
 

@@ -21,7 +21,7 @@ public class SceneManage : MonoBehaviour
         if(instance == null)instance = this;
         else Destroy(gameObject);
     }
-    public void LoadScene(RoomType roomType)
+    public void LoadScene(LevelData roomType)
     {
         EventController.Instance.TriggerEvent(EventName.WhenSceneLoad.ToString());
         StartCoroutine(AsyncLoading(roomType.sceneName));

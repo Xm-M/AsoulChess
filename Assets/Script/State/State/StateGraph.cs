@@ -29,6 +29,10 @@ public class StateGraph : ScriptableObject
             dizzyDate.state=new DizzinessState();
             States.Add(deathData);
             States.Add(dizzyDate);
+            TransitionDate transition = new TransitionDate();
+            transition.transition = new IfDeathTransition();
+            transition.targetState = StateName.DeathState;
+            dizzyDate.transitions.Add(transition);
         }
     }
 }

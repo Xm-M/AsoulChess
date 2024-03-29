@@ -27,7 +27,7 @@ public class FetterManage
     public void AddMember(Chess c)
     {
         
-        if(!c.CompareTag(teamTag)||GameManage.instance.ifGameStart)return;
+        if(!c.CompareTag(teamTag)||LevelManage.instance.IfGameStart)return;
         Debug.Log(c.name+"进入战场");
         string chessName = c.name.Replace("(Clone)", "");
         int extra = 0;
@@ -56,7 +56,7 @@ public class FetterManage
     public void RemoveMember(Chess c)
     {
         
-        if(!c.CompareTag(teamTag)||GameManage.instance.ifGameStart)return;
+        if(!c.CompareTag(teamTag)|| LevelManage.instance.IfGameStart) return;
         Debug.Log(c.name+"离开战场");
         string chessName = c.name.Replace("(Clone)", "");
         chessNames[chessName]--;

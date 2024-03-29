@@ -13,7 +13,7 @@ public class PotTile : Tile
     {
         downTile = t;
         chessesIntile = t.chessesIntile;
-        cubePos = t.cubePos;
+        //cubePos = t.cubePos;
         mapPos = t.mapPos;
     }
     public void ClearTile()
@@ -21,10 +21,10 @@ public class PotTile : Tile
         downTile = null;
         chessesIntile = null;
     }
-    protected override void OnMouseDown()
-    {
-        base.OnMouseDown();
-        Debug.Log("Pot");
-    }
+    //protected override void OnMouseDown()
+    //{
+    //    base.OnMouseDown();
+    //    Debug.Log("Pot");
+    //}
 
 }

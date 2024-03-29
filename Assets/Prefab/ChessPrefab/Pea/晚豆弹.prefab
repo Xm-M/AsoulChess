@@ -134,6 +134,15 @@ MonoBehaviour:
       m_Calls: []
   bulletMove:
     id: 0
+  shooter: {fileID: 0}
+  startPos: {x: 0, y: 0}
+  targetPos: {x: 0, y: 0}
+  Dm:
+    damageFrom: {fileID: 0}
+    damageTo: {fileID: 0}
+    damage: 0
+    damageType: 0
+    damageElementType: 2
   references:
     version: 1
     00000000:

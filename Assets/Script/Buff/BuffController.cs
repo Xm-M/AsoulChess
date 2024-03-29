@@ -24,16 +24,15 @@ public class BuffController:Controller
     {
         ResetList();
     }
-    public void Update()
-    {
- 
-    }
     public void ResetList()
     {
+        List<Buff> list = new List<Buff>();
         foreach (var buff in buffDic)
         {
-            buff.Value.BuffOver();
+            list.Add( buff.Value);
         }
+        for (int i = 0; i < list.Count; i++)
+            list[i].BuffOver();
         buffDic.Clear();
     }
     /// <summary>

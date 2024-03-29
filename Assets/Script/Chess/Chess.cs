@@ -24,7 +24,8 @@ public class Chess : MonoBehaviour
     [FoldoutGroup(groupName:"controller",GroupID ="controller")]
     public MoveController moveController;
     [FoldoutGroup(groupName:"Event",GroupID ="Event")]
-    public UnityEvent<Chess> DeathEvent,WhenEnterGame;//死亡事件 
+    public UnityEvent<Chess> WhenEnterGame;//没有被清除的固定事件,这个是不能清除的
+    [HideInInspector]public UnityEvent<Chess> DeathEvent;//这个会被自动清楚
     public Animator animator;
     public SpriteRenderer sprite;
     bool FacingRight = true;
@@ -56,6 +57,7 @@ public class Chess : MonoBehaviour
         stateController.WhenControllerEnterWar();
         moveController.WhenControllerEnterWar();
         buffController.WhenControllerEnterWar();
+        animator.speed = 1;
         WhenEnterGame?.Invoke(this);//主要是可以用来播放声音什么的
         EventController.Instance.TriggerEvent<Chess>(EventName.WhenChessEnterWar.ToString(), this);
     }
@@ -77,9 +79,10 @@ public class Chess : MonoBehaviour
         skillController.WhenControllerLeaveWar();
         moveController.WhenControllerLeaveWar();
         buffController.WhenControllerLeaveWar();
-        GameManage.instance.RecycleChess(this);
+        ChessTeamManage.Instance.RecycleChess(this);
         EventController.Instance.TriggerEvent<Chess>(EventName.WhenDeath.ToString(), this);
         DeathEvent?.RemoveAllListeners();
+        animator.speed = 1;
     }
 
     public void Flap(Transform target)

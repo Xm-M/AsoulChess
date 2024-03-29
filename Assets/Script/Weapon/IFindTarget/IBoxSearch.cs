@@ -9,7 +9,7 @@ public class IBoxSearch : IFindTarget
     {
         targets.Clear();
         Collider2D[] cols = CheckObjectPoolManage.GetColArray(100);
-        LayerMask layer = GameManage.instance.GetEnemyLayer(user.gameObject);
+        LayerMask layer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         int i = Physics2D.OverlapBoxNonAlloc(user.transform.position, boxCheck, 0, cols, layer);
         for (int j = 0; j < i; j++)
         {

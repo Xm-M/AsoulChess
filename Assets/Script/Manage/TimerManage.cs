@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TimerManage:IManager
 {
-    public float GameTime { get; private set; }
+    public static float GameTime { get; private set; }
     [Range(0f, 2f)]
     public float timeSpeed;
     List<Timer> timerList ;
@@ -77,8 +77,9 @@ public class Timer
     public void Start(Action onFinished,float delayTime,bool isLoop)
     {
         this.OnFinish = onFinished;
-        finishTime = GameManage.instance.timerManage.GameTime + delayTime;
+        finishTime = TimerManage.GameTime + delayTime;
         //Debug.Log("完成时间" + finishTime);
+        
         this.delayTime = delayTime;
         ifLoop = isLoop;
         isFinish=false;
@@ -87,22 +88,22 @@ public class Timer
     public void Update()
     {
         if (isFinish) return;
-        if (GameManage.instance.timerManage.GameTime < finishTime) return;
+        if (TimerManage.GameTime < finishTime) return;
         if (!ifLoop) Stop();
-        else finishTime = Time.time + delayTime;
+        else finishTime = TimerManage.GameTime + delayTime;
         OnFinish?.Invoke();
     }
     public void ResetTime()
     {
-        finishTime = GameManage.instance.timerManage.GameTime + delayTime;
+        finishTime = TimerManage.GameTime + delayTime;
     }
-    public void ResetTime(float delayTime)
+    public void ResetTime(float t)
     {
-        finishTime = GameManage.instance.timerManage.GameTime + delayTime;
+        finishTime -=t;
     }
     public void ChangeDelayTime(float newDelayTime)
     {
-        finishTime = GameManage.instance.timerManage.GameTime - delayTime+newDelayTime;
+        finishTime = TimerManage.GameTime - delayTime+newDelayTime;
         delayTime = newDelayTime;
     }
 }

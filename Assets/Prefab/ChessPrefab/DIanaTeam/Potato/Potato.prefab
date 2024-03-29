@@ -64,6 +64,9 @@ MonoBehaviour:
     onGetDamage:
       m_PersistentCalls:
         m_Calls: []
+    onSetDamage:
+      m_PersistentCalls:
+        m_Calls: []
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
@@ -72,6 +75,7 @@ MonoBehaviour:
     skillList:
     - user: {fileID: 0}
       AnimationName: explorer
+      prepareName: skill
       coldDown: 15
       startTime: 0
       loop: 1
@@ -81,6 +85,7 @@ MonoBehaviour:
     currentSkill:
       user: {fileID: 0}
       AnimationName: 
+      prepareName: 
       coldDown: 0
       startTime: 0
       loop: 1
@@ -106,13 +111,14 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 0
-  DeathEvent:
-    m_PersistentCalls:
-      m_Calls: []
   WhenEnterGame:
     m_PersistentCalls:
       m_Calls: []
+  DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
   animator: {fileID: 3990286117579640657}
+  sprite: {fileID: 0}
   references:
     version: 1
     00000000:
@@ -144,6 +150,14 @@ MonoBehaviour:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
+        DM:
+          damageFrom: {fileID: 0}
+          damageTo: {fileID: 0}
+          damage: 1800
+          damageType: 0
+          damageElementType: 0
+          takeBuff:
+            id: 0
 --- !u!61 &3157068275895864039
 BoxCollider2D:
   m_ObjectHideFlags: 0

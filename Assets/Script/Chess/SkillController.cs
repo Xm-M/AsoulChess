@@ -40,6 +40,10 @@ public class SkillController:Controller
     public void AddPrepareSkill(Skill skill)
     {
         prepareSkill.Add(skill);
+        if (skill.prepareName.Length > 0)
+        {
+            user.animator.Play(skill.prepareName);  
+        }
     }
 
     public void WhenControllerLeaveWar()

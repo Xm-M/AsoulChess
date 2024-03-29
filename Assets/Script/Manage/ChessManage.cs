@@ -5,9 +5,8 @@ using System;
 [Serializable]
 public class ChessManage : IManager
 {
-    public string playerMask;
     public string playerTag;
-    public LayerMask layerMask;
+    //public LayerMask layerMask;
     public List<Chess> chesses;
     public void InitManage()
     {
@@ -15,9 +14,10 @@ public class ChessManage : IManager
     }
     public void OnGameOver()
     {
-        for(int i = 0; i < chesses.Count; i++)
+        List<Chess> list=new List<Chess>(chesses);
+        for(int i = 0; i < list.Count; i++)
         {
-            chesses[i].Death();
+            list[i].Death();
         }
         chesses.Clear();
     }
@@ -31,7 +31,7 @@ public class ChessManage : IManager
         chesses.Add(chess);
         tile.ChessEnter(chess);
         chess.tag=playerTag;
-        chess.gameObject.layer=LayerMask.NameToLayer( playerMask);
+        chess.gameObject.layer=LayerMask.NameToLayer(playerTag);
         chess.gameObject.SetActive(true);
         chess.WhenChessEnterWar();
         return chess;
@@ -57,3 +57,65 @@ public class EnemyManage:ChessManage
         return c;
     }
 }
+
+public class ChessTeamManage
+{
+    public static ChessTeamManage Instance;
+    public  ChessManage player;
+    public  EnemyManage enemy;
+    public ChessTeamManage()
+    {
+        player = new ChessManage();
+        player.playerTag = "Player";
+        enemy = new EnemyManage();
+        enemy.playerTag = "Enemy";
+        player.InitManage();
+        enemy.InitManage();
+        Instance=this;
+    }
+    public LayerMask GetEnemyLayer(GameObject gameObject)
+    {
+        if (gameObject.CompareTag(player.playerTag))
+        {
+            return LayerMask.GetMask(enemy.playerTag);
+        }
+        else
+        {
+            return LayerMask.GetMask(player.playerTag);
+        }
+    }
+    public void RecycleChess(Chess chess)
+    {
+        if (chess.CompareTag(player.playerTag))
+        {
+            player.RecycleChess(chess);
+        }
+        else
+        {
+            enemy.RecycleChess(chess);
+        }
+    }
+    public List<Chess> GetTeam(string tag)
+    {
+        if (tag==player.playerTag)
+        {
+            return player.chesses;
+        }
+        else
+        {
+            return enemy.chesses;
+        }
+    }
+    public Chess CreateChess(PropertyCreator creator, Tile tile,string tag  )
+    {
+        if (tag==enemy.playerTag)
+        {
+            return enemy.CreateChess(creator, tile);
+        }
+        else
+        {
+            return player.CreateChess(creator, tile);
+        }
+    }
+}
+

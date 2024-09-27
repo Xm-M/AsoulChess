@@ -28,7 +28,7 @@ public class DizzyBuff : Buff
         dizzyBuff.dizzyTime = dizzyTime;
         return dizzyBuff;
     }
-}
+}//
 public class AirborneBuff : DizzyBuff
 {
     public override void BuffEffect(Chess target)

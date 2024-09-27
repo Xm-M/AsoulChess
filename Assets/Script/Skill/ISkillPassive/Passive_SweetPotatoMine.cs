@@ -2,21 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Passive_SweetPotatoMine : ISkillPassive
+/// <summary>
+/// 这个b技能的用处就是给土豆雷的技能减CD
+/// </summary>
+public class Passive_SweetPotatoMine : ISkill
 {
     public float reduceRate;
-    public string checkAnim;
-    float baseColdDown;
 
-    public  void InitSkill(Skill chess)
+    public bool IfSkillReady(Chess user)
     {
-        baseColdDown = chess.coldDown;
-        int level = PowerBarPanel.GetView<SweetBar>().GetStage();
-        chess.coldDown=(1-reduceRate*level)*baseColdDown;
+        //throw new System.NotImplementedException();
+        return false;
     }
 
-    public  void OverSkill(Skill user)
+    public  void InitSkill(Chess chess)
     {
-        user.coldDown = baseColdDown;
+ 
+        
+    }
+
+    public void LeaveSkill(Chess user)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public void UseSkill(Chess user)
+    {
+        int level = PowerBarPanel.GetView<SweetBar>().GetStage();
+        user.propertyController.ChangeSpellHaste(level * reduceRate);
     }
 }

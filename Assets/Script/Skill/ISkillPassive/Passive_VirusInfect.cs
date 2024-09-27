@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Passive_VirusInfect : ISkillPassive
+/// <summary>
+/// 这个效果是生化幽灵感染的效果
+/// </summary>
+public class Passive_VirusInfect : ISkill
 {
     public string targetTag;
     public PropertyCreator creator;
-    public void InitSkill(Skill user)
+    public void InitSkill(Chess user)
     {
-        Debug.Log("初始化感染");
-        user.user.propertyController.onTakeDamage.AddListener(Infect);
+        //Debug.Log("初始化感染");
+        user. propertyController.onTakeDamage.AddListener(Infect);
     }
     public void Infect(DamageMessege dm)
     {
@@ -22,8 +25,20 @@ public class Passive_VirusInfect : ISkillPassive
 
         }
     }
-    public void OverSkill(Skill user)
+
+    public void UseSkill(Chess user)
     {
+        //throw new System.NotImplementedException();
+    }
+
+    public void LeaveSkill(Chess user)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    public bool IfSkillReady(Chess user)
+    {
+        return false;
         //throw new System.NotImplementedException();
     }
 }

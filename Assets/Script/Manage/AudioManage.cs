@@ -2,32 +2,84 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-public class AudioManage :MonoBehaviour
+public class AudioManage
 {
-    public AudioSource audioSource;
-    [Serializable]
-    public class AudioName
-    {
-        public string name;
-        public AudioClip clip;
-    }
-    public List<AudioName> clips;
+    public static float SoundEffectValue { get; private set; }
+    public static float BgmValue { get; private set; }
 
-    public void PlayAudio(string audioname)
+    static List<AudioPlayer> players;
+    public AudioManage()
     {
-        //Debug.Log("play "+audioname);
-        for(int i = 0; i < clips.Count; i++)
+        Debug.Log("³õÊ¼»¯");
+        players = new List<AudioPlayer>();
+        EventController.Instance.AddListener(EventName.PauseGame.ToString(), Pause);
+        EventController.Instance.AddListener(EventName.ResumeGame.ToString(), Resume);
+        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Stop);
+        SoundEffectValue = 1;
+        BgmValue = 1;
+    }
+    public static void ChangeSoundEffect(float value)
+    {
+        SoundEffectValue = value;
+        for(int i = 0; i < players.Count; i++)
         {
-            if(clips[i].name == audioname)
+            if (players[i].autype == AudioType.SoundEffect)
             {
-                audioSource.clip=clips[i].clip;
-                audioSource.Play();
+                players[i].audioSource.volume = SoundEffectValue;
             }
+        }
+    }
+    public static void ChangeBGMValue(float value)
+    {
+        BgmValue = value;
+        for(int i = 0; i < players.Count; i++)
+        {
+            if (players[i].autype == AudioType.BGM)
+            {
+                players[i].audioSource.volume = BgmValue;
+            }
+        }
+    }
+    public void Pause()
+    {
+        for(int i = 0; i < players.Count; i++)
+        {
+            players[i].Pause();
+        }
+    }
+    public void Resume()
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            players[i].UnPause();
         }
     }
     public void Stop()
     {
-        audioSource.Stop();
+        for (int i = 0; i < players.Count; i++)
+        {
+            players[i].Stop();
+        }
     }
+    public static void AddPlayer(AudioPlayer play)
+    {
+       
+        if (!players.Contains(play))
+        {
+            players.Add(play);
+        }
+    }
+    public static void RemovePlayer(AudioPlayer audioPlayer)
+    {
+        if (players.Contains(audioPlayer))
+        {
+            players.Remove(audioPlayer);
+        }
+    }
+}
+public enum AudioType
+{
+    SoundEffect,
+    BGM,
 }
 

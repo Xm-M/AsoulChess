@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Playables;
+using Sirenix.OdinInspector;
 /// <summary>
 /// 这个是上方的那个栏，懂我意思吧
 /// 包括旁边的栏，反正这个就是整个选牌体系都放在这了
@@ -19,6 +20,10 @@ public class PlantsShop : View
     
     public Animator anim;
     public AudioPlayer shopAudio;
+    [FoldoutGroup("初始位置")]
+    public Vector2 startPos1,startPos2;
+    [FoldoutGroup("初始位置")]
+    public RectTransform p1,p2;
     ShopIcon currentPlant;
     string Planttag = "Player";
     public override void Init()
@@ -46,15 +51,22 @@ public class PlantsShop : View
     public override void Hide()
     {
         base.Hide();
+        Debug.Log("PlantsShop清理完成");
         if (currentSelectIcons .Count==0) return;
-        for(int i = 0; i < allSelectIcons.Count; i++)
+        for (int i = selectIconParent.childCount - 1; i >= 0; i--)
         {
-            Destroy(allSelectIcons[i].gameObject);
+            Destroy(selectIconParent.GetChild(i).gameObject);
         }
-        for(int i = 0; i < currentSelectIcons.Count; i++)
+        allSelectIcons.Clear();
+        //Debug.Log(selectIconParent.childCount);
+        for (int i = shopIconParent.childCount - 1; i >= 0; i--)
         {
-            Destroy(currentSelectIcons[i].gameObject);
+            Destroy(shopIconParent.GetChild(i).gameObject);
         }
+        //Debug.Log(shopIconParent.childCount);
+        currentSelectIcons.Clear();
+        p1.anchoredPosition = startPos1;
+        p2.anchoredPosition = startPos2;
     }
     
 
@@ -62,11 +74,6 @@ public class PlantsShop : View
 
     public void SelectPlant(ShopIcon icon)
     {
-        //if (currentPlant == null)
-        //{
-            
-        //    //MapManage.instance.AwakeTile();
-        //}
         currentPlant = icon;
     }
     public bool IfCanBuyCard(PropertyCreator c){
@@ -78,17 +85,12 @@ public class PlantsShop : View
     }
     public void BuyPlant(){
         SunLightPanel.instance.ChangeSunLight(currentPlant.good.baseProperty.price);
-        //prePlant.gameObject.SetActive(false);
         currentPlant.ColdDown();
         currentPlant = null;
         CancelBuyCard();
     }
     public void CancelBuyCard(){
-        //MapManage.instance.SleepTile();
-        //prePlant.gameObject.SetActive(false);
         currentPlant=null;
-        //EventController.Instance.RemoveListener<Tile>(EventName.WhenPlantChess.ToString(), BuyPlant);
-        //EventController.Instance.RemoveListener<Tile<(EventName.WhenPlantChess.ToString(),BuyPlant);
     }
     public void AddSelection(ShopSelectIcon selectIcon){
         if(!currentSelectIcons.Contains(selectIcon)){
@@ -101,9 +103,12 @@ public class PlantsShop : View
         currentSelectIcons.Remove(selectIcon);
     }
 
+    /// <summary>
+    /// 这个是button调用的
+    /// </summary>
     public void GameStart(){
-        //LevelManage.instance.GameStart();
-        (MapManage_PVZ.instance as MapManage_PVZ ).WhenGameStart();
+        //(MapManage_PVZ.instance as MapManage_PVZ ).WhenGameStart();
+        LevelManage.instance.GameStart();
         anim.Play("gameStart");
     }
 

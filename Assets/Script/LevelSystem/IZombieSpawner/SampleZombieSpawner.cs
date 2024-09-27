@@ -5,6 +5,8 @@ using UnityEngine;
 
 /// <summary>
 /// 我怎么看都是要用到update 而不是简单的计时器就能解决的问题...
+/// 每个LevelData应该都有一个Clear方法 这个Clear方法应该调用每个Spwner的Clear函数
+/// 这个Clear函数我还没写
 /// </summary>
 public class SampleZombieSpawner : IZombieSpawner
 {
@@ -25,13 +27,14 @@ public class SampleZombieSpawner : IZombieSpawner
     public void Prepare(LevelData levelData)
     {
         Debug.Log("准备阶段");
+        //但我说实话 所有的初始化阶段是不是都可以在Prepare阶段就做好
         t = startTime;zt = 0;
         liveZombies = ChessTeamManage.Instance.GetTeam("Enemy");
         zombiesWave.InitWave(this);
         for (int i = 0; i < zombies.Count; i++)
         {
             Chess zombie = ChessTeamManage.Instance.CreateChess(zombies[i], (MapManage.instance as MapManage_PVZ).zombiePreTile[i],"Enemy");
-            Debug.Log("create"+zombie.name);
+            //Debug.Log("create"+zombie.name);
             //liveZombies.Add(zombie);
         }
         
@@ -51,14 +54,14 @@ public class SampleZombieSpawner : IZombieSpawner
         liveZombies.Clear();
         UIManage.Show<ProgressBar>();
         UIManage.Show<TextPanel>();
-        GameManage.instance.timerManage.AddTimer(
+        waveTimer= GameManage.instance.timerManage.AddTimer(
             UpdateGameStage, updateTime, true);
     }
     public void OverSpawning(LevelData levelData)
     {
         UIManage.Close<TextPanel>();
         UIManage.Close<ProgressBar>();
-        waveTimer.Stop();
+        waveTimer?.Stop();
     }
     public void CreateZombie()
     {
@@ -128,7 +131,7 @@ public class ZombiesWave
         CurrentPrice = 0;
         minTime = UnityEngine.Random.Range(minTimeRange.x, minTimeRange.y);
         maxTime = UnityEngine.Random.Range(maxTimeRange.x, maxTimeRange.y);
-        Debug.Log(minTime + " " + maxTime);
+        //Debug.Log(minTime + " " + maxTime);
         WaveZombie.Clear();
         fateList.Clear();
         UIManage.GetView<ProgressBar>().SetFlag(LastWave / 10);

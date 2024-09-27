@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 8998987949006397871}
   - component: {fileID: 22532233730934420}
   - component: {fileID: 2128867821861061220}
-  - component: {fileID: 7288892839144906051}
   - component: {fileID: 7735702373586384284}
+  - component: {fileID: 4733420927855968632}
   m_Layer: 0
   m_Name: roadBlock
   m_TagString: Untagged
@@ -55,11 +55,14 @@ MonoBehaviour:
     OnWeaponAttack:
       m_PersistentCalls:
         m_Calls: []
-    FindTarget:
+    initWeapon:
       id: 0
-    attack:
+    FindTarget:
       id: 1
+    attack:
+      id: 2
     loop: 1
+    master: {fileID: 0}
   propertyController:
     creator: {fileID: 11400000, guid: 9d3c1b3af48409441b72c9f5db7be006, type: 2}
     onGetDamage:
@@ -83,15 +86,15 @@ MonoBehaviour:
       loop: 1
       targets: []
       skillEffect:
-        id: 2
+        id: 0
   stateController:
     currentState:
       state:
-        id: 2
+        id: 0
       transitions: []
     preState:
       state:
-        id: 2
+        id: 0
       transitions: []
     stateGraph: {fileID: 11400000, guid: 1b2ba9c8965e5fa45910ef11c85a8bf7, type: 2}
     EnterWarState: 4
@@ -114,8 +117,10 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
+      type: {class: , ns: , asm: }
     00000001:
+      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
+    00000002:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
@@ -126,9 +131,7 @@ MonoBehaviour:
           damageType: 0
           damageElementType: 1
           takeBuff:
-            id: 2
-    00000002:
-      type: {class: , ns: , asm: }
+            id: 0
     00000003:
       type: {class: HorMove, ns: , asm: Assembly-CSharp}
 --- !u!95 &22532233730934420
@@ -176,22 +179,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &7288892839144906051
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1126277227195878689}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1775894ab4b61a74fb309c924487b7d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 7735702373586384284}
-  clips:
-  - name: attack
-    clip: {fileID: 8300000, guid: d5f20c5776b7bb247bd1ead5443b64ac, type: 3}
 --- !u!82 &7735702373586384284
 AudioSource:
   m_ObjectHideFlags: 0
@@ -288,6 +275,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4733420927855968632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126277227195878689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cb11ae55d6a7c4c9440a27b7f2aca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: "\u8DEF\u969C"
+  audioSource: {fileID: 7735702373586384284}
+  clipList:
+  - name: attack
+    clip: {fileID: 8300000, guid: d5f20c5776b7bb247bd1ead5443b64ac, type: 3}
 --- !u!1 &1141166926928552240
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,7 +462,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9a011275880fcc94c8bbbdfc0f3bbcfc, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -10,8 +10,8 @@ public class SkillState : State
     public override void Enter(Chess chess)
     {
         base.Enter(chess);
-        if (chess.skillController.currentSkill.AnimationName != "")
-            chess.animator.Play(chess.skillController.currentSkill.AnimationName);    
+        //多种技能的话 就在技能内部用animator.SetFloat();的方法来改变播放内容
+        chess.animator.Play("skill");
     }
     public override void Execute(Chess chess)
     {
@@ -20,7 +20,7 @@ public class SkillState : State
     public override void Exit(Chess chess)
     {
         base.Exit(chess);
-        chess.skillController.LoopSkill();
+        //chess.skillController.LoopSkill(); 
     }
     public override State Clone()
     {

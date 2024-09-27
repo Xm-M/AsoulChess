@@ -8,78 +8,47 @@ using UnityEngine.Events;
 public class SkillController:Controller
 {
     [HideInInspector]public Chess user;
-    public List<Skill> skillList;
-    [HideInInspector]public Skill currentSkill;
-    List<Skill> prepareSkill;
+    [SerializeField]
+    public ISkill passiveSkill;//被动技能同理
+    [SerializeField]
+    public ISkill activeSkill;//如果有复合技能 应该在Iskill类中制作一个复合技能而不是在这用list保存
+    [HideInInspector]
+    public DamageMessege DM;
+
     public void InitController(Chess c){
         this.user=c;
-        prepareSkill=new List<Skill>();
-        for(int i = 0; i < skillList.Count; i++)
-        {
-            skillList[i].user=user;
-        }
+        passiveSkill?.InitSkill(user);
+        activeSkill?.InitSkill(user);
+        DM = new DamageMessege();
     }
     public void WhenControllerEnterWar()
     {
-        for(int i = 0; i < skillList.Count; i++)
-        {
-            skillList[i].InitSkill();
-            if (skillList[i].loop)
-            {
-                int n = i;
-                skillList[i].timer = GameManage.instance.timerManage.AddTimer(
-                    ()=> {AddPrepareSkill(skillList[n]); }, skillList[i].coldDown);
-                skillList[i].timer.ResetTime(skillList[i].startTime);
-            }
-            else
-            {
-                skillList[i].UseSkill();
-            }
-        }
+        passiveSkill?.UseSkill(user);
     }
-    public void AddPrepareSkill(Skill skill)
-    {
-        prepareSkill.Add(skill);
-        if (skill.prepareName.Length > 0)
-        {
-            user.animator.Play(skill.prepareName);  
-        }
-    }
-
     public void WhenControllerLeaveWar()
     {
-        for (int i = 0; i < skillList.Count; i++)
-        {
-            skillList[i].WhenSkillLeave();
-            if (skillList[i].loop)
-            {
-                skillList[i].timer.Stop();
-            }
-        }
+        DM.damageType=DamageType.Magic;
+        passiveSkill?.LeaveSkill(user);
+        activeSkill?.LeaveSkill(user);
     }
 
+    /// <summary>
+    /// 这个其实是技能动画播放到释放技能的时候调用的
+    /// 主要是播放Skill动画和实际技能使用是两回事 所以要分开讨论
+    /// </summary>
     public void UseSkill()
     {
-        currentSkill.UseSkill();
+        activeSkill?.UseSkill(user);
     }
-    public void LoopSkill()
-    {
-        prepareSkill.Remove(currentSkill);
-        int n = skillList.IndexOf(currentSkill);
-        currentSkill.timer= GameManage.instance.timerManage.AddTimer(
-                    () => { AddPrepareSkill(skillList[n]); }, currentSkill.coldDown);
-        currentSkill = null;
-    }
-
+    /// <summary>
+    /// 这个也是用在Transition用来判断是否转换的
+    /// </summary>
+    /// <returns></returns>
     public bool IfSkillReady()
     {
-        for(int i=0;i<prepareSkill.Count; i++)
+        if(activeSkill != null)
         {
-            if (prepareSkill[i].IfSkillReady())
-            {
-                currentSkill = prepareSkill[i];
-                return true;
-            }
+            return activeSkill.IfSkillReady(user);
         }
         return false;
     }

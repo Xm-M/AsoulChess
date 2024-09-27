@@ -201,7 +201,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2047
 --- !u!114 &745931673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,16 +214,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fda94f4fc7a0b4c4cb4c73725cab6480, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NextStage:
-  - "\u5730\u7262"
-  - "\u68EE\u6797"
-  - "\u96EA\u5730"
-  - "\u8150\u8680"
-  stadgeNum: 1
   loadValue: 0
   sliderValue: 0
   speed: 1
+  image: {fileID: 0}
   clock: {fileID: 0}
+  canvers: {fileID: 0}
 --- !u!1 &5045876225837451522
 GameObject:
   m_ObjectHideFlags: 0

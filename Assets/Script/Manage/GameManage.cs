@@ -4,11 +4,16 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
+
+/// <summary>
+/// GameManage就更像是一个用来保存各种Manage数据的地方了
+/// </summary>
 public class GameManage : MonoBehaviour
 {
     public SceneManage sceneManage;
     public UIManage UIManage;
     public TimerManage timerManage;
+    public AudioManage audioManage;
     public CheckObjectPoolManage checObjectPoolManage;
     public BuffManage buffManage;
     public ChessFactory chessFactory;//这个要在最后的时候销毁
@@ -29,12 +34,13 @@ public class GameManage : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
+        audioManage = new AudioManage();
         timerManage = new TimerManage();
-        //audioManage = new AudioManage();
         checObjectPoolManage = new CheckObjectPoolManage();
         buffManage = new BuffManage();
         chessFactory = new ChessFactory();
         chessTeamManage = new ChessTeamManage();
+        
         //enemyManage = new ChessManage(); 
     }
     private void Start()
@@ -49,12 +55,6 @@ public class GameManage : MonoBehaviour
     {
         timerManage.Update();
     }
-    public void RestartGame()
-    {
-        EventController.Instance.TriggerEvent(EventName.RestartGame.ToString());
-         
-    }
-    
     public void QuitGame()
     {
         Application.Quit();

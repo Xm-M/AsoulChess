@@ -10,10 +10,12 @@ public class ChessManage : IManager
     public List<Chess> chesses;
     public void InitManage()
     {
-         chesses=new List<Chess>();
+        chesses=new List<Chess>();
+        EventController.Instance.AddListener(EventName.GameOver.ToString(), OnGameOver);
     }
     public void OnGameOver()
     {
+        Debug.Log("«Â¿Ì∂”ŒÈ" + playerTag);
         List<Chess> list=new List<Chess>(chesses);
         for(int i = 0; i < list.Count; i++)
         {

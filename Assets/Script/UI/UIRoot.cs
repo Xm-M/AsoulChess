@@ -5,7 +5,7 @@ using UnityEngine;
 public class UIRoot : MonoBehaviour
 {
     public static Dictionary<string, View> m_views = new Dictionary<string, View>(); //定义一个字典存储所有UI界面
-    private void Awake()
+    private void Start()
     {
         var prefabs = Resources.LoadAll<Transform>("UIPrefab");//加载UIPrefab文件夹下的所有UI预制体
         foreach (Transform view in prefabs)

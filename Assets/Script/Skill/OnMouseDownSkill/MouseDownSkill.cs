@@ -8,7 +8,8 @@ public class MouseDownSkill : MonoBehaviour
     public bool IfDown { get; private set; }
     protected virtual void OnMouseDown()
     {
-        IfDown = true;    
+        IfDown = true;
+        //Debug.Log("use");
     }
     protected virtual void OnMouseUp()
     {

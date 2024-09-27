@@ -32,7 +32,8 @@ public class SunLight : UIItem, IPointerEnterHandler
     }
     public IEnumerator Recycles()
     {
-        UIManage.GetView<PlantsShop>().shopAudio.PlayAudio("SunLight");
+        //UIManage.GetView<PlantsShop>().shopAudio.PlayAudio("SunLight");
+        UIManage.GetView<ItemPanel>().player.PlayAudio("SunLight");
         while (Vector2.Distance(transform.position,recyclePos) > 1f)
         {
             transform.position = Vector2.MoveTowards(transform.position, recyclePos, fallSpeed * Time.fixedDeltaTime);

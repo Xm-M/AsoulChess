@@ -26,13 +26,13 @@ public class MapManage : MonoBehaviour
     {
         tiles = new Tile[mapSize.x, mapSize.y];
         initMapManage?.InitMap(tiles,mapSize,tileSize);
-        Debug.Log(tiles.Length);
+        //Debug.Log(tiles.Length);
         for (int i = 0; i < mapSize.y; i++)
         {
             preTiles.Add(tiles[mapSize.x - 1, i]);
         }
-        Debug.Log(tiles.Length);
-        Debug.Log(tiles[0, 0]);
+        //Debug.Log(tiles.Length);
+        //Debug.Log(tiles[0, 0]);
     }
     public bool IfInMapRange(int x,int y)
     {

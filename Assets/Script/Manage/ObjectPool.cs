@@ -13,9 +13,15 @@ public class ObjectPool : MonoBehaviour
     {
         if (instance == null)
             instance = this;
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
         objectPool = new Dictionary<string, Stack<GameObject>>();
         poolScene = SceneManager.CreateScene(name);
         otherPool = new Dictionary<Type, Stack<object>>();
+        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), ClearPool);
     }
     //
     IEnumerator AddMember(Chess c, Tile tile)
@@ -60,7 +66,6 @@ public class ObjectPool : MonoBehaviour
     }
     public object CreateObject(Type type)
     {
-        //Type type = obj.GetType();
         if (otherPool.ContainsKey(type))
         {
             if (otherPool[type].Count != 0)
@@ -80,5 +85,20 @@ public class ObjectPool : MonoBehaviour
         {
             otherPool[type].Push(obj);
         }
+    }
+    public void ClearPool()
+    {
+        Debug.Log("ObjectPool清理完成");
+        
+        foreach(var stack in objectPool)
+        {
+            while (stack.Value.Count > 0)
+            {
+                GameObject obj = stack.Value.Pop();
+                Destroy(obj);
+            }
+        }
+        otherPool.Clear();
+        objectPool.Clear();
     }
 }

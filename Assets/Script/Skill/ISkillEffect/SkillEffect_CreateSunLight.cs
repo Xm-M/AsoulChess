@@ -1,17 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class SkillEffect_CreateSunLight : ISkillEffect
+public class SkillEffect_CreateSunLight : ISkill
 {
-    //public GameObject sunLight;
+    public float coldDown;//CD
     public int sunLightNum = 25;
-    public void SkillEffect(Skill skill)
+    float t;
+    public bool IfSkillReady(Chess user)
+    {
+        //throw new System.NotImplementedException();
+        t+=Time.deltaTime;
+        if (t > user.propertyController.GetColdDown(coldDown))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void InitSkill(Chess user)
+    {
+        t = 0; 
+    }
+
+    public void LeaveSkill(Chess user)
+    {
+        t = 0;  
+    }
+
+ 
+
+    public void UseSkill(Chess user)
     {
         SunLight lignt = UIManage.GetView<ItemPanel>().Create<SunLight>() as SunLight;
-        if (lignt != null)
-        {
-            lignt.InitSunLight(skill.user.moveController.standTile,sunLightNum);
-        }
+        Debug.Log(lignt.gameObject.name);
+        lignt.InitSunLight( user.moveController.standTile, sunLightNum);
     }
 }

@@ -8,10 +8,10 @@ public class ICircleSearch : IFindTarget
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
-        Collider2D[] cols = CheckObjectPoolManage.GetColArray(100);
+        Collider2D[] cols = CheckObjectPoolManage.GetColArray((int)(400*checkRange*checkRange));
         LayerMask layer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         int i = Physics2D.OverlapCircleNonAlloc(user.transform.position, checkRange, cols, layer);
-        Debug.Log("找到了" + i);
+        //Debug.Log("找到了" + i);
         for (int j = 0; j < i; j++)
         {
             Chess enemy = cols[j].GetComponent<Chess>();

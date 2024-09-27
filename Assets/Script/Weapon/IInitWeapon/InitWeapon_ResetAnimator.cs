@@ -6,7 +6,7 @@ public class InitWeapon_ResetAnimator : IInitWeapon
 {
     public string id;
     public int baseValue;
-    public void InitWeapon(Weapon weapon)
+    public void InitWeapon(AttackController weapon)
     {
         weapon.master.animator.SetInteger(id,baseValue);
     }

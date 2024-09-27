@@ -521,8 +521,8 @@ GameObject:
   - component: {fileID: 8197890613203561791}
   - component: {fileID: 8197890613203561788}
   - component: {fileID: 8197890613203561777}
-  - component: {fileID: 8197890613203561790}
   - component: {fileID: 8197890613203561776}
+  - component: {fileID: 429199307968476186}
   m_Layer: 5
   m_Name: TextPanel
   m_TagString: Untagged
@@ -593,7 +593,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b39a9eb0990228d4f83cb8dcd823facd, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -678,28 +678,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &8197890613203561790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8197890613203561786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1775894ab4b61a74fb309c924487b7d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 8197890613203561777}
-  clips:
-  - name: "\u51C6\u5907\u79CD\u690D"
-    clip: {fileID: 8300000, guid: b39a9eb0990228d4f83cb8dcd823facd, type: 3}
-  - name: ZombieWave
-    clip: {fileID: 8300000, guid: a75f7d9172717aa499efdc1e7e4fc5b6, type: 3}
-  - name: lastWave
-    clip: {fileID: 8300000, guid: 1239cc892a5829c4687019ea7b703dea, type: 3}
-  - name: firstZombie
-    clip: {fileID: 8300000, guid: bf18e04cefad76c4e8d06464b8eaccb9, type: 3}
 --- !u!114 &8197890613203561776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -713,9 +691,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8197890613203561788}
-  manage: {fileID: 8197890613203561790}
+  manage: {fileID: 429199307968476186}
   zombieWave: {fileID: 8197890614105431148}
   lastWave: {fileID: 8197890614525751158}
+--- !u!114 &429199307968476186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8197890613203561786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cb11ae55d6a7c4c9440a27b7f2aca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: 
+  audioSource: {fileID: 8197890613203561777}
+  clipList:
+  - name: "\u51C6\u5907\u79CD\u690D"
+    clip: {fileID: 8300000, guid: b39a9eb0990228d4f83cb8dcd823facd, type: 3}
+  - name: ZombieWave
+    clip: {fileID: 8300000, guid: a75f7d9172717aa499efdc1e7e4fc5b6, type: 3}
+  - name: lastWave
+    clip: {fileID: 8300000, guid: 1239cc892a5829c4687019ea7b703dea, type: 3}
+  - name: firstZombie
+    clip: {fileID: 8300000, guid: bf18e04cefad76c4e8d06464b8eaccb9, type: 3}
 --- !u!1 &8197890613242833285
 GameObject:
   m_ObjectHideFlags: 0

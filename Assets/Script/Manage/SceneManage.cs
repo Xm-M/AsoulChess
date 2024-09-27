@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using PixelsoftGames.PixelUI;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class SceneManage : MonoBehaviour
 {
@@ -16,31 +17,37 @@ public class SceneManage : MonoBehaviour
     public ClockDemo clock; //这个其实就是进度条
     int n=0;//场景计数
     public GameObject canvers;
+    string currentScene ;
     private void Start()
     {
         if(instance == null)instance = this;
         else Destroy(gameObject);
+        currentScene = "开始";
     }
-    public void LoadScene(LevelData roomType)
+    public void LoadScene(LevelData roomType, UnityAction LoadOver = null, UnityAction beforeLoad = null)
     {
         EventController.Instance.TriggerEvent(EventName.WhenSceneLoad.ToString());
-        StartCoroutine(AsyncLoading(roomType.sceneName));
+        StartCoroutine(AsyncLoading(roomType.sceneName,LoadOver,beforeLoad));
     }
-    public void LoadScene(string name)
+    public void LoadScene(string name, UnityAction LoadOver = null, UnityAction beforeLoad = null)
     {
-         SceneManager.LoadScene(name);
+        StartCoroutine(AsyncLoading(name, LoadOver,beforeLoad));
         
     }
-    IEnumerator AsyncLoading(string sceneName)
+    IEnumerator AsyncLoading(string sceneName,UnityAction LoadOver=null,UnityAction beforeLoad=null)
     {
+        beforeLoad?.Invoke();
+        operation= SceneManager.UnloadSceneAsync(currentScene);
+        yield return operation;
         // 异步加载场景
         canvers.SetActive(false);
         GetComponent<Animator>().SetBool("load",true);
-        operation = SceneManager.LoadSceneAsync(sceneName);
+        currentScene= sceneName;
+        operation = SceneManager.LoadSceneAsync(sceneName,LoadSceneMode.Additive);
         // 阻止当加载完成自动切换
         operation.allowSceneActivation = false;
-
         yield return operation;
+        LoadOver?.Invoke();
     }
     private void Update()
     {

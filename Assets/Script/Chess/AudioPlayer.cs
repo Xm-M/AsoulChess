@@ -3,43 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class AudioController : Controller
-{
-    public List<AudioPlayer> audioPlayers;
-    public Dictionary<string, AudioPlayer> playerMap;
- 
-    public void InitController(Chess chess)
-    {
-        playerMap = new Dictionary<string, AudioPlayer>();
-        for(int i = 0; i < audioPlayers.Count; i++)
-        {
-            playerMap.Add(audioPlayers[i].playerName, audioPlayers[i]);
-        }
-    }
-    public void PlayAudio(string name)
-    {
-        playerMap[name].Play ();
-    }
-   
-
-    public void WhenControllerEnterWar()
-    {
-         
-            
-    }
-
-    public void WhenControllerLeaveWar()
-    {
-        throw new NotImplementedException();
-    }
-}
-
-
 public class AudioPlayer : MonoBehaviour
 {
-    public string playerName;
+    public AudioType autype;
     public AudioSource audioSource;
+    private void OnEnable()
+    {
+        if(autype==AudioType.SoundEffect)
+            audioSource.volume=AudioManage.SoundEffectValue;
+        else
+            audioSource.volume=AudioManage.BgmValue;
+        AudioManage.AddPlayer(this);
+    }
+    private void OnDisable()
+    {
+        AudioManage.RemovePlayer(this);
+    }
     [Serializable]
     public class NameAudioClip
     {
@@ -54,7 +33,7 @@ public class AudioPlayer : MonoBehaviour
             if (name == clipList[i].name)
             {
                 audioSource.clip = clipList[i].clip;
-                audioSource.Play();
+                Play();
                 return;
             }
         }
@@ -72,6 +51,26 @@ public class AudioPlayer : MonoBehaviour
     }
     public void Play()
     {
+        //if(autype==AudioType.SoundEffect)
+        //    audioSource.volume=AudioManage.SoundEffectValue;
+        //else
+        //    audioSource.volume=AudioManage.BgmValue;
         audioSource.Play();
+    }
+    public void Stop()
+    {
+        audioSource.Stop();
+    }
+    public void Pause()
+    {
+        audioSource.Pause();
+    }
+    public void UnPause()
+    {
+        //if (autype == AudioType.SoundEffect)
+        //    audioSource.volume = AudioManage.SoundEffectValue;
+        //else
+        //    audioSource.volume = AudioManage.BgmValue;
+        audioSource.UnPause();
     }
 }

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Sirenix.OdinInspector.Editor;
+/// <summary>
+/// 那我们来思考一下要做什么吧
+/// </summary>
 [CustomEditor(typeof(Chess))]
 public class ChessEditor : OdinEditor
 {
     protected override void OnEnable()
     {
-        // 检查是否已经添加了需要的组件
+        // 检查是否已经添加了需要的组件 
         base.OnEnable();
         Chess myScript = (Chess)target;
         if (myScript.GetComponent<Collider2D>() == null)
@@ -29,6 +32,8 @@ public class ChessEditor : OdinEditor
             childObject.transform.localPosition = Vector3.zero;
             childObject.AddComponent<SpriteRenderer>();
             myScript.sprite = childObject.GetComponent<SpriteRenderer>();
+            myScript.sprite.sortingLayerName = "Chess";
+            myScript.sprite.sortingOrder = 1;
             Debug.Log("自动创建了子物体");
         }
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class Item_PlantCard : UIItem
@@ -8,10 +9,12 @@ public class Item_PlantCard : UIItem
     public PropertyCreator creator;
     public Image goodImage;
     bool ifselect;
-    public void InitCard(PropertyCreator p)
+    public UnityEvent WhenRecycle;
+    public void InitCard(PropertyCreator p,UnityAction WhenReycle=null)
     {
         creator = p;
         ifselect = false;
+        if(WhenReycle!=null)WhenRecycle.AddListener(WhenReycle);
     }
     //然后这里还要写一个闪烁的效果，和一个过了时间就消失的代码
     public override void OnPointerClick(PointerEventData eventData)
@@ -32,5 +35,6 @@ public class Item_PlantCard : UIItem
     public override void Recycle()
     {
         UIManage.GetView<ItemPanel>().Recycle<Item_PlantCard>(this);
+        WhenRecycle?.Invoke();
     }
 }

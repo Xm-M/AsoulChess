@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 我感觉我这个buff系统写的也很垃圾
+/// </summary>
 [Serializable]
 public class Buff  
 {
@@ -39,6 +42,12 @@ public class TimeBuff : Buff
     {
         base.BuffReset();
         timer.ResetTime();
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        timer?.Stop();
+        timer = null;
     }
 }
 /// <summary>
@@ -79,7 +88,7 @@ public class AccelerateBuff:TimeBuff
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
-        Debug.Log("开始加速");
+        //Debug.Log("开始加速");
         target.propertyController.ChangeAcceleRate(accelerateRate);
         target.sprite.color = Color.red;
         timer = GameManage.instance.timerManage.AddTimer(
@@ -89,7 +98,7 @@ public class AccelerateBuff:TimeBuff
     public override void BuffOver()
     {
         base.BuffOver();
-        Debug.Log("结束加速");
+        //Debug.Log("结束加速");
         target.propertyController.ChangeAcceleRate(-accelerateRate);
         target.sprite.color = Color.white;
     }

@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u5E1D\u6C5F\u7136"
+  m_EditorClassIdentifier: 
+  chessName: "\u5E1D\u6C5F\u7136"
+  baseProperty:
+    attack: 0
+    spell: 0
+    crit: 0
+    critDamage: 1.3
+    extraDamge: 0
+    AR: 0
+    MR: 0
+    extraDefence: 0
+    Hp: 500
+    HpMax: 500
+    lifeStealing: 0
+    healRate: 1
+    speed: 2
+    attackSpeed: 1
+    acceleRated: 1
+    spellHaste: 0
+    attackRange: 1
+    price: 50
+    rarity: 4000
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 1233924589323141089, guid: f929581d4fa5ab44f847f805bb1a3083, type: 3}
+  chessSprite: {fileID: 21300000, guid: d1dcbe5bc5a849046abe956b36b18b9f, type: 3}
+  plantTags:
+  - "\u5609\u7136"
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}

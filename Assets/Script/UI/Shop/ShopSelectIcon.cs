@@ -14,7 +14,7 @@ public class ShopSelectIcon : MonoBehaviour
     public Color selectColor;
     public Text price;
 
-    public AudioSource Audio;
+    public AudioPlayer Audio;
     public bool ifSelect;
     private void OnEnable()
     {

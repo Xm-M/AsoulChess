@@ -205,7 +205,7 @@ MonoBehaviour:
         m_MethodName: LoadScene
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: e696545fd53d045428a04b97a1bf2354, type: 2}
+          m_ObjectArgument: {fileID: 11400000, guid: 32c3030a2b9e0fe40a7bd6eacc36241f, type: 2}
           m_ObjectArgumentAssemblyTypeName: LevelData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 6025567823887305212}
   - component: {fileID: 6025567823887305210}
   - component: {fileID: 6025567823887305209}
+  - component: {fileID: 4010160072364037366}
   m_Layer: 5
   m_Name: GameStart
   m_TagString: Untagged
@@ -398,3 +399,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4010160072364037366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025567823887305214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cb11ae55d6a7c4c9440a27b7f2aca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autype: 1
+  audioSource: {fileID: 6025567823887305209}
+  clipList:
+  - name: BGM
+    clip: {fileID: 8300000, guid: abe75aea20b1e254a834c2134ae61a51, type: 3}

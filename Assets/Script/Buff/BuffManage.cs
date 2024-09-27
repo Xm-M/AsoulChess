@@ -49,4 +49,10 @@ public class BuffManage : IManager
             Debug.LogWarning("没有这个buff"+buff.buffName);
         }
     }
+    public void Clear()
+    {
+        Debug.Log("清理buff系统");
+        buffDic.Clear();
+
+    }
 }

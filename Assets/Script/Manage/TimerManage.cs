@@ -23,17 +23,20 @@ public class TimerManage:IManager
         timerList = new List<Timer>();
         availableQueue = new Queue<Timer>();
         timeSpeed = 1;
+        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(),
+            ClearTime);
     }
 
     public void OnGameOver()
     {
-        ChangeTimeSpeed(1);
+        //ChangeTimeSpeed(1);
         for(int i = 0; i < timerList.Count; i++)
         {
             timerList[i].Stop();
             availableQueue.Enqueue(timerList[i]);
             timerList.Remove(timerList[i]);
         }
+
     }
 
     public void OnGameStart()
@@ -63,6 +66,12 @@ public class TimerManage:IManager
     {
         timeSpeed = scale;   
         Time.timeScale = scale;
+    }
+    public void ClearTime()
+    {
+        Debug.Log("清理计时器");
+        timerList.Clear();
+        availableQueue.Clear();
     }
 }
 public class Timer

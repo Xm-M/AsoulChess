@@ -5,12 +5,18 @@ using UnityEngine;
 public class TextPanel : View
 {
     public Animator animator;
-    public AudioManage manage;
+    public AudioPlayer manage;
     public GameObject zombieWave;
     public GameObject lastWave;
     public override void Init()
     {
-        //throw new System.NotImplementedException();
+        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Hide);
+    }
+    public override void Show()
+    {
+        
+        base.Show();
+        manage.PlayAudio("×¼±¸ÖÖÖ²");
     }
     public void FirstZombieCom()
     {

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1194761843561116711}
   - component: {fileID: 2635896559229273121}
   - component: {fileID: 9104700654476823153}
+  - component: {fileID: 134079820078001274}
   m_Layer: 0
   m_Name: SunLight
   m_TagString: Untagged
@@ -51,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SunLightNum: 25
-  fallSpeed: 100
+  fallSpeed: 400
   disapearTime: 20
 --- !u!222 &2635896559229273121
 CanvasRenderer:
@@ -81,7 +82,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 28a14b6acb252df4787e935cd4c43a6e, type: 3}
+  m_Sprite: {fileID: 8982329768464110262, guid: 7037c5aee94b71c4b954dbe575dba4da, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -91,3 +92,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &134079820078001274
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1194761843561116705}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f56a1c5d259c2594ab0233898c5ca58d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

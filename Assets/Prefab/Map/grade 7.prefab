@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2729969307140054517}
   - component: {fileID: 8751636850787671658}
   - component: {fileID: 6206570528074799356}
+  - component: {fileID: 229482464357571037}
   m_Layer: 9
   m_Name: grade 7
   m_TagString: Untagged
@@ -97,15 +98,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca9291e2f492230408421fffd1199b2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubePos: {x: 0, y: 0, z: 0}
   mapPos: {x: 0, y: 0}
   tileType: 1
   stander: {fileID: 0}
   OnPlant:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6206570528074799356}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+      - m_Target: {fileID: 229482464357571037}
+        m_TargetAssemblyTypeName: AudioPlayer, Assembly-CSharp
         m_MethodName: Play
         m_Mode: 1
         m_Arguments:
@@ -238,3 +238,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &229482464357571037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4057372595257492823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cb11ae55d6a7c4c9440a27b7f2aca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autype: 0
+  audioSource: {fileID: 6206570528074799356}
+  clipList:
+  - name: plant
+    clip: {fileID: 8300000, guid: cdc7addb58767ed4ba3b4da205e2edf9, type: 3}

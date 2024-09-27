@@ -39,18 +39,16 @@ public class PropertyController:Controller
     public void GetDamage(DamageMessege mes)
     {
         onSetDamage?.Invoke(mes);
-        Debug.Log("基础伤害" + mes.damage);
+        //Debug.Log("基础伤害" + mes.damage);
         if (mes.takeBuff != null)
         {
             chess.buffController.AddBuff(mes.takeBuff);
         }
-        if (mes.damageType == DamageType.Physical)
+        if (mes.damageType != DamageType.Real)
         {
             //Debug.Log("倍率" + (1 - (Data.AR / (Data.AR + 100))));
             mes.damage *= (1 - (Data.AR / (Data.AR + 100)));
         }
-        else if (mes.damageType == DamageType.Magic)
-            mes.damage *= (1 - (Data.MR / (Data.MR + 100)));
         else if (mes.damageType == DamageType.Miss)
             mes.damage = 0;
         //Debug.Log("当前伤害" + mes.damage);
@@ -89,8 +87,11 @@ public class PropertyController:Controller
         Data.Hp = Mathf.Min(Data.HpMax, Data.Hp + heal);
     }
     public void ChangeHPMax(float value) => Data.HpMax += value;
-    public void ChangeAttack(float value) => Data.attack = Mathf.Max(0, Data.attack + value);
-    public void ChangeSpell(float value) => Data.spell = Mathf.Max(0, Data.spell + value);
+    public void ChangeAttack(float value)
+    {
+        Data.attackRate += value;        //if(Data.attackRate <0)Data.attackRate = 0;
+        Data.attack = creator.baseProperty.attack * Data.attackRate;
+    }
     public void ChangeCrit(float value)
     {
         if (value < 0) Data.crit = Mathf.Max(0, Data.crit + value);
@@ -109,7 +110,6 @@ public class PropertyController:Controller
         Data.critDamage += value;
     }
     public void ChangeAR(float value) => Data.AR += value;
-    public void ChangeMR(float value) => Data.MR += value;
     public void ChangeExtraDamage(float value) => Data.extraDamge *= (1 + value);
     public void ChangeExtraDefence(float value) => Data.extraDefence *= (1 + value);
     //public void ChangeShiled(float value) => Data.shiledNum += value;//改变护盾肯定有问题
@@ -119,6 +119,10 @@ public class PropertyController:Controller
     {
         Data.acceleRated += value;
         chess.animator.speed = Data.acceleRated;
+    }
+    public void ChangeSpellHaste(float value)
+    {
+        Data.spellHaste+=value;
     }
     public void ChangeAttackRange(int value) => Data.attackRange = Mathf.Max(1, Data.attackRange + value);
      
@@ -130,19 +134,16 @@ public class PropertyController:Controller
     }
     public float GetAttack()
     {
-        return Data.attack;
+        return Mathf.Max(Data.attack,0);
+    }
+    public float GetColdDown(float coldDown)
+    {
+
+        return coldDown/(1+ Data.spellHaste/100);
     }
     public float GetAR()
     {
         return Data.AR;
-    }
-    public float GetMR()
-    {
-        return Data.MR;
-    }
-    public float GetSpell()
-    {
-        return Data.spell;
     }
     public float GetHp()
     {
@@ -156,11 +157,7 @@ public class PropertyController:Controller
     //{
     //    return Data.shiledNum;
     //}
-    public float GetAttackInterval()
-    {
-        if (Data.acceleRated <= 0) return 1000;
-        return 1/(Data.attackSpeed*Data.acceleRated);
-    }
+     
     public float GetAccelerate()
     {
         return Data.acceleRated;
@@ -198,14 +195,14 @@ public class PropertyController:Controller
 public class Property
 {
     public float attack;//基础攻击
-    public float spell;//基础法强
-    
+    public float attackRate;//攻击倍率
+
     public float crit;//暴击率
     public float critDamage=1.3f;//暴击伤害
     
     public float extraDamge=0f;//额外增伤
     public float AR;//护甲
-    public float MR;//魔抗
+
     [Range(0,1)]
     public float extraDefence=0;//额外减伤
     
@@ -219,7 +216,7 @@ public class Property
     public float healRate=1f;//回复增益
 
     public float speed = 2f;//移动速度
-    public float attackSpeed = 1f;//攻击速度
+    //public float attackSpeed = 1f;//攻击速度
     public float acceleRated=1f;//攻速移速的加成都取决于这个属性
 
     public float spellHaste=0f;//技能急速
@@ -242,7 +239,7 @@ public class Property
     public void ResetAllProperty(Property property)
     {
         attack = property.attack;
-        spell = property.spell;
+        attackRate = 1;
         crit = property.crit;
         critDamage = property.critDamage;
         extraDefence = property.extraDefence;
@@ -253,8 +250,8 @@ public class Property
         speed = property.speed;
         lifeStealing = property.lifeStealing;
         healRate = property.healRate;
-        attackSpeed = property.attackSpeed;
-        acceleRated = property.acceleRated;
+        //attackSpeed = property.attackSpeed;
+        acceleRated = 1;
         
         attackRange = property.attackRange;
         price = property.price;
@@ -294,7 +291,7 @@ public class DamageMessege
 public enum DamageType
 {
     Physical,//物理伤害
-    Magic,//魔法伤害
+    Magic,//与其说是魔法伤害，不如说是技能伤害
     Real,//真实伤害
     Miss,//未命中
 }

@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u4F20\u9001\u5E26Test"
+  m_EditorClassIdentifier: 
+  sceneName: "\u524D\u9662"
+  levelName: 
+  levelMode: 0
+  preparation:
+    id: 0
+  spawner:
+    id: 1
+  outcome:
+    id: 2
+  references:
+    version: 1
+    00000000:
+      type: {class: LevelPrepare_Conveyor, ns: , asm: Assembly-CSharp}
+      data:
+        creators:
+        - {fileID: 11400000, guid: 5725ecf1e74e08844a87f79964959c28, type: 2}
+        - {fileID: 11400000, guid: a55bed9587bb69345b31d4d2bd10f2c5, type: 2}
+        - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+    00000001:
+      type: {class: SampleZombieSpawner, ns: , asm: Assembly-CSharp}
+      data:
+        zombies:
+        - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+        - {fileID: 11400000, guid: b1e5513280cae75419701eb6ec80144c, type: 2}
+        - {fileID: 11400000, guid: 1cde937abe260174db75bd5d0daf5b91, type: 2}
+        - {fileID: 11400000, guid: 34190b4243f18dd429cf87d2e9554162, type: 2}
+        zombiesWave:
+          WaveZombie:
+          - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+          - {fileID: 11400000, guid: 9d3c1b3af48409441b72c9f5db7be006, type: 2}
+          - {fileID: 11400000, guid: 1cde937abe260174db75bd5d0daf5b91, type: 2}
+          - {fileID: 11400000, guid: 34190b4243f18dd429cf87d2e9554162, type: 2}
+          fateList:
+          - 0.25
+          - 0.5
+          - 0.75
+          - 1
+          waitTime: 6
+          minTimeRange: {x: 20, y: 26}
+          maxTimeRange: {x: 30, y: 35}
+          waveIndex: 3
+          waveAdditionPrice: 30
+          LastWave: 10
+          currentWave: 1
+          CurrentPrice: -2
+          tag: Enemy
+          minTime: 24.776451
+          maxTime: 30.069351
+        zombieInterval: 0.5
+        updateTime: 0.5
+        startTime: 10
+        liveZombies:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+    00000002:
+      type: {class: , ns: , asm: }

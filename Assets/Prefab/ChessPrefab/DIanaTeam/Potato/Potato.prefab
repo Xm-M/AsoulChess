@@ -54,11 +54,14 @@ MonoBehaviour:
     OnWeaponAttack:
       m_PersistentCalls:
         m_Calls: []
+    initWeapon:
+      id: 0
     FindTarget:
       id: 0
     attack:
       id: 0
     loop: 1
+    master: {fileID: 0}
   propertyController:
     creator: {fileID: 11400000, guid: b19c65e094847ae488679b0128196ef3, type: 2}
     onGetDamage:
@@ -118,7 +121,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   animator: {fileID: 3990286117579640657}
-  sprite: {fileID: 0}
+  sprite: {fileID: 77831676951810963}
   references:
     version: 1
     00000000:
@@ -140,20 +143,26 @@ MonoBehaviour:
     00000003:
       type: {class: IAttackSkillEffect, ns: , asm: Assembly-CSharp}
       data:
-        attackFunction:
+        findTarget:
           id: 5
+        attackFunction:
+          id: 6
     00000004:
+      type: {class: ICircleSearch, ns: , asm: Assembly-CSharp}
+      data:
+        checkRange: 1
+    00000005:
       type: {class: IBoxSearch, ns: , asm: Assembly-CSharp}
       data:
-        boxCheck: {x: 1.2, y: 0.5}
-    00000005:
+        boxCheck: {x: 3.5, y: 1}
+    00000006:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
         DM:
           damageFrom: {fileID: 0}
           damageTo: {fileID: 0}
-          damage: 1800
+          damage: 0
           damageType: 0
           damageElementType: 0
           takeBuff:
@@ -171,7 +180,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.02202344, y: -0.11892669}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.325, y: 0.365}
@@ -182,7 +191,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.7621465, y: 0.7621466}
   m_EdgeRadius: 0
 --- !u!95 &3990286117579640657
 Animator:
@@ -311,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27cb11ae55d6a7c4c9440a27b7f2aca3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: "\u5609\u7136\u571F\u8C46\u96F7"
+  autype: 0
   audioSource: {fileID: 5492095926072968025}
   clipList:
   - name: explore
@@ -366,7 +375,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: b6af562e6011c9c449c53f3ba993080c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

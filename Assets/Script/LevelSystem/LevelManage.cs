@@ -4,11 +4,15 @@ using UnityEngine;
 
 /// <summary>
 /// 那么roommanage是用来干什么的呢
+/// 也就是说所有的关卡进程都是在这里控制的 
+/// 而不是在GameManage
+/// 所以为什么这个脚本要是MoneBehavirour的
 /// </summary>
 public class LevelManage: MonoBehaviour
 {
     public static LevelManage instance;
     public LevelData currentLevel;
+    public LevelData menu;
     public bool IfGameStart { get; private set; }
     private void Awake()
     {
@@ -26,6 +30,18 @@ public class LevelManage: MonoBehaviour
         currentLevel = levelData;
         GameManage.instance.sceneManage.LoadScene(currentLevel.sceneName);
     }
+    public void RestartLevel()
+    {
+        GameManage.instance.sceneManage.LoadScene(currentLevel.sceneName, null, () => { GameOver(); LeaveState(); });
+    }
+    public void ReturnMenu()
+    {
+        //GameOver();
+        //LeaveState();
+        GameManage.instance.sceneManage.LoadScene("开始",()=>
+        UIManage.GetView<StartUI>().Show(), () => { GameOver();LeaveState(); });
+        
+    }
     public void PrepareLevel()
     {
         currentLevel.PrepareStage();
@@ -39,12 +55,14 @@ public class LevelManage: MonoBehaviour
     }
     public void GameOver()
     {
+        Debug.Log("GameOver");
         IfGameStart = false;
         currentLevel.OverGameStage();
         EventController.Instance.TriggerEvent(EventName.GameOver.ToString());
     }
-    public void LevelState()
+    public void LeaveState()
     {
+        Debug.Log("LeaveLevel");
         IfGameStart = false;
         currentLevel.LeaveStage();
         EventController.Instance.TriggerEvent(EventName.WhenLeaveLevel.ToString());

@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+/// <summary>
+/// 感觉moveController也是可有可无的东西 要不然就直接删了吧
+/// 但是standTile还是有用的 这就很烦了
+/// </summary>
 [Serializable]
 public class MoveController:Controller
 {

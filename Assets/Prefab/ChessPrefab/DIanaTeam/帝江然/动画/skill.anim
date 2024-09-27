@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!74 &7400000
+AnimationClip:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: skill
+  serializedVersion: 7
+  m_Legacy: 0
+  m_Compressed: 0
+  m_UseHighQualityCurve: 1
+  m_RotationCurves: []
+  m_CompressedRotationCurves: []
+  m_EulerCurves: []
+  m_PositionCurves: []
+  m_ScaleCurves: []
+  m_FloatCurves: []
+  m_PPtrCurves:
+  - curve:
+    - time: 0
+      value: {fileID: 21300000, guid: a8637eea367ee4e46be069e231d0a1df, type: 3}
+    - time: 0.083333336
+      value: {fileID: 21300000, guid: 1fe2335d3eaa41949ab5604bce58e135, type: 3}
+    - time: 0.16666667
+      value: {fileID: 21300000, guid: b1412a98bb08fd547a934960db672de2, type: 3}
+    - time: 0.25
+      value: {fileID: 21300000, guid: e93ca90e04e90a24db43dd9628483627, type: 3}
+    - time: 0.33333334
+      value: {fileID: 21300000, guid: de0793dc60481f443ba55a276e07c225, type: 3}
+    - time: 0.41666666
+      value: {fileID: 21300000, guid: 146213149e4769a4d8e3e34da34da522, type: 3}
+    - time: 0.5
+      value: {fileID: 21300000, guid: 396b819296bc1e046b7f2d394fc6d3ad, type: 3}
+    - time: 0.5833333
+      value: {fileID: 21300000, guid: 7b335e071fc475a4abeef86776efdf04, type: 3}
+    - time: 0.6666667
+      value: {fileID: 21300000, guid: 8424cedbaad78af4fb8591eb401be52f, type: 3}
+    - time: 0.75
+      value: {fileID: 21300000, guid: 411fb01195a48724f9ee871a1447dbe9, type: 3}
+    - time: 0.8333333
+      value: {fileID: 21300000, guid: e3ca261002c43064b8a2ef3c42260599, type: 3}
+    - time: 0.9166667
+      value: {fileID: 21300000, guid: a21cd08aab9365845a5fd7c597e7ca6d, type: 3}
+    attribute: m_Sprite
+    path: sprite
+    classID: 212
+    script: {fileID: 0}
+  m_SampleRate: 60
+  m_WrapMode: 0
+  m_Bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  m_ClipBindingConstant:
+    genericBindings:
+    - serializedVersion: 2
+      path: 891129758
+      attribute: 0
+      script: {fileID: 0}
+      typeID: 212
+      customType: 23
+      isPPtrCurve: 1
+    pptrCurveMapping:
+    - {fileID: 21300000, guid: a8637eea367ee4e46be069e231d0a1df, type: 3}
+    - {fileID: 21300000, guid: 1fe2335d3eaa41949ab5604bce58e135, type: 3}
+    - {fileID: 21300000, guid: b1412a98bb08fd547a934960db672de2, type: 3}
+    - {fileID: 21300000, guid: e93ca90e04e90a24db43dd9628483627, type: 3}
+    - {fileID: 21300000, guid: de0793dc60481f443ba55a276e07c225, type: 3}
+    - {fileID: 21300000, guid: 146213149e4769a4d8e3e34da34da522, type: 3}
+    - {fileID: 21300000, guid: 396b819296bc1e046b7f2d394fc6d3ad, type: 3}
+    - {fileID: 21300000, guid: 7b335e071fc475a4abeef86776efdf04, type: 3}
+    - {fileID: 21300000, guid: 8424cedbaad78af4fb8591eb401be52f, type: 3}
+    - {fileID: 21300000, guid: 411fb01195a48724f9ee871a1447dbe9, type: 3}
+    - {fileID: 21300000, guid: e3ca261002c43064b8a2ef3c42260599, type: 3}
+    - {fileID: 21300000, guid: a21cd08aab9365845a5fd7c597e7ca6d, type: 3}
+  m_AnimationClipSettings:
+    serializedVersion: 2
+    m_AdditiveReferencePoseClip: {fileID: 0}
+    m_AdditiveReferencePoseTime: 0
+    m_StartTime: 0
+    m_StopTime: 0.93333334
+    m_OrientationOffsetY: 0
+    m_Level: 0
+    m_CycleOffset: 0
+    m_HasAdditiveReferencePose: 0
+    m_LoopTime: 0
+    m_LoopBlend: 0
+    m_LoopBlendOrientation: 0
+    m_LoopBlendPositionY: 0
+    m_LoopBlendPositionXZ: 0
+    m_KeepOriginalOrientation: 0
+    m_KeepOriginalPositionY: 1
+    m_KeepOriginalPositionXZ: 0
+    m_HeightFromFeet: 0
+    m_Mirror: 0
+  m_EditorCurves: []
+  m_EulerEditorCurves: []
+  m_HasGenericRootTransform: 0
+  m_HasMotionFloatCurves: 0
+  m_Events:
+  - time: 0.8333333
+    functionName: UseSkill
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.9166667
+    functionName: RevertPreState
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

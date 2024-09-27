@@ -41,7 +41,7 @@ public class MainPlant : IPlantFunction
 {
     public bool ifCanPlant(PropertyCreator creator, Tile tile)
     {
-        Debug.Log(tile.name);
+        //Debug.Log(tile.name); 
         return !tile.stander&&CompairTile(creator.chessTileType,tile);
     }
     public static bool CompairTile(TileType chess,Tile tile)
@@ -70,6 +70,9 @@ public class SupportPlant : IPlantFunction
         return true;
     }
 }
+/// <summary>
+/// Pot类需要修改一下
+/// </summary>
 public class PotPlant : IPlantFunction
 {
     public bool ifCanPlant(PropertyCreator creator, Tile tile)

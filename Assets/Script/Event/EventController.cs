@@ -43,6 +43,8 @@ public enum EventName
     WhenSweetChange,
     WhenLeaveLevel,
     WhenShovel,
+    PauseGame,
+    ResumeGame,
 }
 
 

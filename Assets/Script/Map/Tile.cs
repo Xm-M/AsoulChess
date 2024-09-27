@@ -39,7 +39,9 @@ public class Tile : MonoBehaviour
     //}
     public void PlantChess(Chess chess)
     {
-        if (chess.propertyController.creator.plantType!=PlantType.SupportPlant) stander = chess;
+        //if (chess.propertyController.creator.plantType!=PlantType.SupportPlant) stander = chess;
+        if (chess.propertyController.creator.plantType == PlantType.MainPlant)
+            stander = chess;
         OnPlant?.Invoke(chess);
     }
 }

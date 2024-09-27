@@ -12,6 +12,8 @@ public class Bullet : MonoBehaviour
     public int MaxHitNum;
     public UnityEvent<Bullet> WhenBulletHit;
     [SerializeReference]
+    public IBulletEffect effect;
+    [SerializeReference]
     public IBulletMove bulletMove;   
     public Chess shooter;
     public Vector2 startPos;
@@ -50,9 +52,13 @@ public class Bullet : MonoBehaviour
         {
             Chess c = collision.GetComponent<Chess>();
             if(c==null)return;
-            Dm.damageTo = c; 
-            if(current>0)
+            Dm.damageTo = c;
+            if (current > 0)
+            {
                 shooter.propertyController.TakeDamage(Dm);
+                WhenBulletHit?.Invoke(this);
+                effect?.OnBulletHit(this);
+            }
             current--;
             if (current == 0)
             {
@@ -61,4 +67,8 @@ public class Bullet : MonoBehaviour
         }
         
     }
+}
+public interface IBulletEffect
+{
+    public void OnBulletHit(Bullet bullet);
 }

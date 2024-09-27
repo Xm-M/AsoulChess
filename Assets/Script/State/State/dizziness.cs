@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 眩晕状态 具体的话应该有个眩晕标志
+/// </summary>
 public class DizzinessState : State
 {
     float speed;

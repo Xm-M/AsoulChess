@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 这里的回收机制应该放在哪呢？
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class CheckObjectPool<T>
 {
     private Stack<T[]> pool;

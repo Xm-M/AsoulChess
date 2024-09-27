@@ -8,7 +8,7 @@ public class StartUI : View
 
     public override void Init()
     {
-         
+        Debug.Log("initstartUI");
     }
 
     public void LoadS()

@@ -52,13 +52,20 @@ MonoBehaviour:
     OnWeaponAttack:
       m_PersistentCalls:
         m_Calls: []
+    initWeapon:
+      id: 0
     FindTarget:
       id: 0
     attack:
       id: 0
+    loop: 1
+    master: {fileID: 0}
   propertyController:
     creator: {fileID: 11400000, guid: fe64bf36b13504d4a828b4ad0e29e526, type: 2}
     onGetDamage:
+      m_PersistentCalls:
+        m_Calls: []
+    onSetDamage:
       m_PersistentCalls:
         m_Calls: []
     onTakeDamage:
@@ -66,15 +73,24 @@ MonoBehaviour:
         m_Calls: []
   skillController:
     user: {fileID: 0}
-    passive:
-      id: 0
-    timeSkill:
-      id: 1
-    currentSkill:
-      skillid: 0
-      skillName: 
-      skillDescription: 
+    skillList:
+    - user: {fileID: 0}
       AnimationName: 
+      prepareName: 
+      coldDown: 10
+      startTime: 0
+      loop: 1
+      targets: []
+      skillEffect:
+        id: 1
+    currentSkill:
+      user: {fileID: 0}
+      AnimationName: 
+      prepareName: 
+      coldDown: 0
+      startTime: 0
+      loop: 1
+      targets: []
       skillEffect:
         id: 0
   stateController:
@@ -96,32 +112,29 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 0
+  WhenEnterGame:
+    m_PersistentCalls:
+      m_Calls: []
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
   animator: {fileID: 8713409300920344349}
+  sprite: {fileID: 2688284388241896995}
   references:
     version: 1
     00000000:
       type: {class: , ns: , asm: }
     00000001:
-      type: {class: TimeSkill, ns: , asm: Assembly-CSharp}
+      type: {class: BaseSkill, ns: , asm: Assembly-CSharp}
       data:
-        skillid: 0
-        skillName: skill
-        skillDescription: 
-        AnimationName: skill
-        skillEffect:
+        judge:
+          id: 0
+        attackFunction:
           id: 2
-        coldDown: 10
-        startTime: 0
-        loop: 1
+        passive:
+          id: 0
     00000002:
-      type: {class: TimeSweet, ns: , asm: Assembly-CSharp}
-      data:
-        baseSweet: 25
-        percent: 0.25
-        DianaTag: "\u5609\u7136"
+      type: {class: SkillEffect_CreateSweet, ns: , asm: Assembly-CSharp}
 --- !u!61 &4806503683069346411
 BoxCollider2D:
   m_ObjectHideFlags: 0

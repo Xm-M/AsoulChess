@@ -73,7 +73,16 @@ MonoBehaviour:
         m_Calls: []
   skillController:
     user: {fileID: 0}
-    skillList: []
+    skillList:
+    - user: {fileID: 0}
+      AnimationName: 
+      prepareName: 
+      coldDown: 0
+      startTime: 0
+      loop: 0
+      targets: []
+      skillEffect:
+        id: 1
     currentSkill:
       user: {fileID: 0}
       AnimationName: 
@@ -115,6 +124,19 @@ MonoBehaviour:
     version: 1
     00000000:
       type: {class: , ns: , asm: }
+    00000001:
+      type: {class: BaseSkill, ns: , asm: Assembly-CSharp}
+      data:
+        judge:
+          id: 0
+        attackFunction:
+          id: 0
+        passive:
+          id: 2
+    00000002:
+      type: {class: Passive_HpAnimSet, ns: , asm: Assembly-CSharp}
+      data:
+        animName: HP
 --- !u!61 &1646349266525641642
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -185,7 +207,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4058796056374371297}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.087, y: 0.569, z: 0}
+  m_LocalPosition: {x: 0.095, y: 0.506, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5755059118738971579}
@@ -210,7 +232,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: b6af562e6011c9c449c53f3ba993080c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -228,9 +250,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1149915625
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 0b269156feb1c5542b83f2e1342533d1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

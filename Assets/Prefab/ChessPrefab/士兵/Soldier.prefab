@@ -25,9 +25,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 872629077316088627}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.95, y: 0.62, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4854315384602463432}
   m_Father: {fileID: 341345006159915596}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50,7 +51,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -71,17 +72,47 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 585da9ac725a66943b848ca3c7643ea1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 4.25, y: 3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &5650679315039249435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4854315384602463432}
+  m_Layer: 0
+  m_Name: shootPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4854315384602463432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5650679315039249435}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.47, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2904627436279316800}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7692843652105844817
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,7 +124,7 @@ GameObject:
   - component: {fileID: 341345006159915596}
   - component: {fileID: 6193991015131949974}
   - component: {fileID: 8329031764921853200}
-  - component: {fileID: 3010639427830436910}
+  - component: {fileID: 1673011940702040701}
   m_Layer: 0
   m_Name: Soldier
   m_TagString: Untagged
@@ -109,7 +140,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7692843652105844817}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.7752767, y: 3.7941525, z: 106.27958}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2904627436279316800}
@@ -130,7 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   equipWeapon:
-    weaponPos: {fileID: 0}
+    weaponPos: {fileID: 4854315384602463432}
     OnWeaponAttack:
       m_PersistentCalls:
         m_Calls: []
@@ -140,7 +171,7 @@ MonoBehaviour:
       id: 1
     attack:
       id: 2
-    loop: 1
+    loop: 0
     master: {fileID: 0}
   propertyController:
     creator: {fileID: 11400000, guid: 75f6086ffa6d901458f511b31cae3877, type: 2}
@@ -191,7 +222,7 @@ MonoBehaviour:
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
-  animator: {fileID: 3010639427830436910}
+  animator: {fileID: 1673011940702040701}
   sprite: {fileID: 9053863454096097275}
   references:
     version: 1
@@ -224,17 +255,17 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 4.3125, y: 3}
+    newSize: {x: 4.3125, y: 3}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!95 &3010639427830436910
+--- !u!95 &1673011940702040701
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -244,7 +275,7 @@ Animator:
   m_GameObject: {fileID: 7692843652105844817}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fd96611e67c95d646969c2a770d13085, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

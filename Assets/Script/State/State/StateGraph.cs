@@ -32,7 +32,7 @@ public class StateGraph : ScriptableObject
             TransitionDate transition = new TransitionDate();
             transition.transition = new IfDeathTransition();
             transition.targetState = StateName.DeathState;
-            dizzyDate.transitions.Add(transition);
+            //dizzyDate.transitions.Add(transition);
         }
     }
 }

@@ -71,11 +71,14 @@ MonoBehaviour:
     OnWeaponAttack:
       m_PersistentCalls:
         m_Calls: []
-    FindTarget:
+    initWeapon:
       id: 0
-    attack:
+    FindTarget:
       id: 1
+    attack:
+      id: 2
     loop: 1
+    master: {fileID: 0}
   propertyController:
     creator: {fileID: 11400000, guid: 34190b4243f18dd429cf87d2e9554162, type: 2}
     onGetDamage:
@@ -98,7 +101,7 @@ MonoBehaviour:
       loop: 0
       targets: []
       skillEffect:
-        id: 2
+        id: 3
     - user: {fileID: 0}
       AnimationName: skill
       prepareName: 
@@ -107,7 +110,7 @@ MonoBehaviour:
       loop: 1
       targets: []
       skillEffect:
-        id: 3
+        id: 4
     currentSkill:
       user: {fileID: 0}
       AnimationName: 
@@ -117,15 +120,15 @@ MonoBehaviour:
       loop: 1
       targets: []
       skillEffect:
-        id: 4
+        id: 0
   stateController:
     currentState:
       state:
-        id: 4
+        id: 0
       transitions: []
     preState:
       state:
-        id: 4
+        id: 0
       transitions: []
     stateGraph: {fileID: 11400000, guid: 824db327d9fb1424fa413a919b2caad8, type: 2}
     EnterWarState: 4
@@ -148,8 +151,10 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
+      type: {class: , ns: , asm: }
     00000001:
+      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
+    00000002:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
@@ -160,34 +165,32 @@ MonoBehaviour:
           damageType: 0
           damageElementType: 0
           takeBuff:
-            id: 4
-    00000002:
-      type: {class: BaseSkill, ns: , asm: Assembly-CSharp}
-      data:
-        judge:
-          id: 4
-        attackFunction:
-          id: 4
-        passive:
-          id: 6
+            id: 0
     00000003:
       type: {class: BaseSkill, ns: , asm: Assembly-CSharp}
       data:
         judge:
-          id: 4
+          id: 0
+        attackFunction:
+          id: 0
+        passive:
+          id: 6
+    00000004:
+      type: {class: BaseSkill, ns: , asm: Assembly-CSharp}
+      data:
+        judge:
+          id: 0
         attackFunction:
           id: 7
         passive:
-          id: 4
-    00000004:
-      type: {class: , ns: , asm: }
+          id: 0
     00000005:
       type: {class: HorMove, ns: , asm: Assembly-CSharp}
     00000006:
       type: {class: Passive_VirusInfect, ns: , asm: Assembly-CSharp}
       data:
         targetTag: "\u4EBA"
-        creator: {fileID: 11400000, guid: 34190b4243f18dd429cf87d2e9554162, type: 2}
+        creator: {fileID: 11400000, guid: b1e5513280cae75419701eb6ec80144c, type: 2}
     00000007:
       type: {class: SkillEffect_AddBuff, ns: , asm: Assembly-CSharp}
       data:
@@ -276,7 +279,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: b6af562e6011c9c449c53f3ba993080c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -294,9 +297,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1149915625
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 58aea834ef6ffdd4eb3312e43222fefa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1

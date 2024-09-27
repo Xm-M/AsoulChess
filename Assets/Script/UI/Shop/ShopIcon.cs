@@ -13,7 +13,7 @@ public class ShopIcon : MonoBehaviour
     public UIStatBar bar;
     public Color unUseCorlor;
     public Text goodPrice;
-    public AudioSource Audio;
+    public AudioPlayer Audio;
 
     public float coldDown;//冷却时间
     float t;
@@ -64,6 +64,7 @@ public class ShopIcon : MonoBehaviour
         if (!LevelManage.instance.IfGameStart)
         {
             selectIcon.UnselectCard();
+            UIManage.GetView<PlantsShop>().shopAudio.PlayAudio("tap");
             UIManage.GetView<PlantsShop>().RemoveSelection(selectIcon);
             Destroy(gameObject);
         }

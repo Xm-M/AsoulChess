@@ -23,7 +23,7 @@ public class ChessFactory : IManager
             chessPool.Add(chessName, new Stack<Chess>());
         }
         GameObject c = GameObject.Instantiate(chess.gameObject);
-        //SceneManager.MoveGameObjectToScene(c, chessScene);
+        SceneManager.MoveGameObjectToScene(c, chessScene);
         Chess newchess = c.GetComponent<Chess>();
         newchess.InitChess();
         newchess.instanceID = instanceID;
@@ -46,6 +46,8 @@ public class ChessFactory : IManager
     {
         chessScene = SceneManager.CreateScene("ChessScene");
         chessPool=new Dictionary<string, Stack<Chess>>();
+        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), ClearChessFactory);
+
     }
 
     public void OnGameStart()
@@ -61,6 +63,19 @@ public class ChessFactory : IManager
                 GameObject.Destroy(chess.gameObject);
             }
         }
+    }
+    public void ClearChessFactory()
+    {
+        foreach(var stack in chessPool)
+        {
+            while (stack.Value.Count > 0)
+            {
+                GameObject obj = stack.Value.Pop().gameObject;
+                GameObject.Destroy(obj);
+            }
+        }
+        chessPool.Clear();
+        Debug.Log("chessFactory清理完成");
     }
 }
  

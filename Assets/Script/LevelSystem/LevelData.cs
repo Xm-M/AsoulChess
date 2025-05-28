@@ -14,6 +14,7 @@ public class LevelData : ScriptableObject
     public string sceneName;
     public string levelName;
     public LevelMode levelMode;
+    public bool win;
     [SerializeReference]
     public ILevelPreparation preparation;
     [SerializeReference]
@@ -25,8 +26,9 @@ public class LevelData : ScriptableObject
     /// </summary>
     public  void PrepareStage()
     {
-        preparation.Prepare(this);
-        spawner.Prepare(this);
+        win = false;
+        preparation?.Prepare(this);
+        spawner?.Prepare(this);
     }
     /// <summary>
     /// 刚进入游戏时的事件
@@ -38,7 +40,7 @@ public class LevelData : ScriptableObject
     /// 游戏结束时的事件
     /// </summary>
     public void OverGameStage(){
-        spawner.OverSpawning(this);
+        spawner?.OverSpawning(this);
         outcome?.HandleOutcome(spawner.CheckWinCondition());
     }
     /// <summary>
@@ -46,7 +48,7 @@ public class LevelData : ScriptableObject
     /// </summary>
     public  void LeaveStage()
     {
-
+        spawner?.LeaveSpawning(this);
     }
 }
 /// <summary>
@@ -61,9 +63,11 @@ public interface ILevelPreparation
 /// </summary>
 public interface IZombieSpawner
 {
+
     public void Prepare(LevelData levelData);
     public void StartSpawning(LevelData levelData);
     public void OverSpawning(LevelData levelData);
+    public void LeaveSpawning(LevelData levelData);
     bool CheckWinCondition();
 }
 /// <summary>

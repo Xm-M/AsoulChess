@@ -19,7 +19,7 @@ public class Passive_FireDragonDiana : ISkill
     }
     public void ChangeWeapon(int n)
     {
-        user.animator.SetInteger("weapon", n);
+        //user.animator.SetInteger("weapon", n);
         switch (n)
         {
             case 0:
@@ -58,5 +58,10 @@ public class Passive_FireDragonDiana : ISkill
     public bool IfSkillReady(Chess user)
     {
         return false;
+    }
+
+    public void WhenEnter(Chess user)
+    {
+        throw new System.NotImplementedException();
     }
 }

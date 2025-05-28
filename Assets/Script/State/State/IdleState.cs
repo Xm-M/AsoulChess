@@ -11,7 +11,8 @@ public class IdleState : State
     public override void Enter(Chess chess)
     {
         base.Enter(chess);
-        chess.animator.Play("idle");
+        //chess.animator.Play("idle");
+        chess.animatorController.PlayIdle();
     }
     public override void Execute(Chess chess)
     {

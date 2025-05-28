@@ -1,23 +1,27 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 [Serializable]
-public class BuffController:Controller
+public class BuffController
 {
     public Dictionary<string, Buff> buffDic;
     public Chess chess;
+    [SerializeReference]
+    public List<Buff> onEnterBuff;
     //public UnityEvent buffUpdate;
     public void InitController(Chess chess)
     {
         buffDic = new Dictionary<string, Buff>();
         this.chess = chess;
+        //onEnterBuff = new List<Buff>();
     }
     public void WhenControllerEnterWar()
     {
-         
+        for (int i = 0; i < onEnterBuff.Count; i++)
+        {
+            AddBuff(onEnterBuff[i]);
+        }
     }
 
     public void WhenControllerLeaveWar()
@@ -29,7 +33,7 @@ public class BuffController:Controller
         List<Buff> list = new List<Buff>();
         foreach (var buff in buffDic)
         {
-            list.Add( buff.Value);
+            list.Add(buff.Value);
         }
         for (int i = 0; i < list.Count; i++)
             list[i].BuffOver();
@@ -37,20 +41,24 @@ public class BuffController:Controller
     }
     /// <summary>
     /// 添加新的Buff
-    /// 如果是已经存在的buff 则重置它 
+    /// 如果是已经存在的buff 则重置它  
     /// 否则添加新buff,并激活效果
     /// </summary>
     /// <param name="buffUser"></param>
     /// <param name="buff"></param>
     public void AddBuff(Buff buff)
     {
+
         if (buffDic.ContainsKey(buff.buffName))
         {
             buffDic[buff.buffName].BuffReset();
+            Debug.Log("重置了" + buff.buffName);
         }
         else
         {
-            Buff newBuff=GameManage.instance.buffManage.CreateBuff(buff);
+            Debug.Log("获得了" + buff.buffName);
+            Buff newBuff = buff.Clone();
+            newBuff.buffName = buff.buffName;
             buffDic.Add(buff.buffName, newBuff);
             newBuff.BuffEffect(chess);
         }
@@ -67,6 +75,5 @@ public class BuffController:Controller
         }
     }
 
-    
-}
 
+}

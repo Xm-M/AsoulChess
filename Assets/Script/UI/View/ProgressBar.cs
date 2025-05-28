@@ -9,6 +9,7 @@ public class ProgressBar : View
     public List<GameObject> flags;
     public override void Init()
     {
+        uiBar.SetValue(0, 1);
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(),
             Hide);
     }
@@ -27,12 +28,14 @@ public class ProgressBar : View
     {
         base.Show();
     }
+
     public override void Hide()
     {
         base.Hide();
         for(int i = 0; i < flags.Count; i++)
         {
             flags[i].SetActive(false);
+            uiBar.SetValue(0,1);
         }
     }
 }

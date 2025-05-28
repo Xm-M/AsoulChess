@@ -12,5 +12,6 @@ public class LevelPrepare_Conveyor : ILevelPreparation
     {
         UIManage.Show<ConveyorPanel>();
         UIManage.GetView<ConveyorPanel>().InitCreator(creators);
+        (MapManage_PVZ.instance as MapManage_PVZ).WhenGameStart();
     }
 }

@@ -87,7 +87,6 @@ public class StateController:Controller
             {
                 if (transition.transition.ifReach(self))
                 {
-
                     ChangeState(stateDic[transition.targetState]);
                     return;
                 }

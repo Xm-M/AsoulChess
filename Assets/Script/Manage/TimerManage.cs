@@ -102,6 +102,10 @@ public class Timer
         else finishTime = TimerManage.GameTime + delayTime;
         OnFinish?.Invoke();
     }
+    public float LeftTime()
+    {
+        return  finishTime- TimerManage.GameTime;
+    }
     public void ResetTime()
     {
         finishTime = TimerManage.GameTime + delayTime;

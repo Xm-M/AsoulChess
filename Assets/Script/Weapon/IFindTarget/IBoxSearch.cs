@@ -5,12 +5,13 @@ using UnityEngine;
 public class IBoxSearch : IFindTarget
 {
     public Vector2 boxCheck;
+    public Vector2 centerOffset;
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
         Collider2D[] cols = CheckObjectPoolManage.GetColArray(100);
         LayerMask layer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
-        int i = Physics2D.OverlapBoxNonAlloc(user.transform.position, boxCheck, 0, cols, layer);
+        int i = Physics2D.OverlapBoxNonAlloc((Vector2)user.transform.position+centerOffset, boxCheck, 0, cols, layer);
         for (int j = 0; j < i; j++)
         {
             Chess enemy = cols[j].GetComponent<Chess>();

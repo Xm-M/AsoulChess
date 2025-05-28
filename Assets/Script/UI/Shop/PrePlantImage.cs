@@ -12,15 +12,15 @@ public class PrePlantImage : MonoBehaviour
         instance = this;
         gameObject.SetActive(false);
     }
-    public void TryToPlant(PropertyCreator creator,UnityAction CancelPlant,UnityAction Plant)
+    public void TryToPlant(PropertyCreator creator,UnityAction CancelPlant,UnityAction Plant,string team="Player")
     {
         transform.position = Input.mousePosition;
         gameObject.SetActive(true);
         image.sprite = creator.chessSprite;
         MapManage.instance.AwakeTile();
-        StartCoroutine(Plants(creator, CancelPlant, Plant));
+        StartCoroutine(Plants(creator, CancelPlant, Plant,team));
     }
-    IEnumerator Plants(PropertyCreator creator, UnityAction CancelPlant, UnityAction Plant)
+    IEnumerator Plants(PropertyCreator creator, UnityAction CancelPlant, UnityAction Plant,string team="Player")
     {
         while (true)
         {
@@ -39,8 +39,13 @@ public class PrePlantImage : MonoBehaviour
                     Tile t = hit.collider.GetComponent<Tile>();
                     if (creator.IfCanPlant(hit.collider.GetComponent<Tile>()))
                     {
-                        Chess c = ChessTeamManage.Instance.CreateChess(creator, t, "Player");
-                        t.PlantChess(c);
+                        Chess c = ChessTeamManage.Instance.CreateChess(creator, t, team);
+                        if (team == "Player")
+                        {
+                            t.PlantChess(c);
+                            
+                        }
+                         
                         Plant?.Invoke();
                         break;
                     }

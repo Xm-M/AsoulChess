@@ -20,3 +20,20 @@ public class ICircleSearch : IFindTarget
         CheckObjectPoolManage.ReleaseColArray(100, cols);
     }
 }
+public class ICircleSerach_EnemyListSearch : IFindTarget
+{
+    public float checkRange;
+    public void FindTarget(Chess user, List<Chess> targets)
+    {
+        targets.Clear();
+        foreach(var chess in ChessTeamManage.Instance.GetEnemyTeam(user.tag))
+        {
+            //Debug.Log(chess.name+" "+ Vector2.Distance(chess.transform.position, user.transform.position));
+            if (Vector2.Distance(chess.transform.position, user.transform.position) <= checkRange)
+            {
+                //Debug.Log(chess);
+                targets.Add(chess);
+            }
+        }
+    }
+}

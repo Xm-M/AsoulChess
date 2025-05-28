@@ -4,6 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// 暂时没有理清这些东西
+/// 这个是铁门的逻辑啊  
 /// </summary>
 public class ExternalArmor : ArmorBase
 {
@@ -19,7 +20,7 @@ public class ExternalArmor : ArmorBase
     public override void InitArmor()
     {
         armorCurrent = armorMax;
-        user.WhenEnterGame.AddListener((Chess) => ResetArmor());
+        user.WhenEnterGame.AddListener(ResetArmor);
     }
     public override void GetDamage(DamageMessege dm)
     {
@@ -57,19 +58,16 @@ public class ExternalArmor : ArmorBase
             }
             brokenPercent = armorCurrent / armorMax;
             animator?.SetFloat(animName, brokenPercent);
-            bullet.RecycleBullet();
+            if((bullet.Dm.damageElementType&ElementType.AOE)==0)
+                bullet.RecycleBullet();
         }
     }
-
-
-
-
 
     /// <summary>
     ///  就是重置函数
     /// </summary>
     /// <exception cref="System.NotImplementedException"></exception>
-    public override void ResetArmor()
+    public override void ResetArmor(Chess chess)
     {
         tag = user.tag;
         col.enabled = true;

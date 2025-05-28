@@ -23,7 +23,10 @@ public class ChessEditor : OdinEditor
         if (myScript.GetComponent<Animator>() == null)
         {
             myScript.gameObject.AddComponent<Animator>();
-            myScript.animator = myScript.GetComponent<Animator>();
+            myScript.gameObject.AddComponent<AnimatorController>();
+            myScript.animatorController=myScript.GetComponent<AnimatorController>();
+            myScript.animatorController.animator = myScript.GetComponent<Animator>();
+            //myScript.animator = myScript.GetComponent<Animator>();
         }
         if (myScript.transform.childCount == 0)
         {
@@ -31,9 +34,9 @@ public class ChessEditor : OdinEditor
             childObject.transform.SetParent(myScript.transform);
             childObject.transform.localPosition = Vector3.zero;
             childObject.AddComponent<SpriteRenderer>();
-            myScript.sprite = childObject.GetComponent<SpriteRenderer>();
-            myScript.sprite.sortingLayerName = "Chess";
-            myScript.sprite.sortingOrder = 1;
+            //myScript.sprite = childObject.GetComponent<SpriteRenderer>();
+            //myScript.sprite.sortingLayerName = "Chess";
+            //myScript.sprite.sortingOrder = 1;
             Debug.Log("自动创建了子物体");
         }
     }

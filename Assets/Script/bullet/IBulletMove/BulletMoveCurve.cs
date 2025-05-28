@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
 public class BulletMoveCurve : IBulletMove
 {
     public AnimationCurve curveX;//x的速度曲线

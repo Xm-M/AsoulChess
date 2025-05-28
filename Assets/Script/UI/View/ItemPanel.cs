@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 这个b Item也需要用吗
+/// </summary>
 public class ItemPanel : View
 {
 
@@ -22,14 +25,31 @@ public class ItemPanel : View
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Hide);
         EventController.Instance.AddListener(EventName.GameStart.ToString(), Show);
     }
-    public override void Hide()
+    public override void Show()
     {
-        base.Hide();
-        foreach(var stack in itemPool) {
+        base.Show();
+        foreach (var stack in itemPool)
+        {
             while (stack.Value.Count > 0)
             {
                 Destroy(stack.Value.Pop().gameObject);
             }
+        }
+        itemPool.Clear();
+    }
+    public override void Hide()
+    {
+        base.Hide();
+        //foreach(var stack in itemPool) {
+        //    while (stack.Value.Count > 0)
+        //    {
+        //        Destroy(stack.Value.Pop().gameObject);
+        //    }
+        //}
+        int n = transform.childCount;
+        for(int i = n-1; i >= 0; i--)
+        {
+            Destroy(transform.GetChild(i).gameObject);
         }
         itemPool.Clear();
     }

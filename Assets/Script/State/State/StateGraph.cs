@@ -11,6 +11,8 @@ public enum StateName{
     IdleState,
     DeathState,
     DizzyState,
+    ResumeState,
+    EggState,
 }
 [CreateAssetMenu(fileName = "StateGraph", menuName = "State/StateGraph")]
 public class StateGraph : ScriptableObject

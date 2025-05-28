@@ -10,8 +10,9 @@ public class DeathState : State
     }
     public override void Enter(Chess chess)
     {
-        chess.animator.Play("death");
+        //chess.animator.Play("death");
         //亡语是在死亡状态触发的，所以没有进入死亡状态就不会触发
+        chess.animatorController.PlayDeath();
         chess.DeathEvent?.Invoke(chess);
         chess.SetCol(false);
         base.Enter(chess);

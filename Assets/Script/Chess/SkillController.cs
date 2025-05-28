@@ -4,13 +4,17 @@ using UnityEngine;
 using System;
 using UnityEngine.Events;
 
+/// <summary>
+/// 被动技能和主动技能
+/// </summary>
+
 [Serializable]
 public class SkillController:Controller
 {
     [HideInInspector]public Chess user;
-    [SerializeField]
+    [SerializeReference]
     public ISkill passiveSkill;//被动技能同理
-    [SerializeField]
+    [SerializeReference]
     public ISkill activeSkill;//如果有复合技能 应该在Iskill类中制作一个复合技能而不是在这用list保存
     [HideInInspector]
     public DamageMessege DM;
@@ -24,6 +28,7 @@ public class SkillController:Controller
     public void WhenControllerEnterWar()
     {
         passiveSkill?.UseSkill(user);
+        activeSkill?.WhenEnter(user);
     }
     public void WhenControllerLeaveWar()
     {

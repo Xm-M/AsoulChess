@@ -5,11 +5,12 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// 最大的问题是怎么设计啊
+/// 最大的问题是怎么设计啊 
 /// </summary>
 public class Bullet : MonoBehaviour
 {
-    public int MaxHitNum;
+    public int MaxHitNum=1;
+    public float rate = 1;
     public UnityEvent<Bullet> WhenBulletHit;
     [SerializeReference]
     public IBulletEffect effect;
@@ -22,7 +23,10 @@ public class Bullet : MonoBehaviour
     public DamageMessege Dm;
     protected Chess hitChess;
     protected int current;
-
+    private void Awake()
+    {
+        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), RecycleBullet);
+    }
     public virtual void InitBullet(Chess shooter,Vector3 position,Chess target,Vector2 moveDir)
     {
         this.shooter = shooter;
@@ -33,7 +37,7 @@ public class Bullet : MonoBehaviour
         current = MaxHitNum;
         transform.position = startPos;
         transform.right=moveDir;
-        Dm.damage = shooter.propertyController.GetAttack();
+        Dm.damage = shooter.propertyController.GetAttack()*rate;
         Dm.damageFrom = shooter;
         bulletMove.InitMove(this);
     } 
@@ -46,7 +50,7 @@ public class Bullet : MonoBehaviour
     }
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        //Debug.Log("bulllet hit "+collision.name);
+        //Debug.Log("bulllet hit "+collision.name); 
         
         if (!CompareTag(collision.tag) )
         {
@@ -66,6 +70,10 @@ public class Bullet : MonoBehaviour
             }
         }
         
+    }
+    private void OnDestroy()
+    {
+        EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), RecycleBullet);
     }
 }
 public interface IBulletEffect

@@ -29,6 +29,11 @@ public class Passive_SweetPotatoMine : ISkill
     public void UseSkill(Chess user)
     {
         int level = PowerBarPanel.GetView<SweetBar>().GetStage();
-        user.propertyController.ChangeSpellHaste(level * reduceRate);
+        //user.propertyController.ChangeSpellHaste(level * reduceRate);
+    }
+
+    public void WhenEnter(Chess user)
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -17,5 +17,9 @@ public class SunLightPanel : MonoBehaviour
         sunLightText.text = sunLight.ToString();
         EventController.Instance.TriggerEvent(EventName.WhenSunLightChange.ToString());
     }
-
+    public void SetSunLight(int num)
+    {
+        sunLight = num;
+        sunLightText.text = sunLight.ToString();
+    }
 }

@@ -6,7 +6,7 @@ public class IfAnimPlayOverTransition : Transition
 {
     public override bool ifReach(Chess chess)
     {
-        return true;
+        return chess.animatorController.IfAnimPlayOver();
     }
     public override Transition Clone()
     {

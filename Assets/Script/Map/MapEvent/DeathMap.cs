@@ -6,6 +6,9 @@ public class DeathMap : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Chess c=collision.GetComponent<Chess>();
+        if (c != null) c.Death();
+        else
         Destroy(collision.gameObject);
     }
 }

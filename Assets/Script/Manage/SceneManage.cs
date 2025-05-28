@@ -40,15 +40,23 @@ public class SceneManage : MonoBehaviour
         operation= SceneManager.UnloadSceneAsync(currentScene);
         yield return operation;
         // 异步加载场景
-        canvers.SetActive(false);
+        
         GetComponent<Animator>().SetBool("load",true);
-        currentScene= sceneName;
+         
+        canvers.SetActive(false);
+        currentScene = sceneName;
         operation = SceneManager.LoadSceneAsync(sceneName,LoadSceneMode.Additive);
-        // 阻止当加载完成自动切换
+        // 阻止当加载完成自动切换 
         operation.allowSceneActivation = false;
         yield return operation;
         LoadOver?.Invoke();
     }
+
+    public void Win()
+    {
+        GetComponent<Animator>().Play("winscene");
+    }
+
     private void Update()
     {
         if (operation != null)

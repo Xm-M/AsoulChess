@@ -11,12 +11,12 @@ using Sirenix.OdinInspector;
 /// </summary>
 public class PlantsShop : View
 {
-    public GameObject shopSelectIconPre;//这个是选牌的时候的那个栏
-    public Transform selectIconParent;
-    public GameObject shopIconPre;//这个是游戏开始的时候上面的那个牌
-    public Transform shopIconParent;
-    List<ShopSelectIcon> allSelectIcons;
-    List<ShopSelectIcon> currentSelectIcons;
+    public GameObject shopSelectIconPre;
+    public Transform selectIconParent;//这个是选牌的时候的那个栏
+    public GameObject shopIconPre;
+    public Transform shopIconParent;//这个是游戏开始的时候上面的那个牌
+    public List<ShopSelectIcon> allSelectIcons;//这个是你拥有的棋子 就是下面那个版的
+    public List<ShopSelectIcon> currentSelectIcons;//
     
     public Animator anim;
     public AudioPlayer shopAudio;
@@ -50,9 +50,9 @@ public class PlantsShop : View
     }
     public override void Hide()
     {
-        base.Hide();
+        
         Debug.Log("PlantsShop清理完成");
-        if (currentSelectIcons .Count==0) return;
+        //if (currentSelectIcons .Count==0) return;
         for (int i = selectIconParent.childCount - 1; i >= 0; i--)
         {
             Destroy(selectIconParent.GetChild(i).gameObject);
@@ -67,24 +67,23 @@ public class PlantsShop : View
         currentSelectIcons.Clear();
         p1.anchoredPosition = startPos1;
         p2.anchoredPosition = startPos2;
+        base.Hide();
     }
-    
-
-
-
     public void SelectPlant(ShopIcon icon)
     {
         currentPlant = icon;
     }
     public bool IfCanBuyCard(PropertyCreator c){
+        //Debug.Log("尝试购买");
         if(c.IfCanBuyCard(SunLightPanel.instance.sunLight)){
             PrePlantImage.instance.TryToPlant(c, CancelBuyCard, BuyPlant);
+            //Debug.Log("可以购买");
             return true;
         }
         return false;
     }
     public void BuyPlant(){
-        SunLightPanel.instance.ChangeSunLight(currentPlant.good.baseProperty.price);
+        SunLightPanel.instance.ChangeSunLight(-currentPlant.good.baseProperty.price);
         currentPlant.ColdDown();
         currentPlant = null;
         CancelBuyCard();
@@ -107,10 +106,19 @@ public class PlantsShop : View
     /// 这个是button调用的
     /// </summary>
     public void GameStart(){
-        //(MapManage_PVZ.instance as MapManage_PVZ ).WhenGameStart();
-        LevelManage.instance.GameStart();
+        (MapManage_PVZ.instance as MapManage_PVZ ).WhenGameStart();
+        //LevelManage.instance.GameStart();
+        //foreach(var icon in currentSelectIcons)
+        //    icon.set
+        //foreach(var icon in shopIconParent.getchi)
+        for(int i = 0; i < shopIconParent.childCount; i++)
+        {
+            shopIconParent.GetChild(i).GetComponent<ShopIcon>().SetClearColor();
+        }
         anim.Play("gameStart");
     }
-
-    
+    public void Pause()
+    {
+        UIManage.GetView<ParsePanel>().ShowMenuPanel();
+    }
 }

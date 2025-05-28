@@ -9,15 +9,24 @@ public class EffectMiss : MonoBehaviour
     {
         ObjectPool.instance.Create(Effect).transform.position=transform.position;
     }
+    private void Awake()
+    {
+        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Miss);
+    }
     private void Start()
     {
-        if(GetComponent<SpriteRenderer>()!=null)
-        GetComponent<SpriteRenderer>().sortingLayerName = "Effect";
+        //if(GetComponent<SpriteRenderer>()!=null)
+        //GetComponent<SpriteRenderer>().sortingLayerName = "Effect";
+        
     }
     public void Miss()
     {
         if(gameObject.activeSelf)
             ObjectPool.instance.Recycle(gameObject);
+    }
+    private void OnDestroy()
+    {
+        EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), Miss);
     }
     //public void PlayAudio()=>GetComponent<AudioSource>().Play();
     public void Off()=>gameObject.SetActive(false);

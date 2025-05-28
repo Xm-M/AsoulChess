@@ -46,6 +46,7 @@ public class StraightLaser : IFindTarget
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
+        if (user.propertyController.GetAttackRange() <= 0) return;
         LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         RaycastHit2D[] hits= CheckObjectPoolManage.GetHitArray(100*(int)user.propertyController.GetAttackRange());
         int num = Physics2D.RaycastNonAlloc(user.transform.position, user.transform.right,

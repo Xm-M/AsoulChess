@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 6900543839337929881}
   - component: {fileID: 984857216535852303}
   - component: {fileID: 7117542580369147967}
+  - component: {fileID: 1628495693111901713}
   m_Layer: 0
   m_Name: "\u5411\u65E5\u8475"
   m_TagString: Untagged
@@ -130,18 +131,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   equipWeapon:
+    master: {fileID: 0}
     weaponPos: {fileID: 0}
-    OnWeaponAttack:
+    weapon:
+      id: 0
+    OnAttack:
       m_PersistentCalls:
         m_Calls: []
-    initWeapon:
-      id: 0
-    FindTarget:
-      id: 0
-    attack:
-      id: 0
-    loop: 1
-    master: {fileID: 0}
   propertyController:
     creator: {fileID: 11400000, guid: 549e8224b2b7b2a4d843df5b9836a688, type: 2}
     onGetDamage:
@@ -155,34 +151,26 @@ MonoBehaviour:
         m_Calls: []
   skillController:
     user: {fileID: 0}
-    skillList:
-    - user: {fileID: 0}
-      AnimationName: skill
-      prepareName: 
-      coldDown: 24
-      startTime: 14
-      loop: 1
-      targets: []
-      skillEffect:
+    passiveSkill:
+      id: 1
+    activeSkill:
+      id: 2
+    DM:
+      damageFrom: {fileID: 0}
+      damageTo: {fileID: 0}
+      damage: 0
+      damageType: 0
+      damageElementType: 0
+      takeBuff:
         id: 1
-    currentSkill:
-      user: {fileID: 0}
-      AnimationName: 
-      prepareName: 
-      coldDown: 0
-      startTime: 0
-      loop: 1
-      targets: []
-      skillEffect:
-        id: 0
   stateController:
     currentState:
       state:
-        id: 0
+        id: 1
       transitions: []
     preState:
       state:
-        id: 0
+        id: 1
       transitions: []
     stateGraph: {fileID: 11400000, guid: df14dbffc493e664d8c48e48205f6020, type: 2}
     EnterWarState: 4
@@ -193,31 +181,33 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 0
+      id: 1
+  animatorController: {fileID: 1628495693111901713}
   WhenEnterGame:
     m_PersistentCalls:
       m_Calls: []
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
-  animator: {fileID: 7117542580369147967}
-  sprite: {fileID: 7682363930822727952}
   references:
     version: 1
     00000000:
-      type: {class: , ns: , asm: }
-    00000001:
-      type: {class: BaseSkill, ns: , asm: Assembly-CSharp}
+      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
-        judge:
-          id: 0
+        initWeapon:
+          id: 1
+        findTarget:
+          id: 1
         attackFunction:
-          id: 2
-        passive:
-          id: 0
+          id: 1
+        enemys: []
+        interval: 0
+    00000001:
+      type: {class: , ns: , asm: }
     00000002:
       type: {class: SkillEffect_CreateSunLight, ns: , asm: Assembly-CSharp}
       data:
+        coldDown: 5
         sunLightNum: 25
 --- !u!61 &984857216535852303
 BoxCollider2D:
@@ -229,7 +219,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -264,3 +254,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1628495693111901713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4731646856310339651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687eea4d5a1356149a63151cba61d8b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 7117542580369147967}
+  sprite: {fileID: 7682363930822727952}

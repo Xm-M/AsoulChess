@@ -33,4 +33,9 @@ public class Passive_Pot : ISkill
     {
         throw new System.NotImplementedException();
     }
+
+    public void WhenEnter(Chess user)
+    {
+        throw new System.NotImplementedException();
+    }
 }

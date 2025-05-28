@@ -177,7 +177,7 @@ MonoBehaviour:
   goodImage: {fileID: 4462471612842271455}
   selfImage: {fileID: 2991298695686272982}
   bar: {fileID: 44578973157745605}
-  unUseCorlor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
+  unUseCorlor: {r: 0.5647059, g: 0.5647059, b: 0.5647059, a: 1}
   goodPrice: {fileID: 1049587322768151483}
   Audio: {fileID: 6219217694537288528}
   coldDown: 0
@@ -347,9 +347,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autype: 0
   audioSource: {fileID: 424064689850328056}
+  subAudio: []
+  baseValue: 0
   clipList:
   - name: Plant
     clip: {fileID: 8300000, guid: 30735e57cbd8d8b42ba5ce40a75feb43, type: 3}
+  - name: CantPlant
+    clip: {fileID: 8300000, guid: 23950b60445be9143a11e946f01cf356, type: 3}
 --- !u!1 &3231232775375206514
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,7 +574,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -2.232401, y: -2.2459998}
+  m_AnchoredPosition: {x: -2.232397, y: -2.2459998}
   m_SizeDelta: {x: 0.0132, y: 70.3748}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9133797702680987341
@@ -594,7 +598,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 0.7019608}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.7019608}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0

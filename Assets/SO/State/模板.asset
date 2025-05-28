@@ -37,6 +37,9 @@ MonoBehaviour:
   - state:
       id: 7
     transitions: []
+  - state:
+      id: 8
+    transitions: []
   references:
     version: 1
     00000000:
@@ -66,4 +69,9 @@ MonoBehaviour:
       type: {class: PrepareState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 2
+        chess: {fileID: 0}
+    00000008:
+      type: {class: DizzinessState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 6
         chess: {fileID: 0}

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 
+/// 这个是在仓库里的选项牌 
 /// </summary>
 public class ShopSelectIcon : MonoBehaviour
 {

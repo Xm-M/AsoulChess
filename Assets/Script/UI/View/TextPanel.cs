@@ -8,15 +8,14 @@ public class TextPanel : View
     public AudioPlayer manage;
     public GameObject zombieWave;
     public GameObject lastWave;
+    public GameObject gameOver;
     public override void Init()
     {
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Hide);
     }
     public override void Show()
-    {
-        
+    { 
         base.Show();
-        manage.PlayAudio("准备种植");
     }
     public void FirstZombieCom()
     {
@@ -29,5 +28,20 @@ public class TextPanel : View
     public void LastWave()
     {
          lastWave.SetActive(true);
+    }
+    public void GameOver()
+    {
+        animator.Play("gameover");
+        ((MapManage_PVZ.instance) as MapManage_PVZ).au.PlayAudio("游戏失败");
+        gameOver.SetActive(true);   
+    }
+    public void GameStart()
+    {
+        manage.PlayAudio("准备种植");
+        animator.Play("gamestart");
+    }
+    public void RestartGame()
+    {
+        LevelManage.instance.RestartLevel();
     }
 }

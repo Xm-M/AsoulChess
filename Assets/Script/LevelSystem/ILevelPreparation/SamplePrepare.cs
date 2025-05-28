@@ -9,6 +9,6 @@ public class SamplePrepare : ILevelPreparation
     public void Prepare(LevelData levelData)
     {
         UIManage.Show<PlantsShop>();
-        SunLightPanel.instance.ChangeSunLight(baseSunLight);
+        SunLightPanel.instance.SetSunLight(baseSunLight);
     }
 }

@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
   m_Name: "\u6D4B\u8BD5\u573A\u666F"
   m_EditorClassIdentifier: 
-  sceneName: TestScene
-  levelName: "\u81EA\u7531\u5173\u5361"
+  sceneName: "\u524D\u9662"
+  levelName: "\u524D\u9662"
   levelMode: 4
+  win: 0
   preparation:
     id: 0
   spawner:
@@ -24,8 +25,6 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: SamplePrepare, ns: , asm: Assembly-CSharp}
-      data:
-        baseSunLight: 0
+      type: {class: LevelPrepare_TestPrepare, ns: , asm: Assembly-CSharp}
     00000001:
       type: {class: , ns: , asm: }

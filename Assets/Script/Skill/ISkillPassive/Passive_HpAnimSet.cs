@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// 这个可以直接删啊
+/// </summary>
 public class Passive_HpAnimSet : ISkill
 {
     public string animName = "HP";
     Animator anim;
     public void InitSkill(Chess user)
     {
-        anim = user.animator;
+        //anim = user.animator;
         
     }
     public void WhenTakeDamage(DamageMessege dm)
@@ -33,5 +35,10 @@ public class Passive_HpAnimSet : ISkill
     public bool IfSkillReady(Chess user)
     {
         return false;
+    }
+
+    public void WhenEnter(Chess user)
+    {
+        //throw new System.NotImplementedException();
     }
 }

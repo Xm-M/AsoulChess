@@ -51,18 +51,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanceID: 0
   equipWeapon:
+    master: {fileID: 0}
     weaponPos: {fileID: 0}
-    OnWeaponAttack:
+    weapon:
+      id: 0
+    OnAttack:
       m_PersistentCalls:
         m_Calls: []
-    initWeapon:
-      id: 0
-    FindTarget:
-      id: 1
-    attack:
-      id: 2
-    loop: 1
-    master: {fileID: 0}
+    attackOver: 0
   propertyController:
     creator: {fileID: 11400000, guid: 1cde937abe260174db75bd5d0daf5b91, type: 2}
     onGetDamage:
@@ -76,16 +72,17 @@ MonoBehaviour:
         m_Calls: []
   skillController:
     user: {fileID: 0}
-    skillList: []
-    currentSkill:
-      user: {fileID: 0}
-      AnimationName: 
-      prepareName: 
-      coldDown: 0
-      startTime: 0
-      loop: 1
-      targets: []
-      skillEffect:
+    passiveSkill:
+      id: 0
+    activeSkill:
+      id: 0
+    DM:
+      damageFrom: {fileID: 0}
+      damageTo: {fileID: 0}
+      damage: 0
+      damageType: 0
+      damageElementType: 0
+      takeBuff:
         id: 0
   stateController:
     currentState:
@@ -96,43 +93,29 @@ MonoBehaviour:
       state:
         id: 0
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 1b2ba9c8965e5fa45910ef11c85a8bf7, type: 2}
+    stateGraph: {fileID: 0}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
+    onEnterBuff: []
   moveController:
     chess: {fileID: 0}
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 3
+      id: 1
+  animatorController: {fileID: 0}
   WhenEnterGame:
     m_PersistentCalls:
       m_Calls: []
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
-  animator: {fileID: 22532233730934420}
-  sprite: {fileID: 6393407077200782520}
   references:
     version: 1
     00000000:
       type: {class: , ns: , asm: }
     00000001:
-      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
-    00000002:
-      type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
-      data:
-        effect: {fileID: 0}
-        DM:
-          damageFrom: {fileID: 0}
-          damageTo: {fileID: 0}
-          damage: 0
-          damageType: 0
-          damageElementType: 1
-          takeBuff:
-            id: 0
-    00000003:
       type: {class: HorMove, ns: , asm: Assembly-CSharp}
 --- !u!95 &22532233730934420
 Animator:
@@ -287,7 +270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27cb11ae55d6a7c4c9440a27b7f2aca3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: "\u94C1\u6876"
+  autype: 0
   audioSource: {fileID: 7735702373586384284}
   clipList:
   - name: attack
@@ -387,7 +370,7 @@ Animator:
   m_GameObject: {fileID: 1141166926928552240}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9e772ee254ebb464d8952f4598fa2310, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -516,7 +499,7 @@ SpriteRenderer:
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 3.0625, y: 3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

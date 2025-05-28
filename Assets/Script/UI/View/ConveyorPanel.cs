@@ -4,8 +4,9 @@ using UnityEngine;
 
 /// <summary>
 /// 传送带
-/// 1.只有在GameStart事件触发以后才能开始生成
-/// 2.没有删干净
+/// 1.只有在GameStart事件触发以后才能开始生成  
+/// 2.没有删干净 
+/// 
 /// </summary>
 public class ConveyorPanel : View
 {

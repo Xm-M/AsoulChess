@@ -1,32 +1,36 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
-/// 我感觉我这个buff系统写的也很垃圾
+/// 我感觉我这个buff系统写的也很垃圾 
 /// </summary>
 [Serializable]
-public class Buff  
+public abstract class Buff
 {
+    [LabelText("Buff名")]
     public string buffName;//这个buff的名字
-    public Chess target;//buff的作用对象
+    [HideInInspector] public Chess target;//buff的作用对象
+    [HideInInspector] public int buffNum;//buff的叠加层数
     public virtual void BuffReset()
     {
-         
+        buffNum++;
     }
-    public virtual void BuffEffect( Chess target)
+
+    public virtual void BuffEffect(Chess target)
     {
         this.target = target;
     }
     public virtual void BuffOver()
     {
         target.buffController.RemoveBuff(this);
-        //GameManage.instance.buffManage.RecycleBuff(this);
     }
     public virtual Buff Clone()
     {
-        return new Buff();
+        return (Buff)this.MemberwiseClone();
     }
 }
 public class TimeBuff : Buff
@@ -40,7 +44,6 @@ public class TimeBuff : Buff
     }
     public override void BuffReset()
     {
-        base.BuffReset();
         timer.ResetTime();
     }
     public override void BuffOver()
@@ -51,63 +54,233 @@ public class TimeBuff : Buff
     }
 }
 /// <summary>
-/// 减速buff 
+/// 
 /// </summary>
-public class ColdBuff : TimeBuff
+public class CrazyBuff : Buff
 {
-    public float slowDownRate;
+    [LabelText("buff持续时间")]
+    public float continueTime=10f;
+    protected Timer timer;
+    [LabelText("额外攻速")]
+    public float addspeed=0.5f;
+    
     public override void BuffEffect(Chess target)
     {
-        base.BuffEffect( target);
-        Debug.Log("减速");
-        target.propertyController.ChangeAcceleRate(slowDownRate);
-        target.sprite.color = Color.blue;
-        timer = GameManage.instance.timerManage.AddTimer(
-            BuffOver, continueTime
-            );
+
+        base.BuffEffect(target);
+        //Debug.Log("加攻速");
+        AddSpeed(target);
+        timer=GameManage.instance.timerManage.AddTimer(BuffOver,continueTime,false);
+    }
+    public override void BuffReset()
+    {
+        timer.ResetTime();
+
     }
     public override void BuffOver()
     {
         base.BuffOver();
-        target.propertyController.ChangeAcceleRate(-slowDownRate);
-        target.sprite.color = Color.white;
+        timer?.Stop();
+        timer = null;
+        RemoveSpeed(target);
+        //Debug.Log("加速结束");
     }
-    public override Buff Clone()
+    public void AddSpeed(Chess target)
     {
-        ColdBuff cold = new ColdBuff();
-        cold.buffName = buffName;
-        cold.slowDownRate = slowDownRate;
-        cold.continueTime = continueTime;
-        return cold;
+        target.propertyController.ChangeAcceleRate(addspeed);
+        
+    }
+    public void RemoveSpeed(Chess target)
+    {
+        target.propertyController.ChangeAcceleRate(-addspeed);
     }
 }
-
-public class AccelerateBuff:TimeBuff
+/// <summary>
+/// 喝了点b酒下手没轻没重的 
+/// 拥有该buff的单位
+/// </summary>
+public class Buff_Wine : TimeBuff
 {
-    public float accelerateRate;
+    [LabelText("额外暴击率")]
+    public float extraCrite=0.25f;
+    [LabelText("减速效率")]
+    public float slowRate=-0.25f;
+    public override void BuffEffect(Chess target)
+    {
+        Debug.Log("喝酒了");
+        base.BuffEffect(target);
+        target.propertyController.ChangeAcceleRate(slowRate);
+        target.propertyController.ChangeCrit(extraCrite);
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime, false);
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        target.propertyController.ChangeAcceleRate(-slowRate);
+        target.propertyController.ChangeCrit(-extraCrite);
+    }
+}
+public class ColdBuff : TimeBuff
+{
+    [LabelText("减速效率")]
+    public float slowRate = -0.5f;
+    public GameObject coldBuff;
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
-        //Debug.Log("开始加速");
-        target.propertyController.ChangeAcceleRate(accelerateRate);
-        target.sprite.color = Color.red;
-        timer = GameManage.instance.timerManage.AddTimer(
-            BuffOver, continueTime
-            );
+        if (this.coldBuff != null)
+        {
+            GameObject cold = ObjectPool.instance.Create(coldBuff);
+            cold.transform.position = target.transform.position;
+        }
+        target.propertyController.ChangeAcceleRate(slowRate);
+        target.animatorController.ChangeColor(Color.blue);
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime, false);
     }
     public override void BuffOver()
     {
         base.BuffOver();
-        //Debug.Log("结束加速");
-        target.propertyController.ChangeAcceleRate(-accelerateRate);
-        target.sprite.color = Color.white;
+        target.propertyController.ChangeAcceleRate(-slowRate);
+        target.animatorController.ChangeColor(Color.white);
     }
-    public override Buff Clone()
+}
+
+
+public class DizznessBuff : TimeBuff
+{
+    StateName current;
+    public override void BuffEffect(Chess target)
     {
-        AccelerateBuff accelerateBuff = new AccelerateBuff();
-        accelerateBuff.accelerateRate = accelerateRate;
-        accelerateBuff.continueTime = continueTime;
-        accelerateBuff.buffName = buffName;
-        return accelerateBuff;
+        base.BuffEffect(target);
+        //Debug.Log("剩余时间" + continueTime);
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime, false);
+        current = target.stateController.currentState.state.stateName;
+        target.stateController.ChangeState(StateName.DizzyState);
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        //Debug.Log("重力场结束");
+        target.stateController.ChangeState(current);
+    }
+}
+public class FreezyBuff : DizznessBuff
+{
+    [SerializeReference]
+    public ColdBuff buff;//这里的coldbuff 不要加音效 但是名字是一样的
+    public GameObject FreezyEffect; //这个也是没有音效的
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        if (this.FreezyEffect != null)
+        {
+            GameObject cold = ObjectPool.instance.Create(FreezyEffect);
+            cold.transform.position = target.transform.position;
+        }
+        target.buffController.AddBuff(buff);
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+
+    }
+}
+
+
+
+/// <summary>
+/// 恢复buff
+/// </summary>
+public class ResumeBuff : Buff
+{
+    Timer timer;
+    public float healPercent=0.05f;
+    public float healRate=1;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        float value = 0.5f + target.propertyController.GetHpPerCent();
+        target.animatorController.ChangeColor(new Color(1, 1, 1, value));
+        timer = GameManage.instance.timerManage.AddTimer(Heal, healRate, true);
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        timer.Stop();
+        timer = null;
+        target.animatorController.ChangeColor(Color.white);
+    }
+    public void Heal()
+    {
+        target.propertyController.Heal(target.propertyController.GetMaxHp()*healPercent);
+        float value = 0.5f + target.propertyController.GetHpPerCent();
+        target.animatorController.ChangeColor(new Color(1, 1, 1, value));
+        if (target.propertyController.GetHpPerCent() >= 0.999)
+        {
+            BuffOver();
+        }
+    }
+
+    public override void BuffReset()
+    {
+        base.BuffReset();
+    }
+    
+}
+/// <summary>
+/// 抹茶芭菲buff
+/// </summary>
+public class MatchaParfaitBuff : TimeBuff
+{
+    [SerializeReference]
+    public ColdBuff coldBuff;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        target.propertyController.onTakeDamage.AddListener(OnTakeDamage);
+        timer=GameManage.instance.timerManage.AddTimer(BuffOver,continueTime, false);
+        //效果是如果目标是要乐奈 则提供效果(转换状态什么的)
+        if (target.propertyController.creator.name == "要乐奈")
+        {
+            target.animatorController.animator.SetBool("Match", true);
+        }
+    }
+
+    public void OnTakeDamage(DamageMessege dm)
+    {
+        dm.damageTo.buffController.AddBuff(coldBuff);
+    }
+    
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        target.propertyController.onTakeDamage.RemoveListener(OnTakeDamage);
+    }
+}
+public class BloodBuff : TimeBuff
+{
+    public DamageMessege dm;
+    public float damage = 70;
+    float speed;
+    public override void BuffEffect(Chess target)
+    {
+        dm.damageTo = target;
+        dm.damageFrom = target;
+        this.target = target;
+        speed = UnityEngine.Random.Range(1, 2f);
+        timer = GameManage.instance.timerManage.AddTimer(BloodDamage,speed*Time.deltaTime,true);
+        //base.BuffEffect(target);
+    }
+    public void BloodDamage()
+    {
+        dm.damage = damage* Time.deltaTime;
+        target.propertyController.GetDamage(dm);
+        
+    }
+    public override void BuffOver()
+    {
+        //Debug.Log("流血buff结束");
+        timer.Stop();
+        timer = null;
     }
 }

@@ -36,4 +36,9 @@ public class Passive_SecondKill : ISkill
         user.propertyController.onTakeDamage.AddListener(
             Seckill);
     }
+
+    public void WhenEnter(Chess user)
+    {
+        //throw new System.NotImplementedException();
+    }
 }

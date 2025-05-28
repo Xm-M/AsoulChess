@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u957F\u5D0E\u7D20\u4E16"
+  m_EditorClassIdentifier: 
+  chessName: "\u957F\u5D0E\u7D20\u4E16"
+  baseProperty:
+    attack: 30
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 2500
+    HpMax: 2500
+    lifeStealing: 0
+    healRate: 1
+    speed: 2
+    acceleRated: 1
+    attackRange: 6.25
+    price: 0
+    rarity: 4000
+    CD: 0
+    Size: 2
+  chessPre: {fileID: 7383187323799798311, guid: ebd99213a4ce6604aa2615122dbd6acd, type: 3}
+  chessSprite: {fileID: 21300000, guid: 139d053265a51a549b82db1eeb9b5081, type: 3}
+  plantTags:
+  - Mygo
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    id: 0
+  plantIfCanBuyCard:
+    id: 1
+  references:
+    version: 1
+    00000000:
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+    00000001:
+      type: {class: , ns: , asm: }

@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 
 /// <summary>
 /// 我怎么看都是要用到update 而不是简单的计时器就能解决的问题...
 /// 每个LevelData应该都有一个Clear方法 这个Clear方法应该调用每个Spwner的Clear函数
 /// 这个Clear函数我还没写
+/// 关于下一关：如果是冒险模式就进入下一关；如果是小游戏胜利就返回小游戏菜单其他模式同理
 /// </summary>
 public class SampleZombieSpawner : IZombieSpawner
 {
@@ -19,6 +21,7 @@ public class SampleZombieSpawner : IZombieSpawner
     Timer  waveTimer;
     float t, zt;
     bool win;
+    public LevelData nextLevelData;
     public bool CheckWinCondition()
     {
         return win;
@@ -27,6 +30,7 @@ public class SampleZombieSpawner : IZombieSpawner
     public void Prepare(LevelData levelData)
     {
         Debug.Log("准备阶段");
+        win = false;
         //但我说实话 所有的初始化阶段是不是都可以在Prepare阶段就做好
         t = startTime;zt = 0;
         liveZombies = ChessTeamManage.Instance.GetTeam("Enemy");
@@ -34,10 +38,15 @@ public class SampleZombieSpawner : IZombieSpawner
         for (int i = 0; i < zombies.Count; i++)
         {
             Chess zombie = ChessTeamManage.Instance.CreateChess(zombies[i], (MapManage.instance as MapManage_PVZ).zombiePreTile[i],"Enemy");
-            //Debug.Log("create"+zombie.name);
-            //liveZombies.Add(zombie);
         }
-        
+        for (int i = 0; i < (MapManage_PVZ.instance as MapManage_PVZ).roomTile.Count; i++)
+        {
+            Chess cars = ChessTeamManage.Instance.CreateChess((MapManage_PVZ.instance as MapManage_PVZ).car,
+                 (MapManage_PVZ.instance as MapManage_PVZ).roomTile[i], "Player");
+            cars.gameObject.layer = 11;
+            //Debug.Log(cars.gameObject.layer);
+            //Debug.Log(LayerMask.LayerToName(cars.gameObject.layer));
+        }
     }
     /// <summary>
     /// 这个函数才是最重要的
@@ -45,6 +54,7 @@ public class SampleZombieSpawner : IZombieSpawner
     /// <param name="levelData"></param>
     public void StartSpawning(LevelData levelData)
     {
+        
         List<Chess> chesses = new List<Chess>(liveZombies);
         for (int i = 0; i < chesses.Count; i++)
         {
@@ -54,13 +64,33 @@ public class SampleZombieSpawner : IZombieSpawner
         liveZombies.Clear();
         UIManage.Show<ProgressBar>();
         UIManage.Show<TextPanel>();
-        waveTimer= GameManage.instance.timerManage.AddTimer(
-            UpdateGameStage, updateTime, true);
+        UIManage.GetView<TextPanel>().GameStart();
+        waveTimer = GameManage.instance.timerManage.AddTimer(
+            ()=>UpdateGameStage(levelData), updateTime, true);
+        EventController.Instance.AddListener<Chess>(EventName.WhenDeath.ToString(), CheckLastZombie);
     }
     public void OverSpawning(LevelData levelData)
     {
-        UIManage.Close<TextPanel>();
+        
         UIManage.Close<ProgressBar>();
+        ((MapManage_PVZ.instance) as MapManage_PVZ).au.SetLoop(false);
+        if (levelData.win)
+        {
+            //Debug.Log("游戏胜利");
+            //((MapManage_PVZ.instance) as MapManage_PVZ).au.PlayAudio("游戏胜利");
+            if(nextLevelData!=null)
+                LevelManage.instance.ChangeLevel(nextLevelData);
+            else
+            {
+                LevelManage.instance.ReturnMenu();
+            }
+        }
+        else
+        {
+            //((MapManage_PVZ.instance) as MapManage_PVZ).au.PlayAudio("游戏失败");
+            Debug.Log("游戏失败");
+            UIManage.GetView<TextPanel>().GameOver();
+        }
         waveTimer?.Stop();
     }
     public void CreateZombie()
@@ -68,7 +98,7 @@ public class SampleZombieSpawner : IZombieSpawner
         Tile tile = MapManage.instance.preTiles[UnityEngine.Random.Range(0, MapManage.instance.preTiles.Count)];
         Chess c = zombiesWave.CreateChess(tile);
     }
-    public  void UpdateGameStage()
+    public  void UpdateGameStage(LevelData levelData)
     {
         if (zombiesWave.CurrentPrice > 0)
         {
@@ -87,7 +117,7 @@ public class SampleZombieSpawner : IZombieSpawner
             {
                 Debug.Log("进入下一波");
                 t = 0;
-                zombiesWave.EnterNextWave();
+                zombiesWave.EnterNextWave(levelData);
                 if (liveZombies.Count == 0) Debug.Log("死完了");
                 for (int i = 0; i < zombies.Count; i++)
                 {
@@ -102,8 +132,25 @@ public class SampleZombieSpawner : IZombieSpawner
 
         }
     }
+    public void CheckLastZombie(Chess chess)
+    {
+        if (zombiesWave.currentWave >= zombiesWave.LastWave&& liveZombies.Count == 0&&!win)
+        {
+            if(nextLevelData!=null)
+                Debug.Log(nextLevelData.levelName);
+            Item_Reward reward = UIManage.GetView<ItemPanel>().Create<Item_Reward>();
+            reward.SetRewardPos(chess.transform.position);
+            win = true;
+        }
+    }
 
-    
+    public void LeaveSpawning(LevelData levelData)
+    {
+        Debug.Log("离开房间"+levelData.levelName);
+        waveTimer?.Stop();
+        waveTimer = null;
+        EventController.Instance.RemoveListener<Chess>(EventName.WhenDeath.ToString(), CheckLastZombie);
+    }
 }
 
 [Serializable]
@@ -138,13 +185,13 @@ public class ZombiesWave
         this.spawner = spawner;
     }
 
-    public void EnterNextWave()
+    public void EnterNextWave(LevelData levelData)
     {
         currentWave++;
         UIManage.GetView<ProgressBar>().MoveBar(currentWave, LastWave);
         if (currentWave > LastWave)
         {
-            spawner.OverSpawning(null);
+            levelData.win = true;
         }
         else if (currentWave == 1)
         {

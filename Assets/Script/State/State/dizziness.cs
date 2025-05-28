@@ -15,8 +15,11 @@ public class DizzinessState : State
     public override void Enter(Chess chess)
     {
         base.Enter(chess);
-        speed = chess.animator.speed;
-        chess.animator.speed = 0;
+        //speed = chess.animator.speed;
+        //speed = chess.animatorController.animator.speed;
+        chess.animatorController.ChangeSpeed(0);
+        //chess.animator.speed = 0;
+        chess.propertyController.Freezy();
     }
     public override void Execute(Chess chess)
     {
@@ -25,7 +28,8 @@ public class DizzinessState : State
     public override void Exit(Chess chess)
     {
         base.Exit(chess);
-        chess.animator.speed = speed;
+        //chess.animatorController.ChangeSpeed(speed);
+        chess.propertyController.UnFreezy();
     }
     public override State Clone()
     {

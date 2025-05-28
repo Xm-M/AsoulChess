@@ -11,10 +11,19 @@ public class HorMove : FindTileMethod
     {
         this.chess=c;
         Vector2Int currentPos=c.moveController.standTile.mapPos;
+        Vector2Int nextPos = new Vector2Int(currentPos.x + (int)c.transform.right.x, currentPos.y);
         //Debug.Log(currentPos);
-        if (currentPos.x > 0)
-            return MapManage.instance.tiles[currentPos.x - 1, currentPos.y];
-        else return (MapManage.instance as MapManage_PVZ).roomTile;
+        if (nextPos.x >= 0 && nextPos.x < MapManage.instance.mapSize.x)
+            return MapManage.instance.tiles[nextPos.x, nextPos.y];
+        else if (nextPos.x >= MapManage.instance.mapSize.x)
+        {
+            return (MapManage.instance as MapManage_PVZ).deathTile;
+        }
+        else if (nextPos.x < 0)
+        {
+            return (MapManage.instance as MapManage_PVZ).roomTile[currentPos.y];
+        }
+        return c.moveController.standTile;
     }
     public override void StartMoving()
     {

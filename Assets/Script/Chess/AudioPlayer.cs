@@ -7,12 +7,19 @@ public class AudioPlayer : MonoBehaviour
 {
     public AudioType autype;
     public AudioSource audioSource;
+    public List<GameObject> subAudio;
+    public float baseValue;
+    private void Awake()
+    {
+        baseValue= audioSource.volume;
+    }
     private void OnEnable()
     {
+       
         if(autype==AudioType.SoundEffect)
-            audioSource.volume=AudioManage.SoundEffectValue;
+            audioSource.volume=AudioManage.SoundEffectValue*baseValue;
         else
-            audioSource.volume=AudioManage.BgmValue;
+            audioSource.volume=AudioManage.BgmValue * baseValue;
         AudioManage.AddPlayer(this);
     }
     private void OnDisable()
@@ -38,6 +45,12 @@ public class AudioPlayer : MonoBehaviour
             }
         }
     }
+    public void RandomPlay()
+    {
+        int n=UnityEngine.Random.Range(0,clipList.Count);
+        audioSource.clip = clipList[n].clip;
+        Play();
+    }
     public void ChangeAudio(string name)
     {
         for (int i = 0; i < clipList.Count; i++)
@@ -57,6 +70,21 @@ public class AudioPlayer : MonoBehaviour
         //    audioSource.volume=AudioManage.BgmValue;
         audioSource.Play();
     }
+    public void PlayWithSub()
+    {
+        audioSource.Play();
+        for(int i=0;i<subAudio.Count;i++)
+            subAudio[i].GetComponent<AudioPlayer>().RandomPlay(); 
+    }
+    public void PlaySub()
+    {
+        for (int i = 0; i < subAudio.Count; i++)
+            subAudio[i].GetComponent<AudioPlayer>().RandomPlay();
+    }
+    public void PlaySubN(int n)
+    {
+        subAudio[n].GetComponent<AudioPlayer>().RandomPlay();
+    }
     public void Stop()
     {
         audioSource.Stop();
@@ -72,5 +100,9 @@ public class AudioPlayer : MonoBehaviour
         //else
         //    audioSource.volume = AudioManage.BgmValue;
         audioSource.UnPause();
+    }
+    public void SetLoop(bool loop)
+    {
+        audioSource.loop = loop;
     }
 }

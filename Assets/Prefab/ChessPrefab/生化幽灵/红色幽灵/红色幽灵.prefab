@@ -65,6 +65,10 @@ MonoBehaviour:
         m_Calls: []
   skillController:
     user: {fileID: 0}
+    passiveSkill:
+      id: 1
+    activeSkill:
+      id: 1
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -103,14 +107,15 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: Weapon, ns: , asm: Assembly-CSharp}
+      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
           id: 1
-        FindTarget:
+        findTarget:
           id: 3
-        attack:
+        attackFunction:
           id: 4
+        enemys: []
         interval: 0
     00000001:
       type: {class: , ns: , asm: }
@@ -143,7 +148,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.36428937, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}

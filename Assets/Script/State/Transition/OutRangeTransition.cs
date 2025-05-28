@@ -6,7 +6,7 @@ public class OutRangeTransition : Transition
 {
     public override bool ifReach(Chess chess)
     {
-        return chess.equipWeapon.weapon.FindEnemy(chess)<=0;
+        return (chess.equipWeapon.weapon.FindEnemy(chess)<=0&&chess.animatorController.IfAnimPlayOver()&&chess.equipWeapon.attackOver);
     }
     public override Transition Clone()
     {

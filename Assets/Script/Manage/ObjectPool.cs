@@ -21,7 +21,8 @@ public class ObjectPool : MonoBehaviour
         objectPool = new Dictionary<string, Stack<GameObject>>();
         poolScene = SceneManager.CreateScene(name);
         otherPool = new Dictionary<Type, Stack<object>>();
-        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), ClearPool);
+        //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), ClearPool);
+        EventController.Instance.AddListener(EventName.GameStart.ToString(), ClearPool);
     }
     //
     IEnumerator AddMember(Chess c, Tile tile)

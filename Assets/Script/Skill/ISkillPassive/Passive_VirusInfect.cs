@@ -41,4 +41,9 @@ public class Passive_VirusInfect : ISkill
         return false;
         //throw new System.NotImplementedException();
     }
+
+    public void WhenEnter(Chess user)
+    {
+        //throw new System.NotImplementedException();
+    }
 }

@@ -54,7 +54,10 @@ public class MapManage : MonoBehaviour
                 tiles[i, j].GetComponent<Collider2D>().enabled = false;
             }
     }
-    
+    public Tile   RandomTile()
+    {
+        return tiles[Random.Range(0,mapSize.x-1),Random.Range(0,mapSize.y-1)];
+    }
 }
 public interface IInitMapManage
 {

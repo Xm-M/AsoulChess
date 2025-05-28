@@ -5,6 +5,7 @@ using UnityEngine;
 /// 这个是soldier对应的weapon
 /// 有几个信息是需要的 1.主要是改变的weapon方式 2.animtor对应的数值改变 
 /// 这tm是个啥
+/// 这个的动画问题之后再考虑
 /// </summary>
 public class Passive_SoldierWeapon : ISkill
 {
@@ -30,7 +31,7 @@ public class Passive_SoldierWeapon : ISkill
         }
         else
         {
-            soldier.animator.SetInteger(property, id);
+            //soldier.animator.SetInteger(property, id);
             //soldier.equipWeapon.ChangeWeapon(weapon,findTarget);
             user.Death();
         }
@@ -44,6 +45,11 @@ public class Passive_SoldierWeapon : ISkill
    
 
     public void UseSkill(Chess user)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void WhenEnter(Chess user)
     {
         throw new System.NotImplementedException();
     }

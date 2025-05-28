@@ -2,17 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelPrepare_TestPrepare : MonoBehaviour
+public class LevelPrepare_TestPrepare : ILevelPreparation
 {
-    // Start is called before the first frame update
-    void Start()
+    public void Prepare(LevelData levelData)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        UIManage.Show<TestScenePanel>();
+        (MapManage_PVZ.instance as MapManage_PVZ).WhenGameStart();
     }
 }

@@ -8,4 +8,6 @@ public  interface ISkill
     public void UseSkill(Chess user);//使用skill,可能被引用多次
     public void LeaveSkill(Chess user);//结束初始化，主要是清除一些东西
     public bool IfSkillReady(Chess user);//这个是判断函数
+
+    public void WhenEnter(Chess user);//进入战斗初始化
 }

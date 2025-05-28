@@ -8,15 +8,18 @@ public class MapManage_PVZ : MapManage
 {
     public Transform sunLightRecyclePos;
     public List<Tile> zombiePreTile;
-    public Tile roomTile;
+    public List<Tile> roomTile;
+    public Tile deathTile;
     public AudioPlayer au;
     public PlayableDirector dir;
+    public PropertyCreator car;
     //public LevelData room;
     protected override void Start()
     {
         base.Start();
         //EventController.Instance.AddListener(EventName.GameOver.ToString(), WhenGameOver);
         //EventController.Instance.AddListener(EventName.GameStart.ToString(), WhenGameStart);
+       
     }//
   
     /// <summary>
@@ -25,6 +28,7 @@ public class MapManage_PVZ : MapManage
     public void WhenGameStart()
     {
         dir.Play();
+        
     }
     public void WhenGameOver()
     {

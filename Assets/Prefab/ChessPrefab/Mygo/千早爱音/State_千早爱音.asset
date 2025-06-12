@@ -49,6 +49,12 @@ MonoBehaviour:
     - transition:
         id: 11
       targetState: 4
+  - state:
+      id: 12
+    transitions:
+    - transition:
+        id: 13
+      targetState: 5
   references:
     version: 1
     00000000:
@@ -93,3 +99,10 @@ MonoBehaviour:
         chess: {fileID: 0}
     0000000B:
       type: {class: IfAnimPlayOverTransition, ns: , asm: Assembly-CSharp}
+    0000000C:
+      type: {class: DizzinessState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 6
+        chess: {fileID: 0}
+    0000000D:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}

@@ -37,7 +37,7 @@ public class PrePlantImage : MonoBehaviour
                 if (hit.collider != null)
                 {
                     Tile t = hit.collider.GetComponent<Tile>();
-                    if (creator.IfCanPlant(hit.collider.GetComponent<Tile>()))
+                    if (creator.IfCanPlant(t))
                     {
                         Chess c = ChessTeamManage.Instance.CreateChess(creator, t, team);
                         if (team == "Player")

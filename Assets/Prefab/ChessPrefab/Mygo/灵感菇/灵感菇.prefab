@@ -83,18 +83,19 @@ MonoBehaviour:
       damage: 0
       damageType: 0
       damageElementType: 0
+      ifCrit: 0
       takeBuff:
-        id: 2
+        id: 3
   stateController:
     currentState:
       state:
-        id: 2
+        id: 3
       transitions: []
     preState:
       state:
-        id: 2
+        id: 3
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 34ad83a1969766747828a7774a87e075, type: 2}
+    stateGraph: {fileID: 11400000, guid: e76dbd0eedc2a624fa8f96ee98b0f67e, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -104,7 +105,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 2
+      id: 3
   animatorController: {fileID: 1448611078435410148}
   WhenEnterGame:
     m_PersistentCalls:
@@ -130,11 +131,11 @@ MonoBehaviour:
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 2
+          id: 3
         findTarget:
-          id: 2
+          id: 3
         attackFunction:
-          id: 2
+          id: 3
         enemys: []
         interval: 0
     00000001:
@@ -142,7 +143,45 @@ MonoBehaviour:
       data:
         color: {r: 0.9622642, g: 0.43029547, b: 0.8268257, a: 1}
     00000002:
+      type: {class: SkillEffect_Saki, ns: , asm: Assembly-CSharp}
+      data:
+        skillRange: 8.75
+        cold: 30
+        frequency: 5
+        buffCharm:
+          id: 4
+        buffCoercion:
+          id: 5
+        fearBuff:
+          id: 6
+    00000003:
       type: {class: , ns: , asm: }
+    00000004:
+      type: {class: Buff_Charm, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u9B45\u60D1"
+        target: {fileID: 0}
+        buffNum: 0
+        color: {r: 0.9607843, g: 0.43137255, b: 0.827451, a: 1}
+    00000005:
+      type: {class: Buff_Coercion, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u5A01\u538B"
+        target: {fileID: 0}
+        buffNum: 0
+        continueTime: 10
+        deAttack: 0.2
+        deDefence: 0.2
+        Coerctioneffect: {fileID: 5528529480491682693, guid: 310eaf154a2c4914196c9fe3e4dbd161, type: 3}
+    00000006:
+      type: {class: Buff_Fear, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u6050\u60E7"
+        target: {fileID: 0}
+        buffNum: 0
+        continueTime: 3
+        FearEffect: {fileID: 60859552351474783, guid: 5bb58ad649f96fd47b6e29b885d8ff28, type: 3}
+        moveRate: 0.5
 --- !u!61 &3717117946826914175
 BoxCollider2D:
   m_ObjectHideFlags: 0

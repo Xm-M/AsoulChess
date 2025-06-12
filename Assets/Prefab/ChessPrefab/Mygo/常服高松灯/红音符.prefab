@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHitNum: 1
-  rate: 2
+  rate: 1
   WhenBulletHit:
     m_PersistentCalls:
       m_Calls:
@@ -177,6 +177,7 @@ MonoBehaviour:
     damage: 0
     damageType: 0
     damageElementType: 2
+    ifCrit: 0
     takeBuff:
       id: 0
   references:

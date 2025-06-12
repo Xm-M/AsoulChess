@@ -56,6 +56,7 @@ public class Bullet : MonoBehaviour
         {
             Chess c = collision.GetComponent<Chess>();
             if(c==null)return;
+            Dm.damage= shooter.propertyController.GetAttack() * rate;
             Dm.damageTo = c;
             if (current > 0)
             {

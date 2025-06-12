@@ -5,10 +5,20 @@ using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 
 /// <summary>
+/// 暂时没想好怎么改 真的很复杂啊
 /// 我怎么看都是要用到update 而不是简单的计时器就能解决的问题...
 /// 每个LevelData应该都有一个Clear方法 这个Clear方法应该调用每个Spwner的Clear函数
 /// 这个Clear函数我还没写
 /// 关于下一关：如果是冒险模式就进入下一关；如果是小游戏胜利就返回小游戏菜单其他模式同理
+/// 有限制出怪：某种僵尸可能出现的波数是固定的 或者说 大部分僵尸都只能在一大波之后出现 
+/// 无限制出怪：可能第一只僵尸就是巨人了
+/// 一类出怪：（int((x-1)/3)+n）*t 
+/// 二类出怪：(int((x-1)*2/5)+n)*t
+/// 其中 x表示波数 n表示初始绿（第一波出现怪的值） t表示出怪倍率
+/// 因为我有设定僵尸的阳光 所以公式算出来的值*25=僵尸的每波阳光
+/// 
+/// 我应该把出怪逻辑和具体数据剥离开来 然后插件可以一个个加进去 应该是这样的 
+/// 僵尸怎么出 这个函数应该是放在 具体的类里面的
 /// </summary>
 public class SampleZombieSpawner : IZombieSpawner
 {
@@ -21,6 +31,7 @@ public class SampleZombieSpawner : IZombieSpawner
     Timer  waveTimer;
     float t, zt;
     bool win;
+    Vector3 lastPos;
     public LevelData nextLevelData;
     public bool CheckWinCondition()
     {
@@ -67,7 +78,7 @@ public class SampleZombieSpawner : IZombieSpawner
         UIManage.GetView<TextPanel>().GameStart();
         waveTimer = GameManage.instance.timerManage.AddTimer(
             ()=>UpdateGameStage(levelData), updateTime, true);
-        EventController.Instance.AddListener<Chess>(EventName.WhenDeath.ToString(), CheckLastZombie);
+        //EventController.Instance.AddListener<Chess>(EventName.WhenDeath.ToString(), CheckLastZombie);
     }
     public void OverSpawning(LevelData levelData)
     {
@@ -118,7 +129,15 @@ public class SampleZombieSpawner : IZombieSpawner
                 Debug.Log("进入下一波");
                 t = 0;
                 zombiesWave.EnterNextWave(levelData);
-                if (liveZombies.Count == 0) Debug.Log("死完了");
+                if (liveZombies.Count == 0&&levelData.win)
+                {
+                    Debug.Log("死完了");
+                    if (nextLevelData != null)
+                        Debug.Log(nextLevelData.levelName);
+                    Item_Reward reward = UIManage.GetView<ItemPanel>().Create<Item_Reward>();
+                    reward.SetRewardPos(lastPos);
+                    win = true;
+                }
                 for (int i = 0; i < zombies.Count; i++)
                 {
                     if (zombies[i].baseProperty.price <= zombiesWave.CurrentPrice &&
@@ -129,7 +148,10 @@ public class SampleZombieSpawner : IZombieSpawner
                 }
                 zt = zombieInterval + 1;
             }
-
+            else
+            {
+                lastPos = liveZombies[0].transform.position;
+            }
         }
     }
     public void CheckLastZombie(Chess chess)
@@ -149,7 +171,7 @@ public class SampleZombieSpawner : IZombieSpawner
         Debug.Log("离开房间"+levelData.levelName);
         waveTimer?.Stop();
         waveTimer = null;
-        EventController.Instance.RemoveListener<Chess>(EventName.WhenDeath.ToString(), CheckLastZombie);
+        //EventController.Instance.RemoveListener<Chess>(EventName.WhenDeath.ToString(), CheckLastZombie);
     }
 }
 
@@ -244,7 +266,7 @@ public class ZombiesWave
     public Chess CreateChess(Tile standTile)
     {
         float fate = UnityEngine.Random.Range(0, 1f);
-        //Debug.Log(fate);
+        //Debug.Log(fate); 
         Chess c = WaveZombie[0].chessPre;
         //Debug.Log(fateList.Count);
         for (int i = 0; i < fateList.Count; i++)

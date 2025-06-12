@@ -163,7 +163,7 @@ public class OnlyOne_Limit : IfCanBuyCard
         {
             if(chess.propertyController.creator == creator)
             {
-                Debug.Log("有相同单位"+chess.name);
+                //Debug.Log("有相同单位"+chess.name);
                 return false;
             }
         }

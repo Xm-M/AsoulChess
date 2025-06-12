@@ -12,7 +12,7 @@ public class Passive_Mygo : ISkill
     protected Chess user;
     //List<string> members =new List<string>{ "长崎素世", "高松灯", "椎名立希", "要乐奈","千早爱音" };
     public EggController eggcontroller;
-    List<string> nearChess;
+    protected List<string> nearChess;
     //int[] dx =[]
     public bool IfSkillReady(Chess user)
     {
@@ -51,7 +51,7 @@ public class Passive_Mygo : ISkill
     /// 
     /// </summary>
     /// <param name="chess"></param>
-    public void CheckFriend(Chess chess)
+    public virtual void CheckFriend(Chess chess)
     {
         int[] dx = new int[4] { 0, 0, 1, -1 };
         Tile tile = user.moveController.standTile;
@@ -82,6 +82,7 @@ public class Passive_Mygo : ISkill
             //Debug.Log("队友+1");
             user.animatorController.ChangeFloat("Mygo", 1);
             //user.animatorController.animator.Play("change1");
+            user.animatorController.ChangeFlash(1);
             user.propertyController.SetAtttackRange(user.propertyController.creator.baseProperty.attackRange);
             if (GameManage.instance.fetterManage.ContainFetter("Mygo")&&nearChess.Count == 4)
             {
@@ -92,7 +93,8 @@ public class Passive_Mygo : ISkill
         else
         {
             user.animatorController.ChangeFloat("Mygo", 0);
-            user.propertyController.SetAtttackRange(0);
+            user.propertyController.SetAtttackRange(-1);
+            user.animatorController.ChangeFlash(1);
         }
     }
     public void Check(Chess chess)
@@ -137,8 +139,19 @@ public class Passive_Anon : Passive_Mygo
         }
     }
 }
+/// <summary>
+/// 这个主要是改变射程 
+/// </summary>
 public class Passive_Taki : Passive_Mygo
 {
-
+    public override void CheckFriend(Chess chess)
+    {
+        base.CheckFriend(chess);
+        if (nearChess.Count == 4)
+        {
+            //Debug.Log("增加攻击距离");
+            user.propertyController.SetAtttackRange(1000);
+        }
+    }
 }
 

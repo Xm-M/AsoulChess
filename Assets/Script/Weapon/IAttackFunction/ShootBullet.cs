@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Sirenix.OdinInspector;
 /// <summary>
 ///  
 /// </summary>
@@ -43,52 +43,92 @@ public class MultiAttack : IAttackFunction
         }
     }
 }
-public class ShootBullet_ÀÔ…–œ„ : IAttackFunction
-{
-    public GameObject bullet;
-    int index = 0;
-    public void Attack(Chess user, List<Chess> targets)
-    {
-        if (index < 3)
-        {
-            GameObject b = ObjectPool.instance.Create(bullet);
-            Bullet zidan = b.GetComponent<Bullet>();
-            zidan.InitBullet(user, user.equipWeapon.weaponPos.position, targets[0], user.transform.right);
-        }
-        else
-        {
-            index = 0;
-        }
-    }
-}
+//public class ShootBullet_ÀÔ…–œ„ : IAttackFunction
+//{
+//    public GameObject bullet;
+//    int index = 0;
+//    public void Attack(Chess user, List<Chess> targets)
+//    {
+//        if (index < 3)
+//        {
+//            GameObject b = ObjectPool.instance.Create(bullet);
+//            Bullet zidan = b.GetComponent<Bullet>();
+//            zidan.InitBullet(user, user.equipWeapon.weaponPos.position, targets[0], user.transform.right);
+//        }
+//        else
+//        {
+//            index = 0;
+//        }
+//    }
+//}
 public class ShootBullet_Tomorin : IAttackFunction
 {
-    public List<GameObject> bullets;
-    public Transform shooter;
+    [SerializeReference]
+    public List<Buff> buffs;
+    public GameObject bullet;
+    public List<GameObject> effects;
+    //public Transform shooter;
     public void Attack(Chess user, List<Chess> targets)
     {
         if ((targets.Count == 0)) return;
-        int n = Random.Range(0, bullets.Count);
-        GameObject b = ObjectPool.instance.Create(bullets[n]);
+        int n = Random.Range(0, buffs.Count);
+        GameObject b = ObjectPool.instance.Create(bullet);
         Bullet zidan = b.GetComponent<Bullet>();
-        zidan.InitBullet(user, shooter.transform.position, targets[0], shooter.transform.right);
-        
+        zidan.InitBullet(user, user.equipWeapon.weaponPos.transform.position, targets[0], user.transform.right);
         zidan.Dm.damageTo = targets[0];
+        zidan.Dm.takeBuff = buffs[n].Clone();
+        zidan.GetComponent<Animator>().SetInteger("type", n);
+        if(n==1)
+            zidan.GetComponent<Animator>().Play("greenBullet");
+        else if (n == 2)
+        {
+            zidan.GetComponent<Animator>().Play("blueBullet");
+        }
+        zidan.GetComponent<EffectMiss>().Effect = effects[n];
     }
 }
-//public class ShootBullet_Taki : IAttackFunction
-//{
-//    public List<GameObject> bullets;
-//    public Transform shooter;
-//    public int n;
-//    public void Attack(Chess user, List<Chess> targets)
-//    {
-//        if ((targets.Count == 0)) return;
-//        //int n = Random.Range(0, bullets.Count);
-//        GameObject b = ObjectPool.instance.Create(bullets[n]);
-//        Bullet zidan = b.GetComponent<Bullet>();
-//        zidan.InitBullet(user, shooter.transform.position, targets[0], shooter.transform.right);
+public class ShootBullet_Taki : IAttackFunction
+{
+    public Armor_TakiArmor armor;
+    [LabelText("∆’Õ®◊”µØ")]
+    public GameObject bullet;
+    [LabelText("¥Û∫≈◊”µØ")]
+    public GameObject bigBullet;
+    public Transform shooter;
+    
+    public void Attack(Chess user, List<Chess> targets)
+    {
+        if ((targets.Count == 0)) return;
+        GameObject bu=user.GetComponent<Animator>().GetFloat("Mygo")== 2 ?bigBullet :bullet;
+        GameObject b = ObjectPool.instance.Create(bu);
+        Bullet zidan = b.GetComponent<Bullet>();
+        int n = armor.animator.GetInteger("tomorin");
+        zidan.GetComponent<Animator>().SetInteger("type", n);
+        zidan.InitBullet(user, shooter.transform.position, targets[0], shooter.transform.right);
+        zidan.Dm.damageTo = targets[0];
+        zidan.Dm.takeBuff =armor.currentbuff;
+    }
+}
+public class ShootBullet_Rana : IAttackFunction
+{
+    public GameObject bullet;
 
-//        zidan.Dm.damageTo = targets[0];
-//    }
-//}
+    public void Attack(Chess user, List<Chess> targets)
+    {
+        GameObject b = ObjectPool.instance.Create(bullet);
+        Bullet zidan = b.GetComponent<Bullet>();
+        if (targets.Count == 0) return;
+        if (user.animatorController.animator.GetFloat("Mygo") > 1)
+        {
+            zidan.MaxHitNum = 1000;
+        }
+        else
+        {
+            zidan.MaxHitNum = 1;
+        }
+        zidan.InitBullet(user, user.equipWeapon.weaponPos.position, targets[0], user.transform.right);
+        zidan.Dm.damageTo = targets[0];
+        //Debug.Log(zidan.Dm.damageTo.name);
+        
+    }
+}// 

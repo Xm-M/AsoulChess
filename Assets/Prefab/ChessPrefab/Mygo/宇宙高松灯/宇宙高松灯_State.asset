@@ -18,21 +18,24 @@ MonoBehaviour:
     transitions: []
   - state:
       id: 1
-    transitions: []
-  - state:
-      id: 2
     transitions:
     - transition:
-        id: 3
-      targetState: 3
-    - transition:
-        id: 4
+        id: 2
       targetState: 5
   - state:
-      id: 5
+      id: 3
     transitions:
     - transition:
-        id: 6
+        id: 4
+      targetState: 3
+    - transition:
+        id: 5
+      targetState: 5
+  - state:
+      id: 6
+    transitions:
+    - transition:
+        id: 7
       targetState: 5
   references:
     version: 1
@@ -47,18 +50,20 @@ MonoBehaviour:
         stateName: 6
         chess: {fileID: 0}
     00000002:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+    00000003:
       type: {class: IdleState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 4
         chess: {fileID: 0}
-    00000003:
-      type: {class: IfSkillReadyTransition, ns: , asm: Assembly-CSharp}
     00000004:
-      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+      type: {class: IfSkillReadyTransition, ns: , asm: Assembly-CSharp}
     00000005:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+    00000006:
       type: {class: SkillState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 3
         chess: {fileID: 0}
-    00000006:
+    00000007:
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}

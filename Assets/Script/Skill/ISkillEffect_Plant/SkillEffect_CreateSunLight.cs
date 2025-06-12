@@ -102,7 +102,15 @@ public class SkillEffect_Anon: ISkill
         SunLight lignt = UIManage.GetView<ItemPanel>().Create<SunLight>() as SunLight;
         //Debug.Log(lignt.gameObject.name);
         //lignt.InitSunLight(user.moveController.standTile, sunLightNum, sunLightPos.transform.position);
-        lignt.InitSunLight(sunLightNum, sunLightPos.position, totalTime, x0, height, movespeed,timeSpeed);
+        float n = Random.Range(0, 1);
+        int sun = sunLightNum;
+        if (n < user.propertyController.GetCrit())
+        {
+            //Debug.Log("»áÐÄÑô¹â");
+            sun = (int)(sunLightNum * user.propertyController.GetCritDamage());
+        }
+
+        lignt.InitSunLight(sun, sunLightPos.position, totalTime, x0, height, movespeed,timeSpeed);
     }
 
     public void WhenEnter(Chess user)
@@ -130,12 +138,13 @@ public class SkillEffect_AnonHide : ISkill
     {
         t += Time.deltaTime;
 
-        if (t > user.propertyController.GetColdDown(coldDown) && user.animatorController.animator.GetFloat("Mygo")>0)
+        if (t > user.propertyController.GetColdDown(coldDown) && user.animatorController.animator.GetFloat("Mygo")>1)
         {
-            //user.animatorController.ChangeFlash(-1);
+            user.animatorController.ChangeFlash(-1);
             //Passive_Anon
             if (ifMouseDown.IfDown)
             {
+                user.animatorController.ChangeFlash(1);
                 t = 0;
                 return true;
             }
@@ -192,6 +201,7 @@ public class SkillEffect_AnonHide : ISkill
     public void WhenEnter(Chess user)
     {
         t = 0;
+        user.animatorController.ChangeFlash(1);
         targets = new List<Chess>();
          
     }

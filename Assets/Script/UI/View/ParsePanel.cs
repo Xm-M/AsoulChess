@@ -19,6 +19,7 @@ public class ParsePanel : View
         base.Show();
         //Debug.Log("show");
         //GameManage.instance.timerManage.ChangeTimeSpeed(0);
+        UIManage.Show<DamagePanel>();//这一句要放在之后的开关里面使用 跟其他设置一样
     }
     public override void Hide()
     {

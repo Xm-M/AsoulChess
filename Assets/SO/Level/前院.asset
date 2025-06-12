@@ -36,25 +36,19 @@ MonoBehaviour:
         - {fileID: 11400000, guid: b9d7ed13a1409984a95d1e5215673292, type: 2}
         - {fileID: 11400000, guid: ae5039e4a3290274e985148dba09a9fd, type: 2}
         zombiesWave:
-          WaveZombie:
-          - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
-          - {fileID: 11400000, guid: b9d7ed13a1409984a95d1e5215673292, type: 2}
-          - {fileID: 11400000, guid: ae5039e4a3290274e985148dba09a9fd, type: 2}
-          fateList:
-          - 0.36363637
-          - 0.72727275
-          - 1
+          WaveZombie: []
+          fateList: []
           waitTime: 6
           minTimeRange: {x: 20, y: 26}
           maxTimeRange: {x: 30, y: 35}
           waveIndex: 3
           waveAdditionPrice: 60
-          LastWave: 1
-          currentWave: 3
+          LastWave: 20
+          currentWave: 0
           CurrentPrice: 0
           tag: Enemy
-          minTime: 23.259848
-          maxTime: 31.152542
+          minTime: 21.728886
+          maxTime: 33.627445
         zombieInterval: 0.5
         updateTime: 0.5
         startTime: 0

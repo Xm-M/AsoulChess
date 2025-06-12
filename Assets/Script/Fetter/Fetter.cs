@@ -11,10 +11,7 @@ public class Fetter
     public string fetterName;
     public Sprite fetterIcon;
     public int bandMemberNum;
-    public virtual void UseFetter()
-    {
-
-    }
+    public int num;
     /// <summary>
     /// 这个是进入游戏就会调用一次的函数
     /// </summary>
@@ -97,8 +94,11 @@ public class TogenashiTogeari : Fetter
     }
     public void AddBuff(Chess chess)
     {
-        chess.propertyController.onGetDamage.AddListener(OnGetDamage);
-        chess.propertyController.onTakeDamage.AddListener(OnTakeDamage);
+        if (chess.propertyController.creator.plantTags.Contains("无刺有刺"))
+        {
+            chess.propertyController.onGetDamage.AddListener(OnGetDamage);
+            chess.propertyController.onTakeDamage.AddListener(OnTakeDamage);
+        }
     }
     public void ChangeThron(float value)
     {
@@ -121,15 +121,44 @@ public class TogenashiTogeari : Fetter
         EventController.Instance.RemoveListener<Chess>(EventName.WhenPlantChess.ToString(), AddBuff);
     }
 }
+/// <summary>
+/// Mygo羁绊：效果：所有Mygo成员的冷却时间减半
+/// 周围有四个队友的Mygo成员获得20%增伤和20%免伤害
+/// </summary>
 public class Mygo : Fetter
 {
+    [LabelText("Mygobuff")]
+    [SerializeReference]
+    public Buff_Mygo buff;
     public override void FetterEffect(int num)
     {
         base.FetterEffect(num);
+        EventController.Instance.AddListener<Chess>(EventName.WhenPlantChess.ToString(), AddBuff);
+        PlantsShop shop = UIManage.GetView<PlantsShop>();
+        for (int i = 0; i < shop.shopIconParent.childCount;i++)
+        {
+            ShopIcon icon=shop.shopIconParent.GetChild(i).GetComponent<ShopIcon>();
+            Debug.Log(icon.name);
+            Debug.Log(icon.good);
+            if (icon.good.plantTags.Contains("Mygo"))
+            {
+                icon.coldDown /= 2;
+            }
+        }
+    }
+    public void AddBuff(Chess chess)
+    {
+        if (chess.propertyController.creator.plantTags.Contains("Mygo"))
+        {
+            Debug.Log("添加MygoBuff");
+            chess.buffController.AddBuff(buff);
+        }
     }
     public override void ResetFetter()
     {
         base.ResetFetter();
+        EventController.Instance.RemoveListener<Chess>(EventName.WhenPlantChess.ToString(), AddBuff);
+
     }
 }
 public class AveMujica : Fetter {

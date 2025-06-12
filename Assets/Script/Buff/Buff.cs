@@ -155,7 +155,9 @@ public class DizznessBuff : TimeBuff
         //Debug.Log("剩余时间" + continueTime);
         timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime, false);
         current = target.stateController.currentState.state.stateName;
+        target.animatorController.ChangeSpeed(0);
         target.stateController.ChangeState(StateName.DizzyState);
+
     }
     public override void BuffOver()
     {
@@ -245,7 +247,14 @@ public class MatchaParfaitBuff : TimeBuff
             target.animatorController.animator.SetBool("Match", true);
         }
     }
-
+    public override void BuffReset()
+    {
+        base.BuffReset();
+        if (target.propertyController.creator.name == "要乐奈")
+        {
+            target.animatorController.animator.SetBool("Match", true);
+        }
+    }
     public void OnTakeDamage(DamageMessege dm)
     {
         dm.damageTo.buffController.AddBuff(coldBuff);
@@ -253,8 +262,9 @@ public class MatchaParfaitBuff : TimeBuff
     
     public override void BuffOver()
     {
-        base.BuffOver();
         target.propertyController.onTakeDamage.RemoveListener(OnTakeDamage);
+        base.BuffOver();
+        
     }
 }
 public class BloodBuff : TimeBuff
@@ -282,5 +292,188 @@ public class BloodBuff : TimeBuff
         //Debug.Log("流血buff结束");
         timer.Stop();
         timer = null;
+        base.BuffOver();
+       
+    }
+}
+public class BloodDeBuff : TimeBuff
+{
+    public DamageMessege dm;
+    public float damage = 70;
+    Timer damagetimer;
+    public override void BuffEffect(Chess target)
+    {
+        dm.damageTo = target;
+        dm.damageFrom = target;
+        this.target = target;
+        //speed = UnityEngine.Random.Range(1, 2f);
+        damagetimer = GameManage.instance.timerManage.AddTimer(BloodDamage, 1, true);
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime);
+        //base.BuffEffect(target);
+    
+    }
+     
+    public void BloodDamage()
+    {
+        dm.damage = damage;
+        target.propertyController.GetDamage(dm);
+
+    }
+    public override void BuffOver()
+    {
+        //Debug.Log("流血buff结束");
+        timer.Stop();
+        damagetimer.Stop();
+        damagetimer = null;
+        timer = null;
+        base.BuffOver();
+        
+    }
+}
+
+/// <summary>
+/// 偷摸零那使用的 削弱抗性的buff 好吧 估计不是偷摸零用了
+/// </summary>
+public class Buff_Weak :TimeBuff
+{
+    public float weakArmor;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        target.propertyController.ChangeAR(-weakArmor);
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime);
+    }
+    public override void BuffReset()
+    {
+        base.BuffReset();
+        timer.ResetTime();
+    }
+    public override void BuffOver()
+    {
+        target.propertyController.ChangeAR(weakArmor);
+        base.BuffOver();
+    }
+}
+
+/// <summary>
+/// 威压buff tomo，saki，taki的攻击都会施加这个buff
+/// 那么威压到底会导致什么呢 输出降低？抗性降低？那就降低攻击力和防御力
+/// </summary>
+public class Buff_Coercion : TimeBuff
+{
+    [LabelText("减攻")]
+    public float deAttack=0.2f;//减少的攻击力
+    [LabelText("减防")]
+    public float deDefence = 0.2f;//减少的防御力
+    [LabelText("虚弱特效")]
+    public GameObject Coerctioneffect;
+    //GameObject effect;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime);
+        target.propertyController.ChangeAttack(-deAttack);
+        target.propertyController.ChangeExtraDefence(-deDefence);
+        GameObject effect =ObjectPool.instance.Create(Coerctioneffect);
+        effect.transform.SetParent(target.transform);
+        effect.transform.localPosition = Vector3.zero;
+    }
+    public override void BuffReset()
+    {
+        base.BuffReset();
+        GameObject effect = ObjectPool.instance.Create(Coerctioneffect);
+        effect.transform.SetParent(target.transform);
+        effect.transform.localPosition = Vector3.zero;
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        target.propertyController.ChangeAttack(-deAttack);
+        target.propertyController.ChangeExtraDefence(-deDefence);
+        //ObjectPool.instance.ReycleObject(effect);
+    }
+}
+
+/// <summary>
+/// 现在重点是恐惧的回头走两步要怎么实现...
+/// </summary>
+public class Buff_Fear : TimeBuff {
+
+    [LabelText("恐惧特效")]
+    public GameObject FearEffect;
+    [LabelText("缓速效率")]
+    public float moveRate=0.5f;
+    GameObject effect;
+    StateName current;
+    Tile stand;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        current = target.stateController.currentState.state.stateName;
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime, false);
+        effect = ObjectPool.instance.Create(FearEffect);
+        effect.transform.SetParent(target.transform);
+        effect.transform.localPosition = Vector3.zero;
+        target.stateController.ChangeState(StateName.DizzyState);
+        stand = target.moveController.nextTile;
+        if (target.moveController.standTile != null) {
+            float speed = target.propertyController.GetMoveSpeed()*moveRate;
+            target.moveController.MoveToTarget(target.moveController.standTile,speed
+                 );
+            target.animatorController.PlayMove();
+            target.transform.right=-target.transform.right;
+        }
+    }
+    
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        //effect.transform.SetParent(null);
+        ObjectPool.instance.Recycle(effect);
+        target.stateController.ChangeState(current);
+        target.moveController.StopMove();
+        target.transform.right = -target.transform.right;
+        target.moveController.nextTile = stand;
+    }
+}
+public class Buff_Mygo : Buff
+{
+    [LabelText("额外增伤")]
+    public float extraDamage=0.2f;
+    [LabelText("额外减伤")]
+    public float extraDefence=0.2f;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        target.propertyController.ChangeExtraDamage(extraDamage);
+        target.propertyController.ChangeExtraDefence(extraDefence);
+    
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        target.propertyController.ChangeExtraDamage(-extraDamage);
+        target.propertyController.ChangeExtraDefence(-extraDefence);
+        
+    }
+}
+/// <summary>
+/// 魅惑buff
+/// </summary>
+public class Buff_Charm : Buff
+{
+    public Color color;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        ChessTeamManage.Instance.ChangeTeam(target);
+        target.transform.right = -target.transform.right;
+        //dm.damageTo.Death();
+        target.animatorController.ChangeColor(color);
+        target.stateController.ChangeState(StateName.IdleState);
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
     }
 }

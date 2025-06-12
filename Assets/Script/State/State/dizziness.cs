@@ -17,7 +17,7 @@ public class DizzinessState : State
         base.Enter(chess);
         //speed = chess.animator.speed;
         //speed = chess.animatorController.animator.speed;
-        chess.animatorController.ChangeSpeed(0);
+        //chess.animatorController.ChangeSpeed(0);
         //chess.animator.speed = 0;
         chess.propertyController.Freezy();
     }

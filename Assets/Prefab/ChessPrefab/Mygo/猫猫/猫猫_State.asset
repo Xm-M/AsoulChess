@@ -18,39 +18,42 @@ MonoBehaviour:
     transitions: []
   - state:
       id: 1
-    transitions: []
-  - state:
-      id: 2
     transitions:
     - transition:
-        id: 3
+        id: 2
       targetState: 5
+  - state:
+      id: 3
+    transitions:
     - transition:
         id: 4
+      targetState: 5
+    - transition:
+        id: 5
       targetState: 4
   - state:
-      id: 5
+      id: 6
     transitions:
-    - transition:
-        id: 6
-      targetState: 1
     - transition:
         id: 7
-      targetState: 5
+      targetState: 1
     - transition:
         id: 8
-      targetState: 0
-  - state:
-      id: 9
-    transitions:
-    - transition:
-        id: 10
-      targetState: 4
-    - transition:
-        id: 11
       targetState: 5
     - transition:
+        id: 9
+      targetState: 0
+  - state:
+      id: 10
+    transitions:
+    - transition:
+        id: 11
+      targetState: 4
+    - transition:
         id: 12
+      targetState: 5
+    - transition:
+        id: 13
       targetState: 0
   references:
     version: 1
@@ -65,37 +68,39 @@ MonoBehaviour:
         stateName: 6
         chess: {fileID: 0}
     00000002:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+    00000003:
       type: {class: AttackState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 0
         chess: {fileID: 0}
-    00000003:
-      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
     00000004:
-      type: {class: OutRangeTransition, ns: , asm: Assembly-CSharp}
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
     00000005:
+      type: {class: OutRangeTransition, ns: , asm: Assembly-CSharp}
+    00000006:
       type: {class: IdleState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 4
         chess: {fileID: 0}
-    00000006:
+    00000007:
       type: {class: IWaitTimeTransition, ns: , asm: Assembly-CSharp}
       data:
         WaitTime: 1.5
-    00000007:
-      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
     00000008:
-      type: {class: InRangeTransition, ns: , asm: Assembly-CSharp}
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
     00000009:
+      type: {class: InRangeTransition, ns: , asm: Assembly-CSharp}
+    0000000A:
       type: {class: MoveState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 1
         chess: {fileID: 0}
-    0000000A:
+    0000000B:
       type: {class: IWaitTimeTransition, ns: , asm: Assembly-CSharp}
       data:
         WaitTime: 3
-    0000000B:
-      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
     0000000C:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+    0000000D:
       type: {class: InRangeTransition, ns: , asm: Assembly-CSharp}

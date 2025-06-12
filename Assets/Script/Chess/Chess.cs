@@ -35,12 +35,12 @@ public class Chess : MonoBehaviour
 
 
     [FoldoutGroup(groupName:"Event",GroupID ="Event")]
-    public UnityEvent<Chess> WhenEnterGame;//没有被清除的固定事件,这个是不能清除的
+    public UnityEvent<Chess> WhenEnterGame;//没有被清除的固定事件,这个是不能清除的  
     [HideInInspector]public UnityEvent<Chess> DeathEvent;//这个会被自动清除
     //public Animator animator;
     //public SpriteRenderer sprite;
     bool FacingRight = true;
-    public bool IfDeath{get;private set;}
+    public bool IfDeath{get;  set;}
     public bool IfSelectable { get;private set;}
     Collider2D col;
     /// <summary>
@@ -84,7 +84,7 @@ public class Chess : MonoBehaviour
     /// </summary>
     public virtual void Death()
     {
-        if (IfDeath == true) return;
+        //if (IfDeath == true) return;
         IfDeath = true;
         ResumeSelectable();
         skillController.WhenControllerLeaveWar();

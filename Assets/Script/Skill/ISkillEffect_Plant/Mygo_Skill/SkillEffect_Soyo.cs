@@ -23,13 +23,13 @@ public class SkillEffect_Soyo : ISkill
     {
         t += Time.deltaTime;
 
-        if (t > user.propertyController.GetColdDown(coldDown)&&user.animatorController.animator.GetFloat("Mygo")>0)
+        if (t > user.propertyController.GetColdDown(coldDown)&&user.animatorController.animator.GetFloat("Mygo")>1)
         {
-            //user.animatorController.ChangeFlash(-1);
+            user.animatorController.ChangeFlash(-1);
             if (ifMouseDown.IfDown)
             {
                 t = 0;
-                //user.animatorController.ChangeFlash(1);
+                user.animatorController.ChangeFlash(1);
                 return true;
             }
             return false;
@@ -79,7 +79,7 @@ public class SkillEffect_Soyo : ISkill
     {
         t = 0;
         targets = new List<Chess>();
-        //user.animatorController.ChangeFlash(0);
+        user.animatorController.ChangeFlash(1);
         //SkillEffect_Anon
     }
 }

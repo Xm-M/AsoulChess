@@ -17,6 +17,7 @@ public class Tile : MonoBehaviour
     public UnityEvent<Chess> OnPlant;
     public List<TileEffect> ObjectsOnTile { get; protected set; }
     public List<Chess> chessesIntile { get;protected set; }
+    //bool ban;
     protected virtual void Awake()
     {
         chessesIntile = new List<Chess>();

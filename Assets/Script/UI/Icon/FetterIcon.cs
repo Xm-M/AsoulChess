@@ -9,11 +9,13 @@ public class FetterIcon : MonoBehaviour
 {
     public Image fetterImage;
     public Text fetterName;
+    public Text fetterCount;
     //public Text fetterCount;
     public void ShowFetterIcon(Fetter fetter)
     {
         fetterImage.sprite=fetter.fetterIcon;
         fetterName.text=fetter.fetterName;
+        fetterCount.text = fetter.num.ToString();
         //fetterCount.text=fetter.
     }
 }

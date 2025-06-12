@@ -16,7 +16,55 @@ public class Item_PlantCard : UIItem
     public UnityEvent WhenRecycle;
     public AudioPlayer au;
     bool plantOver;
-    //public float moveSpeed;
+
+    public AnimationCurve curve;
+    public float totalTime = 1;
+    public float timeSpeed = 2;
+    public float height = 1.25f;
+    public float moveSpeed = 1;
+    public float moveDuration = 1f;
+    //private RectTransform rectTransform;
+    private bool isMoving = false;
+    bool click;
+    public void InitCard(Vector3 pos, PropertyCreator p, UnityAction WhenReycle = null)
+    {
+        InitCard(p,WhenReycle);
+        float speed = moveSpeed;
+        Vector2 center = MapManage_PVZ.instance.tiles[MapManage_PVZ.instance.mapSize.x / 2, MapManage.instance.mapSize.y / 2].transform.position;
+        if (pos.x > center.x)
+        {
+            speed *= -1;
+        }
+        //moveSpeed
+        StartCoroutine(CurveMove(pos, totalTime, 0, height, speed, timeSpeed));
+
+    }
+    IEnumerator CurveMove(Vector3 startPos, float totalTime, float x0, float height, float moveSpeed, float timeSpeed)
+    {
+
+        transform.position = Camera.main.WorldToScreenPoint(startPos);
+        float elapsed = 0f;
+        float t = x0;
+        float y0 = curve.Evaluate(t);
+
+        float starty = startPos.y;
+        while (elapsed < totalTime && !click)
+        {
+            //t(curve的x参数)=elspsed(实际经过的时间)/总时间
+            t = elapsed + x0;
+            float yOffset = (curve.Evaluate(t) - y0);
+            startPos = new Vector2(startPos.x + moveSpeed * Time.deltaTime, starty + (yOffset * height));
+            transform.position = Camera.main.WorldToScreenPoint(startPos);
+            elapsed += Time.deltaTime * timeSpeed;
+
+            yield return null;
+        }
+
+        // 最终归位
+        //rectTransform.anchoredPosition = targetPos;
+    }
+
+
     public void InitCard(PropertyCreator p,UnityAction WhenReycle=null)
     {
         plantOver = false;
@@ -40,7 +88,7 @@ public class Item_PlantCard : UIItem
             transform.position = Vector2.MoveTowards(transform.position, endPos, moveSpeed * Time.deltaTime);
             yield return null;
             if (plantOver) break;
-        }
+        } 
     }
 
 

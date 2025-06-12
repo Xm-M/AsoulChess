@@ -17,6 +17,7 @@ public class MoveController:Controller
     [SerializeReference]
     public FindTileMethod tileMethod;
     bool ifMove;
+    Vector2 targetPos;
     public virtual void InitController(Chess chess)
     {
         this.chess = chess;
@@ -32,6 +33,7 @@ public class MoveController:Controller
         standTile?.ChessLeave(chess);
         standTile = null;
         nextTile = null;
+        ifMove = false;
     }
     
     public virtual void StartMoving(string anim="run")
@@ -68,19 +70,44 @@ public class MoveController:Controller
     {
         //chess.transform.position = Vector2.MoveTowards(chess.transform.position, targetPos,
         //        chess.propertyController.GetMoveSpeed());
+        //Debug.Log("开始移动");
         if (!ifMove)
         {
+            
             Vector2 dir = targetPos - (Vector2)chess.transform.position;
             int dx = (int)(dir.x / 2.5);
             int dy = (int)(dir.y / 2.5);
+
             Tile targetTile = MapManage_PVZ.instance.tiles[standTile.mapPos.x + dx, standTile.mapPos.y + dy];
             chess.StartCoroutine(MoveToTile(targetPos, targetTile, moveSpeed));
         }
     }
+    public virtual void MoveToTarget(Vector2 targetPos,Vector2 moveDir,UnityAction moveOver = null)
+    {
+        if (!ifMove)
+        {
+            this.targetPos = targetPos;
+            ifMove = true;
+            Debug.Log("开始移动");
+            chess.StartCoroutine(MoveToTile(moveOver));
+        }
+        else
+        {
+            this.targetPos = targetPos;
+        }
+    }
+
+
+
     public virtual void MoveToTarget(Tile tile,float moveSpeed=-1,UnityAction moveOver=null)
     {
         if(!ifMove)
             chess.StartCoroutine(MoveToTile(tile.transform.position,tile,moveSpeed,moveOver));
+    }
+    public void StopMove()
+    {
+        ifMove = false;
+        
     }
     IEnumerator MoveToTile(Vector2 targetPos,Tile newStandTile,float movespeed, UnityAction moveOver = null)
     {
@@ -89,16 +116,41 @@ public class MoveController:Controller
             movespeed = chess.propertyController.GetMoveSpeed();
         }
         ifMove = true;
-        while(Vector2.Distance(chess.transform.position, newStandTile.transform.position) > 0.01&&!chess.IfDeath&&LevelManage.instance.IfGameStart)
+        while(ifMove&&Vector2.Distance(chess.transform.position, newStandTile.transform.position) > 0.01&&!chess.IfDeath&&LevelManage.instance.IfGameStart)
         {
             chess.transform.position = Vector2.MoveTowards(chess.transform.position, newStandTile.transform.position,
                 movespeed * Time.deltaTime);
             yield return null;
+            //Debug.Log("移动中");
         }
         standTile = newStandTile;
         ifMove = false;
         moveOver?.Invoke();
     }
+    IEnumerator MoveToTile( UnityAction moveOver = null)
+    {
+        float movespeed = chess.propertyController.GetMoveSpeed();
+        ifMove = true;
+        Debug.Log("移动中");
+        while (ifMove && !chess.IfDeath && LevelManage.instance.IfGameStart)
+        {
+            chess.transform.position = Vector2.MoveTowards(chess.transform.position, targetPos,
+                movespeed * Time.deltaTime);
+            if (Vector2.Distance(chess.transform.position, targetPos)< 0.01)
+            {
+                Debug.Log("移动");
+                moveOver?.Invoke();
+            }
+
+            yield return null;
+            //
+        }
+        //standTile = newStandTile;
+        ifMove = false;
+        
+    }
+
+
 
     public virtual void EndMoving()
     {

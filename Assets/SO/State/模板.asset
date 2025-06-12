@@ -39,7 +39,10 @@ MonoBehaviour:
     transitions: []
   - state:
       id: 8
-    transitions: []
+    transitions:
+    - transition:
+        id: 9
+      targetState: 5
   references:
     version: 1
     00000000:
@@ -75,3 +78,5 @@ MonoBehaviour:
       data:
         stateName: 6
         chess: {fileID: 0}
+    00000009:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}

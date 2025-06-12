@@ -2,10 +2,12 @@ using PixelsoftGames.PixelUI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ProgressBar : View
 {
     public UIStatBar uiBar;
+    public Text stadgeName;//¹Ø¿¨Ãû
     public List<GameObject> flags;
     public override void Init()
     {
@@ -27,6 +29,7 @@ public class ProgressBar : View
     public override void Show()
     {
         base.Show();
+        stadgeName.text = LevelManage.instance.currentLevel.levelName;
     }
 
     public override void Hide()
@@ -37,5 +40,6 @@ public class ProgressBar : View
             flags[i].SetActive(false);
             uiBar.SetValue(0,1);
         }
+        stadgeName.text = "";
     }
 }

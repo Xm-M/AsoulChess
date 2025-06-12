@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GameManage : MonoBehaviour
 {
+    public GameMode mode;
     public SceneManage sceneManage;
     public UIManage UIManage;
     public TimerManage timerManage;
@@ -54,9 +55,21 @@ public class GameManage : MonoBehaviour
     private void Update()
     {
         timerManage.Update();
+        if (mode == GameMode.Test && Input.GetKeyUp(KeyCode.T))
+        {
+            UIManage.Show<TestScenePanel>();
+        }else if (mode == GameMode.Test && Input.GetKeyUp(KeyCode.Y))
+        {
+            UIManage.Close<TestScenePanel>();
+        }
     }
     public void QuitGame()
     {
         Application.Quit();
     }
+}
+public enum GameMode
+{
+    Test,
+    Game,
 }

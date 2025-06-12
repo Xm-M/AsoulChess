@@ -732,6 +732,7 @@ MonoBehaviour:
       damage: 0
       damageType: 0
       damageElementType: 0
+      ifCrit: 0
       takeBuff:
         id: 3
   stateController:
@@ -812,7 +813,7 @@ MonoBehaviour:
       type: {class: SkillEffect_Anon, ns: , asm: Assembly-CSharp}
       data:
         startTime: 10
-        coldDown: 30
+        coldDown: 24
         sunLightNum: 25
         sunLightPos: {fileID: 3622910182320136284}
         x0: 0.5
@@ -823,7 +824,7 @@ MonoBehaviour:
     00000006:
       type: {class: SkillEffect_AnonHide, ns: , asm: Assembly-CSharp}
       data:
-        coldDown: 10
+        coldDown: 50
         ifMouseDown: {fileID: 4325811273688656354}
         radius: 6.25
         healRate: 0.25

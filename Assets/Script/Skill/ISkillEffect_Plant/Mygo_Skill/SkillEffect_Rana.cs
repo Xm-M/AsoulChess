@@ -16,13 +16,15 @@ public class SkillEffect_Rana : ISkill
     public bool IfSkillReady(Chess user)
     {
         t += Time.deltaTime;
-        //这里先大于0 实际是大于3 就是四个成员在场时才能使用的技能
-        if (t > user.propertyController.GetColdDown(coldDown) && user.animatorController.animator.GetFloat("Mygo") > 0)
+        //这里先大于0 实际是大于1 就是四个成员在场时才能使用的技能
+        if (t > coldDown && user.animatorController.animator.GetFloat("Mygo") > 1)
         {
+            user.animatorController.ChangeFlash(-1);
             if (ifMouseDown.IfDown)
             {
+                user.animatorController.ChangeFlash(1);
                 t = 0;
-                //user.animatorController.ChangeFlash(1);
+                Debug.Log("召唤猫猫");
                 return true;
             }
             return false;
@@ -61,6 +63,7 @@ public class SkillEffect_Rana : ISkill
     public void WhenEnter(Chess user)
     {
         t = 0;
+        user.animatorController.ChangeFlash(1);
     }
 }
 
@@ -69,6 +72,8 @@ public class SkillEffect_RanaFreezy : ISkill
 {
     [SerializeReference]
     public FreezyBuff freezyBuff;
+    [LabelText("冰冻特效全屏")]
+    public GameObject freezyEffect;
     public bool IfSkillReady(Chess user)
     {
         //t += Time.deltaTime;
@@ -101,6 +106,7 @@ public class SkillEffect_RanaFreezy : ISkill
             chess.buffController.AddBuff(freezyBuff);
         }
         user.animatorController.animator.SetBool("Match", false);
+        ObjectPool.instance.Create(freezyEffect).transform.position = Vector3.zero;
     }
 
     public void WhenEnter(Chess user)

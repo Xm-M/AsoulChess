@@ -158,7 +158,7 @@ MonoBehaviour:
     passiveSkill:
       id: 1
     activeSkill:
-      id: 1
+      id: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -166,15 +166,15 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       takeBuff:
-        id: 1
+        id: 2
   stateController:
     currentState:
       state:
-        id: 1
+        id: 2
       transitions: []
     preState:
       state:
-        id: 1
+        id: 2
       transitions: []
     stateGraph: {fileID: 11400000, guid: 5d45536681d478446b5d3e36d313d605, type: 2}
     EnterWarState: 4
@@ -186,7 +186,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 2
   animatorController: {fileID: 8726618807515788469}
   WhenEnterGame:
     m_PersistentCalls:
@@ -212,18 +212,20 @@ MonoBehaviour:
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 1
-        findTarget:
           id: 2
-        attackFunction:
+        findTarget:
           id: 3
+        attackFunction:
+          id: 4
         enemys: []
         interval: 0
     00000001:
-      type: {class: , ns: , asm: }
+      type: {class: Passive_Boqi, ns: , asm: Assembly-CSharp}
     00000002:
-      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
+      type: {class: , ns: , asm: }
     00000003:
+      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
+    00000004:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
@@ -234,7 +236,7 @@ MonoBehaviour:
           damageType: 0
           damageElementType: 0
           takeBuff:
-            id: 1
+            id: 2
 --- !u!61 &3516087841406546987
 BoxCollider2D:
   m_ObjectHideFlags: 0

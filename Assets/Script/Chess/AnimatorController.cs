@@ -47,6 +47,7 @@ public class AnimatorController : MonoBehaviour,Controller
     {
         animator.Play("death");
     }
+     
     public virtual void OnGetDamage(DamageMessege dm)
     {
         sprite.material.SetFloat("_FlashAmount", Time.time);

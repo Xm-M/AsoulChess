@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 public class CarArmor : ArmorBase
 {
     public DamageMessege dm;
     public AudioPlayer player;
+    public UnityEvent  onHit;
     public override void BrokenArmor()
     {
-         
+          
     }
 
     public override void GetDamage(DamageMessege dm)
@@ -25,7 +26,7 @@ public class CarArmor : ArmorBase
     {
          
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.CompareTag(user.tag))
         {
@@ -33,11 +34,13 @@ public class CarArmor : ArmorBase
             dm.damageFrom = user;
             dm.damageTo = chess;
             dm.damage = user.propertyController.GetAttack();
+            onHit?.Invoke( );
             user.propertyController.TakeDamage(dm);
             if(player != null)
             {
                 player.RandomPlay();
             }
+            
         }
     }
 }

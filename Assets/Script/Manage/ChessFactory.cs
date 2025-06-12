@@ -22,7 +22,7 @@ public class ChessFactory : IManager
         {
             chessPool.Add(chessName, new Stack<Chess>());
         }
-        GameObject c = GameObject.Instantiate(chess.gameObject);
+        GameObject c = GameObject.Instantiate(chess.gameObject); 
         SceneManager.MoveGameObjectToScene(c, chessScene);
         Chess newchess = c.GetComponent<Chess>();
         newchess.InitChess();

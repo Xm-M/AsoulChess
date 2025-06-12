@@ -84,6 +84,7 @@ MonoBehaviour:
       damage: 0
       damageType: 0
       damageElementType: 0
+      ifCrit: 0
       takeBuff:
         id: 1
   stateController:
@@ -133,7 +134,7 @@ MonoBehaviour:
     00000003:
       type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
-        bullet: {fileID: 2098010854589325911, guid: 0aebb633534ea7d4eaefabecaacb1716, type: 3}
+        bullet: {fileID: 2098010854589325911, guid: ff9d21301bc540649a5a50ce3a75106a, type: 3}
 --- !u!61 &8243562531970831682
 BoxCollider2D:
   m_ObjectHideFlags: 0

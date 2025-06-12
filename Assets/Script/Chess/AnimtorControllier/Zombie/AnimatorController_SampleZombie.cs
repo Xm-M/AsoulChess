@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public class AnimatorController_SampleZombie : AnimatorController
 {
     public SpriteRenderer arm, body;
     public bool deathfire;
     public GameObject leftarm, leftHead;
+    [LabelText("ÊÜÉË²¥·ÅÆ÷")]
     public AudioPlayer player;
+    [LabelText("»ðÑæÊÜÉË²¥·ÅÆ÷")]
+    public AudioPlayer player2;
     [SerializeReference]
     public BloodBuff bloodBuff;//³ÖÐøµôÑªbuff
     public float randomSpeed=0.2f;//ÒÆËÙÆ«²îÖµ
@@ -43,8 +47,14 @@ public class AnimatorController_SampleZombie : AnimatorController
         }
         else
         {
-            if((dm.damageElementType&ElementType.CloseAttack)==0)
+            if ((dm.damageElementType & ElementType.Fire)!=0)
+            {
+                player2?.RandomPlay();
+            }
+            else if ((dm.damageElementType & ElementType.Bullet) != 0)
+            {
                 player?.RandomPlay();
+            }
             if (chess.propertyController.GetHpPerCent() > 0.6)
             {
                 base.OnGetDamage(dm);

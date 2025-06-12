@@ -63,6 +63,7 @@ public class PropertyController:Controller
         if (mes.damage > 0)
         {
             Data.Hp -= mes.damage;
+            UIManage.GetView<DamagePanel>().ShowDamageMes(mes);
             //Debug.Log(creator.name + "受到了" + mes.damage);
             //chess.animator.SetFloat();
             onGetDamage?.Invoke(mes);
@@ -81,13 +82,26 @@ public class PropertyController:Controller
             if (mes.damageType != DamageType.Heal)
             {
                 //暴击伤害
-                mes.damage = UnityEngine.Random.Range(0, 1f) < GetCrit() ? mes.damage * GetCritDamage() : mes.damage;
+                float n = UnityEngine.Random.Range(0, 1f);
+                if (n < GetCrit())
+                {
+                    mes.damage = mes.damage * GetCritDamage();
+                    mes.ifCrit = true;
+                }
+                else
+                {
+                    mes.ifCrit = false;
+                }
+                //mes.damage =  n< GetCrit() ? mes.damage * GetCritDamage() : mes.damage;
+
                 //增伤
-                mes.damage *= (1 + Data.extraDamge);
+                mes.damage *= (1 + GetExtraDamage());
+                //if(GetExtraDamage() > 0)Debug.Log(mes.damage+" 增伤了");
                 mes.damageTo.propertyController.GetDamage(mes);
                 onTakeDamage?.Invoke(mes);
                 float heal = mes.damage *= Data.lifeStealing;
-                Heal(heal);
+                if(heal > 0)
+                    Heal(heal);
             }
             else
             {
@@ -100,9 +114,17 @@ public class PropertyController:Controller
     {
         heal *= Data.healRate;
         Data.Hp = Mathf.Min(Data.HpMax, Data.Hp + heal);
+        UIManage.GetView<DamagePanel>().ShowHeal(heal, chess);
     }
     public void ChangeHp(float value) => Data.Hp = value;
-    public void ChangeHPMax(float value) => Data.HpMax += value;
+    public void ChangeHPMax(float value)
+    {
+        Data.HpMax += value;
+        if (value > 0)
+        {
+            Data.Hp += value;
+        }
+    }
     public void ChangeAttack(float value)
     {
         Data.attackRate += value;        //if(Data.attackRate <0)Data.attackRate = 0;
@@ -122,8 +144,8 @@ public class PropertyController:Controller
         Data.critDamage += value;
     }
     public void ChangeAR(float value) => Data.AR += value;
-    public void ChangeExtraDamage(float value) => Data.extraDamge *= (1 + value);
-    public void ChangeExtraDefence(float value) => Data.extraDefence *= (1 + value);
+    public void ChangeExtraDamage(float value) => Data.extraDamge += value;
+    public void ChangeExtraDefence(float value) => Data.extraDefence +=  value;
     //public void ChangeShiled(float value) => Data.shiledNum += value;//改变护盾肯定有问题
     public void ChangeLifeSteeling(float value) => Data.lifeStealing = Mathf.Max(0, Data.lifeStealing + value);
     public void ChangeHealRate(float value) => Data.healRate = Mathf.Max(0, Data.healRate + value);
@@ -147,12 +169,19 @@ public class PropertyController:Controller
     public void SetAtttackRange(float value) => Data.attackRange = value;
     public float GetMoveSpeed()
     {
-
         return Data.speed * Mathf.Max(0, Data.acceleRated);
     }
     public float GetAttack()
     {
         return Mathf.Max(Data.attack,0);
+    }
+    public float GetExtraDamage()
+    {
+        return  Data.extraDamge;
+    }
+    public float GetExtraDefence()
+    {
+        return Data.extraDefence;
     }
     /// <summary>
     /// 本来是有一个技能急速的设定的 现在统一和攻速绑定
@@ -222,6 +251,11 @@ public class PropertyController:Controller
     {
         return Data.Size;
     }
+    public void ChangeSize(int value)
+    {
+        Data.Size += value;
+        Data.Size = Mathf.Max(Data.Size, 1);
+    }
     public float GetHpPerCent()
     {
         return Data.Hp / Data.HpMax;
@@ -244,8 +278,8 @@ public class Property
     public float extraDefence=0;//额外减伤
     
     
-    public float Hp=500;
-    public float HpMax=500f;//最大生命值
+    public float Hp=300;
+    public float HpMax=300f;//最大生命值
     //public float shiledNum=0f;//护盾值
 
 
@@ -307,6 +341,7 @@ public class DamageMessege
     public float damage;//伤害的数值
     public DamageType damageType;//伤害的类型
     public ElementType damageElementType;//元素的类型
+    public bool ifCrit;//是否暴击
     [SerializeReference]
     public Buff takeBuff;
     public DamageMessege()
@@ -343,6 +378,7 @@ public enum ElementType
     AOE=1<<2,//AOE 范围伤害
     Puncture=1<<3,//穿刺 仙人掌是Bullet Puncture;地刺是CloseAttack Puncture
     Explode=1<<4,//爆炸
+    Fire=1<<5,//火焰伤害
 }
 public class ShiledNum
 {

@@ -1024,6 +1024,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb789ecc5a94cc4478daa4aa011e99b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mode: 0
   sceneManage: {fileID: 745931670}
   fetterManage:
     id: 0
@@ -1044,9 +1045,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 28a34a04535ef9146a949aa5f236b329, type: 2}
   - {fileID: 11400000, guid: e592550f5c0bb4147a2fa70395384eb9, type: 2}
   - {fileID: 11400000, guid: f16e5ddb6f2568f4f92426c928cc8e23, type: 2}
-  - {fileID: 11400000, guid: 5725ecf1e74e08844a87f79964959c28, type: 2}
   - {fileID: 11400000, guid: 4f2fbeba2d8daa7489c3e49d797b0b10, type: 2}
   - {fileID: 11400000, guid: c0f006a9e1e304b429816ee842b59b6d, type: 2}
+  - {fileID: 11400000, guid: 13bad971bd87897418821c4c2b994b3d, type: 2}
   PlayerChess: []
   WhenGameOver:
     m_PersistentCalls:
@@ -1061,6 +1062,10 @@ MonoBehaviour:
       data:
         fetterDataList:
         - {fileID: 11400000, guid: d50c4a3927619bf4b95b705a91a7382c, type: 2}
+        - {fileID: 11400000, guid: f85c58c796de2dd499ae363205810b77, type: 2}
+        - {fileID: 11400000, guid: d55f47ad0af8c82479838974033fc728, type: 2}
+        - {fileID: 11400000, guid: 611e5bf4db8f80c47b62b8a0e9b2d466, type: 2}
+        - {fileID: 11400000, guid: fd341481fc8dfe74cb2e6dd2d0dc192b, type: 2}
 --- !u!4 &1335504422
 Transform:
   m_ObjectHideFlags: 0

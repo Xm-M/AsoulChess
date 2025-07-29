@@ -27,9 +27,12 @@ public class HeadArmor :ArmorBase
         if (armorCurrent >= dm.damage)
         {
             //Debug.Log("·À¾ßµÖÏû");
+            
+            dm.damage *= (1 - user.propertyController.GetExtraDefence() );
             UIManage.GetView<DamagePanel>().ShowDamageMes(dm);
             armorCurrent -= dm.damage;
             dm.damage = 0;
+
             currentRender.material.SetFloat("_FlashAmount", Time.time);
             if ((dm.damageElementType & ElementType.CloseAttack) == 0)
                 player?.RandomPlay();

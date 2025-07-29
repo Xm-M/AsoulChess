@@ -84,7 +84,7 @@ public class SampleZombieSpawner : IZombieSpawner
     {
         
         UIManage.Close<ProgressBar>();
-        ((MapManage_PVZ.instance) as MapManage_PVZ).au.SetLoop(false);
+        //((MapManage_PVZ.instance) as MapManage_PVZ).au.SetLoop(false);
         if (levelData.win)
         {
             //Debug.Log("ÓÎÏ·Ê¤Àû");

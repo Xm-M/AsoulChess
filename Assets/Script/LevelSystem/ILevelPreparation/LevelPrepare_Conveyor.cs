@@ -25,7 +25,7 @@ public class LevelPrepare_NutBowling : ILevelPreparation
     public void Prepare(LevelData levelData)
     {
         UIManage.Show<ConveyorPanel>();
-        UIManage.GetView<ConveyorPanel>().InitCreator(creators);
+        UIManage.GetView<ConveyorPanel>().InitCreator(creators,4);
         (MapManage_PVZ.instance as MapManage_PVZ).WhenGameStart();
         for (int i = 3; i < MapManage_PVZ.instance.mapSize.x; i++)
             for (int j = 0; j < MapManage.instance.mapSize.y; j++)

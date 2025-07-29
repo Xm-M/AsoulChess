@@ -55,6 +55,10 @@ public class ChessManage : IManager
             chesses.Remove(chess);
             GameManage.instance.chessFactory.RecycleChess(chess, chess.propertyController.creator.chessName);
         }
+        else
+        {
+            chess.gameObject.SetActive(false);
+        }
     }
     
 }

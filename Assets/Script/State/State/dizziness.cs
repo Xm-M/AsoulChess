@@ -7,7 +7,9 @@ using UnityEngine;
 /// </summary>
 public class DizzinessState : State
 {
-    float speed;
+    float t;
+    //StateName preState;
+    //bool dizznessOver;
     public DizzinessState()
     {
         stateName=StateName.DizzyState;
@@ -15,21 +17,26 @@ public class DizzinessState : State
     public override void Enter(Chess chess)
     {
         base.Enter(chess);
-        //speed = chess.animator.speed;
-        //speed = chess.animatorController.animator.speed;
-        //chess.animatorController.ChangeSpeed(0);
-        //chess.animator.speed = 0;
-        chess.propertyController.Freezy();
+        t = 0;
+        chess.animatorController.PlayDizzy();
+        //dizznessOver = false;
+        //Debug.Log("½øÈëÑ£ÔÎ×´Ì¬");
+        //Debug.Log(chess.propertyController.GetDizznessTime());
     }
     public override void Execute(Chess chess)
     {
-        
+        t+=Time.deltaTime;
+        if (t > chess.propertyController.GetDizznessTime())
+        {
+            t = 0;
+            chess.RevertPreState();
+        }
     }
     public override void Exit(Chess chess)
     {
         base.Exit(chess);
-        //chess.animatorController.ChangeSpeed(speed);
-        chess.propertyController.UnFreezy();
+        chess.propertyController.ResetDizznessTime();
+        t = 0;
     }
     public override State Clone()
     {

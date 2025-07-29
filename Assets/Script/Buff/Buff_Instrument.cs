@@ -90,8 +90,11 @@ public class Buff_Bass : Buff
         target.propertyController.ChangeLifeSteeling(-extraHpSteal);
         target.propertyController.ChangeSize(-extraSize);
         target.propertyController.onSetDamage.RemoveListener(OnGetDamage);
-        timer.Stop();
-        timer = null;
+        if (timer != null)
+        {
+            timer.Stop();
+            timer = null;
+        }
     }
 }
 /// <summary>

@@ -55,7 +55,7 @@ public class ObjectPool : MonoBehaviour
     public void Recycle(GameObject a)
     {
         string name = a.name.Replace("(Clone)", "");
-        if (!objectPool[name].Contains(a))
+        if (objectPool.ContainsKey(name)&&!objectPool[name].Contains(a))
         {           
             objectPool[name].Push(a);
         }

@@ -58,35 +58,65 @@ public class StraightLaser : IFindTarget
         CheckObjectPoolManage.ReleaseArray(100, hits);
     }
 }
-public class MultiFindTarget : IFindTarget
+
+public class StraightFindLastTarget : IFindTarget
 {
-    [Serializable]
-    public class MFindDate
-    {
-        public List<Chess> chesses;
-        [SerializeReference]
-        public IFindTarget findTarget;
-        public MFindDate()
-        {
-            chesses = new List<Chess>();
-        }
-        public void Find(Chess user)
-        {
-            findTarget.FindTarget(user, chesses);
-        }
-    }
-    [SerializeReference]
-    public List<MFindDate> findDates;
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
-        for(int i = 0; i<findDates.Count; i++)
+        float attackRange = user.propertyController.GetAttackRange();
+        if (attackRange <= 0) return;
+
+        LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
+        RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(100 * (int)attackRange);
+
+        int num = Physics2D.RaycastNonAlloc(user.transform.position, user.transform.right,
+            hits, attackRange, enemyLayer);
+
+        // 对hits进行排序：从远到近
+        Array.Sort(hits, 0, num, Comparer<RaycastHit2D>.Create((a, b) =>
+            Vector2.Distance(user.transform.position, b.point).CompareTo(
+            Vector2.Distance(user.transform.position, a.point))));
+
+        // 按排序后的结果添加到targets中
+        for (int i = 0; i < num; i++)
         {
-            findDates[i].Find(user);
-            for(int j = 0; j < findDates[i].chesses.Count; j++)
+            targets.Add(hits[i].collider.GetComponent<Chess>());
+        }
+
+        CheckObjectPoolManage.ReleaseArray(100, hits);
+    }
+}
+
+    public class MultiFindTarget : IFindTarget
+    {
+        [Serializable]
+        public class MFindDate
+        {
+            public List<Chess> chesses;
+            [SerializeReference]
+            public IFindTarget findTarget;
+            public MFindDate()
             {
-                targets.Add(findDates[i].chesses[j]);
+                chesses = new List<Chess>();
+            }
+            public void Find(Chess user)
+            {
+                findTarget.FindTarget(user, chesses);
             }
         }
-    }
+        [SerializeReference]
+        public List<MFindDate> findDates;
+        public void FindTarget(Chess user, List<Chess> targets)
+        {
+            targets.Clear();
+            for(int i = 0; i<findDates.Count; i++)
+            {
+                findDates[i].Find(user);
+                for(int j = 0; j < findDates[i].chesses.Count; j++)
+                {
+                    targets.Add(findDates[i].chesses[j]);
+                }
+            }
+        }
 }

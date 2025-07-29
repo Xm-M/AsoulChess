@@ -131,14 +131,14 @@ public class MoveController:Controller
     {
         float movespeed = chess.propertyController.GetMoveSpeed();
         ifMove = true;
-        Debug.Log("移动中");
+        //Debug.Log("移动中");
         while (ifMove && !chess.IfDeath && LevelManage.instance.IfGameStart)
         {
             chess.transform.position = Vector2.MoveTowards(chess.transform.position, targetPos,
                 movespeed * Time.deltaTime);
             if (Vector2.Distance(chess.transform.position, targetPos)< 0.01)
             {
-                Debug.Log("移动");
+                //Debug.Log("移动");
                 moveOver?.Invoke();
             }
 

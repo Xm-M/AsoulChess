@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u5B66\u6821"
+  m_EditorClassIdentifier: 
+  sceneName: "\u5B66\u6821"
+  levelName: 3-1
+  levelMode: 0
+  EnterMapPlugin:
+  - id: 0
+  PreParePlugin:
+  - id: 1
+  GameStartPlugin:
+  - id: 2
+  - id: 3
+  - id: 4
+  MaxWave: 10
+  n: 1
+  t: 4
+  zombieList:
+  - {fileID: 11400000, guid: 129ac75237c11ee41941cddae5ed9065, type: 2}
+  createZombieType: 0
+  nextLevel: {fileID: 0}
+  win: 0
+  preparation:
+    id: 5
+  spawner:
+    id: 6
+  outcome:
+    id: 7
+  references:
+    version: 1
+    00000000:
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    00000001:
+      type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 10000
+    00000002:
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u767D\u5929"
+    00000003:
+      type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
+      data:
+        sunlight: 25
+    00000004:
+      type: {class: GameStartPlugin_PlaySchoolAudio, ns: , asm: Assembly-CSharp}
+      data:
+        interval_classBegin: 20
+        interval_classOver: 50
+        audioEffect: {fileID: 8083856290253730264, guid: 3e25964741fc5a540b7554f94ed38378, type: 3}
+        beginBuff:
+          id: 8
+        overBuff:
+          id: 9
+        zombieList:
+        - {fileID: 11400000, guid: 129ac75237c11ee41941cddae5ed9065, type: 2}
+    00000005:
+      type: {class: SamplePrepare, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 1000
+    00000006:
+      type: {class: SampleZombieSpawner, ns: , asm: Assembly-CSharp}
+      data:
+        zombies:
+        - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+        - {fileID: 11400000, guid: b9d7ed13a1409984a95d1e5215673292, type: 2}
+        - {fileID: 11400000, guid: ae5039e4a3290274e985148dba09a9fd, type: 2}
+        zombiesWave:
+          WaveZombie: []
+          fateList: []
+          waitTime: 6
+          minTimeRange: {x: 20, y: 26}
+          maxTimeRange: {x: 30, y: 35}
+          waveIndex: 3
+          waveAdditionPrice: 60
+          LastWave: 20
+          currentWave: 0
+          CurrentPrice: 0
+          tag: Enemy
+          minTime: 21.728886
+          maxTime: 33.627445
+        zombieInterval: 0.5
+        updateTime: 0.5
+        startTime: 0
+        liveZombies: []
+        nextLevelData: {fileID: 11400000, guid: 3d140f0531489e244b974a1627c40f32, type: 2}
+    00000007:
+      type: {class: , ns: , asm: }
+    00000008:
+      type: {class: Buff_ClassBegin, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u4E0A\u8BFE"
+        target: {fileID: 0}
+        buffNum: 0
+        continueTime: 45
+        extradefence: 0.3
+        extraSpeed: 0.25
+    00000009:
+      type: {class: Buff_ClassOver, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u4E0B\u8BFE"
+        target: {fileID: 0}
+        buffNum: 0
+        continueTime: 10
+        extraAttack: 0.3
+        extraSpeed: 0.25

@@ -492,7 +492,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7988780667064301093}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -74.8489, y: 3.0139658, z: -12.502024}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3690721294577757483}
@@ -568,6 +568,7 @@ MonoBehaviour:
       damage: 0
       damageType: 0
       damageElementType: 0
+      ifCrit: 0
       takeBuff:
         id: 1
   stateController:
@@ -625,7 +626,8 @@ MonoBehaviour:
           damageTo: {fileID: 0}
           damage: 0
           damageType: 0
-          damageElementType: 0
+          damageElementType: 1
+          ifCrit: 0
           takeBuff:
             id: 1
 --- !u!61 &6127518310232861434
@@ -814,6 +816,7 @@ MonoBehaviour:
           damage: 70
           damageType: 2
           damageElementType: 0
+          ifCrit: 0
           takeBuff:
             id: 1
         damage: 70

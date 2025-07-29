@@ -1,0 +1,375 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Sirenix.OdinInspector;
+public class LevelController : MonoBehaviour
+{
+    public LevelData levelData;//关卡数据 但是是从LevelManage里设置的
+    [ShowInInspector]
+    int currentWave;//当前波数
+    [ShowInInspector]
+    float t;//还是要用独立的时间控制器 不然还是太混乱了
+    List<WaveData> waveDatas;
+    [ShowInInspector]
+    public float mintime;
+    [ShowInInspector]
+    public float maxtime;
+    List<Chess> zombies;
+    //插件也是放在LevelData里面的
+
+
+    private void OnEnable()
+    {
+        LevelManage.instance.SetController(this);
+    }
+    public void Init(LevelData levelData)
+    {
+        this.levelData = levelData;
+    }
+
+    /// <summary>
+    /// 进入地图时调用的函数 一般在地图加载完就调用 还是统一绑定在TimeLine上吧 比较好控制
+    /// </summary>
+    public void EnterMap()
+    {
+        zombies = new List<Chess>();
+        if(levelData == null)
+        {
+            Debug.LogError("没有关卡数据");
+        }
+        if (levelData.EnterMapPlugin != null)
+        {
+            for(int i = 0; i < levelData.EnterMapPlugin.Count; i++)
+            {
+                levelData.EnterMapPlugin[i].StadgeEffect(this);
+            }
+        }
+        //在调用完所有准备阶段前的插件后，生成僵尸列表的所有数据
+        waveDatas = new List<WaveData>();
+        for(int i = 0; i < levelData.MaxWave; i++)
+        {
+            WaveData waveData = new WaveData();
+            waveData.InitWave(i+1,levelData);
+            waveDatas.Add(waveData);
+        }
+        //在MapManage的右侧生成所有可能出现的僵尸 小推车放在小推车插件里
+        for (int i = 0; i < levelData.zombieList.Count; i++)
+        {
+            Chess zombie = ChessTeamManage.Instance.CreateChess(levelData.zombieList[i], (MapManage.instance as MapManage_PVZ).zombiePreTile[i], "Enemy");
+            zombies.Add(zombie);
+        }
+    }
+
+    /// <summary>
+    /// 游戏准备阶段 也就是选卡的时候调用
+    /// 选卡和羁绊可以放一起 反正传送带没有羁绊
+    /// </summary>
+    public void GamePrepare()
+    {
+        if (levelData == null)
+        {
+            Debug.LogError("没有关卡数据");
+        }
+        for(int i = 0; i < levelData.PreParePlugin.Count; i++)
+        {
+            levelData.PreParePlugin[i].StadgeEffect(this);
+        }
+        LevelManage.instance.PrepareLevel();
+        //这里一定要做的..好像没有
+        currentWave = -1;
+        mintime = 16;
+    }
+
+
+    /// <summary>
+    /// 游戏开始阶段 也就是选卡之后 出僵尸之前
+    /// </summary>
+    public void GameStart()
+    {
+        if (levelData == null)
+        {
+            Debug.LogError("没有关卡数据");
+        }
+        for(int i = 0; i < zombies.Count; i++)
+        {
+            zombies[i].Death();
+        }
+        if (levelData.GameStartPlugin != null)
+        {
+            for (int i = 0; i < levelData.GameStartPlugin.Count; i++)
+            {
+                levelData.GameStartPlugin[i].StadgeEffect(this);
+            }
+        }
+        LevelManage.instance.GameStart();
+        UIManage.Show<TextPanel>();
+        UIManage.GetView<TextPanel>().GameStart();
+    }
+
+    /// <summary>
+    /// 接下来的生成僵尸才是最tm难的地方;
+    /// 首先就是波次与生成僵尸的问题
+    /// </summary>
+    private void Update()
+    {
+        if (LevelManage.instance.IfGameStart && currentWave < levelData.MaxWave)
+        {
+            t += Time.deltaTime;
+            if (currentWave == -1&&t>mintime)
+            {
+                waveDatas[currentWave+1].EnterWave();
+                UIManage.GetView<TextPanel>().FirstZombieCom();
+                EventController.Instance.TriggerEvent(EventName.FirstZombieComming.ToString());
+                mintime = Random.Range(0, 6);
+                maxtime = mintime+23;
+                currentWave++;
+                t = 0;
+                UIManage.Show<ProgressBar>();//进度条(其实也可以在第一只僵尸出来的时候刷)
+                UIManage.GetView<ProgressBar>().SetFlag(levelData.MaxWave / 10);
+            }
+            //else if(currentWave==levelData.MaxWave-1&&)
+            //else if (currentWave==levelData.MaxWave-1&& waveDatas[currentWave].CheckZombieHp())
+            //{
+            //    currentWave++;
+            //}
+            else if (currentWave!=-1&&((waveDatas[currentWave].CheckZombieHp() && t > mintime) || (t > maxtime)))
+            {
+                t = 0;
+                UIManage.GetView<ProgressBar>().MoveBar(currentWave+1, levelData.MaxWave);
+                if (currentWave + 1 < levelData.MaxWave)
+                {
+                    waveDatas[currentWave + 1].EnterWave();
+                    t = -2;
+                    currentWave++;
+                }
+                if (currentWave % 10 == 9)
+                {
+                    mintime = Random.Range(0, 6);
+                    maxtime = 50;
+                }
+                else
+                {
+                    mintime = Random.Range(0, 6);
+                    maxtime = mintime + 23;
+                }
+                
+            }
+        }
+    }
+    public void GameOver(bool win)
+    {
+        UIManage.Close<ProgressBar>();
+        if (win)
+        {
+            if (levelData.nextLevel != null)
+                LevelManage.instance.ChangeLevel(levelData.nextLevel);
+            else
+            {
+                LevelManage.instance.ReturnMenu();
+            }
+        }
+        else
+        {
+            UIManage.GetView<TextPanel>().GameOver();
+        }
+        UIManage.Close<ProgressBar>();
+    }
+}
+/// <summary>
+/// 保存每波僵尸的数据，
+/// </summary>
+public class WaveData
+{
+    public static List<float> fateList;
+    public List<int> zombieTeam;
+    public List<PropertyCreator> canUse;
+    List<Chess> liveZombie;
+    float enterPecent;
+    float hpmax;
+    int wave;
+    bool createOver;
+    /// <summary>
+    /// 总之先这样写吧
+    /// </summary>
+    /// <param name="wave"></param>
+    /// <param name="data"></param>
+    public void InitWave(int wave,LevelData data)
+    {
+        int raritySum = 0;
+        this.wave = wave;
+        if (canUse == null)
+        {
+            canUse = new List<PropertyCreator>();
+            fateList = new List<float>();
+            zombieTeam = new List<int>();
+        }
+        else
+        {
+            canUse.Clear();
+            fateList.Clear();
+            zombieTeam.Clear();
+        }
+        if (data.createZombieType == CreateZombieType.一类有限制 || data.createZombieType == CreateZombieType.二类有限制)
+        {
+            for (int i = 0; i < data.zombieList.Count; i++)
+            {
+                if (data.zombieList[i].baseProperty.waveLimit <= wave)
+                {
+                    canUse.Add(data.zombieList[i]);
+                    zombieTeam.Add(0);
+                    raritySum += canUse[i].baseProperty.rarity;
+                }
+
+            }
+        }
+        else
+        {
+            for (int i = 0; i < data.zombieList.Count; i++)
+            {
+                canUse.Add(data.zombieList[i]);
+                zombieTeam.Add(0);
+                raritySum += canUse[i].baseProperty.rarity;
+            }
+        }
+
+        Debug.Log("筛选僵尸完毕");
+        fateList.Add ((float)canUse[0].baseProperty.rarity / raritySum);
+        for (int i = 1; i < canUse.Count; i++)
+        {
+            fateList.Add(fateList[i - 1] + (float)canUse[i].baseProperty.rarity / raritySum);
+            //Debug.Log(fateList[i]);
+        }
+
+        int maxZombieValue = 0;
+        if (wave % 10 != 0)
+        {
+            if (data.createZombieType == CreateZombieType.一类有限制 || data.createZombieType == CreateZombieType.一类无限制)
+                maxZombieValue = ((int)((wave - 1) / 3) + data.n) * data.t;
+            else
+                maxZombieValue = ((int)((wave - 1) * 2/5) + data.n) * data.t;
+        }   
+        else
+        {
+            maxZombieValue = (wave - 1) * 5 +data.n;
+        }
+        maxZombieValue *= 25;
+        Debug.Log("本波僵尸价值为" + maxZombieValue);
+        int num = 0;
+        while (maxZombieValue > 0)
+        {
+            float fate = UnityEngine.Random.Range(0, 1f);
+            //Debug.Log(fateList.Count);
+            //Debug.Log(fate);
+            for (int i = 0; i < fateList.Count; i++)
+            {
+                if (fate < fateList[i])
+                {
+                    zombieTeam[i] += 1;
+                    maxZombieValue -= canUse[i].baseProperty.price;
+                    //Debug.Log(maxZombieValue);
+                    hpmax += canUse[i].baseProperty.HpMax;
+                    break;
+                }
+            }
+            num++;
+            if (num > 500) break;
+        }
+        if (wave % 10 == 9&&wave%10==0)
+        {
+            enterPecent = 0;
+        }
+        else enterPecent = Random.Range(0.5f,0.65f);
+        Debug.Log(string.Format("第{0}波僵尸已经生成完毕,共生成{1}只僵尸", wave,num));
+    }
+
+    /// <summary>
+    /// 在这里生成这波的所有僵尸，并且生成的位置要符合规则
+    /// 今天下午把他写完吧 其实可以用携程写 这样不会卡
+    /// </summary>
+    public void EnterWave()
+    {
+        
+        LevelManage.instance.StartCoroutine(Create());
+    }
+    IEnumerator Create()
+    {
+        liveZombie = new List<Chess>();
+        //激活状态 2s后生成僵尸
+        if (wave % 10 == 0)
+        {
+            EventController.Instance.TriggerEvent(EventName.WaveZombieComming.ToString());
+            UIManage.GetView<TextPanel>().ZombieWave();
+            yield return new WaitForSeconds(6);
+            if (wave == LevelManage.instance.currentLevel.MaxWave)
+            {
+                EventController.Instance.TriggerEvent(EventName.LastWaveZombie.ToString());
+                UIManage.GetView<TextPanel>().LastWave();
+            }
+        }
+        else
+        {
+            yield return new WaitForSeconds(2);
+        }
+        for(int i = 0; i < zombieTeam.Count; i++)
+        {
+            for(int j = 0; j < zombieTeam[i]; j++)
+            {
+                liveZombie.Add(CreateChess(canUse[i]));
+            }
+            yield return null;
+        }
+        createOver = true;
+    }
+    public Chess CreateChess(PropertyCreator creator)
+    {
+        Tile standTile = null;
+        List<Tile> tiles = new List<Tile>();
+        List<Tile> all= ((MapManage.instance) as MapManage_PVZ).preTiles;
+        for (int i=0;i<all.Count; i++)
+        {
+            if((all[i].tileType & creator.chessTileType) != 0)
+            {
+                tiles.Add(all[i]);
+            }
+        }
+        int n = Random.Range(0, tiles.Count);
+        standTile = tiles[n];
+        Chess chess= ChessTeamManage.Instance.CreateChess(creator, standTile, "Enemy");
+        float dx = Random.Range(0, 3.75f);
+        chess.transform.position = standTile.transform.position + Vector3.right * dx;//位置偏移
+        return chess;
+    }
+
+    public bool CheckZombieHp()
+    {
+        if(!createOver)return false;
+        if(liveZombie.Count==0)return true;
+        float hpcurrent = 0;
+        Chess last = liveZombie[0];
+        for(int i = liveZombie.Count-1; i >= 0; i--)
+        {
+            if (!liveZombie[i].IfDeath)
+                hpcurrent += liveZombie[i].propertyController.GetHp();
+            else
+            {
+                liveZombie.RemoveAt(i);
+            }
+        }
+        if (liveZombie.Count==0&&wave==LevelManage.instance.currentLevel.MaxWave)
+        {
+            //if (nextLevelData != null)
+            //    Debug.Log(nextLevelData.levelName);
+            Item_Reward reward = UIManage.GetView<ItemPanel>().Create<Item_Reward>();
+            reward.SetRewardPos(last.transform.position);
+            //win = true;
+            return true;
+        }
+
+        if (hpcurrent / hpmax < enterPecent)
+        {
+            return true;
+        
+        }
+        else return false;
+    }
+}

@@ -29,11 +29,13 @@ public class ShopSelectIcon : MonoBehaviour
     {
         if (select != null && !ifSelect)
         {
-            UIManage.GetView<PlantsShop>().AddSelection(this);
-            selfImage.color=selectColor;
-            chessImage.color=selectColor;
-            ifSelect=true;
-            Audio?.Play();
+            if (UIManage.GetView<PlantsShop>().AddSelection(this))
+            {
+                selfImage.color = selectColor;
+                chessImage.color = selectColor;
+                ifSelect = true;
+                Audio?.Play();
+            }
         }
     }
     public void UnselectCard(){

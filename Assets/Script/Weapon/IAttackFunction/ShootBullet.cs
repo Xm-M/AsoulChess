@@ -132,3 +132,30 @@ public class ShootBullet_Rana : IAttackFunction
         
     }
 }// 
+public class ShootBullet_WaitBullet : IAttackFunction
+{
+    public GameObject bullet;
+    public string pamareName = "wait";
+    Bullet zidan;
+    Chess user;
+    public void Attack(Chess user, List<Chess> targets)
+    {
+        this.user = user;
+        GameObject b = ObjectPool.instance.Create(bullet);
+        user.animatorController.ChangeFloat(pamareName, 0);
+        zidan = b.GetComponent<Bullet>();
+        if (targets.Count == 0) return;
+        zidan.InitBullet(user, user.equipWeapon.weaponPos.position, targets[0], user.transform.right);
+        //zidan.targetPos =;
+        zidan.Dm.damageTo = targets[0];
+        user.StartCoroutine(WaitBullet());
+    }
+    IEnumerator WaitBullet()
+    {
+        while (zidan == null||zidan.gameObject.activeSelf )
+        {
+            yield return null;  
+        }
+        user.animatorController.ChangeFloat(pamareName,1);
+    }
+}

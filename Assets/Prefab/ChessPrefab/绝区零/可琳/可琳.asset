@@ -30,6 +30,7 @@ MonoBehaviour:
     attackRange: 1.5
     price: 50
     rarity: 4000
+    waveLimit: 1
     CD: 7.5
     Size: 1
   chessPre: {fileID: 8677154956117635196, guid: ab30d6665cab9684a862d54baa343cf2, type: 3}
@@ -40,8 +41,10 @@ MonoBehaviour:
   plantFunction:
     id: 0
   plantIfCanBuyCard:
-    id: 0
+    id: 1
   references:
     version: 1
     00000000:
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+    00000001:
       type: {class: , ns: , asm: }

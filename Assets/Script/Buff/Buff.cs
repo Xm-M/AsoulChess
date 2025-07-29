@@ -148,22 +148,37 @@ public class ColdBuff : TimeBuff
 
 public class DizznessBuff : TimeBuff
 {
-    StateName current;
+    //StateName current;
+    public GameObject Dizznesseffect;
+    GameObject effect;
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
-        //Debug.Log("剩余时间" + continueTime);
-        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime, false);
-        current = target.stateController.currentState.state.stateName;
-        target.animatorController.ChangeSpeed(0);
-        target.stateController.ChangeState(StateName.DizzyState);
+        //current = target.stateController.currentState.state.stateName;
+        target.propertyController.ChangeDizznessTime(continueTime);
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, target.propertyController.GetDizznessTime(), false);
+        if (Dizznesseffect != null)
+        {
+            effect = ObjectPool.instance.Create(Dizznesseffect);
+            effect.transform.SetParent(target.transform);
+            effect.transform.localPosition = Vector3.zero;
+        }
 
+    }
+    public override void BuffReset()
+    {
+        base.BuffReset();
+        //Debug.Log("重置buff");
+        target.propertyController.ChangeDizznessTime(continueTime);
     }
     public override void BuffOver()
     {
         base.BuffOver();
-        //Debug.Log("重力场结束");
-        target.stateController.ChangeState(current);
+        if (effect != null)
+        {
+            ObjectPool.instance.Recycle(effect);
+            effect = null;
+        }
     }
 }
 public class FreezyBuff : DizznessBuff
@@ -179,12 +194,13 @@ public class FreezyBuff : DizznessBuff
             GameObject cold = ObjectPool.instance.Create(FreezyEffect);
             cold.transform.position = target.transform.position;
         }
+        target.animatorController.Freezy();
         target.buffController.AddBuff(buff);
     }
     public override void BuffOver()
     {
         base.BuffOver();
-
+        target.animatorController.ResumeSpeed();
     }
 }
 
@@ -277,14 +293,15 @@ public class BloodBuff : TimeBuff
         dm.damageTo = target;
         dm.damageFrom = target;
         this.target = target;
-        speed = UnityEngine.Random.Range(1, 2f);
+        speed = UnityEngine.Random.Range(1, 1.5f);
         timer = GameManage.instance.timerManage.AddTimer(BloodDamage,speed*Time.deltaTime,true);
         //base.BuffEffect(target);
     }
     public void BloodDamage()
     {
         dm.damage = damage* Time.deltaTime;
-        target.propertyController.GetDamage(dm);
+        if(!target.IfDeath)
+            target.propertyController.GetDamage(dm);
         
     }
     public override void BuffOver()
@@ -410,30 +427,42 @@ public class Buff_Fear : TimeBuff {
     {
         base.BuffEffect(target);
         current = target.stateController.currentState.state.stateName;
-        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime, false);
+        
         effect = ObjectPool.instance.Create(FearEffect);
         effect.transform.SetParent(target.transform);
         effect.transform.localPosition = Vector3.zero;
-        target.stateController.ChangeState(StateName.DizzyState);
+        //target.stateController.ChangeState(StateName.DizzyState);
+        target.propertyController.ChangeDizznessTime(continueTime);
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, target.propertyController.GetDizznessTime(), false);
         stand = target.moveController.nextTile;
-        if (target.moveController.standTile != null) {
+        if (target.moveController.standTile != null&&target.propertyController.GetMoveSpeed()!=0) {
             float speed = target.propertyController.GetMoveSpeed()*moveRate;
             target.moveController.MoveToTarget(target.moveController.standTile,speed
                  );
             target.animatorController.PlayMove();
             target.transform.right=-target.transform.right;
         }
+        else
+        {
+            target.animatorController.PlayIdle();
+        }
     }
-    
+    public override void BuffReset()
+    {
+        base.BuffReset();
+        target.propertyController.ChangeDizznessTime(continueTime);
+    }
     public override void BuffOver()
     {
         base.BuffOver();
         //effect.transform.SetParent(null);
         ObjectPool.instance.Recycle(effect);
         target.stateController.ChangeState(current);
-        target.moveController.StopMove();
-        target.transform.right = -target.transform.right;
-        target.moveController.nextTile = stand;
+        if (target.moveController.standTile != null && target.propertyController.GetMoveSpeed() !=0) {
+            target.moveController.StopMove();
+            target.transform.right = -target.transform.right;
+            target.moveController.nextTile = stand; 
+        }
     }
 }
 public class Buff_Mygo : Buff
@@ -463,17 +492,337 @@ public class Buff_Mygo : Buff
 public class Buff_Charm : Buff
 {
     public Color color;
+    public GameObject charmEffect;//魅惑特效
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
         ChessTeamManage.Instance.ChangeTeam(target);
         target.transform.right = -target.transform.right;
         //dm.damageTo.Death();
+        GameObject effect = ObjectPool.instance.Create(charmEffect);
+        effect.transform.SetParent(target.transform);
+        effect.transform.localPosition = Vector3.zero;
         target.animatorController.ChangeColor(color);
+        target.StartCoroutine(Wait());
+    }
+    IEnumerator Wait()
+    {
+        yield return null;
         target.stateController.ChangeState(StateName.IdleState);
     }
     public override void BuffOver()
     {
         base.BuffOver();
+    }
+}
+/// <summary>
+/// 吉野家的牛肉饭 吃完后加20%攻击力 如果目标是小孩姐 则切换成
+/// </summary>
+public class BeafRiceBuff : Buff
+{
+    [LabelText("额外百分比攻击力")]
+    public float extraAttack=0.2f;
+    [LabelText("修改攻击距离")]
+    public float closeAttackRange = 3.75f;
+    [LabelText("额外攻速")]
+    public float extraSpeed=0.25f;
+    float baseAttackRange;
+    public GameObject effect;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+
+        target.propertyController.ChangeAttack(extraAttack);        
+        if (target.propertyController.creator.chessName == "井芹仁菜")
+        {
+            //target.animatorController.ChangeFloat("")
+            if (target.animatorController.animator.GetFloat("type") < 1)
+            {
+                baseAttackRange = target.propertyController.GetAttackRange();
+                target.animatorController.ChangeFloat("type", 1);
+                target.animatorController.animator.SetInteger("skill1", 1);
+                Debug.Log("第一次吃");
+                target.propertyController .SetAtttackRange(closeAttackRange);
+                target.propertyController.ChangeAttack(extraAttack*4f);
+                //target.propertyController.ChangeAcceleRate(extraSpeed);
+            }
+            else 
+            {
+                target.animatorController.animator.SetInteger("skill1", 2);
+                target.animatorController.ChangeFloat("type", 2);
+                Debug.Log("第二次吃");
+            }
+        }
+        if (effect != null)
+        {
+            GameObject newEffect= ObjectPool.instance.Create(effect);
+            newEffect.transform.position = target.transform.position;
+        }
+    }
+    public override void BuffReset()
+    {
+        base.BuffReset();
+        if (effect != null)
+        {
+            GameObject newEffect = ObjectPool.instance.Create(effect);
+            newEffect.transform.position = target.transform.position;
+        }
+        if (target.propertyController.creator.chessName == "井芹仁菜")
+        {
+            //target.animatorController.ChangeFloat("")
+            if (target.animatorController.animator.GetFloat("type") < 1)
+            {
+                baseAttackRange = target.propertyController.GetAttackRange();
+                target.animatorController.ChangeFloat("type", 1);
+                target.animatorController.animator.SetInteger("skill1", 1);
+                Debug.Log("第一次吃");
+                target.propertyController.SetAtttackRange(closeAttackRange);
+            }
+            else
+            {
+                target.animatorController.animator.SetInteger("skill1", 2);
+                target.animatorController.ChangeFloat("type", 2);
+                Debug.Log("第二次吃");
+            }
+        }
+    }
+     
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        target.animatorController.ChangeFloat("type", 0);
+        target.propertyController.ChangeAttack(-extraAttack);
+        if (target.propertyController.creator.name == "井芹仁菜")
+        {
+            target.animatorController.ChangeFloat("type", 0);
+            target.propertyController.SetAtttackRange(baseAttackRange);
+            target.propertyController.ChangeAttack(-extraAttack * 4f);
+            //target.propertyController.ChangeAcceleRate(-extraSpeed);
+        }
+    }
+}
+public class DodgeBuff : TimeBuff
+{
+    [LabelText("额外闪避率")]
+    public float extraDodgeRate = 1f;
+    public GameObject effect;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        target.propertyController.ChangeDodgeRate(extraDodgeRate);
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime);
+        if (effect != null)
+        {
+            GameObject newEffect = ObjectPool.instance.Create(effect);
+            newEffect.transform.position = target.transform.position;
+        }
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        target.propertyController.ChangeDodgeRate(-extraDodgeRate);
+    }
+    public override void BuffReset()
+    {
+        base.BuffReset();
+        timer.ResetTime();
+        if (effect != null)
+        {
+            GameObject newEffect = ObjectPool.instance.Create(effect);
+            newEffect.transform.position = target.transform.position;
+        }
+    }
+}
+/// <summary>
+/// 愤怒Buff
+/// </summary>
+public class AngryBuff:Buff
+{
+    [LabelText("生气特效")]
+    public GameObject angryEffect;
+    [LabelText("额外攻速")]
+    public float extraAttackSpeed=0.5f;
+    [LabelText("额外承伤")]
+    public float extraTake=1f;
+    GameObject effect;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        target.propertyController.ChangeExtraDefence(-extraTake);
+        target.propertyController.ChangeAcceleRate(extraAttackSpeed);
+        effect = ObjectPool.instance.Create(angryEffect);
+        effect.transform.SetParent(target.transform);
+        effect.transform.localPosition = Vector3.zero;
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        target.propertyController.ChangeExtraDefence(extraTake);
+        target.propertyController.ChangeAcceleRate(-extraAttackSpeed);
+        ObjectPool.instance.Recycle(effect);
+    }
+    public override void BuffReset()
+    {
+        base.BuffReset();
+        
+    }
+}
+public class Buff_MMKFirm : Buff
+{
+    [LabelText("冷却时间")]
+    public float coldDonw = 15f;
+    [LabelText("倍率基础")]
+    public float buffBase=40;
+    public DamageMessege Dm;
+     
+    public GameObject user;
+    int buffCount;
+    Timer timer;
+    Timer triggerTimer;
+    bool isCold;
+    bool isTrigger;
+    int count;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        buffCount++;
+        isCold = true;
+        if (target.CompareTag(user.tag))
+        {
+            
+            target.propertyController.onSetDamage.AddListener(OnGetDamage);
+            timer = GameManage.instance.timerManage.AddTimer(() => isCold = true, coldDonw, true);
+        }
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        buffCount = 0;
+        if (target.CompareTag(user.tag))
+        {
+            target.propertyController.onSetDamage.RemoveListener(OnGetDamage);
+            timer?.Stop();
+            triggerTimer?.Stop();
+            timer = null;
+        }
+    }
+    public override void BuffReset()
+    {
+        base.BuffReset();
+        buffCount++;
+    }
+    public void TriggerBuffEffect()
+    {
+        //Debug.Log("MMK触发效果");
+        if (target.CompareTag(user.tag))
+        {
+            target.propertyController.Heal(buffCount * buffBase);
+        }
+        else
+        {
+            Dm.damageFrom = null;
+            Dm.damage = buffCount * buffBase;
+            Dm.damageTo = target;
+            target.propertyController.GetDamage(Dm);
+            
+        }
+        
+    }
+    public void OnGetDamage(DamageMessege dm)
+    {
+        if ((dm.damage >= dm.damageTo.propertyController.GetHp()&&isCold)||isTrigger)
+        {
+            dm.damage = 0;
+            Debug.Log("触发不屈");
+            UIManage.GetView<DamagePanel>().ShowText(dm, "不屈!", Color.white);
+            if (!isTrigger)
+            {
+                isTrigger=true;
+                count=buffCount;
+                //dm.damageTo.StartCoroutine(Firm(dm.damageTo));
+                triggerTimer = GameManage.instance.timerManage.AddTimer(Firm, 1, true);
+            }
+        }
+    }
+    public void Firm()
+    {
+        if (count > 0)
+        {
+            count--;
+        }
+        else
+        {
+            isTrigger = false;
+            isCold = false;
+            timer.ResetTime();
+            triggerTimer.Stop();
+            triggerTimer = null;
+        }
+    }
+}
+/// <summary>
+/// 持续10s 上课buff
+/// </summary>
+public class Buff_ClassBegin : TimeBuff
+{
+    [LabelText("额外减伤")]
+    public float extradefence=0.3f;
+    [LabelText("减少移速")]
+    public float extraSpeed=0.25f;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        target.propertyController.ChangeExtraDefence(extraSpeed);
+        target.propertyController.ChangeAcceleRate(-extraSpeed);
+        Buff buff = null;
+        target.buffController.buffDic.TryGetValue("下课",out buff);
+        if(buff != null)
+        {
+            buff.BuffOver();
+        }
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime);
+    }
+    public override void BuffReset()
+    {
+        base.BuffReset();
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        target.propertyController.ChangeExtraDefence(-extraSpeed);
+        target.propertyController.ChangeAcceleRate(extraSpeed);
+    }
+}
+/// <summary>
+/// 下课buff 持续50s
+/// </summary>
+public class Buff_ClassOver : TimeBuff
+{
+    [LabelText("额外攻击")]
+    public float extraAttack=0.3f;
+    [LabelText("额外移速")]
+    public float extraSpeed=0.25f;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        target.propertyController.ChangeAttack(extraAttack);
+        target.propertyController.ChangeAcceleRate(extraSpeed);
+        Buff buff = null;
+        target.buffController.buffDic.TryGetValue("上课", out buff);
+        if (buff != null)
+        {
+            buff.BuffOver();
+        }
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime);
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+    }
+    public override void BuffReset()
+    {
+        base.BuffReset();
+        target.propertyController.ChangeAttack(-extraAttack);
+        target.propertyController.ChangeAcceleRate(-extraSpeed);
     }
 }

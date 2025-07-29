@@ -11,6 +11,13 @@ public class PropertyCreator : ScriptableObject
 {
     [LabelText("棋子名")]
     public string chessName;
+    [LabelText("棋子简介")]
+    [Multiline]
+    public string chessDescription;
+    [LabelText("棋子效果描述")]
+    [Multiline ]
+    public string chessEffect;
+
     [LabelText("基础数据")]
     public Property baseProperty;
     [LabelText("棋子的预制体")]

@@ -94,7 +94,7 @@ public enum TileType
     Grass=1<<0,
     Water=1<<1,
     Stone=1<<2,
-    Occupation=1<<3,
+    Occupation=1<<3,//这个到底是个啥
     All,
 }
 [Flags]

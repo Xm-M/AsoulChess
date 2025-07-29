@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 锁定目标的子弹
+/// 锁定目标的子弹 
 /// </summary>
 public class Bullet_Aming : Bullet
 {

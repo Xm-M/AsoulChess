@@ -11,6 +11,7 @@ using UnityEngine;
 public class LevelManage: MonoBehaviour
 {
     public static LevelManage instance;
+    public LevelController currentController;
     public LevelData currentLevel;
     public LevelData menu;
     public bool IfGameStart {  get;  set; }
@@ -44,16 +45,14 @@ public class LevelManage: MonoBehaviour
     }
     public void PrepareLevel()
     {
-        currentLevel.PrepareStage();
+        //currentLevel.PrepareStage();
         EventController.Instance.TriggerEvent(EventName.SelectState.ToString());
     }
   
     public void GameStart()
     {
         IfGameStart = true;
-        currentLevel.StartGameStage();
-        Debug.Log(currentLevel.levelName);
-        ((MapManage_PVZ.instance) as MapManage_PVZ).au.SetLoop(true);
+        //((MapManage_PVZ.instance) as MapManage_PVZ).au.SetLoop(true);
         EventController.Instance.TriggerEvent(EventName.GameStart.ToString());
     }
     /// <summary>
@@ -61,10 +60,8 @@ public class LevelManage: MonoBehaviour
     /// </summary>
     public void GameOver(bool win)
     {
-        //Debug.Log("GameOver");
         IfGameStart=false;
-        currentLevel.win = win;
-        currentLevel.OverGameStage();
+        currentController.GameOver(win);
         EventController.Instance.TriggerEvent(EventName.GameOver.ToString());
     }
     public void GamePause()
@@ -79,7 +76,14 @@ public class LevelManage: MonoBehaviour
     {
         Debug.Log("LeaveLevel");
         IfGameStart = false;
-        currentLevel.LeaveStage();
+        //currentLevel.LeaveStage();
         EventController.Instance.TriggerEvent(EventName.WhenLeaveLevel.ToString());
     }
+    public void SetController(LevelController levelController)
+    {
+        this.currentController = levelController;
+        levelController.levelData = this.currentLevel;
+    }
+
+
 }

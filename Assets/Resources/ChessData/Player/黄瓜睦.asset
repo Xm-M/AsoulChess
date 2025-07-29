@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
   m_Name: "\u9EC4\u74DC\u7766"
   m_EditorClassIdentifier: 
-  chessName: "\u9EC4\u74DC\u7766"
+  chessName: "\u82E5\u53F6\u7766"
   baseProperty:
     attack: 15
     attackRate: 0
@@ -25,11 +25,12 @@ MonoBehaviour:
     HpMax: 500
     lifeStealing: 0
     healRate: 1
-    speed: 2
+    speed: 0
     acceleRated: 1
     attackRange: 40
     price: 75
     rarity: 4000
+    waveLimit: 1
     CD: 7.5
     Size: 1
   chessPre: {fileID: 2811414589655366307, guid: 201226b34288b794484d93193f2cb219, type: 3}

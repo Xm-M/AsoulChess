@@ -9,12 +9,12 @@ public class BuffController
     public Chess chess;
     [SerializeReference]
     public List<Buff> onEnterBuff;
-    //public UnityEvent buffUpdate;
+    //public UnityEvent buffUpdate; 
     public void InitController(Chess chess)
     {
         buffDic = new Dictionary<string, Buff>();
-        this.chess = chess;
-        //onEnterBuff = new List<Buff>();
+        this.chess = chess; 
+        //onEnterBuff = new List<Buff>(); 
     }
     public void WhenControllerEnterWar()
     {
@@ -39,10 +39,11 @@ public class BuffController
             list[i].BuffOver();
         buffDic.Clear();
     }
-    /// <summary>
-    /// 添加新的Buff
-    /// 如果是已经存在的buff 则重置它  
-    /// 否则添加新buff,并激活效果
+    /// <summary> 
+    /// 添加新的Buff  
+    /// 如果是已经存在的buff 则重置它 
+    /// 否则添加新buff,并激活效果      
+    ///  买不起不至于 主要是不喜欢魂类 
     /// </summary>
     /// <param name="buffUser"></param>
     /// <param name="buff"></param>

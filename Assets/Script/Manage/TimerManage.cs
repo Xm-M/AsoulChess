@@ -116,7 +116,10 @@ public class Timer
     }
     public void ChangeDelayTime(float newDelayTime)
     {
-        finishTime = TimerManage.GameTime - delayTime+newDelayTime;
+        finishTime = finishTime - delayTime+newDelayTime;
         delayTime = newDelayTime;
+        //Debug.Log(newDelayTime);
+        //Debug.Log("结束时间" + finishTime);
+        //Debug.Log("现在时间" + TimerManage.GameTime);
     }
 }

@@ -10,6 +10,7 @@ public class HorMove : FindTileMethod
     public override Tile FindNextTile(Chess c)
     {
         this.chess=c;
+        if (c.moveController.standTile == null) return null;
         Vector2Int currentPos=c.moveController.standTile.mapPos;
         Vector2Int nextPos = new Vector2Int(currentPos.x + (int)c.transform.right.x, currentPos.y);
         //Debug.Log(currentPos);

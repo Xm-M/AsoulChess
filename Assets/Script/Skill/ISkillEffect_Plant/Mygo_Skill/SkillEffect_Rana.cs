@@ -141,7 +141,8 @@ public class SkillEffect_MatchaParfait : ISkill
     public void UseSkill(Chess user)
     {
         Chess target = user.moveController.standTile.stander;
-        target.buffController.AddBuff(matchaParfaitBuff);
+        if (target != null)
+            target.buffController.AddBuff(matchaParfaitBuff);
         Debug.Log("吃个抹茶芭菲");
         //death事件放在动画播放完毕自动转过去就好了
     }

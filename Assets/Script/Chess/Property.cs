@@ -18,7 +18,7 @@ public class PropertyController:Controller
     [HideInInspector] public UnityEvent<DamageMessege> onSetDamage;//受到伤害前的事件(主要是增伤或者缓和，还有护甲抵挡等问题)
     [HideInInspector] public UnityEvent<DamageMessege> onTakeDamage;//造成伤害的事件
     Property Data;
-    bool freezy = false;
+    //bool freezy = false;
     public void InitController(Chess chess)
     {
         Data = creator.GetClone();
@@ -28,7 +28,7 @@ public class PropertyController:Controller
     public void WhenControllerEnterWar()
     {
         Data.ResetAllProperty(creator.baseProperty);
-        freezy = false;
+        //freezy = false;
     }
     public void WhenControllerLeaveWar()
     {
@@ -60,6 +60,13 @@ public class PropertyController:Controller
         }
         //Debug.Log("当前伤害" + mes.damage);
         mes.damage *= (1 - Data.extraDefence);
+        float n = UnityEngine.Random.Range(0, 1f);
+        if (n < GetDodge())
+        {
+            mes.damage = 0;
+            UIManage.GetView<DamagePanel>().ShowMiss(mes);
+        }
+
         if (mes.damage > 0)
         {
             Data.Hp -= mes.damage;
@@ -74,7 +81,7 @@ public class PropertyController:Controller
         //UIManage.instance.CreateDamage(mes);
         //chess.StartCoroutine(ColorChange(1f));
     }
-    //造成伤害的函数
+    //造成伤害的函数 
     public void TakeDamage(DamageMessege mes)
     {
         if (mes.damageTo != null && !mes.damageTo.IfDeath)
@@ -139,6 +146,10 @@ public class PropertyController:Controller
            
         }
     }
+    public void ChangeDodgeRate(float value)
+    {
+        Data.dodgeRate += value;
+    }
     public void ChangeCritDamage(float value)
     {
         Data.critDamage += value;
@@ -153,17 +164,33 @@ public class PropertyController:Controller
     {
         Data.acceleRated += value;
         //chess.animator.speed = Data.acceleRated;
-        if(!freezy)
-            chess.animatorController.ChangeSpeed(Data.acceleRated);
-    }
-    public void Freezy()
-    {
-        freezy = true;
-    }
-    public void UnFreezy()
-    {
-        freezy = false;
         chess.animatorController.ChangeSpeed(Data.acceleRated);
+        //if (!freezy)
+            
+    }
+    public void ChangeDizznessTime(float value)
+    {
+        
+        if (chess.stateController.currentState.state.stateName == StateName.DizzyState)
+        {
+            Data.dizzinessTime = Mathf.Max(Data.dizzinessTime, value);
+            //Debug.Log("重置眩晕状态");
+        }
+        else
+        {
+            Data.dizzinessTime = value;
+            if(GetDizznessTime()>0)
+                chess.stateController.ChangeState(StateName.DizzyState);
+            //Debug.Log("进入眩晕状态");
+        }
+    }
+    public float GetDizznessTime()
+    {
+        return Data.dizzinessTime*(1-Data.tenacity);
+    }
+    public void ResetDizznessTime()
+    {
+        Data.dizzinessTime = 0;
     }
     public void ChangeAttackRange(float value) => Data.attackRange = Data.attackRange + value;
     public void SetAtttackRange(float value) => Data.attackRange = value;
@@ -178,6 +205,10 @@ public class PropertyController:Controller
     public float GetExtraDamage()
     {
         return  Data.extraDamge;
+    }
+    public float GetDodge()
+    {
+        return Data.dodgeRate;
     }
     public float GetExtraDefence()
     {
@@ -270,7 +301,8 @@ public class Property
 
     public float crit;//暴击率
     public float critDamage=1.3f;//暴击伤害
-    
+    public float dodgeRate;//闪避概率
+
     public float extraDamge=0f;//额外增伤
     public float AR;//护甲
 
@@ -286,16 +318,20 @@ public class Property
     public float lifeStealing=0f;//生命偷取
     public float healRate=1f;//回复增益
 
-    public float speed = 2f;//移动速度
+    public float speed = 0f;//移动速度
     //public float attackSpeed = 1f;//攻击速度
     public float acceleRated=1f;//攻速移速的加成都取决于这个属性
 
-    //public float spellHaste=0f;//技能急速
-    
+    [HideInInspector] public float dizzinessTime;//眩晕时间
+    [LabelText("韧性")]
+    public float tenacity;//韧性
+
+
     public float attackRange=1;//攻击距离
 
     public int price=50;//价格
     public int rarity=4000;//稀有度
+    public int waveLimit = 1;//波数限制
 
     public float CD=7.5f;
     public int Size = 1;//体型
@@ -313,11 +349,15 @@ public class Property
         attackRate = 1;
         crit = property.crit;
         critDamage = property.critDamage;
+        dodgeRate = property.dodgeRate;
+
         extraDefence = property.extraDefence;
         //spellHaste = property.spellHaste;
         Hp = property.Hp;
         HpMax = property.HpMax;
 
+        tenacity =property.tenacity;
+        dizzinessTime = 0;
         speed = property.speed;
         lifeStealing = property.lifeStealing;
         healRate = property.healRate;
@@ -327,12 +367,13 @@ public class Property
         attackRange = property.attackRange;
         price = property.price;
         rarity = property.rarity;
+        waveLimit = property.waveLimit;
         CD = property.CD;
         Size = property.Size;
 
     }
 }
-//造成伤害时传递的信息
+//造成伤害时传递的信息 
 [Serializable]
 public class DamageMessege
 {
@@ -379,6 +420,7 @@ public enum ElementType
     Puncture=1<<3,//穿刺 仙人掌是Bullet Puncture;地刺是CloseAttack Puncture
     Explode=1<<4,//爆炸
     Fire=1<<5,//火焰伤害
+    Cutting=1<<6,//切割伤害
 }
 public class ShiledNum
 {

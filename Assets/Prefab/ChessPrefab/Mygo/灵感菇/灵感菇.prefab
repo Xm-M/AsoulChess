@@ -95,17 +95,17 @@ MonoBehaviour:
       state:
         id: 3
       transitions: []
-    stateGraph: {fileID: 11400000, guid: e76dbd0eedc2a624fa8f96ee98b0f67e, type: 2}
+    stateGraph: {fileID: 11400000, guid: 0daf3fd1077366a4dbef57cf44015c9b, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
     onEnterBuff: []
   moveController:
-    chess: {fileID: 0}
+    chess: {fileID: 1100954334559966023}
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 3
+      id: 4
   animatorController: {fileID: 1448611078435410148}
   WhenEnterGame:
     m_PersistentCalls:
@@ -146,24 +146,26 @@ MonoBehaviour:
       type: {class: SkillEffect_Saki, ns: , asm: Assembly-CSharp}
       data:
         skillRange: 8.75
-        cold: 30
+        useTimes: 4
         frequency: 5
         buffCharm:
-          id: 4
-        buffCoercion:
           id: 5
-        fearBuff:
+        buffCoercion:
           id: 6
+        fearBuff:
+          id: 7
     00000003:
       type: {class: , ns: , asm: }
     00000004:
+      type: {class: HorMove, ns: , asm: Assembly-CSharp}
+    00000005:
       type: {class: Buff_Charm, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u9B45\u60D1"
         target: {fileID: 0}
         buffNum: 0
         color: {r: 0.9607843, g: 0.43137255, b: 0.827451, a: 1}
-    00000005:
+    00000006:
       type: {class: Buff_Coercion, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u5A01\u538B"
@@ -173,7 +175,7 @@ MonoBehaviour:
         deAttack: 0.2
         deDefence: 0.2
         Coerctioneffect: {fileID: 5528529480491682693, guid: 310eaf154a2c4914196c9fe3e4dbd161, type: 3}
-    00000006:
+    00000007:
       type: {class: Buff_Fear, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u6050\u60E7"
@@ -276,7 +278,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.669
   m_Pitch: 1
   Loop: 0
   Mute: 0

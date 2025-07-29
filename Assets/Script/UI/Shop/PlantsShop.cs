@@ -17,7 +17,7 @@ public class PlantsShop : View
     public Transform shopIconParent;//这个是游戏开始的时候上面的那个牌
     public List<ShopSelectIcon> allSelectIcons;//这个是你拥有的棋子 就是下面那个版的
     public List<ShopSelectIcon> currentSelectIcons;//
-    
+    public int maxCount=10;
     public Animator anim;
     public AudioPlayer shopAudio;
     [FoldoutGroup("初始位置")]
@@ -91,12 +91,13 @@ public class PlantsShop : View
     public void CancelBuyCard(){
         currentPlant=null;
     }
-    public void AddSelection(ShopSelectIcon selectIcon){
-        if(!currentSelectIcons.Contains(selectIcon)){
+    public bool AddSelection(ShopSelectIcon selectIcon){
+        if(!currentSelectIcons.Contains(selectIcon)&&currentSelectIcons.Count<maxCount){
             currentSelectIcons.Add(selectIcon);
             GameObject shopIcon= Instantiate(shopIconPre,shopIconParent);
             shopIcon.GetComponent<ShopIcon>().InitShopIcon(selectIcon);
-        }
+            return true;
+        }return false;
     }
     public void RemoveSelection(ShopSelectIcon selectIcon){
         currentSelectIcons.Remove(selectIcon);

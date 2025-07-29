@@ -41,13 +41,6 @@ public class MapManage_PVZ : MapManage
         //EventController.Instance.RemoveListener(EventName.GameStart.ToString(), WhenGameStart);
     }
     
-    public void GamePrepare()
-    {
-        LevelManage.instance.PrepareLevel();
-    }
-    public void GameStart()
-    {
-        LevelManage.instance.GameStart();
-    }
+     
 
 }

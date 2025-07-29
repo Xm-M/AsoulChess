@@ -39,6 +39,7 @@ public class AttackController :  Controller
     {
         timer?.Stop();
         timer = null;
+        OnAttack.RemoveAllListeners();
     }
     /// <summary>
     /// attack是播放动画，Takedamage是实际上造成伤害（或者发射子弹）是绑定在动画上的
@@ -72,12 +73,13 @@ public class AttackController :  Controller
     }
     public virtual void TakeDamages()
     {
+        //
         //也就是说这里是触发onattack的函数对吧
         weapon.TakeDamage(master);
         OnAttack?.Invoke(master);
         if(!loop)
             attackOver=false;
-        //EventController 
+        //EventController  
     } 
 }
 public interface IAttackFunction
@@ -90,7 +92,7 @@ public interface IInitWeapon
 }
 
 //public interface Weapon
-//{
+//{ 
 //    [SerializeReference]
 //    protected IInitWeapon initWeapon;
 //    [SerializeReference]
@@ -114,18 +116,18 @@ public interface IInitWeapon
 //    {
 //        FindTarget.FindTarget(user, target);
 //        return target.Count;
-//    }
+//    } 
 //    public void TakeDamage(Chess user)
 //    {
 //        if(FindEnemy(user)>0)
 //            attack.Attack(user, target);
-
+//    
 //    }
-//}
+//}  
 public interface Weapon
 {
 
-    //List<Chess> target;//这个是攻击目标
+    //List<Chess> target;//这个是攻击目标 
     //public float interval;//攻击间隔 如果是0或者-1就表明是loop动画
     public float GetInterval();
     //public bool AttackOver();

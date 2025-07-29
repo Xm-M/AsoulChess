@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u65C1\u89C2\u8005"
+  m_EditorClassIdentifier: 
+  chessName: "\u65C1\u89C2\u8005"
+  chessDescription: 
+  chessEffect: 
+  baseProperty:
+    attack: 0
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 600
+    HpMax: 600
+    lifeStealing: 0
+    healRate: 1
+    speed: 0.5
+    acceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 0
+    price: 25
+    rarity: 4000
+    waveLimit: 1
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 1863300723465491323, guid: e23c5ce0fa260cc41800ed9a50148d71, type: 3}
+  chessSprite: {fileID: 0}
+  plantTags:
+  - "\u5B66\u751F"
+  chessTileType: 5
+  plantType: 0
+  plantFunction:
+    id: 0
+  plantIfCanBuyCard:
+    id: 1
+  references:
+    version: 1
+    00000000:
+      type: {class: NonePlant, ns: , asm: Assembly-CSharp}
+    00000001:
+      type: {class: , ns: , asm: }

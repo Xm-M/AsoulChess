@@ -58,6 +58,22 @@ public class MapManage : MonoBehaviour
     {
         return tiles[Random.Range(0,mapSize.x-1),Random.Range(0,mapSize.y-1)];
     }
+    public List<Tile> NearTile(Tile tile)
+    {
+        List<Tile> list = new List<Tile>();
+        Vector2Int mapPos = tile.mapPos;
+        int[] dx = {-1,1,0,0};
+        for(int i = 0; i < dx.Length; i++)
+        {
+            Vector2Int newPos = new Vector2Int(mapPos.x + dx[i], mapPos.y + dx[3 - i]);
+            if (IfInMapRange(newPos.x,newPos.y))
+            {
+                list.Add(tiles[newPos.x, newPos.y]);
+            }
+        }
+        
+        return list;
+    }
 }
 public interface IInitMapManage
 {

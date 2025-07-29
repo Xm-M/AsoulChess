@@ -74,5 +74,16 @@ public class AnimatorController : MonoBehaviour,Controller
     {
         animator.SetFloat(vname, value);
     }
-    
+    public virtual void Freezy()
+    {
+        ChangeSpeed(0);
+    }
+    public virtual void ResumeSpeed()
+    {
+        ChangeSpeed(chess.propertyController.GetAccelerate());
+    }
+    public virtual void PlayDizzy()
+    {
+        animator.Play("idle");
+    }
 }

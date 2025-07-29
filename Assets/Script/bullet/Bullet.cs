@@ -19,7 +19,7 @@ public class Bullet : MonoBehaviour
     public Chess shooter;
     public Vector2 startPos;
     public Vector2 targetPos;
-    public Chess lockTarget;
+    //public Chess lockTarget;
     public DamageMessege Dm;
     protected Chess hitChess;
     protected int current;
@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour
         this.shooter = shooter;
         startPos = position;
         targetPos = target.transform.position;
-        lockTarget = target;
+        //lockTarget = target;
         this.tag = shooter.tag;
         current = MaxHitNum;
         transform.position = startPos;
@@ -63,8 +63,9 @@ public class Bullet : MonoBehaviour
                 shooter.propertyController.TakeDamage(Dm);
                 WhenBulletHit?.Invoke(this);
                 effect?.OnBulletHit(this);
+                current--;
             }
-            current--;
+            
             if (current == 0)
             {
                 RecycleBullet();

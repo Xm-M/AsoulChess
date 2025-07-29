@@ -988,6 +988,7 @@ MonoBehaviour:
       damage: 0
       damageType: 0
       damageElementType: 0
+      ifCrit: 0
       takeBuff:
         id: 1
   stateController:
@@ -1045,7 +1046,8 @@ MonoBehaviour:
           damageTo: {fileID: 0}
           damage: 0
           damageType: 0
-          damageElementType: 0
+          damageElementType: 1
+          ifCrit: 0
           takeBuff:
             id: 1
 --- !u!61 &6127518310232861434
@@ -1234,6 +1236,7 @@ MonoBehaviour:
           damage: 70
           damageType: 2
           damageElementType: 0
+          ifCrit: 0
           takeBuff:
             id: 1
         damage: 70

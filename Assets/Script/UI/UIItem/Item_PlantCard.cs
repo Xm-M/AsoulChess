@@ -115,6 +115,7 @@ public class Item_PlantCard : UIItem
     }
     public override void Recycle()
     {
+        transform.SetParent(UIManage.GetView<ItemPanel>().transform);
         UIManage.GetView<ItemPanel>().Recycle<Item_PlantCard>(this);
         WhenRecycle?.Invoke();
         plantOver = true;

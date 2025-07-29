@@ -23,21 +23,22 @@ public class DamagePanel : View
     }
     public void ShowDamageMes(DamageMessege dm)
     {
-        //Debug.Log("damhe");
+        //Debug.Log("damhe"); 
         if (!showDamage||dm.damage<1) return;
         //Debug.Log("չʾ");
         GameObject text= ObjectPool.instance.Create(damageText);
         text.transform.SetParent(transform);
         text.transform.position=Camera.main.WorldToScreenPoint(dm.damageTo.transform.position+Vector3.up*0.75f);
+        Text t = text.GetComponentInChildren<Text>();
         if (!dm.ifCrit)
         {
             text.transform.localScale = new Vector3(1f, 1f, 1f);
-            text.GetComponentInChildren<Text>().text = ((int)dm.damage).ToString();
+            t.text = ((int)dm.damage).ToString();
         }
         else
         {
             text.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
-            text.GetComponentInChildren<Text>().text = ((int)dm.damage).ToString()+ "!!";
+            t.text = ((int)dm.damage).ToString()+ "!!";
         }
         Color newColor;
         switch (dm.damageType)
@@ -47,9 +48,33 @@ public class DamagePanel : View
             case DamageType.Real:newColor = Real;  break;
             default:newColor = Color.white; break;
         }
-        text.GetComponentInChildren<Text>().color = newColor;
+        t.color = newColor;
     
     }
+    //生成一个Text 显示Miss
+    public void ShowMiss(DamageMessege dm)
+    {
+        GameObject text = ObjectPool.instance.Create(damageText);
+        text.transform.SetParent(transform);
+        text.transform.position = Camera.main.WorldToScreenPoint(dm.damageTo.transform.position + Vector3.up * 0.75f);
+        Text t = text.GetComponentInChildren<Text>();
+        t.text = "Miss";
+        t.color = Color.white;
+    }
+    public void ShowText(DamageMessege dm,string mes,Color color)
+    {
+        GameObject text = ObjectPool.instance.Create(damageText);
+        text.transform.SetParent(transform);
+        text.transform.position = Camera.main.WorldToScreenPoint(dm.damageTo.transform.position + Vector3.up * 0.75f);
+        Text t = text.GetComponentInChildren<Text>();
+        t.text = mes;
+        if(color==null)
+            t.color = Color.white;
+        else
+            t.color=color;
+    }
+
+
     public void ShowHeal(float heal, Chess target)
     {
         if (!showDamage) return;
@@ -58,11 +83,11 @@ public class DamagePanel : View
             GameObject text = ObjectPool.instance.Create(damageText);
             text.transform.SetParent(transform);
             text.transform.localScale = new Vector3(1f, 1f, 1f);
-
-            text.transform.position = target.transform.position + Vector3.up * 0.75f;
-            Text t = text.GetComponentInChildren<Text>(); ;
+            text.transform.position = Camera.main.WorldToScreenPoint(target.transform.position + Vector3.up * 0.75f);
+            Text t = text.GetComponentInChildren<Text>();
+             
             t.text = ((int)heal).ToString();
-            t.color = Color.green;
+            t.color = Heal;
             if (healPrefab != null)
             {
                 GameObject healeffect = ObjectPool.instance.Create(healPrefab);
@@ -71,4 +96,4 @@ public class DamagePanel : View
             }
         }
     }
-}
+}//

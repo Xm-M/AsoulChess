@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Sirenix.OdinInspector;
 public class AudioPlayer : MonoBehaviour
 {
     public AudioType autype;
@@ -62,6 +62,7 @@ public class AudioPlayer : MonoBehaviour
             }
         }
     }
+    [Button("²¥·Å")]
     public void Play()
     {
         //if(autype==AudioType.SoundEffect)

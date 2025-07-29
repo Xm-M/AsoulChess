@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u4E30\u5DDD\u7965\u5B50"
+  m_EditorClassIdentifier: 
+  chessName: "\u4E30\u5DDD\u7965\u5B50"
+  baseProperty:
+    attack: 0
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 5000
+    HpMax: 5000
+    lifeStealing: 0
+    healRate: 1
+    speed: 1
+    acceleRated: 1
+    attackRange: 1
+    price: 75
+    rarity: 4000
+    waveLimit: 1
+    CD: 0
+    Size: 1
+  chessPre: {fileID: 4055832552212940801, guid: d8a05bd147348324897fa54d61f52d2f, type: 3}
+  chessSprite: {fileID: 21300000, guid: 5fe39294f69dadb43888fabec9d61853, type: 3}
+  plantTags:
+  - AveMujica
+  - "\u952E\u76D8\u624B"
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    id: 0
+  plantIfCanBuyCard:
+    id: 1
+  references:
+    version: 1
+    00000000:
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+    00000001:
+      type: {class: , ns: , asm: }

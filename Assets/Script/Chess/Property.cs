@@ -11,12 +11,15 @@ using UnityEngine.Events;
 [Serializable]
 public class PropertyController:Controller 
 {
+    
     public PropertyCreator creator;//这个就是一个基本数据
-    [HideInInspector]protected Chess chess;//拥有该属性的棋子
+    protected Chess chess;//拥有该属性的棋子
     //这几个都是只能在战斗中添加事件 因为结束的时候会被清除 所以不能在游戏开始前在Inspector面板添加事件
     [HideInInspector] public UnityEvent<DamageMessege> onGetDamage;//受到伤害的事件
     [HideInInspector] public UnityEvent<DamageMessege> onSetDamage;//受到伤害前的事件(主要是增伤或者缓和，还有护甲抵挡等问题)
     [HideInInspector] public UnityEvent<DamageMessege> onTakeDamage;//造成伤害的事件
+    [ShowInInspector, ReadOnly]
+    [ShowIf("@UnityEngine.Application.isPlaying")]
     Property Data;
     //bool freezy = false;
     public void InitController(Chess chess)
@@ -40,24 +43,27 @@ public class PropertyController:Controller
     //受到伤害的函数
     public void GetDamage(DamageMessege mes)
     {
+        //
         onSetDamage?.Invoke(mes);
         //Debug.Log("基础伤害" + mes.damage);
         if (mes.takeBuff != null)
         {
             chess.buffController.AddBuff(mes.takeBuff);
         }
-        if (mes.damageType != DamageType.Real)
+        if (mes.damageType == DamageType.Heal)
+        {
+            //Debug.Log(mes.damageFrom + " " + mes.damageType);
+            Heal(mes.damage);
+            return;
+        }
+        else if (mes.damageType == DamageType.Miss)
+            mes.damage = 0;
+        else if (mes.damageType != DamageType.Real)
         {
             //Debug.Log("倍率" + (1 - (Data.AR / (Data.AR + 100))));
             mes.damage *= (1 - (Data.AR / (Data.AR + 100)));
         }
-        else if (mes.damageType == DamageType.Miss)
-            mes.damage = 0;
-        else if(mes.damageType == DamageType.Heal)
-        {
-            Heal(mes.damage);
-            return;
-        }
+        
         //Debug.Log("当前伤害" + mes.damage);
         mes.damage *= (1 - Data.extraDefence);
         float n = UnityEngine.Random.Range(0, 1f);
@@ -97,7 +103,7 @@ public class PropertyController:Controller
                 }
                 else
                 {
-                    mes.ifCrit = false;
+                    mes.ifCrit = false; 
                 }
                 //mes.damage =  n< GetCrit() ? mes.damage * GetCritDamage() : mes.damage;
 
@@ -120,8 +126,19 @@ public class PropertyController:Controller
     public void Heal(float heal)
     {
         heal *= Data.healRate;
-        Data.Hp = Mathf.Min(Data.HpMax, Data.Hp + heal);
-        UIManage.GetView<DamagePanel>().ShowHeal(heal, chess);
+        if (Data.HpMax > Data.Hp + heal)
+        {
+            Data.Hp =   Data.Hp + heal;
+            UIManage.GetView<DamagePanel>().ShowHeal(heal, chess);
+        }
+        else
+        {
+            float dheal = Data.HpMax - heal;
+            if(dheal>1) UIManage.GetView<DamagePanel>().ShowHeal(dheal, chess);
+            Data.Hp = Data.HpMax;
+        }
+        
+        
     }
     public void ChangeHp(float value) => Data.Hp = value;
     public void ChangeHPMax(float value)

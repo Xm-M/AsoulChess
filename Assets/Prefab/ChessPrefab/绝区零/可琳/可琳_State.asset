@@ -34,6 +34,12 @@ MonoBehaviour:
     - transition:
         id: 6
       targetState: 5
+  - state:
+      id: 7
+    transitions:
+    - transition:
+        id: 8
+      targetState: 4
   references:
     version: 1
     00000000:
@@ -62,3 +68,10 @@ MonoBehaviour:
         chess: {fileID: 0}
     00000006:
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+    00000007:
+      type: {class: PrepareState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 2
+        chess: {fileID: 0}
+    00000008:
+      type: {class: IfGameStart, ns: , asm: Assembly-CSharp}

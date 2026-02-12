@@ -236,6 +236,12 @@ MonoBehaviour:
       ifCrit: 0
       takeBuff:
         id: 1
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
@@ -261,6 +267,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRemove:
     m_PersistentCalls:
       m_Calls: []
   references:
@@ -308,7 +317,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.5355495}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -319,7 +328,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 2.071099}
+  m_Size: {x: 1.25, y: 2.25}
   m_EdgeRadius: 0
 --- !u!95 &1739079732004308174
 Animator:

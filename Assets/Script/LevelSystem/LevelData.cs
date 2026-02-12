@@ -15,9 +15,12 @@ using System;
 [CreateAssetMenu(fileName = "NewLevel", menuName = "Message/Level")]
 public class LevelData : ScriptableObject
 {
+    public bool ifClearStadge;
     public string sceneName;
     public string levelName;
+    public Sprite levelSprit;
     public LevelMode levelMode;
+
     [SerializeReference]
     [LabelText("进入地图插件"), FoldoutGroup("插件")]
     public List<ILevelPlugin> EnterMapPlugin;
@@ -39,67 +42,9 @@ public class LevelData : ScriptableObject
     public CreateZombieType createZombieType;
     [LabelText("下一关")]
     public LevelData nextLevel;
-
-    /// <summary>
-    /// 这里往下都是要删掉的东西 暂时放一下
-    /// </summary>
-    public bool win;
-    [SerializeReference]
-    public ILevelPreparation preparation;
-    [SerializeReference]
-    public IZombieSpawner spawner;
     [SerializeReference]
     public ILevelOutcome outcome;
-    /// <summary>
-    /// 准备阶段要做的事情
-    /// </summary>
-    public  void PrepareStage()
-    {
-        win = false;
-        preparation?.Prepare(this);
-        spawner?.Prepare(this);
-        
-
-    }
-    /// <summary>
-    /// 刚进入游戏时的事件
-    /// </summary>
-    public  void StartGameStage(){
-        spawner?.StartSpawning(this);
-    }
-    /// <summary>
-    /// 游戏结束时的事件
-    /// </summary>
-    public void OverGameStage(){
-        spawner?.OverSpawning(this);
-        outcome?.HandleOutcome(spawner.CheckWinCondition());
-    }
-    /// <summary>
-    /// 离开关卡会触发的事件
-    /// </summary>
-    public  void LeaveStage()
-    {
-        spawner?.LeaveSpawning(this);
-    }
-}
-/// <summary>
-/// 这个接口主要是负责选卡模式，还有控制游戏开始
-/// </summary>
-public interface ILevelPreparation
-{
-    public void Prepare(LevelData levelData);
-}
-/// <summary>
-/// 这个接口是僵尸的生成方式
-/// </summary>
-public interface IZombieSpawner
-{
-
-    public void Prepare(LevelData levelData);
-    public void StartSpawning(LevelData levelData);
-    public void OverSpawning(LevelData levelData);
-    public void LeaveSpawning(LevelData levelData);
-    bool CheckWinCondition();
+  
 }
 /// <summary>
 /// 这个是胜利后的结算阶段
@@ -111,7 +56,7 @@ public interface ILevelOutcome
 
 //[Flags]
 public enum CreateZombieType
-{
+{ 
     一类有限制,
     二类有限制,
     一类无限制,

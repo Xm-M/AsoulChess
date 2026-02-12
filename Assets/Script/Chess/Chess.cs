@@ -32,11 +32,10 @@ public class Chess : MonoBehaviour
     public MoveController moveController;
     [FoldoutGroup(groupName: "controller", GroupID = "controller")]
     public AnimatorController animatorController;
-
-
     [FoldoutGroup(groupName:"Event",GroupID ="Event")]
     public UnityEvent<Chess> WhenEnterGame;//没有被清除的固定事件,这个是不能清除的  
     [HideInInspector]public UnityEvent<Chess> DeathEvent;//这个会被自动清除
+    [HideInInspector]public UnityEvent<Chess> OnRemove;//这个也会被自动清除
     //public Animator animator;
     //public SpriteRenderer sprite;
     bool FacingRight = true;
@@ -47,8 +46,6 @@ public class Chess : MonoBehaviour
     /// 初始化所有Controller 只有在生成的时候会调用一次
     /// </summary>
     public void InitChess(){
-  
-
         propertyController.InitController(this);
         equipWeapon.InitController(this);
         stateController.InitController(this);
@@ -84,7 +81,11 @@ public class Chess : MonoBehaviour
     /// </summary>
     public virtual void Death()
     {
-        //if (IfDeath == true) return;
+        //if (IfDeath == true)
+        //{
+        //    Debug.Log("这个角色已经死亡");
+        //    return;
+        //}
         IfDeath = true;
         ResumeSelectable();
         skillController.WhenControllerLeaveWar();
@@ -97,6 +98,9 @@ public class Chess : MonoBehaviour
         ChessTeamManage.Instance.RecycleChess(this);
         EventController.Instance.TriggerEvent<Chess>(EventName.WhenDeath.ToString(), this);
         DeathEvent?.RemoveAllListeners();
+        OnRemove?.Invoke(this);
+        OnRemove.RemoveAllListeners();
+        StopAllCoroutines();
        
     }
     
@@ -166,4 +170,5 @@ public class Chess : MonoBehaviour
             gameObject.layer = LayerMask.NameToLayer(tag);
         }
     }
+    
 }

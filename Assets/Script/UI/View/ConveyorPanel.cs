@@ -57,7 +57,7 @@ public class ConveyorPanel : View
             newcard.transform.SetParent(iconParent);
             newcard.transform.position = startPos.position;
             float r = Random.Range(0, 1f);
-            Debug.Log(r);
+         
             int n = 0;
             for (int i = 0; i < fateList.Count; i++)
             {

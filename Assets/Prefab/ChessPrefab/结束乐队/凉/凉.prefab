@@ -156,7 +156,7 @@ MonoBehaviour:
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      id: 0
     activeSkill:
       id: 1
     DM:
@@ -165,18 +165,25 @@ MonoBehaviour:
       damage: 0
       damageType: 0
       damageElementType: 0
+      ifCrit: 0
       takeBuff:
-        id: 1
+        id: 0
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 1
+        id: 0
       transitions: []
     preState:
       state:
-        id: 1
+        id: 0
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 5d45536681d478446b5d3e36d313d605, type: 2}
+    stateGraph: {fileID: 11400000, guid: 11a8d3c8ba4dd994b961ba2e19cad4f6, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -186,7 +193,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 0
   animatorController: {fileID: 7858030610196140360}
   WhenEnterGame:
     m_PersistentCalls:
@@ -194,17 +201,40 @@ MonoBehaviour:
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1
     00000000:
-      type: {class: Weapon_Eat, ns: , asm: Assembly-CSharp}
-      data:
-        interval: 30
-        find:
-          id: 2
-    00000001:
       type: {class: , ns: , asm: }
+    00000001:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: 62c29111c487aa845ae1bc44623417d6, type: 2}
+        readyChecker:
+          id: 2
+        effect:
+          id: 3
+        skillFinish:
+          id: 4
+        runtime:
+          id: 5
     00000002:
+      type: {class: SkillReady_IfTargetInRange, ns: , asm: Assembly-CSharp}
+      data:
+        search:
+          id: 6
+    00000003:
+      type: {class: SkillEffect_Liang, ns: , asm: Assembly-CSharp}
+    00000004:
+      type: {class: DurationFinish, ns: , asm: Assembly-CSharp}
+    00000005:
+      type: {class: SkillRuntimeInfo_Duration, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+        maxTime: 41
+    00000006:
       type: {class: StraightLaser, ns: , asm: Assembly-CSharp}
 --- !u!61 &6036426651558158421
 BoxCollider2D:

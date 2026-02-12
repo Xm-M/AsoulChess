@@ -31,6 +31,9 @@ MonoBehaviour:
   - state:
       id: 5
     transitions: []
+  - state:
+      id: 6
+    transitions: []
   references:
     version: 1
     00000000:
@@ -56,4 +59,9 @@ MonoBehaviour:
       type: {class: SkillState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 3
+        chess: {fileID: 0}
+    00000006:
+      type: {class: PrepareState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 2
         chess: {fileID: 0}

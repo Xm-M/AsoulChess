@@ -10,6 +10,7 @@ public class HeadArmor :ArmorBase
     public SpriteRenderer state1,state2,state3;
     public GameObject effect;
     SpriteRenderer currentRender;
+    [SerializeField]
     float armorCurrent;
     public AudioPlayer player;
     //float brokenPercent;
@@ -24,6 +25,7 @@ public class HeadArmor :ArmorBase
     }
     public override void GetDamage(DamageMessege dm)
     {
+        //Debug.Log(dm.damage);
         if (armorCurrent >= dm.damage)
         {
             //Debug.Log("·À¾ßµÖÏû");

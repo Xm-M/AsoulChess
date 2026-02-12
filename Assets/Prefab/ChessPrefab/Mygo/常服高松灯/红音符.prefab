@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHitNum: 1
-  rate: 1
+  rate: 2
   WhenBulletHit:
     m_PersistentCalls:
       m_Calls:
@@ -170,7 +170,6 @@ MonoBehaviour:
   shooter: {fileID: 0}
   startPos: {x: 0, y: 0}
   targetPos: {x: 0, y: 0}
-  lockTarget: {fileID: 0}
   Dm:
     damageFrom: {fileID: 0}
     damageTo: {fileID: 0}

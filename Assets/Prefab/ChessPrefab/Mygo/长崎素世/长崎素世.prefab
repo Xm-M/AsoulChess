@@ -161,6 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7394795561750634123}
   - component: {fileID: 1126858390960916036}
+  - component: {fileID: 4329091558586030983}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -233,6 +234,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &4329091558586030983
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2481250219723454749}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.3320254, y: 0.5952177}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.21621622, y: 0.3628319}
+    oldSize: {x: 9.25, y: 7.0625}
+    newSize: {x: 1.48, y: 0.97}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.4022677, y: 2.5978289}
+  m_EdgeRadius: 0
 --- !u!1 &5260086963768893235
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +422,6 @@ GameObject:
   - component: {fileID: 3299480048335111549}
   - component: {fileID: 3697525827251446667}
   - component: {fileID: 2450880504370241716}
-  - component: {fileID: 5904875398816348796}
   m_Layer: 0
   m_Name: "\u957F\u5D0E\u7D20\u4E16"
   m_TagString: Untagged
@@ -466,11 +492,17 @@ MonoBehaviour:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
       damage: 0
-      damageType: 0
-      damageElementType: 0
+      damageType: 2
+      damageElementType: 84
       ifCrit: 0
       takeBuff:
         id: 3
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
@@ -480,7 +512,7 @@ MonoBehaviour:
       state:
         id: 3
       transitions: []
-    stateGraph: {fileID: 11400000, guid: ac5385ff462e3ba4b9b0717122374468, type: 2}
+    stateGraph: {fileID: 11400000, guid: cb53f67c9f384e84496ed78db0664ee2, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -510,6 +542,9 @@ MonoBehaviour:
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1
     00000000:
@@ -524,21 +559,26 @@ MonoBehaviour:
         enemys: []
         interval: 0
     00000001:
-      type: {class: Passive_Mygo, ns: , asm: Assembly-CSharp}
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
       data:
-        eggcontroller: {fileID: 0}
-    00000002:
-      type: {class: SkillEffect_Soyo, ns: , asm: Assembly-CSharp}
-      data:
-        coldDown: 50
-        ifMouseDown: {fileID: 5904875398816348796}
-        findTarget:
+        effect:
           id: 6
-        explodeRate: 60
+    00000002:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: f91fcd50d6679f6469481ad9ad35b322, type: 2}
+        readyChecker:
+          id: 7
+        effect:
+          id: 8
+        skillFinish:
+          id: 9
+        runtime:
+          id: 10
     00000003:
       type: {class: , ns: , asm: }
     00000004:
-      type: {class: StraightLaser, ns: , asm: Assembly-CSharp}
+      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
     00000005:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
@@ -553,10 +593,42 @@ MonoBehaviour:
           takeBuff:
             id: 3
     00000006:
-      type: {class: IBoxSearch, ns: , asm: Assembly-CSharp}
+      type: {class: PassiveSkill_Mygo, ns: , asm: Assembly-CSharp}
       data:
-        boxCheck: {x: 5.5, y: 5.5}
-        centerOffset: {x: 5, y: 0}
+        interval: 0.25
+    00000007:
+      type: {class: SkillReady_Multy, ns: , asm: Assembly-CSharp}
+      data:
+        skillReadies:
+        - id: 11
+        - id: 12
+        - id: 13
+    00000008:
+      type: {class: SkillEffect_KitaExplode, ns: , asm: Assembly-CSharp}
+    00000009:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    0000000A:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    0000000B:
+      type: {class: SkillReady_Mygo, ns: , asm: Assembly-CSharp}
+      data:
+        min: 3
+    0000000C:
+      type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
+      data:
+        clickBox: {fileID: 4329091558586030983}
+    0000000D:
+      type: {class: SkillReady_IfTargetInRange, ns: , asm: Assembly-CSharp}
+      data:
+        search:
+          id: 14
+    0000000E:
+      type: {class: ICircleSearch, ns: , asm: Assembly-CSharp}
+      data:
+        checkRange: 5
+        dx: {x: 5, y: 0, z: 0}
 --- !u!61 &2753943151381572351
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -741,18 +813,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5904875398816348796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5605843154704742254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95e3e8e2f74f00043b3ceb4a62af6993, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7745263365287391578
 GameObject:
   m_ObjectHideFlags: 0
@@ -921,7 +981,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3437918193065198695
 Transform:
   m_ObjectHideFlags: 0

@@ -100,7 +100,11 @@ public class Item_PlantCard : UIItem
             ifselect = true;
             goodImage.color = new Color(1, 1, 1, 0);
             //这里调用PrePlantImage的效果
-            PrePlantImage.instance.TryToPlant(creator, CancelPlant, Recycle);
+            PrePlantImage_Data data = new PrePlantImage_Data();
+            data.creator = creator;
+            data.preSprite = creator.chessSprite;
+            data.tag = "Player";
+            PrePlantImage.instance.TryToPlant(CancelPlant, Recycle,data,HandItemType.Plants);
             if (select != null) select.CancelPlant();
             select = this;
             //au.RandomPlay();
@@ -113,8 +117,13 @@ public class Item_PlantCard : UIItem
         goodImage.color = new Color(1, 1, 1, 1);
         if (select == this) select = null;
     }
+    public void Recycle(Chess chess)
+    {
+        Recycle();
+    }
     public override void Recycle()
     {
+        //if (gameObject == null) return;
         transform.SetParent(UIManage.GetView<ItemPanel>().transform);
         UIManage.GetView<ItemPanel>().Recycle<Item_PlantCard>(this);
         WhenRecycle?.Invoke();

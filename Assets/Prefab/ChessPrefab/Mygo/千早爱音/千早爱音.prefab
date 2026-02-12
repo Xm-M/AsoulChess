@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8649578377345641588
 Transform:
   m_ObjectHideFlags: 0
@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5912275156091895070}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3454280451185899550
 MonoBehaviour:
@@ -177,7 +177,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5912275156091895070}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &580719029500299437
 AudioSource:
@@ -294,6 +294,63 @@ MonoBehaviour:
   clipList:
   - name: cry
     clip: {fileID: 8300000, guid: 70ecc86062062d64e8f2a42e5a395f86, type: 3}
+--- !u!1 &1178977333782690334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8177555258664809271}
+  - component: {fileID: 1819051974477141835}
+  m_Layer: 0
+  m_Name: CheckMouseCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8177555258664809271
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178977333782690334}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5912275156091895070}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1819051974477141835
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178977333782690334}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.11516303, y: 0.70668244}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.7747332, y: 2.580875}
+  m_EdgeRadius: 0
 --- !u!1 &1214836743614490825
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,6 +363,7 @@ GameObject:
   - component: {fileID: 5330488772526634781}
   - component: {fileID: 2762653876771869230}
   - component: {fileID: 3333062461028182459}
+  - component: {fileID: 7617995748216850888}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -493,6 +551,32 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!61 &7617995748216850888
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1214836743614490825}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.15027511, y: 0.6728326}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.4}
+    oldSize: {x: 4, y: 3.9375}
+    newSize: {x: 4, y: 3.9375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.896147, y: 2.692363}
+  m_EdgeRadius: 0
 --- !u!1 &5439485548908392749
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,7 +594,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5144072429068397904
 Transform:
   m_ObjectHideFlags: 0
@@ -523,7 +607,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5912275156091895070}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &372138017074399071
 MonoBehaviour:
@@ -652,11 +736,9 @@ GameObject:
   - component: {fileID: 1528409868925605310}
   - component: {fileID: 4201314393735650036}
   - component: {fileID: 6435378588017872584}
-  - component: {fileID: 4325811273688656354}
-  - component: {fileID: 6457789907030432804}
-  - component: {fileID: 6005089190574982862}
   - component: {fileID: 8595554583397799884}
   - component: {fileID: 4137857033195697372}
+  - component: {fileID: 9206988363224202757}
   m_Layer: 0
   m_Name: "\u5343\u65E9\u7231\u97F3"
   m_TagString: Untagged
@@ -677,6 +759,7 @@ Transform:
   m_Children:
   - {fileID: 4003205488330249042}
   - {fileID: 5529009768736613087}
+  - {fileID: 8177555258664809271}
   - {fileID: 3622910182320136284}
   - {fileID: 8667696910701580581}
   - {fileID: 7810947143611806103}
@@ -734,17 +817,23 @@ MonoBehaviour:
       damageElementType: 0
       ifCrit: 0
       takeBuff:
-        id: 3
+        id: 0
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 3
+        id: 0
       transitions: []
     preState:
       state:
-        id: 3
+        id: 0
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 94b60ddc62bfe504a85ea746049008dd, type: 2}
+    stateGraph: {fileID: 11400000, guid: dd63c8f9109c6c4418a5d911747903a6, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -754,8 +843,8 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 3
-  animatorController: {fileID: 6457789907030432804}
+      id: 0
+  animatorController: {fileID: 9206988363224202757}
   WhenEnterGame:
     m_PersistentCalls:
       m_Calls:
@@ -774,61 +863,103 @@ MonoBehaviour:
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1
     00000000:
-      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
-      data:
-        initWeapon:
-          id: 3
-        findTarget:
-          id: 3
-        attackFunction:
-          id: 3
-        enemys: []
-        interval: 0
+      type: {class: , ns: , asm: }
     00000001:
-      type: {class: Passive_Anon, ns: , asm: Assembly-CSharp}
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
       data:
-        eggcontroller: {fileID: 6005089190574982862}
-        ResumeBuff:
-          id: 4
+        effect:
+          id: 3
     00000002:
-      type: {class: SkillEffect_MultySkill, ns: , asm: Assembly-CSharp}
+      type: {class: MultySkill, ns: , asm: Assembly-CSharp}
       data:
         skills:
+        - id: 4
         - id: 5
-        - id: 6
+        skilltag: skill
     00000003:
-      type: {class: , ns: , asm: }
+      type: {class: PassiveSkill_MygoPassive_Anon, ns: , asm: Assembly-CSharp}
+      data:
+        interval: 0.25
+        ResumeBuff:
+          id: 6
     00000004:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: 104cc09d1f9666d429b3314a87452632, type: 2}
+        readyChecker:
+          id: 0
+        effect:
+          id: 7
+        skillFinish:
+          id: 8
+        runtime:
+          id: 9
+    00000005:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: a68bdf72538a43b41b96d999c68fe352, type: 2}
+        readyChecker:
+          id: 10
+        effect:
+          id: 11
+        skillFinish:
+          id: 12
+        runtime:
+          id: 13
+    00000006:
       type: {class: ResumeBuff, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u6062\u590D"
         target: {fileID: 0}
-        buffNum: 0
         healPercent: 0.05
         healRate: 1
-    00000005:
+    00000007:
       type: {class: SkillEffect_Anon, ns: , asm: Assembly-CSharp}
       data:
-        startTime: 10
-        coldDown: 24
-        sunLightNum: 25
         sunLightPos: {fileID: 3622910182320136284}
         x0: 0.5
         movespeed: -1
-        height: 1.5
+        height: 10
         totalTime: 1
-        timeSpeed: 2
-    00000006:
+        timeSpeed: 1
+    00000008:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    00000009:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    0000000A:
+      type: {class: SkillReady_Multy, ns: , asm: Assembly-CSharp}
+      data:
+        skillReadies:
+        - id: 14
+        - id: 15
+    0000000B:
       type: {class: SkillEffect_AnonHide, ns: , asm: Assembly-CSharp}
       data:
-        coldDown: 50
-        ifMouseDown: {fileID: 4325811273688656354}
         radius: 6.25
         healRate: 0.25
         healEffect: {fileID: 2524636974382821215, guid: 0f4af01437366684288117a390a3036a, type: 3}
+    0000000C:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    0000000D:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    0000000E:
+      type: {class: SkillReady_Mygo, ns: , asm: Assembly-CSharp}
+      data:
+        min: 3
+    0000000F:
+      type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
+      data:
+        clickBox: {fileID: 7617995748216850888}
 --- !u!61 &4201314393735650036
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -874,47 +1005,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4325811273688656354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6343342064233896734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95e3e8e2f74f00043b3ceb4a62af6993, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6457789907030432804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6343342064233896734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab05881c8a3d8f3499b008e4104a944e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 6435378588017872584}
-  sprite: {fileID: 5330488772526634781}
---- !u!114 &6005089190574982862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6343342064233896734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c1f44fecd523e548965235114f8efe5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  user: {fileID: 1528409868925605310}
-  eggsNames: []
-  player: {fileID: 0}
 --- !u!114 &8595554583397799884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1037,6 +1127,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &9206988363224202757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6343342064233896734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19e4123e30b9c8e48991c0f1ce5de29b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 6435378588017872584}
+  sprite: {fileID: 5330488772526634781}
+  skillTag: skill
+  skillNames:
+  - skill
+  - skill2
 --- !u!1 &6434949214386851247
 GameObject:
   m_ObjectHideFlags: 0
@@ -1054,7 +1162,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8925208277587862533
 Transform:
   m_ObjectHideFlags: 0
@@ -1067,7 +1175,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5912275156091895070}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3582921927024321391
 MonoBehaviour:
@@ -1213,7 +1321,7 @@ Transform:
   m_LocalScale: {x: 1.6349, y: 1.6349, z: 1.6349}
   m_Children: []
   m_Father: {fileID: 5912275156091895070}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8277181744417080624
 SpriteRenderer:
@@ -1283,7 +1391,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7810947143611806103
 Transform:
   m_ObjectHideFlags: 0
@@ -1296,7 +1404,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5912275156091895070}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3854668461529544293
 MonoBehaviour:
@@ -1430,7 +1538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4453652108218431031
 Transform:
   m_ObjectHideFlags: 0
@@ -1443,7 +1551,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5912275156091895070}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8060465496026099764
 MonoBehaviour:

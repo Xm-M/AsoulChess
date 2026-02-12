@@ -6,6 +6,7 @@ using UnityEngine;
 public abstract class State 
 {
     public StateName stateName;
+    [HideInInspector]
     public Chess chess;
     
     public virtual void Execute(Chess chess)

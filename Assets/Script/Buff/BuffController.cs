@@ -52,27 +52,36 @@ public class BuffController
 
         if (buffDic.ContainsKey(buff.buffName))
         {
-            buffDic[buff.buffName].BuffReset();
-            Debug.Log("重置了" + buff.buffName);
+            buffDic[buff.buffName].BuffReset(buff);
+            //Debug.Log(chess.name+ " 重置了" + buff.buffName);
         }
         else
         {
-            Debug.Log("获得了" + buff.buffName);
+            //Debug.Log(chess.name+"获得了" + buff.buffName);
             Buff newBuff = buff.Clone();
             newBuff.buffName = buff.buffName;
             buffDic.Add(buff.buffName, newBuff);
             newBuff.BuffEffect(chess);
         }
     }
+    public void TryOverBuff(Buff buff)
+    {
+        if (buffDic.ContainsKey(buff.buffName))
+        {
+            buffDic[buff.buffName].BuffOver();
+        }
+    }
     public void RemoveBuff(Buff buff)
     {
         if (buffDic.ContainsKey(buff.buffName))
         {
+            //buffDic[buff.buffName].BuffOver();
             buffDic.Remove(buff.buffName);
+            //Debug.Log("移除了" + buff.buffName);
         }
         else
         {
-            Debug.LogWarning("没有这个buff");
+            Debug.Log("没有这个buff");
         }
     }
 

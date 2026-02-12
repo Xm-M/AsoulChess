@@ -20,14 +20,14 @@ public class Armor_TakiArmor : ArmorBase
     public override void InitArmor()
     {
         animator = GetComponent<Animator>();
-        //taki= (user.equipWeapon.weapon as Weapon_Sample).attackFunction as ShootBullet;
+ 
         currentbuff = null;
         animator.SetInteger("tomorin", -1);
         user.WhenEnterGame.AddListener(ResetArmor);
     }
     public override void ResetArmor(Chess chess)
     {
-        //taki.bullet = bullets[2];
+ 
         animator.SetInteger("tomorin", -1);
         currentbuff = null;
     }
@@ -42,8 +42,11 @@ public class Armor_TakiArmor : ArmorBase
         if (bullet != null && bullet.Dm.damageFrom != null&&bullet.Dm.damageFrom.propertyController.creator.chessName=="¸ßËÉµÆ")
         {
             currentbuff = bullet.Dm.takeBuff;
-            int n = bullet.GetComponent<Animator>().GetInteger("type");
+            //int n = bullet.GetComponent<Animator>().GetInteger("type");
             //0ºì 1ÂÌ 2À¶
+            int n = 0;
+            if (bullet.name.Contains("»Æ")) n = 1;
+            else if (bullet.name.Contains("À¶")) n = 2;
             animator.SetInteger("tomorin", n);
         }
     }

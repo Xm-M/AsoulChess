@@ -65,10 +65,6 @@ public class AudioPlayer : MonoBehaviour
     [Button("²¥·Å")]
     public void Play()
     {
-        //if(autype==AudioType.SoundEffect)
-        //    audioSource.volume=AudioManage.SoundEffectValue;
-        //else
-        //    audioSource.volume=AudioManage.BgmValue;
         audioSource.Play();
     }
     public void PlayWithSub()
@@ -81,6 +77,10 @@ public class AudioPlayer : MonoBehaviour
     {
         for (int i = 0; i < subAudio.Count; i++)
             subAudio[i].GetComponent<AudioPlayer>().RandomPlay();
+    }
+    public void PlaySub(int n,string audioName)
+    {
+        subAudio[n].GetComponent<AudioPlayer>().PlayAudio(audioName);
     }
     public void PlaySubN(int n)
     {

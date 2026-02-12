@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
+/// <summary>
+/// 这个b类是用来干嘛的
+/// </summary>
+
 public class TestShopIcon : MonoBehaviour
 {
     public PropertyCreator good;
@@ -19,7 +24,11 @@ public class TestShopIcon : MonoBehaviour
     }
     public void SelectCard()
     {
-        PrePlantImage.instance.TryToPlant(good,CancelPlant,OnPlant,team);
+        PrePlantImage_Data data = new PrePlantImage_Data();
+        data.creator = good;
+        data.preSprite = good.chessSprite;
+        data.tag = team;
+        PrePlantImage.instance.TryToPlant( CancelPlant,OnPlant,data,HandItemType.Plants);
     }
     //public override void OnPointerClick(PointerEventData eventData)
     //{
@@ -41,7 +50,7 @@ public class TestShopIcon : MonoBehaviour
         //if (select == this) select = null;
         Debug.Log("需要做什么吗");
     }
-    public void OnPlant()
+    public void OnPlant(Chess chess)
     {
         Debug.Log("种完了所以呢？");
     }

@@ -80,16 +80,23 @@ MonoBehaviour:
       damage: 0
       damageType: 0
       damageElementType: 0
+      ifCrit: 0
       takeBuff:
-        id: 1
+        id: 0
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 1
+        id: 0
       transitions: []
     preState:
       state:
-        id: 1
+        id: 0
       transitions: []
     stateGraph: {fileID: 11400000, guid: d3f806ded704e7b49a3847bb374524ec, type: 2}
     EnterWarState: 4
@@ -101,7 +108,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 0
   animatorController: {fileID: 9174867554305239025}
   WhenEnterGame:
     m_PersistentCalls:
@@ -109,41 +116,43 @@ MonoBehaviour:
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1
     00000000:
-      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
-      data:
-        initWeapon:
-          id: 1
-        findTarget:
-          id: 1
-        attackFunction:
-          id: 1
-        enemys: []
-        interval: 0
-    00000001:
       type: {class: , ns: , asm: }
-    00000002:
-      type: {class: SkillEffect_MatchaParfait, ns: , asm: Assembly-CSharp}
+    00000001:
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
       data:
-        matchaParfaitBuff:
+        effect:
           id: 3
+    00000002:
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
+      data:
+        effect:
+          id: 4
     00000003:
+      type: {class: Passive_Item, ns: , asm: Assembly-CSharp}
+    00000004:
+      type: {class: SkillEffect_Item, ns: , asm: Assembly-CSharp}
+      data:
+        ItemBuff:
+          id: 5
+    00000005:
       type: {class: MatchaParfaitBuff, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u62B9\u8336\u82AD\u83F2"
         target: {fileID: 0}
-        buffNum: 0
         continueTime: 50
         coldBuff:
-          id: 4
-    00000004:
+          id: 6
+    00000006:
       type: {class: ColdBuff, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u51B0\u51B7"
         target: {fileID: 0}
-        buffNum: 0
         continueTime: 15
         slowRate: -0.5
         coldBuff: {fileID: 7196381099807767998, guid: d4c0260bead243647a0d53dc079b158e, type: 3}

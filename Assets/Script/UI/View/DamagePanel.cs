@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using TMPro;
 
 public class DamagePanel : View
 {
@@ -29,7 +30,7 @@ public class DamagePanel : View
         GameObject text= ObjectPool.instance.Create(damageText);
         text.transform.SetParent(transform);
         text.transform.position=Camera.main.WorldToScreenPoint(dm.damageTo.transform.position+Vector3.up*0.75f);
-        Text t = text.GetComponentInChildren<Text>();
+        TMP_Text t = text.GetComponentInChildren<TMP_Text>();
         if (!dm.ifCrit)
         {
             text.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -57,7 +58,7 @@ public class DamagePanel : View
         GameObject text = ObjectPool.instance.Create(damageText);
         text.transform.SetParent(transform);
         text.transform.position = Camera.main.WorldToScreenPoint(dm.damageTo.transform.position + Vector3.up * 0.75f);
-        Text t = text.GetComponentInChildren<Text>();
+        TMP_Text t = text.GetComponentInChildren<TMP_Text>();
         t.text = "Miss";
         t.color = Color.white;
     }
@@ -66,7 +67,7 @@ public class DamagePanel : View
         GameObject text = ObjectPool.instance.Create(damageText);
         text.transform.SetParent(transform);
         text.transform.position = Camera.main.WorldToScreenPoint(dm.damageTo.transform.position + Vector3.up * 0.75f);
-        Text t = text.GetComponentInChildren<Text>();
+        TMP_Text t = text.GetComponentInChildren<TMP_Text>();
         t.text = mes;
         if(color==null)
             t.color = Color.white;
@@ -84,9 +85,9 @@ public class DamagePanel : View
             text.transform.SetParent(transform);
             text.transform.localScale = new Vector3(1f, 1f, 1f);
             text.transform.position = Camera.main.WorldToScreenPoint(target.transform.position + Vector3.up * 0.75f);
-            Text t = text.GetComponentInChildren<Text>();
-             
-            t.text = ((int)heal).ToString();
+            TMP_Text t = text.GetComponentInChildren<TMP_Text>();
+
+            t.text = "+"+((int)heal).ToString();
             t.color = Heal;
             if (healPrefab != null)
             {

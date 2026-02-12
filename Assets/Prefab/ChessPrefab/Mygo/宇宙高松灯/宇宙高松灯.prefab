@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5243248525817786135}
   - component: {fileID: 262497763629625259}
+  - component: {fileID: 1470622576061074278}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -82,6 +83,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &1470622576061074278
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4921203465456532857}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.13503367, y: 0.87883997}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.4}
+    oldSize: {x: 4, y: 5.1875}
+    newSize: {x: 4, y: 5.1875}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.001501, y: 3.2070055}
+  m_EdgeRadius: 0
 --- !u!1 &8356497786523285147
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,7 +124,6 @@ GameObject:
   - component: {fileID: 7095559630144856286}
   - component: {fileID: 6475748115616290462}
   - component: {fileID: 4963753138394915985}
-  - component: {fileID: 1189563936916890647}
   m_Layer: 0
   m_Name: "\u5B87\u5B99\u9AD8\u677E\u706F"
   m_TagString: Untagged
@@ -157,27 +183,34 @@ MonoBehaviour:
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      id: 0
     activeSkill:
-      id: 2
+      id: 1
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
       damage: 0
       damageType: 0
       damageElementType: 0
+      ifCrit: 0
       takeBuff:
-        id: 1
+        id: 0
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 1
+        id: 0
       transitions: []
     preState:
       state:
-        id: 1
+        id: 0
       transitions: []
-    stateGraph: {fileID: 11400000, guid: e261b1ddd9676e3459a4442be44c9d13, type: 2}
+    stateGraph: {fileID: 11400000, guid: 11a8d3c8ba4dd994b961ba2e19cad4f6, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -187,7 +220,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 0
   animatorController: {fileID: 7095559630144856286}
   WhenEnterGame:
     m_PersistentCalls:
@@ -207,30 +240,41 @@ MonoBehaviour:
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1
     00000000:
-      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
-      data:
-        initWeapon:
-          id: 1
-        findTarget:
-          id: 1
-        attackFunction:
-          id: 1
-        enemys: []
-        interval: 0
-    00000001:
       type: {class: , ns: , asm: }
+    00000001:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: bafbe4b5e963f464fb6d44830c42e4dc, type: 2}
+        readyChecker:
+          id: 2
+        effect:
+          id: 3
+        skillFinish:
+          id: 4
+        runtime:
+          id: 5
     00000002:
+      type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
+      data:
+        clickBox: {fileID: 1470622576061074278}
+    00000003:
       type: {class: SkillEffect_SummonBlackHole, ns: , asm: Assembly-CSharp}
       data:
-        coldDown: 10
-        loopTime: 5
         FontNum: 4
-        sunLightPos: {fileID: 0}
         blackHole: {fileID: 1612128934694989042, guid: efb0e999d39b04c4f8697101abeca5a4, type: 3}
-        ifMouseDown: {fileID: 1189563936916890647}
+    00000004:
+      type: {class: DurationFinish, ns: , asm: Assembly-CSharp}
+    00000005:
+      type: {class: SkillRuntimeInfo_Duration, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+        maxTime: 5
 --- !u!61 &2512685581966761054
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -407,18 +451,6 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: fc0978b84c10a854b8f3e1e1ef220290, type: 3}
   - name: "\u4E00\u4F112"
     clip: {fileID: 8300000, guid: 5976936a20186914680447bc0cfbfd29, type: 3}
---- !u!114 &1189563936916890647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8356497786523285147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95e3e8e2f74f00043b3ceb4a62af6993, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &559074050445261084
 PrefabInstance:
   m_ObjectHideFlags: 0

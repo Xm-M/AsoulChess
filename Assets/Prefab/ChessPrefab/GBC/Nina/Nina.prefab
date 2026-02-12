@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7262274591452973218}
   - component: {fileID: 6252915712346208989}
+  - component: {fileID: 3308615174740697808}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -112,6 +113,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &3308615174740697808
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831104070756523788}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.030033827, y: 0.46382904}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.4}
+    oldSize: {x: 4, y: 3.9375}
+    newSize: {x: 4, y: 3.9375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.937676, y: 2.836259}
+  m_EdgeRadius: 0
 --- !u!1 &3379018172507853940
 GameObject:
   m_ObjectHideFlags: 0
@@ -124,9 +151,9 @@ GameObject:
   - component: {fileID: 4623637602870428066}
   - component: {fileID: 7028147305281554596}
   - component: {fileID: 6628129883950998991}
-  - component: {fileID: 4888027724681636987}
   - component: {fileID: 7765988506869990395}
   - component: {fileID: 8042926737840284729}
+  - component: {fileID: 6615314884702013011}
   m_Layer: 0
   m_Name: Nina
   m_TagString: Untagged
@@ -201,17 +228,23 @@ MonoBehaviour:
       damageElementType: 0
       ifCrit: 0
       takeBuff:
-        id: 1
+        id: 3
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 1
+        id: 3
       transitions: []
     preState:
       state:
-        id: 1
+        id: 3
       transitions: []
-    stateGraph: {fileID: 11400000, guid: ea261ffdd893aba4d87726b0b072e870, type: 2}
+    stateGraph: {fileID: 11400000, guid: 4cf9bc0071e47f9439e4a2447f2307df, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -221,12 +254,15 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
-  animatorController: {fileID: 4888027724681636987}
+      id: 3
+  animatorController: {fileID: 6615314884702013011}
   WhenEnterGame:
     m_PersistentCalls:
       m_Calls: []
   DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRemove:
     m_PersistentCalls:
       m_Calls: []
   references:
@@ -235,73 +271,177 @@ MonoBehaviour:
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 1
-        findTarget:
           id: 3
-        attackFunction:
+        findTarget:
           id: 4
+        attackFunction:
+          id: 5
         enemys: []
         interval: 0
     00000001:
-      type: {class: , ns: , asm: }
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
+      data:
+        effect:
+          id: 6
     00000002:
-      type: {class: SkillEffect_MultySkill, ns: , asm: Assembly-CSharp}
+      type: {class: MultySkill, ns: , asm: Assembly-CSharp}
       data:
         skills:
-        - id: 5
-        - id: 6
         - id: 7
+        - id: 8
+        - id: 9
+        skilltag: skill
     00000003:
-      type: {class: StraightFindLastTarget, ns: , asm: Assembly-CSharp}
+      type: {class: , ns: , asm: }
     00000004:
+      type: {class: StraightFindLastTarget, ns: , asm: Assembly-CSharp}
+    00000005:
       type: {class: ShootBullet_WaitBullet, ns: , asm: Assembly-CSharp}
       data:
         bullet: {fileID: 2098010854589325911, guid: 9930e3b39d50c8a49b0f42d47c83e5db, type: 3}
         pamareName: wait
-    00000005:
+    00000006:
+      type: {class: Passive_GBC, ns: , asm: Assembly-CSharp}
+      data:
+        stressBuff:
+          id: 10
+        user: {fileID: 0}
+    00000007:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: f6b71d65f181fb4439a492b349725905, type: 2}
+        readyChecker:
+          id: 11
+        effect:
+          id: 12
+        skillFinish:
+          id: 13
+        runtime:
+          id: 14
+    00000008:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: 3b8b2b735c2a24f44868749e45f1a643, type: 2}
+        readyChecker:
+          id: 15
+        effect:
+          id: 3
+        skillFinish:
+          id: 16
+        runtime:
+          id: 17
+    00000009:
+      type: {class: AttackSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: 49447ce95d90d6a43b603d72254a58c0, type: 2}
+        readyChecker:
+          id: 18
+        effect:
+          id: 19
+        skillFinish:
+          id: 20
+        runtime:
+          id: 21
+    0000000A:
+      type: {class: Buff_StressBuff_Nina, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u538B\u529B"
+        target: {fileID: 0}
+        stressLimit: 100
+        extraStress: 1
+        stressTextPre: {fileID: 0}
+        attackLimit: 100
+        stressIconPre: {fileID: 4987320287646775565, guid: 92937554df6dd074799f9b285e0a0a41, type: 3}
+        attackBuff:
+          id: 22
+        stressRate: 1
+    0000000B:
+      type: {class: SkillReady_Multy, ns: , asm: Assembly-CSharp}
+      data:
+        skillReadies:
+        - id: 23
+        - id: 24
+    0000000C:
       type: {class: SkillEffect_Nina, ns: , asm: Assembly-CSharp}
       data:
-        DodgeTime: 3
         radiu: 2.5
-        coldTime: 15
         dizznessBuff:
-          id: 8
+          id: 25
         dodgeBuff:
-          id: 9
-    00000006:
+          id: 26
+    0000000D:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    0000000E:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    0000000F:
+      type: {class: SkillReady_UseSpecialItem, ns: , asm: Assembly-CSharp}
+      data:
+        ItemTag: BeafRice
+    00000010:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    00000011:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    00000012:
+      type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
+      data:
+        clickBox: {fileID: 3308615174740697808}
+    00000013:
       type: {class: SkillEffect_NinaTaunt, ns: , asm: Assembly-CSharp}
       data:
         tauntRange: 8.75
         angryBuff:
-          id: 10
-    00000007:
-      type: {class: SkillEffect_NinaEat, ns: , asm: Assembly-CSharp}
-    00000008:
+          id: 27
+    00000014:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    00000015:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    00000016:
+      type: {class: Buff_BaseValueBuff_Attack, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u653B\u51FB\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        extraAttack: 0.1
+    00000017:
+      type: {class: SkillReady_BeAttack, ns: , asm: Assembly-CSharp}
+    00000018:
+      type: {class: SkillReady_IfTargetInRange, ns: , asm: Assembly-CSharp}
+      data:
+        search:
+          id: 28
+    00000019:
       type: {class: DizznessBuff, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u7729\u6655"
         target: {fileID: 0}
-        buffNum: 0
-        continueTime: 3
+        continueTime: 5
         Dizznesseffect: {fileID: 4435493129093539486, guid: e5b98d497220fce43b459ef2d808e2f5, type: 3}
-    00000009:
-      type: {class: DodgeBuff, ns: , asm: Assembly-CSharp}
+    0000001A:
+      type: {class: Buff_BaseValueBuff_DodgeRate, ns: , asm: Assembly-CSharp}
       data:
-        buffName: "\u95EA\u907F"
+        buffName: "\u95EA\u907F\u589E\u76CA"
         target: {fileID: 0}
-        buffNum: 0
-        continueTime: 3
-        extraDodgeRate: 1
         effect: {fileID: 0}
-    0000000A:
+        extraDodgeRate: 1
+    0000001B:
       type: {class: AngryBuff, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u6124\u6012"
         target: {fileID: 0}
-        buffNum: 0
         angryEffect: {fileID: 8791662696141457555, guid: c425c1c965424fa4cb7c86e6c44d6524, type: 3}
         extraAttackSpeed: 0.5
         extraTake: 1
+    0000001C:
+      type: {class: ICircleSearch, ns: , asm: Assembly-CSharp}
+      data:
+        checkRange: 2.5
+        dx: {x: 0, y: 0, z: 0}
 --- !u!61 &7028147305281554596
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -347,20 +487,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4888027724681636987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3379018172507853940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 826053a651ccd2549ad693b0aeb4188a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 6628129883950998991}
-  sprite: {fileID: 6252915712346208989}
 --- !u!114 &7765988506869990395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,6 +603,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6615314884702013011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3379018172507853940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19e4123e30b9c8e48991c0f1ce5de29b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 6628129883950998991}
+  sprite: {fileID: 6252915712346208989}
+  skillTag: skill
+  skillNames:
+  - skill
+  - skill1
+  - skill2
 --- !u!1 &5180070593172210185
 GameObject:
   m_ObjectHideFlags: 0

@@ -30,7 +30,7 @@ public class ChessManage : IManager
     }
     public virtual Chess CreateChess(PropertyCreator creator,Tile tile)
     {
-        Chess chess = GameManage.instance.chessFactory.ChessCreate(creator.chessPre,creator.chessName);
+        Chess chess = GameManage.instance.chessFactory.ChessCreate(creator.GetPre(),creator.chessName);
         chesses.Add(chess);
         tile.ChessEnter(chess);
         chess.tag=playerTag;

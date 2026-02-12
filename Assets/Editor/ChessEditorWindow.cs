@@ -40,9 +40,9 @@ public class ChessEditorWindow : OdinEditorWindow
     public class SkillMes
     {
         [SerializeReference]
-        public ISkill activeSkill;//主动技能
+        public ISkillEffect activeSkill;//主动技能
         [SerializeReference]
-        public ISkill passiveSkill;//被动技能
+        public ISkillEffect passiveSkill;//被动技能
     }
     [FoldoutGroup("技能信息")]
     [SerializeReference]
@@ -201,8 +201,8 @@ public class ChessEditorWindow : OdinEditorWindow
     {
         if (skillData != null)
         {
-            skillController.activeSkill = skillData.activeSkill;
-            skillController.passiveSkill = skillData.passiveSkill;
+            //skillController.activeSkill = skillData.activeSkill;
+            //skillController.passiveSkill = skillData.passiveSkill;
         }
     }
     protected override void OnDisable()

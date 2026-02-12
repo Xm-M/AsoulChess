@@ -8,6 +8,7 @@ public class UIRoot : MonoBehaviour
     private void Start()
     {
         var prefabs = Resources.LoadAll<Transform>("UIPrefab");//加载UIPrefab文件夹下的所有UI预制体
+        
         foreach (Transform view in prefabs)
         {
             if (!m_views.ContainsKey(view.name))

@@ -20,16 +20,16 @@ public class AnimatorController : MonoBehaviour,Controller
     public bool IfAnimPlayOver()
     {
         AnimatorStateInfo animStateInfo = chess.animatorController.animator.GetCurrentAnimatorStateInfo(0);
-        if (animStateInfo.normalizedTime > 1.0f && !animator.IsInTransition(0))
+        if (animStateInfo.normalizedTime >=1f && !animator.IsInTransition(0))
         {
-            //Debug.Log("over");
+            //Debug.Log("动画播放结束");
             return true;
         }
         return false;
     }
     public virtual void WhenControllerLeaveWar()
     {
-        //throw new System.NotImplementedException();
+        SetOutline(Color.white, 0);
     }
     public virtual void PlayIdle()
     {
@@ -54,14 +54,19 @@ public class AnimatorController : MonoBehaviour,Controller
     }
     public virtual void PlaySkill()
     {
-        //Debug.Log("..");
+   
         animator.Play("skill");
     }
     public virtual void ChangeSpeed(float value)
     {
-        //Debug.Log("播放速度为" + value);
+      
         animator.speed = value;
     }
+    public virtual void ChangeInt(int value)
+    {
+        animator.SetInteger("skill", value);
+    }
+
     public virtual void ChangeColor(Color color)
     {
         sprite.color = color;
@@ -85,5 +90,19 @@ public class AnimatorController : MonoBehaviour,Controller
     public virtual void PlayDizzy()
     {
         animator.Play("idle");
+    }
+    public virtual string GetCurrentAnimName()
+    {
+        var anim = GetComponent<Animator>();
+        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+
+        string fullPathName = anim.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+        //Debug.Log("当前动画名：" + fullPathName);
+        return fullPathName;
+    }
+    public void SetOutline(Color _OutlineColor,float _OutlineSize)
+    {
+        sprite.material.SetColor("_OutlineColor", _OutlineColor);
+        sprite.material.SetFloat("_OutlineSize",_OutlineSize);
     }
 }

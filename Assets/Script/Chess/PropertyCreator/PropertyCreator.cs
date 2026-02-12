@@ -21,6 +21,7 @@ public class PropertyCreator : ScriptableObject
     [LabelText("基础数据")]
     public Property baseProperty;
     [LabelText("棋子的预制体")]
+    [SerializeField]
     public Chess chessPre;
     [LabelText("棋子头像")]
     public Sprite chessSprite;
@@ -36,20 +37,26 @@ public class PropertyCreator : ScriptableObject
     [LabelText("购买限制")]
     [SerializeReference]
     public IfCanBuyCard plantIfCanBuyCard;
+    [LabelText("种子卡")]
+    public GameObject PlantCardPre;
+    [LabelText("仓库卡")]
+    public GameObject PlantEntrepotCardPre;
+
     public Property GetClone()
     {
         Property newP = new Property(baseProperty);
         return newP;
     }
-    public virtual bool IfCanBuyCard(int sunLight){
-        if(sunLight>=baseProperty.price){
-            if (plantIfCanBuyCard != null)
-            {
+    public Chess GetPre()
+    {
+        return chessPre;
+    }
+    public virtual bool IfCanBuyCard(){
+        if (plantIfCanBuyCard != null)
+           {
                 if (!plantIfCanBuyCard.BuyCard(this)) return false;
-            }
-            return true;
-        }
-        return false;
+           }
+        return true;
     }
     public virtual bool IfCanPlant(Tile tile){
         return plantFunction.ifCanPlant(this, tile);
@@ -67,6 +74,7 @@ public class MainPlant : IPlantFunction
     public bool ifCanPlant(PropertyCreator creator, Tile tile)
     {
         //Debug.Log(tile.name); 
+        //Debug.Log(tile.stander);
         return !tile.stander&&CompairTile(creator.chessTileType,tile);
     }
     public static bool CompairTile(TileType chess,Tile tile)
@@ -132,6 +140,20 @@ public class ConsumePlant : IPlantFunction
         return false;
     }
 }
+public class LevelUpPlant : IPlantFunction
+{
+    public PropertyCreator basePlant;
+    public virtual bool ifCanPlant(PropertyCreator creator, Tile tile)
+    {
+         
+       bool ans= tile.stander&&(tile.stander.propertyController.creator==basePlant);
+        if (ans)
+        {
+            tile.stander.Death();
+            return ans;
+        }return false;
+    }
+}
 public class NonePlant : IPlantFunction
 {
     public bool ifCanPlant(PropertyCreator creator, Tile tile)
@@ -158,24 +180,6 @@ public class ExclusivePlant : IPlantFunction
         {
             return true;
         }
-    }
-}
-public class OnlyOne_Limit : IfCanBuyCard
-{
-    public bool BuyCard(PropertyCreator creator)
-    {
-        //throw new NotImplementedException();
-        List<Chess> team = ChessTeamManage.Instance.GetTeam("Player");
-        foreach(var chess in team)
-        {
-            if(chess.propertyController.creator == creator)
-            {
-                //Debug.Log("有相同单位"+chess.name);
-                return false;
-            }
-        }
-        //Debug.Log("没有相同单位");
-        return true;
     }
 }
 

@@ -5,12 +5,13 @@ using UnityEngine;
 public class ICircleSearch : IFindTarget
 {
     public float checkRange;
+    public Vector3 dx;
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
-        Collider2D[] cols = CheckObjectPoolManage.GetColArray((int)(400*checkRange*checkRange));
+        Collider2D[] cols = CheckObjectPoolManage.GetColArray((int)(100*checkRange*checkRange));
         LayerMask layer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
-        int i = Physics2D.OverlapCircleNonAlloc(user.transform.position, checkRange, cols, layer);
+        int i = Physics2D.OverlapCircleNonAlloc(user.transform.position+dx, checkRange, cols, layer);
         //Debug.Log("ур╣╫ак" + i);
         for (int j = 0; j < i; j++)
         {
@@ -28,7 +29,7 @@ public class ICircleSerach_EnemyListSearch : IFindTarget
         targets.Clear();
         foreach(var chess in ChessTeamManage.Instance.GetEnemyTeam(user.tag))
         {
-            //Debug.Log(chess.name+" "+ Vector2.Distance(chess.transform.position, user.transform.position));
+            
             if (Vector2.Distance(chess.transform.position, user.transform.position) <= checkRange)
             {
                 //Debug.Log(chess);

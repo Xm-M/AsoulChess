@@ -25,7 +25,7 @@ public class TestScenePanel : View
         var playerChess = Resources.LoadAll<PropertyCreator>("ChessData/Player");//加载UIPrefab文件夹下的所有UI预制体
         foreach (PropertyCreator view in playerChess)
         {
-            if (view.chessPre!=null)
+            if (view.GetPre()!=null)
             {
                 GameObject chessIcon = Instantiate(shopIconPre, playerIconParent);
                 TestShopIcon icon=chessIcon.GetComponent<TestShopIcon>();
@@ -36,7 +36,7 @@ public class TestScenePanel : View
         var enemyChess = Resources.LoadAll<PropertyCreator>("ChessData/Enemy");//加载UIPrefab文件夹下的所有UI预制体
         foreach (PropertyCreator view in enemyChess)
         {
-            if (view.chessPre != null)
+            if (view.GetPre() != null)
             {
                 GameObject chessIcon = Instantiate(shopIconPre, enemyIconParent);
                 TestShopIcon icon = chessIcon.GetComponent<TestShopIcon>();

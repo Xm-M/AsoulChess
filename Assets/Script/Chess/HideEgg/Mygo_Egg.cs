@@ -35,7 +35,7 @@ public class HideEgg_AnonSoyo : HideEgg
         var playerChess = Resources.LoadAll<PropertyCreator>("ChessData/Player");//加载UIPrefab文件夹下的所有UI预制体
         foreach (PropertyCreator view in playerChess)
         {
-            if (view.chessPre != null)
+            if (view.GetPre() != null)
             {
                 if (view.plantTags.Contains("AveMujica"))
                 {
@@ -105,7 +105,7 @@ public class HideEgg_AnonTomorin : HideEgg
         var playerChess = Resources.LoadAll<PropertyCreator>("ChessData/Player");//加载UIPrefab文件夹下的所有UI预制体
         foreach (PropertyCreator view in playerChess)
         {
-            if (view.chessPre != null)
+            if (view.GetPre()!= null)
             {
                 if (view.chessName=="迈巴赫")
                 {

@@ -72,25 +72,32 @@ public class StateController:Controller
     //
     public void StateUpdate()
     {
-        if (anyState != null)
+        if (LevelManage.instance.IfGameStart)
         {
-            anyState.Execute(self);
-            if(anyTransition != null&&anyTransition.ifReach(self))
+            if (anyState != null)
             {
-                RevertToPreState();
-            }
-        }
-        else if (currentState.state != null)
-        {
-            currentState.state.Execute(self);
-            foreach (var transition in currentState.transitions)
-            {
-                if (transition.transition.ifReach(self))
+                anyState.Execute(self);
+                if (anyTransition != null && anyTransition.ifReach(self))
                 {
-                    ChangeState(stateDic[transition.targetState]);
-                    return;
+                    RevertToPreState();
                 }
             }
+            else if (currentState.state != null)
+            {
+                currentState.state.Execute(self);
+                foreach (var transition in currentState.transitions)
+                {
+                    if (transition.transition.ifReach(self))
+                    {
+                        ChangeState(stateDic[transition.targetState]);
+                        return;
+                    }
+                }
+            }
+        }
+        else
+        {
+            ChangeState(stateDic[StateName.PrepareState]);
         }
     }
 }//

@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IAllSearch : IFindTarget
-{
-    public void FindTarget(Chess user, List<Chess> targets)
-    {
-        //throw new System.NotImplementedException();
-    }
-}
+//public class IAllSearch : IFindTarget
+//{
+//    public void FindTarget(Chess user, List<Chess> targets)
+//    {
+//        //throw new System.NotImplementedException();
+//    }
+//}
 
-public class IAllSearch_Cat : IFindTarget
+public class IAllSearch_Rana : IFindTarget
 {
     int minX;
     Chess current;
@@ -38,3 +38,19 @@ public class IAllSearch_Cat : IFindTarget
             targets.Add(current);
     }
 }
+//public class IAllSearch_Rana : IFindTarget
+//{
+//    public void FindTarget(Chess user, List<Chess> targets)
+//    {
+//        //throw new System.NotImplementedException();
+//        float mindis = 1000;
+//        foreach(var enemy in GameManage.instance.chessTeamManage.GetEnemyTeam(user.tag))
+//        {
+//            //这里应该有一个优先检测气球僵尸的
+//            if (Vector2.Distance(user.transform.position, enemy.transform.position)<mindis)
+//            {
+
+//            }
+//        }
+//    }
+//}

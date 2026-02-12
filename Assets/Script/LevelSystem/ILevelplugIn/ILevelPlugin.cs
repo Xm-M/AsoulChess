@@ -9,6 +9,7 @@ using UnityEngine.Playables;
 public interface ILevelPlugin  
 {
      public void StadgeEffect(LevelController levelController);
+     public void OverPlugin(LevelController levelController);
 }
 
 /// <summary>
@@ -44,6 +45,10 @@ public class EnterWarPlugin_Plot : ILevelPlugin
         over = true;
         EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), WhenLeave);
     }
+    public void OverPlugin(LevelController levelController)
+    {
+        //暂时不需要
+    }
 }
 
 
@@ -67,7 +72,7 @@ public class EnterWarPlugin_CarCreate : ILevelPlugin
             //Debug.Log(cars.gameObject.layer);
             //Debug.Log(LayerMask.LayerToName(cars.gameObject.layer)); 
         }
-        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), DestroyCars);
+        //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), DestroyCars);
     }
     public void DestroyCars()
     {
@@ -76,7 +81,11 @@ public class EnterWarPlugin_CarCreate : ILevelPlugin
             GameObject.Destroy(carses[i].gameObject);
         }
         carses.Clear();
-        EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), DestroyCars);
+        //EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), DestroyCars);
+    }
+    public void OverPlugin(LevelController levelController)
+    {
+        DestroyCars();
     }
 }
 /// <summary>
@@ -91,10 +100,14 @@ public class PreParePlugun_ShowPlantShop : ILevelPlugin
         UIManage.Show<PlantsShop>();
         SunLightPanel.instance.SetSunLight(baseSunLight);
     }
+    public void OverPlugin(LevelController levelController)
+    {
+        UIManage.Close<PlantsShop>();
+    }
 }
 
 /// <summary>
-/// 这个其实是见过保龄球的插件
+/// 这个其实是坚果保龄球的插件 因为会生成一条红线 红线外不可种植
 /// </summary>
 public class PreParePlugin_Conveyor : ILevelPlugin
 {
@@ -115,13 +128,18 @@ public class PreParePlugin_Conveyor : ILevelPlugin
         //line = ObjectPool.instance.Create(redLine);
         line = GameObject.Instantiate(redLine);
         line.transform.position = MapManage.instance.tiles[2, 2].transform.position;
-        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), GameOver);
+        //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), GameOver);
+    }
+    public void OverPlugin(LevelController levelController)
+    {
+        GameOver();
     }
     public void GameOver()
     {
         //ObjectPool.instance.Recycle(line);
         GameObject.Destroy(line);
-        EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), GameOver);
+        UIManage.Close<ConveyorPanel>();
+        //EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), GameOver);
     }
 }
 
@@ -135,7 +153,7 @@ public class GameStartPlugin_CreateSunlight : ILevelPlugin
     {
         float delay = CaculateDelayTime();
         timer = GameManage.instance.timerManage.AddTimer(CreateSunlight,delay, true);
-        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(),WhenLeave);
+        //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(),WhenLeave);
     }
     public void CreateSunlight()
     {
@@ -149,11 +167,15 @@ public class GameStartPlugin_CreateSunlight : ILevelPlugin
         //Debug.Log("下一次生成时间为："+CaculateDelayTime());
         timer.ChangeDelayTime(CaculateDelayTime());
     }
+    public void OverPlugin(LevelController levelController)
+    {
+        WhenLeave();
+    }
     public void WhenLeave()
     {
-        timer.Stop();
+        timer?.Stop();
         timer = null;
-        EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), WhenLeave);
+        //EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), WhenLeave);
     }
     public float CaculateDelayTime()
     {
@@ -173,6 +195,10 @@ public class GameStartPlugin_FastCreateZombie : ILevelPlugin
         Debug.Log("加速进场");
         levelController.mintime = fastEnterTime;
     }
+    public void OverPlugin(LevelController levelController)
+    {
+
+    }
 }
 
 /// <summary>
@@ -184,6 +210,10 @@ public class GameStartPlugin_PlayAudio : ILevelPlugin
     public void StadgeEffect(LevelController levelController)
     {
         (MapManage.instance as MapManage_PVZ).au.ChangeAudio(audioName);
+    }
+    public void OverPlugin(LevelController levelController)
+    {
+
     }
 }
 //也就是说这个buff 1.要对场上的所有单位生效 2.要对出场的僵尸生效
@@ -218,8 +248,7 @@ public class GameStartPlugin_PlaySchoolAudio : ILevelPlugin
         classBegin = false;
         currentBuff=beginBuff;
         center = MapManage.instance.tiles[MapManage.instance.mapSize.x/2,MapManage.instance.mapSize.y/2].transform;
-        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), WhenLeave);
-        //EventController.Instance.AddListener(EventName.WhenChessEnterWar.ToString,);
+        EventController.Instance.AddListener<Chess>(EventName.WhenChessEnterWar.ToString(),AddBuff);
         doorTiles = GameObject.FindObjectsOfType<DoorTile>();
         foreach(DoorTile doorTile in doorTiles)
         {
@@ -271,9 +300,31 @@ public class GameStartPlugin_PlaySchoolAudio : ILevelPlugin
     }
     public void WhenLeave()
     {
-        timer.Stop();
+        timer?.Stop();
         timer = null;
-        EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), WhenLeave);
         EventController.Instance.RemoveListener<Chess>(EventName.WhenChessEnterWar.ToString(),AddBuff);
+    }
+    public void OverPlugin(LevelController levelController)
+    {
+        WhenLeave();
+    }
+}
+//EventController.Instance.AddListener(EventName.GameStart.ToString(),CheckFetter);
+//EventController.Instance.AddListener(EventName.GameOver.ToString(), ClearFetter);
+//EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), ClearFetter);
+public class GameStartPlugin_Fetter : ILevelPlugin
+{
+    public void StadgeEffect(LevelController levelController)
+    {
+        //throw new System.NotImplementedException();
+        GameManage.instance.fetterManage.CheckFetter();
+        UIManage.Show<FetterPanel>();
+       
+    }
+    public void OverPlugin(LevelController levelController)
+    {
+        GameManage.instance.fetterManage.ClearFetter();
+        UIManage.Close<FetterPanel>();
+    
     }
 }

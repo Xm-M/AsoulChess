@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a3eea657dcad7a47b8f4f8555794f77, type: 3}
+  m_Name: "\u65E0\u523A\u6709\u523A"
+  m_EditorClassIdentifier: 
+  fetter:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: TogenashiTogeari, ns: , asm: Assembly-CSharp}
+      data:
+        fetterName: "\u65E0\u523A\u6709\u523A"
+        fetterIcon: {fileID: 0}
+        bandMemberNum: 5
+        num: 0
+        DM:
+          damageFrom: {fileID: 0}
+          damageTo: {fileID: 0}
+          damage: 3048
+          damageType: 2
+          damageElementType: 0
+          ifCrit: 0
+          takeBuff:
+            id: 1
+        GBCBuff:
+          id: 2
+        coldDown: 25
+        continueTime: 10
+        rate: 1
+        darkPecent: 0.5
+        rainPre: {fileID: 4196391829057553230, guid: 734d69a9a5797574dacecff2e93d480b, type: 3}
+        outlineColor: {r: 0.735849, g: 0.025453812, b: 0.05221822, a: 1}
+        outlineSize: 1
+        stressChangeValue: 626
+    00000001:
+      type: {class: , ns: , asm: }
+    00000002:
+      type: {class: Buff_Band_GBC, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: GBC
+        target: {fileID: 0}

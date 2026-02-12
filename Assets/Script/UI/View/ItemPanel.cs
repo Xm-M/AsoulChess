@@ -80,6 +80,7 @@ public class ItemPanel : View
     }
     public void Recycle<T>(UIItem item) where T : UIItem
     {
+        if (item == null) return;
         if (itemPool.ContainsKey(typeof(T)))
         {
             if (item.transform.parent != transform)
@@ -89,6 +90,10 @@ public class ItemPanel : View
             }
             item.gameObject.SetActive(false);
             itemPool[typeof(T)].Push(item);
+        }
+        else
+        {
+            Destroy(item.gameObject);
         }
     }
 }

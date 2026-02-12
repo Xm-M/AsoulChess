@@ -82,15 +82,21 @@ MonoBehaviour:
       damageElementType: 0
       ifCrit: 0
       takeBuff:
-        id: 1
+        id: 0
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 1
+        id: 0
       transitions: []
     preState:
       state:
-        id: 1
+        id: 0
       transitions: []
     stateGraph: {fileID: 11400000, guid: d3f806ded704e7b49a3847bb374524ec, type: 2}
     EnterWarState: 4
@@ -102,7 +108,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 0
   animatorController: {fileID: 5674625054589759482}
   WhenEnterGame:
     m_PersistentCalls:
@@ -110,34 +116,38 @@ MonoBehaviour:
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1
     00000000:
-      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
-      data:
-        initWeapon:
-          id: 1
-        findTarget:
-          id: 1
-        attackFunction:
-          id: 1
-        enemys: []
-        interval: 0
-    00000001:
       type: {class: , ns: , asm: }
-    00000002:
-      type: {class: SkillEffect_BeafRice, ns: , asm: Assembly-CSharp}
+    00000001:
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
       data:
-        beafRiceBuff:
+        effect:
           id: 3
+    00000002:
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
+      data:
+        effect:
+          id: 4
     00000003:
+      type: {class: Passive_Item, ns: , asm: Assembly-CSharp}
+    00000004:
+      type: {class: SkillEffect_Item, ns: , asm: Assembly-CSharp}
+      data:
+        ItemBuff:
+          id: 5
+    00000005:
       type: {class: BeafRiceBuff, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u725B\u8089\u996D"
         target: {fileID: 0}
-        buffNum: 0
-        extraAttack: 0.2
+        extraAttack: 0.1
         closeAttackRange: 11.25
+        extraSpeed: 0.25
         effect: {fileID: 0}
 --- !u!61 &4210929491903002382
 BoxCollider2D:
@@ -146,7 +156,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6027730303304517279}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1

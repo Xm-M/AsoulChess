@@ -77,7 +77,7 @@ MonoBehaviour:
     passiveSkill:
       id: 1
     activeSkill:
-      id: 1
+      id: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -86,17 +86,23 @@ MonoBehaviour:
       damageElementType: 0
       ifCrit: 0
       takeBuff:
-        id: 1
+        id: 3
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 1
+        id: 3
       transitions: []
     preState:
       state:
-        id: 1
+        id: 3
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 5d45536681d478446b5d3e36d313d605, type: 2}
+    stateGraph: {fileID: 11400000, guid: 4cf9bc0071e47f9439e4a2447f2307df, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -106,12 +112,15 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 3
   animatorController: {fileID: 8076291525023295071}
   WhenEnterGame:
     m_PersistentCalls:
       m_Calls: []
   DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRemove:
     m_PersistentCalls:
       m_Calls: []
   references:
@@ -120,21 +129,92 @@ MonoBehaviour:
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 1
-        findTarget:
-          id: 2
-        attackFunction:
           id: 3
+        findTarget:
+          id: 4
+        attackFunction:
+          id: 5
         enemys: []
         interval: -1
     00000001:
-      type: {class: , ns: , asm: }
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
+      data:
+        effect:
+          id: 6
     00000002:
-      type: {class: StraightFindLastTarget, ns: , asm: Assembly-CSharp}
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: 7ff48f5f303088b4aac349c7f0ece66f, type: 2}
+        readyChecker:
+          id: 7
+        effect:
+          id: 8
+        skillFinish:
+          id: 9
+        runtime:
+          id: 10
     00000003:
+      type: {class: , ns: , asm: }
+    00000004:
+      type: {class: StraightFindLastTarget, ns: , asm: Assembly-CSharp}
+    00000005:
       type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
         bullet: {fileID: 2098010854589325911, guid: 15fa26a0c0a8b0747aba983ef11ef87d, type: 3}
+    00000006:
+      type: {class: Passive_ZZZLight, ns: , asm: Assembly-CSharp}
+      data:
+        buff:
+          id: 11
+    00000007:
+      type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
+      data:
+        clickBox: {fileID: 7895530665067381902}
+    00000008:
+      type: {class: SkillEffect_ZZZLight, ns: , asm: Assembly-CSharp}
+      data:
+        headOffset: {x: 0, y: 0}
+        riseHeight: 0
+        riseDuration: 1
+        gatherDuration: 1
+        angularSpeedDeg: 10
+        minRadius: 2.5
+        minRadiusLong: 2.5
+        orbitDuration: 3
+        scatterDuration: 3
+        dropDuration: 0.4
+        swordsPerRing: 6
+        baseRingRadius: 1
+        groundY: -6.25
+        innerRadiusX: 8
+        innerRadiusY: 2
+        midRadiusX: 16
+        midRadiusY: 4
+        outerRadiusX: 24
+        outerRadiusY: 6
+        waveAmp:
+        - 0.2
+        - 0.35
+        - 0.5
+        waveFreq:
+        - 2
+        - 2.5
+        - 3
+        activeSwords: []
+    00000009:
+      type: {class: DurationFinish, ns: , asm: Assembly-CSharp}
+    0000000A:
+      type: {class: SkillRuntimeInfo_Duration, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+        maxTime: 30
+    0000000B:
+      type: {class: Buff_ZZZLight_CreateSword, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u5251\u6765"
+        target: {fileID: 0}
+        buffNum: 0
+        swordPrefab: {fileID: 1250741319016384224, guid: 677c130fbebb7904a985b5b27a9e54fa, type: 3}
 --- !u!61 &8243562531970831682
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -351,6 +431,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8178440196308801640}
   - component: {fileID: 3690117724320952491}
+  - component: {fileID: 7895530665067381902}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -423,6 +504,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &7895530665067381902
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5580093003499813547}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.105397224, y: 0.6237078}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.4}
+    oldSize: {x: 4, y: 3.9375}
+    newSize: {x: 4, y: 3.9375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.5279541, y: 3.0176692}
+  m_EdgeRadius: 0
 --- !u!1001 &2349039927922020582
 PrefabInstance:
   m_ObjectHideFlags: 0

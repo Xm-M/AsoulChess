@@ -15,7 +15,7 @@ public class AttackController :  Controller
     public Transform weaponPos;//这个的主要作用是设计类武器可以找到子弹发射的位置
     [SerializeReference]
     public Weapon weapon;
-    public UnityEvent<Chess> OnAttack;
+    [HideInInspector]public UnityEvent<Chess> OnAttack;
     public bool attackOver;
     Timer timer;//这个是计时器
     bool loop;
@@ -23,6 +23,7 @@ public class AttackController :  Controller
     {
         master=chess;
         //weapon.InitWeapon(this);
+        if (weapon == null) weapon = new Weapon_Sample();
     }
     public void ChangeWeapon(Weapon newWeapon)
     {
@@ -75,6 +76,7 @@ public class AttackController :  Controller
     {
         //
         //也就是说这里是触发onattack的函数对吧
+        //这里也是绑定在攻击动画上触发的函数
         weapon.TakeDamage(master);
         OnAttack?.Invoke(master);
         if(!loop)
@@ -126,11 +128,7 @@ public interface IInitWeapon
 //}  
 public interface Weapon
 {
-
-    //List<Chess> target;//这个是攻击目标 
-    //public float interval;//攻击间隔 如果是0或者-1就表明是loop动画
     public float GetInterval();
-    //public bool AttackOver();
     public void InitWeapon(AttackController attackController);
 
     public int FindEnemy(Chess user);

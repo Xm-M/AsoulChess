@@ -10,8 +10,8 @@ public class AnimatorController_SampleZombie : AnimatorController
     public GameObject leftarm, leftHead;
     [LabelText("受伤播放器")]
     public AudioPlayer player;
-    [LabelText("火焰受伤播放器")]
-    public AudioPlayer player2;
+    //[LabelText("火焰受伤播放器")]
+    //public AudioPlayer player2;
     [SerializeReference]
     public BloodBuff bloodBuff;//持续掉血buff
     public float randomSpeed=0.2f;//移速偏差值
@@ -47,11 +47,7 @@ public class AnimatorController_SampleZombie : AnimatorController
         }
         else
         {
-            if ((dm.damageElementType & ElementType.Fire)!=0)
-            {
-                player2?.RandomPlay();
-            }
-            else if ((dm.damageElementType & ElementType.Bullet) != 0)
+            if ((dm.damageElementType & ElementType.Bullet) != 0)
             {
                 player?.RandomPlay();
             }
@@ -87,9 +83,9 @@ public class AnimatorController_SampleZombie : AnimatorController
 
                         //这里生成一个掉头特效
                     }
-                    //body.material.SetFloat("_FlashAmount", Time.time);
+ 
                 }
-                //else 
+ 
             }
         }
     }
@@ -110,5 +106,43 @@ public class AnimatorController_SampleZombie : AnimatorController
         base.ChangeColor(color);
         arm.color = color;
         body.color = color;
+    }
+}
+/// <summary>
+/// 僵尸的 自扣血buff
+/// </summary>
+public class BloodBuff : Buff
+{
+    public DamageMessege dm;
+    //public float damage = 70;
+    float speed;
+    Timer timer;
+    float leftHp;
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        dm.damageTo = target;
+        dm.damageFrom = target;
+        this.target = target;
+        target.propertyController.ChangeAttack(-target.propertyController.GetAttack());
+        speed = UnityEngine.Random.Range(1, 1.5f);
+        //continueTime = speed;
+        leftHp = target.propertyController.GetHp();
+        timer = GameManage.instance.timerManage.AddTimer(BloodDamage, 0.1f, true);
+         
+    }
+    public void BloodDamage()
+    {
+        dm.damage =leftHp * 0.1f/speed;
+        //Debug.Log("造成" + dm.damage);
+        if (!target.IfDeath)
+            target.propertyController.GetDamage(dm);
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        timer.Stop();
+        timer = null;
+
     }
 }

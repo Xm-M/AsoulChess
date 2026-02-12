@@ -39,7 +39,7 @@ public class StraightFindTargetByDir : IFindTarget
 
 /// <summary>
 /// 龙然和大喷菇都是用这个逻辑
-/// 
+/// 这个是Aoe找目标
 /// </summary>
 public class StraightLaser : IFindTarget
 {
@@ -59,6 +59,10 @@ public class StraightLaser : IFindTarget
     }
 }
 
+
+/// <summary>
+/// 这个是找最后一个
+/// </summary>
 public class StraightFindLastTarget : IFindTarget
 {
     public void FindTarget(Chess user, List<Chess> targets)
@@ -87,36 +91,36 @@ public class StraightFindLastTarget : IFindTarget
         CheckObjectPoolManage.ReleaseArray(100, hits);
     }
 }
-
-    public class MultiFindTarget : IFindTarget
+public class MultiFindTarget : IFindTarget
+{
+    [Serializable]
+    public class MFindDate
     {
-        [Serializable]
-        public class MFindDate
-        {
-            public List<Chess> chesses;
-            [SerializeReference]
-            public IFindTarget findTarget;
-            public MFindDate()
-            {
-                chesses = new List<Chess>();
-            }
-            public void Find(Chess user)
-            {
-                findTarget.FindTarget(user, chesses);
-            }
-        }
+        public List<Chess> chesses;
         [SerializeReference]
-        public List<MFindDate> findDates;
-        public void FindTarget(Chess user, List<Chess> targets)
+        public IFindTarget findTarget;
+        public MFindDate()
         {
-            targets.Clear();
-            for(int i = 0; i<findDates.Count; i++)
+            chesses = new List<Chess>();
+        }
+        public void Find(Chess user)
+        {
+            findTarget.FindTarget(user, chesses);
+        }
+    }
+    [SerializeReference]
+    public List<MFindDate> findDates;
+    public void FindTarget(Chess user, List<Chess> targets)
+    {
+        targets.Clear();
+        for (int i = 0; i < findDates.Count; i++)
+        {
+            findDates[i].Find(user);
+            for (int j = 0; j < findDates[i].chesses.Count; j++)
             {
-                findDates[i].Find(user);
-                for(int j = 0; j < findDates[i].chesses.Count; j++)
-                {
-                    targets.Add(findDates[i].chesses[j]);
-                }
+                targets.Add(findDates[i].chesses[j]);
             }
         }
+    }
 }
+

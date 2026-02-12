@@ -16,25 +16,32 @@ public class SkillController:Controller
     public ISkill passiveSkill;//被动技能同理
     [SerializeReference]
     public ISkill activeSkill;//如果有复合技能 应该在Iskill类中制作一个复合技能而不是在这用list保存
-    [HideInInspector]
+    //[HideInInspector]
     public DamageMessege DM;
-
+    public SkillContext context;
+    [HideInInspector]public UnityEvent<Chess> onUseSkill;
+    [HideInInspector]public UnityEvent<Chess> onSkillOver;
     public void InitController(Chess c){
         this.user=c;
         passiveSkill?.InitSkill(user);
         activeSkill?.InitSkill(user);
-        DM = new DamageMessege();
+        //DM = new DamageMessege();
+        context = new SkillContext();
     }
     public void WhenControllerEnterWar()
     {
         passiveSkill?.UseSkill(user);
         activeSkill?.WhenEnter(user);
+        
     }
     public void WhenControllerLeaveWar()
     {
-        DM.damageType=DamageType.Magic;
+        //DM.damageType=DamageType.Magic;
         passiveSkill?.LeaveSkill(user);
         activeSkill?.LeaveSkill(user);
+        onUseSkill.RemoveAllListeners();
+        onSkillOver.RemoveAllListeners();
+        context.Clear();
     }
 
     /// <summary>
@@ -43,6 +50,7 @@ public class SkillController:Controller
     /// </summary>
     public void UseSkill()
     {
+        onUseSkill?.Invoke(user);
         activeSkill?.UseSkill(user);
     }
     /// <summary>
@@ -56,5 +64,57 @@ public class SkillController:Controller
             return activeSkill.IfSkillReady(user);
         }
         return false;
+    }
+    public void SkillOver(Chess user)
+    {
+        activeSkill.SkillOver(user);
+        onSkillOver?.Invoke(user);
+    }
+}
+public class SkillContext
+{
+    // 扩展用的字典（可选）
+    Dictionary<string, object> extra;
+    public UnityEvent OnValueChange;
+    public SkillContext()
+    {
+        extra = new Dictionary<string, object>();
+        OnValueChange=new UnityEvent();
+    }
+    public void Clear()
+    {
+        extra.Clear();
+        OnValueChange.RemoveAllListeners();
+    }
+    public void AddEvent(UnityAction unityAction)
+    {
+        Debug.Log("添加事件");
+        OnValueChange.AddListener(unityAction);
+    }
+    public  void RemoveEvent(UnityAction unityAction)
+    {
+        OnValueChange.RemoveListener(unityAction);
+    }
+    public void Set<T>(string key, T value)
+    {
+        extra ??= new Dictionary<string, object>();
+        extra[key] = value;
+        OnValueChange?.Invoke();
+        //Debug.Log("?");
+    }
+    public bool TryGet<T>(string key, out T value)
+    {
+        value = default;
+        if (extra != null && extra.TryGetValue(key, out var obj) && obj is T cast)
+        {
+            value = cast;
+            return true;
+        }
+        return false;
+    }
+    public void Remove(string key)
+    {
+        extra.Remove(key);
+        OnValueChange?.Invoke();
     }
 }

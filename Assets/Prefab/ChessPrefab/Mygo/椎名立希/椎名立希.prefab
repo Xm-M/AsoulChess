@@ -189,6 +189,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5716893337664395820}
   - component: {fileID: 921368741970170798}
+  - component: {fileID: 4008276486264347998}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -261,6 +262,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &4008276486264347998
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7025032979227467773}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.06238389, y: 0.68784523}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.4}
+    oldSize: {x: 4, y: 3.9375}
+    newSize: {x: 4, y: 3.9375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3.1622744, y: 2.9571824}
+  m_EdgeRadius: 0
 --- !u!1 &7304382322199300087
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,10 +300,9 @@ GameObject:
   - component: {fileID: 2935482277367135691}
   - component: {fileID: 1330504015422418270}
   - component: {fileID: 316511915307503306}
-  - component: {fileID: 6138198586915953680}
-  - component: {fileID: 472145082017450513}
   - component: {fileID: 9052059458679005366}
   - component: {fileID: 5452588477874543677}
+  - component: {fileID: 2293826477764516510}
   m_Layer: 0
   m_Name: "\u690E\u540D\u7ACB\u5E0C"
   m_TagString: Untagged
@@ -351,6 +377,12 @@ MonoBehaviour:
       ifCrit: 0
       takeBuff:
         id: 3
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
@@ -360,7 +392,7 @@ MonoBehaviour:
       state:
         id: 3
       transitions: []
-    stateGraph: {fileID: 11400000, guid: e17c1656828eea9418c0d94a2b507765, type: 2}
+    stateGraph: {fileID: 11400000, guid: cb53f67c9f384e84496ed78db0664ee2, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -371,11 +403,14 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 3
-  animatorController: {fileID: 472145082017450513}
+  animatorController: {fileID: 2293826477764516510}
   WhenEnterGame:
     m_PersistentCalls:
       m_Calls: []
   DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRemove:
     m_PersistentCalls:
       m_Calls: []
   references:
@@ -392,23 +427,26 @@ MonoBehaviour:
         enemys: []
         interval: 0
     00000001:
-      type: {class: Passive_Taki, ns: , asm: Assembly-CSharp}
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
       data:
-        eggcontroller: {fileID: 0}
-    00000002:
-      type: {class: SkillEffect_Taki, ns: , asm: Assembly-CSharp}
-      data:
-        coerction:
+        effect:
           id: 6
-        fear:
+    00000002:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: f5d6f3e23af62fc499db82595ff06f80, type: 2}
+        readyChecker:
           id: 7
-        coldDown: 5
-        ifMouseDown: {fileID: 6138198586915953680}
-        fearBullet: {fileID: 9081334164916679580, guid: c683ce1acc210c742be20b42227dfe11, type: 3}
+        effect:
+          id: 8
+        skillFinish:
+          id: 9
+        runtime:
+          id: 10
     00000003:
       type: {class: , ns: , asm: }
     00000004:
-      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
+      type: {class: StraightLaser, ns: , asm: Assembly-CSharp}
     00000005:
       type: {class: ShootBullet_Taki, ns: , asm: Assembly-CSharp}
       data:
@@ -417,22 +455,42 @@ MonoBehaviour:
         bigBullet: {fileID: 9081334164916679580, guid: 67d02fb9a9a8b97418dd5a1402e4ec9d, type: 3}
         shooter: {fileID: 1663130996254410327}
     00000006:
-      type: {class: Buff_Coercion, ns: , asm: Assembly-CSharp}
+      type: {class: PassiveSkill_MygoPassive_Taki, ns: , asm: Assembly-CSharp}
       data:
-        buffName: "\u5A01\u538B"
-        target: {fileID: 0}
-        buffNum: 0
-        continueTime: 10
-        deAttack: 0.2
-        deDefence: 0.2
-        Coerctioneffect: {fileID: 5528529480491682693, guid: 310eaf154a2c4914196c9fe3e4dbd161, type: 3}
+        interval: 0.25
+        extraRange: 10
     00000007:
+      type: {class: SkillReady_Multy, ns: , asm: Assembly-CSharp}
+      data:
+        skillReadies:
+        - id: 11
+        - id: 12
+    00000008:
+      type: {class: SkillEffect_TakiFear, ns: , asm: Assembly-CSharp}
+      data:
+        fear:
+          id: 13
+        fearBullet: {fileID: 9081334164916679580, guid: c683ce1acc210c742be20b42227dfe11, type: 3}
+    00000009:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    0000000A:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    0000000B:
+      type: {class: SkillReady_Mygo, ns: , asm: Assembly-CSharp}
+      data:
+        min: 3
+    0000000C:
+      type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
+      data:
+        clickBox: {fileID: 4008276486264347998}
+    0000000D:
       type: {class: Buff_Fear, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u6050\u60E7"
         target: {fileID: 0}
-        buffNum: 0
-        continueTime: 3
+        continueTime: 5
         FearEffect: {fileID: 60859552351474783, guid: 5bb58ad649f96fd47b6e29b885d8ff28, type: 3}
         moveRate: 0.5
 --- !u!61 &1330504015422418270
@@ -480,32 +538,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6138198586915953680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7304382322199300087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95e3e8e2f74f00043b3ceb4a62af6993, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &472145082017450513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7304382322199300087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab05881c8a3d8f3499b008e4104a944e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 316511915307503306}
-  sprite: {fileID: 921368741970170798}
 --- !u!82 &9052059458679005366
 AudioSource:
   m_ObjectHideFlags: 0
@@ -620,6 +652,20 @@ MonoBehaviour:
   - {fileID: 3669975701295989931}
   baseValue: 0
   clipList: []
+--- !u!114 &2293826477764516510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304382322199300087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687eea4d5a1356149a63151cba61d8b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 316511915307503306}
+  sprite: {fileID: 921368741970170798}
 --- !u!1 &8421957004660854082
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,8 +716,8 @@ MonoBehaviour:
   type: 0
   bullets:
   - {fileID: 9081334164916679580, guid: b0454f343d592ae42a9f5d271aab8067, type: 3}
-  - {fileID: 9081334164916679580, guid: 24266154d26935a4b867e697dd8785bd, type: 3}
-  - {fileID: 9081334164916679580, guid: 83281e1dcd9658e4586d2d267401a8e9, type: 3}
+  - {fileID: 9081334164916679580, guid: 67d02fb9a9a8b97418dd5a1402e4ec9d, type: 3}
+  - {fileID: 9081334164916679580, guid: c683ce1acc210c742be20b42227dfe11, type: 3}
   animator: {fileID: 5624718514446432023}
 --- !u!61 &8726010307141565589
 BoxCollider2D:

@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: "\u8679\u590F"
   m_EditorClassIdentifier: 
   chessName: "\u8679\u590F"
+  chessDescription: 
+  chessEffect: 
   baseProperty:
     attack: 0
     attackRate: 0
     crit: 0
     critDamage: 1.3
+    dodgeRate: 0
     extraDamge: 0
     AR: 0
     extraDefence: 0
@@ -27,6 +30,8 @@ MonoBehaviour:
     healRate: 1
     speed: 0
     acceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
     attackRange: 0
     price: 50
     rarity: 4000
@@ -34,7 +39,7 @@ MonoBehaviour:
     CD: 7.5
     Size: 1
   chessPre: {fileID: 6692503982250395099, guid: 838b15b452e9c0a41a4afd36b8b67a8b, type: 3}
-  chessSprite: {fileID: 21300000, guid: 15f5c963733eca046a8db9f15434320c, type: 3}
+  chessSprite: {fileID: 21300000, guid: ca42b3b2ab6647a4696b60a9f0d20618, type: 3}
   plantTags:
   - "\u9F13\u624B"
   - "\u7ED3\u675F\u4E50\u961F"
@@ -44,6 +49,8 @@ MonoBehaviour:
     id: 0
   plantIfCanBuyCard:
     id: 1
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
   references:
     version: 1
     00000000:

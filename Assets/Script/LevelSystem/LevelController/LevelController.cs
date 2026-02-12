@@ -2,19 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using System;
+
+/// <summary>
+/// 关卡流程
+/// 1.进入关卡场景
+/// (--关卡插件--)
+/// 2.调用EnterMap插件
+/// 3.调用Prepare插件
+/// 4.调用GameStart插件
+/// 5.调用所有插件的Over函数 掉用outcome插件
+/// (--关卡插件--)
+/// 6.离开关卡场景 WhenLeaveLevel;
+/// </summary>
 public class LevelController : MonoBehaviour
 {
     public LevelData levelData;//关卡数据 但是是从LevelManage里设置的
-    [ShowInInspector]
+    [ShowInInspector, ReadOnly]
+    [ShowIf("@UnityEngine.Application.isPlaying")]
     int currentWave;//当前波数
-    [ShowInInspector]
+    [ShowInInspector, ReadOnly]
+    [ShowIf("@UnityEngine.Application.isPlaying")]
     float t;//还是要用独立的时间控制器 不然还是太混乱了
-    List<WaveData> waveDatas;
-    [ShowInInspector]
-    public float mintime;
-    [ShowInInspector]
-    public float maxtime;
-    List<Chess> zombies;
+    [ShowInInspector, ReadOnly]
+    [ShowIf("@UnityEngine.Application.isPlaying")]
+    List<WaveData> waveDatas;//每波的数据
+    [ShowInInspector, ReadOnly]
+    [ShowIf("@UnityEngine.Application.isPlaying")]
+    public float mintime;//每波的最小时间
+    [ShowInInspector, ReadOnly]
+    [ShowIf("@UnityEngine.Application.isPlaying")]
+    public float maxtime;//每波的最大时间
+    protected List<Chess> zombies;
     //插件也是放在LevelData里面的
 
 
@@ -22,34 +41,43 @@ public class LevelController : MonoBehaviour
     {
         LevelManage.instance.SetController(this);
     }
-    public void Init(LevelData levelData)
+    public virtual void Init(LevelData levelData)
     {
         this.levelData = levelData;
     }
 
     /// <summary>
     /// 进入地图时调用的函数 一般在地图加载完就调用 还是统一绑定在TimeLine上吧 比较好控制
+    /// 如果我再次调用这个函数是不是就又能重来了
     /// </summary>
-    public void EnterMap()
+    public virtual void EnterMap()
     {
-        zombies = new List<Chess>();
-        if(levelData == null)
-        {
-            Debug.LogError("没有关卡数据");
-        }
         if (levelData.EnterMapPlugin != null)
         {
             for(int i = 0; i < levelData.EnterMapPlugin.Count; i++)
             {
-                levelData.EnterMapPlugin[i].StadgeEffect(this);
+                levelData.EnterMapPlugin[i].StadgeEffect(this);//但是开始插件为什么放在这里呢
             }
         }
+        CreateZombieWaves();
+    }
+    public virtual void CreateZombieWaves()
+    {
+        if (zombies == null)
+            zombies = new List<Chess>();
+        else zombies.Clear();
+        if (levelData == null)
+        {
+            Debug.LogError("没有关卡数据");
+        }
         //在调用完所有准备阶段前的插件后，生成僵尸列表的所有数据
-        waveDatas = new List<WaveData>();
-        for(int i = 0; i < levelData.MaxWave; i++)
+        if (waveDatas == null)
+            waveDatas = new List<WaveData>();
+        else waveDatas.Clear();
+        for (int i = 0; i < levelData.MaxWave; i++)
         {
             WaveData waveData = new WaveData();
-            waveData.InitWave(i+1,levelData);
+            waveData.InitWave(i + 1, levelData);
             waveDatas.Add(waveData);
         }
         //在MapManage的右侧生成所有可能出现的僵尸 小推车放在小推车插件里
@@ -58,13 +86,15 @@ public class LevelController : MonoBehaviour
             Chess zombie = ChessTeamManage.Instance.CreateChess(levelData.zombieList[i], (MapManage.instance as MapManage_PVZ).zombiePreTile[i], "Enemy");
             zombies.Add(zombie);
         }
+        t = 0;
+        currentWave = -1;
     }
 
     /// <summary>
     /// 游戏准备阶段 也就是选卡的时候调用
     /// 选卡和羁绊可以放一起 反正传送带没有羁绊
     /// </summary>
-    public void GamePrepare()
+    public virtual void GamePrepare()
     {
         if (levelData == null)
         {
@@ -84,7 +114,7 @@ public class LevelController : MonoBehaviour
     /// <summary>
     /// 游戏开始阶段 也就是选卡之后 出僵尸之前
     /// </summary>
-    public void GameStart()
+    public virtual void GameStart()
     {
         if (levelData == null)
         {
@@ -110,7 +140,7 @@ public class LevelController : MonoBehaviour
     /// 接下来的生成僵尸才是最tm难的地方;
     /// 首先就是波次与生成僵尸的问题
     /// </summary>
-    private void Update()
+    protected virtual void Update()
     {
         if (LevelManage.instance.IfGameStart && currentWave < levelData.MaxWave)
         {
@@ -120,18 +150,13 @@ public class LevelController : MonoBehaviour
                 waveDatas[currentWave+1].EnterWave();
                 UIManage.GetView<TextPanel>().FirstZombieCom();
                 EventController.Instance.TriggerEvent(EventName.FirstZombieComming.ToString());
-                mintime = Random.Range(0, 6);
+                mintime =UnityEngine. Random.Range(0, 6);
                 maxtime = mintime+23;
                 currentWave++;
                 t = 0;
                 UIManage.Show<ProgressBar>();//进度条(其实也可以在第一只僵尸出来的时候刷)
                 UIManage.GetView<ProgressBar>().SetFlag(levelData.MaxWave / 10);
             }
-            //else if(currentWave==levelData.MaxWave-1&&)
-            //else if (currentWave==levelData.MaxWave-1&& waveDatas[currentWave].CheckZombieHp())
-            //{
-            //    currentWave++;
-            //}
             else if (currentWave!=-1&&((waveDatas[currentWave].CheckZombieHp() && t > mintime) || (t > maxtime)))
             {
                 t = 0;
@@ -144,21 +169,27 @@ public class LevelController : MonoBehaviour
                 }
                 if (currentWave % 10 == 9)
                 {
-                    mintime = Random.Range(0, 6);
-                    maxtime = 50;
+                    mintime = UnityEngine.Random.Range(0, 6);
+                    maxtime = 50; 
                 }
                 else
                 {
-                    mintime = Random.Range(0, 6);
+                    mintime =UnityEngine. Random.Range(0, 6);
                     maxtime = mintime + 23;
                 }
                 
             }
         }
     }
-    public void GameOver(bool win)
+    /// <summary>
+    /// 游戏结束 生成胜利道具或者失败 生成失败文字
+    /// 在LevelController里面不需要考虑LeaveLevel;
+    /// </summary>
+    /// <param name="win"></param>
+    public virtual void GameOver(bool win)
     {
         UIManage.Close<ProgressBar>();
+        OverPlugin();
         if (win)
         {
             if (levelData.nextLevel != null)
@@ -174,20 +205,41 @@ public class LevelController : MonoBehaviour
         }
         UIManage.Close<ProgressBar>();
     }
+    public void OverPlugin()
+    {
+        foreach (var plugin in levelData.GameStartPlugin)
+            plugin.OverPlugin(this );
+        foreach (var plugin in levelData.EnterMapPlugin)
+            plugin.OverPlugin(this);
+        foreach (var plugin in levelData.PreParePlugin)
+            plugin.OverPlugin(this);
+    }
 }
 /// <summary>
 /// 保存每波僵尸的数据，
 /// </summary>
+[Serializable]
 public class WaveData
 {
-    public static List<float> fateList;
-    public List<int> zombieTeam;
-    public List<PropertyCreator> canUse;
+    [Serializable]
+    public class ZombieInWaveData
+    {
+        public PropertyCreator zombieCreate;
+        public int zombieNum;
+    }
+    [FoldoutGroup("zombieData")]
+    public  List<float> fateList;
+    [FoldoutGroup("zombieData")]
+    public List<ZombieInWaveData> zombieList;
+    [ShowInInspector]
     List<Chess> liveZombie;
     float enterPecent;
     float hpmax;
     int wave;
     bool createOver;
+    [FoldoutGroup("zombieData"),ShowInInspector]
+    int maxZombieValue = 0;
+    ILevelOutcome outcome;
     /// <summary>
     /// 总之先这样写吧
     /// </summary>
@@ -197,17 +249,16 @@ public class WaveData
     {
         int raritySum = 0;
         this.wave = wave;
-        if (canUse == null)
+        outcome=data.outcome;
+        if (zombieList == null)
         {
-            canUse = new List<PropertyCreator>();
+             zombieList = new List<ZombieInWaveData>();
             fateList = new List<float>();
-            zombieTeam = new List<int>();
         }
         else
         {
-            canUse.Clear();
+            zombieList.Clear();
             fateList.Clear();
-            zombieTeam.Clear();
         }
         if (data.createZombieType == CreateZombieType.一类有限制 || data.createZombieType == CreateZombieType.二类有限制)
         {
@@ -215,9 +266,11 @@ public class WaveData
             {
                 if (data.zombieList[i].baseProperty.waveLimit <= wave)
                 {
-                    canUse.Add(data.zombieList[i]);
-                    zombieTeam.Add(0);
-                    raritySum += canUse[i].baseProperty.rarity;
+                    ZombieInWaveData zombieInWaveData = new ZombieInWaveData();
+                    zombieList.Add(zombieInWaveData);
+                    zombieInWaveData.zombieCreate = data.zombieList[i];
+                    zombieInWaveData.zombieNum = 0;
+                    raritySum += data.zombieList[i].baseProperty.rarity;
                 }
 
             }
@@ -226,21 +279,23 @@ public class WaveData
         {
             for (int i = 0; i < data.zombieList.Count; i++)
             {
-                canUse.Add(data.zombieList[i]);
-                zombieTeam.Add(0);
-                raritySum += canUse[i].baseProperty.rarity;
+                ZombieInWaveData zombieInWaveData = new ZombieInWaveData();
+                zombieList.Add(zombieInWaveData);
+                zombieInWaveData.zombieCreate = data.zombieList[i];
+                zombieInWaveData.zombieNum = 0;
+                raritySum += data.zombieList[i].baseProperty.rarity;
             }
         }
 
         Debug.Log("筛选僵尸完毕");
-        fateList.Add ((float)canUse[0].baseProperty.rarity / raritySum);
-        for (int i = 1; i < canUse.Count; i++)
+        fateList.Add((float)(zombieList[0].zombieCreate.baseProperty.rarity) / raritySum);
+        for (int i = 1; i < zombieList.Count; i++)
         {
-            fateList.Add(fateList[i - 1] + (float)canUse[i].baseProperty.rarity / raritySum);
+            fateList.Add(fateList[i - 1] + (float)(zombieList[0].zombieCreate.baseProperty.rarity) / raritySum);
             //Debug.Log(fateList[i]);
         }
 
-        int maxZombieValue = 0;
+         maxZombieValue = 0;
         if (wave % 10 != 0)
         {
             if (data.createZombieType == CreateZombieType.一类有限制 || data.createZombieType == CreateZombieType.一类无限制)
@@ -264,21 +319,21 @@ public class WaveData
             {
                 if (fate < fateList[i])
                 {
-                    zombieTeam[i] += 1;
-                    maxZombieValue -= canUse[i].baseProperty.price;
+                    zombieList[i].zombieNum += 1;
+                    maxZombieValue -= zombieList[i].zombieCreate.baseProperty.price;
                     //Debug.Log(maxZombieValue);
-                    hpmax += canUse[i].baseProperty.HpMax;
+                    hpmax += zombieList[i].zombieCreate.baseProperty.HpMax;
                     break;
                 }
             }
             num++;
             if (num > 500) break;
         }
-        if (wave % 10 == 9&&wave%10==0)
+        if (wave % 10 == 9||wave%10==0)
         {
             enterPecent = 0;
         }
-        else enterPecent = Random.Range(0.5f,0.65f);
+        else enterPecent = UnityEngine.Random.Range(0.5f,0.65f);
         Debug.Log(string.Format("第{0}波僵尸已经生成完毕,共生成{1}只僵尸", wave,num));
     }
 
@@ -310,11 +365,12 @@ public class WaveData
         {
             yield return new WaitForSeconds(2);
         }
-        for(int i = 0; i < zombieTeam.Count; i++)
+        for(int i = 0; i < zombieList.Count; i++)
         {
-            for(int j = 0; j < zombieTeam[i]; j++)
+            for(int j = 0; j < zombieList[i].zombieNum; j++)
             {
-                liveZombie.Add(CreateChess(canUse[i]));
+                //Debug.Log(zombieList[i].zombieCreate.chessName);
+                liveZombie.Add(CreateChess(zombieList[i].zombieCreate));
             }
             yield return null;
         }
@@ -332,11 +388,12 @@ public class WaveData
                 tiles.Add(all[i]);
             }
         }
-        int n = Random.Range(0, tiles.Count);
+        int n = UnityEngine.Random.Range(0, tiles.Count);
         standTile = tiles[n];
         Chess chess= ChessTeamManage.Instance.CreateChess(creator, standTile, "Enemy");
-        float dx = Random.Range(0, 3.75f);
+        float dx = UnityEngine.Random.Range(0, 3.75f);
         chess.transform.position = standTile.transform.position + Vector3.right * dx;//位置偏移
+        //Debug.Log(chess.name);
         return chess;
     }
 
@@ -358,9 +415,17 @@ public class WaveData
         if (liveZombie.Count==0&&wave==LevelManage.instance.currentLevel.MaxWave)
         {
             //if (nextLevelData != null)
-            //    Debug.Log(nextLevelData.levelName);
-            Item_Reward reward = UIManage.GetView<ItemPanel>().Create<Item_Reward>();
-            reward.SetRewardPos(last.transform.position);
+            //    Debug.Log(nextLevelData.levelName); 
+            //也就是说我是在这里搞对吧
+            if (outcome == null)
+            {
+                Item_Reward reward = UIManage.GetView<ItemPanel>().Create<Item_Reward>();
+                reward.SetRewardPos(last.transform.position);
+            }
+            else
+            {
+                outcome.HandleOutcome(true);
+            }
             //win = true;
             return true;
         }

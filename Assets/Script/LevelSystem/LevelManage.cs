@@ -26,6 +26,10 @@ public class LevelManage: MonoBehaviour
            Destroy(gameObject);
         }
     }
+    /// <summary>
+    /// 转换关卡的时候会调用LevelLevel
+    /// </summary>
+    /// <param name="levelData"></param>
     public void ChangeLevel(LevelData levelData)
     {
         currentLevel = levelData;
@@ -76,7 +80,8 @@ public class LevelManage: MonoBehaviour
     {
         Debug.Log("LeaveLevel");
         IfGameStart = false;
-        //currentLevel.LeaveStage();
+        if(currentController != null)
+            currentController.OverPlugin ();
         EventController.Instance.TriggerEvent(EventName.WhenLeaveLevel.ToString());
     }
     public void SetController(LevelController levelController)

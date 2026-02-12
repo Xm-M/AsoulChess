@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHitNum: 1
+  rate: 1
   WhenBulletHit:
     m_PersistentCalls:
       m_Calls: []
@@ -155,30 +156,21 @@ MonoBehaviour:
   shooter: {fileID: 0}
   startPos: {x: 0, y: 0}
   targetPos: {x: 0, y: 0}
-  lockTarget: {fileID: 0}
   Dm:
     damageFrom: {fileID: 0}
     damageTo: {fileID: 0}
     damage: 0
     damageType: 4
     damageElementType: 0
+    ifCrit: 0
     takeBuff:
-      id: 2
+      id: 0
   references:
     version: 1
     00000000:
       type: {class: , ns: , asm: }
     00000001:
-      type: {class: BulletMoveParabola_Continue, ns: , asm: Assembly-CSharp}
+      type: {class: BulletMoveParabola, ns: , asm: Assembly-CSharp}
       data:
-        continueTime: 2
         moveTime: 1
-        height: 3
-    00000002:
-      type: {class: CrazyBuff, ns: , asm: Assembly-CSharp}
-      data:
-        buffName: "\u91D1\u94B1\u7684\u529B\u91CF"
-        target: {fileID: 0}
-        buffNum: 0
-        continueTime: 30
-        addspeed: 0.25
+        maxHeight: 10

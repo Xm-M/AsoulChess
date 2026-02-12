@@ -42,7 +42,6 @@ public enum EventName
     WhenPlantChess,
     WhenSweetChange,
     WhenLeaveLevel,
-    WhenShovel,
     PauseGame,
     ResumeGame,
 }

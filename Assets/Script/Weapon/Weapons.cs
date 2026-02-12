@@ -15,8 +15,16 @@ public class Weapon_Sample : Weapon
     public int FindEnemy(Chess user)
     {
         //throw new System.NotImplementedException();
-        findTarget.FindTarget(user,enemys);
-        return enemys.Count;
+        enemys.Clear();
+        if (findTarget != null)
+        {
+            findTarget?.FindTarget(user, enemys);
+            return enemys.Count;
+        }
+        else
+        {
+            return -1;
+        }
     }
 
     public float GetInterval()

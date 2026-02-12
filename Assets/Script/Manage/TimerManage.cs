@@ -48,18 +48,21 @@ public class TimerManage:IManager
 
     public void Update()
     {
-        GameTime += Time.deltaTime;
-        if(timerList.Count==0)return;
-
-        for(int i = 0; i < timerList.Count; i++)
+        if (LevelManage.instance.IfGameStart)
         {
-            if (timerList[i].IsFinish)
+            GameTime += Time.deltaTime;
+            if (timerList.Count == 0) return;
+            for (int i = 0; i < timerList.Count; i++)
             {
-                availableQueue.Enqueue(timerList[i]);
-                timerList.Remove(timerList[i]);
-                continue;
-            }else
-                timerList[i].Update();
+                if (timerList[i].IsFinish)
+                {
+                    availableQueue.Enqueue(timerList[i]);
+                    timerList.Remove(timerList[i]);
+                    continue;
+                }
+                else
+                    timerList[i].Update();
+            }
         }
     }
     public void ChangeTimeSpeed(float scale)
@@ -112,7 +115,8 @@ public class Timer
     }
     public void ResetTime(float t)
     {
-        finishTime -=t;
+        delayTime = t;
+        finishTime =TimerManage.GameTime+t;
     }
     public void ChangeDelayTime(float newDelayTime)
     {

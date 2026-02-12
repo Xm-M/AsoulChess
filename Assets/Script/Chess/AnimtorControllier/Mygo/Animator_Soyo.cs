@@ -10,25 +10,25 @@ public class Animator_Soyo : AnimatorController
         base.WhenControllerEnterWar();
         friend = false;
     }
-    public override void ChangeFloat(string vname, float value)
-    {
-        base.ChangeFloat(vname, value);
-        //Debug.Log(chess);
-        if (chess.stateController.currentState.state!=null&&chess.stateController.currentState.state.stateName == StateName.IdleState)
-        {
-            if (value > 0 && !friend)
-            {
-                animator.Play("change1");
-                friend = true;
-            }
-            else if (value < 0.1f && friend)
-            {
-                animator.Play("change4");
-                friend = false;
+    //public override void ChangeFloat(string vname, float value)
+    //{
+    //    base.ChangeFloat(vname, value);
+    //    //Debug.Log(chess);
+    //    if (chess.stateController.currentState.state!=null&&chess.stateController.currentState.state.stateName == StateName.IdleState)
+    //    {
+    //        if (value > 0 && !friend)
+    //        {
+    //            animator.Play("change1");
+    //            friend = true;
+    //        }
+    //        else if (value < 0.1f && friend)
+    //        {
+    //            animator.Play("change4");
+    //            friend = false;
 
-            }
-        }
-    }
+    //        }
+    //    }
+    //}
     private void Update()
     {
         LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(chess.gameObject);
@@ -43,17 +43,17 @@ public class Animator_Soyo : AnimatorController
             animator.SetBool("enemy", false);
         }
     }
-    public override void PlayIdle()
-    {
-        float mygo = animator.GetFloat("Mygo");
-        if (mygo < 1)
-        {
-            animator.Play("idle1");
-        }
-        else if (mygo > 0.9)
-        {
-            animator.Play("idle2");
-        }
-    }
+    //public override void PlayIdle()
+    //{
+    //    float mygo = animator.GetFloat("Mygo");
+    //    if (mygo < 1)
+    //    {
+    //        animator.Play("idle1");
+    //    }
+    //    else if (mygo > 0.9)
+    //    {
+    //        animator.Play("idle2");
+    //    }
+    //}
 }
 

@@ -62,6 +62,15 @@ public class GameManage : MonoBehaviour
         {
             UIManage.Close<TestScenePanel>();
         }
+        if (Input.GetKeyUp(KeyCode.X)&&LevelManage.instance.IfGameStart)
+        {
+            LevelManage.instance.GamePause();
+            Debug.Log("ÔÝÍ£");
+        }else if (Input.GetKeyUp(KeyCode.X) && !LevelManage.instance.IfGameStart)
+        {
+            LevelManage.instance.GameContinue();
+            Debug.Log("¼ÌÐø");
+        }
     }
     public void QuitGame()
     {

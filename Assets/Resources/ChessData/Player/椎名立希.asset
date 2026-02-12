@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: "\u690E\u540D\u7ACB\u5E0C"
   m_EditorClassIdentifier: 
   chessName: "\u690E\u540D\u7ACB\u5E0C"
+  chessDescription: 
+  chessEffect: 
   baseProperty:
     attack: 40
     attackRate: 0
     crit: 0
     critDamage: 1.3
+    dodgeRate: 0
     extraDamge: 0
     AR: 0
     extraDefence: 0
@@ -27,8 +30,10 @@ MonoBehaviour:
     healRate: 1
     speed: 0
     acceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
     attackRange: 11.25
-    price: 75
+    price: 200
     rarity: 4000
     waveLimit: 1
     CD: 7.5

@@ -150,7 +150,11 @@ public class MoveController:Controller
         
     }
 
-
+    public virtual void Turn()
+    {
+        chess.Flap(chess.transform );
+        nextTile=tileMethod?.FindNextTile(chess);
+    }
 
     public virtual void EndMoving()
     {

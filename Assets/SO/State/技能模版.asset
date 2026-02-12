@@ -33,15 +33,18 @@ MonoBehaviour:
       targetState: 5
   - state:
       id: 6
-    transitions: []
-  - state:
-      id: 7
-    transitions: []
-  - state:
-      id: 8
     transitions:
     - transition:
-        id: 9
+        id: 7
+      targetState: 4
+  - state:
+      id: 8
+    transitions: []
+  - state:
+      id: 9
+    transitions:
+    - transition:
+        id: 10
       targetState: 5
   references:
     version: 1
@@ -69,14 +72,16 @@ MonoBehaviour:
         stateName: 2
         chess: {fileID: 0}
     00000007:
+      type: {class: IfGameStart, ns: , asm: Assembly-CSharp}
+    00000008:
       type: {class: DeathState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 5
         chess: {fileID: 0}
-    00000008:
+    00000009:
       type: {class: DizzinessState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 6
         chess: {fileID: 0}
-    00000009:
+    0000000A:
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}

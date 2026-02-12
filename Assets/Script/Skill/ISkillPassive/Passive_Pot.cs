@@ -3,39 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 这个逻辑上有问题，以后会改
+/// 这个逻辑上有问题，以后会改 这个是花盆吧 这个b东西要怎么写我还没想好
 /// </summary>
-public class Passive_Pot : ISkill
-{
-    public PotTile potTile;
+//public class Passive_Pot : ISkill
+//{
+//    public PotTile potTile;
 
-    public bool IfSkillReady(Chess user)
-    {
-        throw new System.NotImplementedException();
-    }
+//    public bool IfSkillReady(Chess user)
+//    {
+//        throw new System.NotImplementedException();
+//    }
 
-    //public void InitSkill(Skill skill)
-    //{
-    //    potTile.SetTile(skill.user.moveController.standTile);
-    //}
+//    //public void InitSkill(Skill skill)
+//    //{
+//    //    potTile.SetTile(skill.user.moveController.standTile);
+//    //}
 
-    public void InitSkill(Chess user)
-    {
-        throw new System.NotImplementedException();
-    }
+//    public void InitSkill(Chess user)
+//    {
+//        throw new System.NotImplementedException();
+//    }
 
-    public void LeaveSkill(Chess user)
-    {
-        throw new System.NotImplementedException();
-    }
+//    public void LeaveSkill(Chess user)
+//    {
+//        throw new System.NotImplementedException();
+//    }
 
-    public void UseSkill(Chess user)
-    {
-        throw new System.NotImplementedException();
-    }
+//    public void UseSkill(Chess user)
+//    {
+//        throw new System.NotImplementedException();
+//    }
 
-    public void WhenEnter(Chess user)
-    {
-        throw new System.NotImplementedException();
-    }
-}
+//    public void WhenEnter(Chess user)
+//    {
+//        throw new System.NotImplementedException();
+//    }
+//}

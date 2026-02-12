@@ -388,9 +388,9 @@ MonoBehaviour:
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      id: 0
     activeSkill:
-      id: 2
+      id: 1
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -399,17 +399,23 @@ MonoBehaviour:
       damageElementType: 0
       ifCrit: 0
       takeBuff:
-        id: 1
+        id: 0
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 1
+        id: 0
       transitions: []
     preState:
       state:
-        id: 1
+        id: 0
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 96519b4b5f173b44492267c16ec7cd0d, type: 2}
+    stateGraph: {fileID: 11400000, guid: 11a8d3c8ba4dd994b961ba2e19cad4f6, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -419,7 +425,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 0
   animatorController: {fileID: 3744606940738722277}
   WhenEnterGame:
     m_PersistentCalls:
@@ -439,25 +445,36 @@ MonoBehaviour:
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1
     00000000:
-      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
-      data:
-        initWeapon:
-          id: 1
-        findTarget:
-          id: 1
-        attackFunction:
-          id: 1
-        enemys: []
-        interval: 0
-    00000001:
       type: {class: , ns: , asm: }
+    00000001:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: b00ea469121ca1f4587856374fbc3373, type: 2}
+        readyChecker:
+          id: 0
+        effect:
+          id: 2
+        skillFinish:
+          id: 3
+        runtime:
+          id: 4
     00000002:
-      type: {class: SkillEffect_Bowling, ns: , asm: Assembly-CSharp}
+      type: {class: SkillEffect_Bowling_, ns: , asm: Assembly-CSharp}
       data:
         armor: {fileID: 5186064477592837383}
+    00000003:
+      type: {class: DurationFinish, ns: , asm: Assembly-CSharp}
+    00000004:
+      type: {class: SkillRuntimeInfo_Duration, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+        maxTime: 50000
 --- !u!61 &1897016762848573687
 BoxCollider2D:
   m_ObjectHideFlags: 0

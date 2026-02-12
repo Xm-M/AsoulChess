@@ -22,6 +22,7 @@ public class ShopIcon : MonoBehaviour
     public Text goodPrice;
     public AudioPlayer Audio;
     public float coldDown;//冷却时间
+    public int price;
     float t;
     bool ifCanbuy;
     ShopSelectIcon selectIcon;
@@ -33,22 +34,50 @@ public class ShopIcon : MonoBehaviour
          
     }}//
     public void InitShopIcon(ShopSelectIcon s){
+        UIManage.GetView<PlantsShop>().AddShopIcon(this);
         this.selectIcon=s;
         good=selectIcon.select;
-        goodImage.sprite=good.chessSprite;   
+        goodImage.sprite=good.chessSprite;
+        price = good.baseProperty.price;
         goodPrice.text=s.price.text;
         coldDown=good.baseProperty.CD;
         if (coldDown < 30) t = coldDown;
         else t = 0;
         ifCanbuy = true;
     }
+
+    public void RefreshGood(PropertyCreator creator){
+
+        good = creator;
+        goodImage.sprite = good.chessSprite;
+        price = creator.baseProperty.price;
+        goodPrice.text = creator.baseProperty.price.ToString();
+        coldDown=good.baseProperty.CD;
+        if (coldDown < 30) t = coldDown;
+        else t = 0;
+        ifCanbuy=true;
+    }
+    public void ChangePrice(int changePrice)
+    {
+        price+=changePrice;
+        goodPrice.text = price.ToString();
+    }
+    public void ResumePrice()
+    {
+        price = good.baseProperty.price;
+        goodPrice.text = price.ToString();
+    }
+
     public bool IfCanBuyCard(){
         if(good==null){
             Destroy(gameObject);
             return false;
         }
-      
-        return good.IfCanBuyCard(SunLightPanel.instance.sunLight);
+        //if(sunLight>=baseProperty.price){
+        //    
+        //}
+        //return false;
+        return good.IfCanBuyCard()&& SunLightPanel.instance.sunLight>=price;
     }
     public bool IfColdDown()
     {
@@ -93,6 +122,7 @@ public class ShopIcon : MonoBehaviour
             selectIcon.UnselectCard();
             UIManage.GetView<PlantsShop>().shopAudio.PlayAudio("tap");
             UIManage.GetView<PlantsShop>().RemoveSelection(selectIcon);
+            UIManage.GetView<PlantsShop>().RemoveShopIcon(this);
             Destroy(gameObject);
         }
         else

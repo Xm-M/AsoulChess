@@ -1,39 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class SkillEffect_Summon : ISkill
+public class SkillEffect_Summon : ISkillEffect
 {
-    public PropertyCreator creator;
+    public List<PropertyCreator> creators;
 
-    public bool IfSkillReady(Chess user)
+    public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
-        throw new System.NotImplementedException();
-    }
-
-    public void InitSkill(Chess user)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void LeaveSkill(Chess user)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void SkillEffect(Chess user)
-    {
-        ChessTeamManage.Instance.CreateChess(creator,  user.moveController.standTile,
+        int n=Random.Range(0, creators.Count);
+        ChessTeamManage.Instance.CreateChess(creators[n], user.moveController.standTile,
              user.tag);
-    }
-
-    public void UseSkill(Chess user)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void WhenEnter(Chess user)
-    {
-        throw new System.NotImplementedException();
     }
 }

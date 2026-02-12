@@ -1,0 +1,134 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1ff76dd6f3c6ab44bbad763dbcc3a33, type: 3}
+  m_Name: "Mygo_\u653B\u51FB\u6A21\u677F"
+  m_EditorClassIdentifier: 
+  States:
+  - state:
+      id: 0
+    transitions:
+    - transition:
+        id: 1
+      targetState: 5
+    - transition:
+        id: 2
+      targetState: 9
+    - transition:
+        id: 3
+      targetState: 0
+  - state:
+      id: 4
+    transitions:
+    - transition:
+        id: 5
+      targetState: 4
+    - transition:
+        id: 6
+      targetState: 5
+    - transition:
+        id: 7
+      targetState: 9
+  - state:
+      id: 8
+    transitions: []
+  - state:
+      id: 9
+    transitions:
+    - transition:
+        id: 10
+      targetState: 4
+  - state:
+      id: 11
+    transitions:
+    - transition:
+        id: 12
+      targetState: 5
+  - state:
+      id: 13
+    transitions:
+    - transition:
+        id: 14
+      targetState: 4
+    - transition:
+        id: 15
+      targetState: 5
+  references:
+    version: 1
+    00000000:
+      type: {class: IdleState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 4
+        chess: {fileID: 0}
+    00000001:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+    00000002:
+      type: {class: Transition_Mygo, ns: , asm: Assembly-CSharp}
+      data:
+        min: 1
+        isCheck: 0
+    00000003:
+      type: {class: InRangeTransition, ns: , asm: Assembly-CSharp}
+    00000004:
+      type: {class: AttackState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 0
+        chess: {fileID: 0}
+    00000005:
+      type: {class: OutRangeTransition, ns: , asm: Assembly-CSharp}
+    00000006:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+    00000007:
+      type: {class: Transition_Mygo, ns: , asm: Assembly-CSharp}
+      data:
+        min: 1
+        isCheck: 0
+    00000008:
+      type: {class: DeathState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 5
+        chess: {fileID: 0}
+    00000009:
+      type: {class: PrepareState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 2
+        chess: {fileID: 0}
+    0000000A:
+      type: {class: IfGameStart, ns: , asm: Assembly-CSharp}
+    0000000B:
+      type: {class: DizzinessState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 6
+        chess: {fileID: 0}
+    0000000C:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+    0000000D:
+      type: {class: Confusion, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 9
+        chess: {fileID: 0}
+    0000000E:
+      type: {class: MultyTransision_And, ns: , asm: Assembly-CSharp}
+      data:
+        transitions:
+        - id: 16
+        - id: 17
+    0000000F:
+      type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+    00000010:
+      type: {class: Transition_Mygo, ns: , asm: Assembly-CSharp}
+      data:
+        min: 0
+        isCheck: 1
+    00000011:
+      type: {class: IfAnimationOverTransisiton, ns: , asm: Assembly-CSharp}
+      data:
+        animName: idle

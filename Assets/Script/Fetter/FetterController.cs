@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph;
 using UnityEngine;
 
 /// <summary>
@@ -24,9 +23,9 @@ public class FetterController
             fetterDic.Add(fetterDataList[i].fetter.fetterName, fetterDataList[i].fetter);
         }
 
-        EventController.Instance.AddListener(EventName.GameStart.ToString(),CheckFetter);
-        EventController.Instance.AddListener(EventName.GameOver.ToString(), ClearFetter);
-        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), ClearFetter);
+        //EventController.Instance.AddListener(EventName.GameStart.ToString(),CheckFetter);
+        //EventController.Instance.AddListener(EventName.GameOver.ToString(), ClearFetter);
+        //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), ClearFetter);
     }
 
     /// <summary>
@@ -63,6 +62,12 @@ public class FetterController
                 }
             }
         }
+    }
+    public Fetter GetFetter(string fetterName)
+    {
+        Fetter fetter = null;   
+        fetterDic.TryGetValue(fetterName, out fetter);
+        return fetter;
     }
     public void ClearFetter()
     {

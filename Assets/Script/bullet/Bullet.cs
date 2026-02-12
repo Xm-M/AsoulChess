@@ -21,24 +21,35 @@ public class Bullet : MonoBehaviour
     public Vector2 targetPos;
     //public Chess lockTarget;
     public DamageMessege Dm;
+    protected float damage;
     protected Chess hitChess;
     protected int current;
     private void Awake()
     {
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), RecycleBullet);
     }
-    public virtual void InitBullet(Chess shooter,Vector3 position,Chess target,Vector2 moveDir)
+    public virtual void InitBullet(Chess shooter,Vector3 position,Chess target,Vector2 moveDir,float damage=-1,float rate=1)
     {
         this.shooter = shooter;
         startPos = position;
-        targetPos = target.transform.position;
+        if(target!=null)
+            targetPos = target.transform.position;
         //lockTarget = target;
         this.tag = shooter.tag;
         current = MaxHitNum;
         transform.position = startPos;
         transform.right=moveDir;
-        Dm.damage = shooter.propertyController.GetAttack()*rate;
         Dm.damageFrom = shooter;
+        this.rate = rate;
+        if (damage == -1)
+        {
+            this.damage = shooter.propertyController.GetAttack() * rate;
+           
+        }
+        else
+        {
+            this.damage = damage;
+        }
         bulletMove.InitMove(this);
     } 
     protected virtual void Update()
@@ -56,7 +67,7 @@ public class Bullet : MonoBehaviour
         {
             Chess c = collision.GetComponent<Chess>();
             if(c==null)return;
-            Dm.damage= shooter.propertyController.GetAttack() * rate;
+            Dm.damage= damage * rate;
             Dm.damageTo = c;
             if (current > 0)
             {

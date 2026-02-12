@@ -157,25 +157,29 @@ MonoBehaviour:
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      id: 0
     activeSkill:
-      id: 2
+      id: 1
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
       damage: 0
       damageType: 0
       damageElementType: 0
+      ifCrit: 0
       takeBuff:
-        id: 1
+        id: 0
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 1
+        id: 0
       transitions: []
     preState:
       state:
-        id: 1
+        id: 0
       transitions: []
     stateGraph: {fileID: 11400000, guid: e76dbd0eedc2a624fa8f96ee98b0f67e, type: 2}
     EnterWarState: 4
@@ -187,7 +191,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 0
   animatorController: {fileID: 907093881712178286}
   WhenEnterGame:
     m_PersistentCalls:
@@ -210,39 +214,29 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
-      data:
-        initWeapon:
-          id: 1
-        findTarget:
-          id: 3
-        attackFunction:
-          id: 4
-        enemys: []
-        interval: 0
-    00000001:
       type: {class: , ns: , asm: }
+    00000001:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: 53518ad05c8a7ab4abb8862864751974, type: 2}
+        readyChecker:
+          id: 0
+        effect:
+          id: 2
+        skillFinish:
+          id: 3
+        runtime:
+          id: 4
     00000002:
       type: {class: SkillEffect_CreateSunLight, ns: , asm: Assembly-CSharp}
       data:
-        startTime: 15
-        coldDown: 25
-        sunLightNum: 25
         sunLightPos: {fileID: 8190265288536604016}
     00000003:
-      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
     00000004:
-      type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
       data:
-        effect: {fileID: 0}
-        DM:
-          damageFrom: {fileID: 0}
-          damageTo: {fileID: 0}
-          damage: 0
-          damageType: 0
-          damageElementType: 0
-          takeBuff:
-            id: 1
+        currentTime: 0
 --- !u!61 &4467941491783882133
 BoxCollider2D:
   m_ObjectHideFlags: 0

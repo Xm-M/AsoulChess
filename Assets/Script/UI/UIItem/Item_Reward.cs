@@ -95,7 +95,7 @@ public class Item_Reward : UIItem
     }
     public void Win()
     {
-        LevelManage.instance.GameOver(true);
+        LevelManage.instance.GameOver(true);//所以说我的游戏结束实际是绑定在了生成这个上面
     }
     public override void Recycle()
     {

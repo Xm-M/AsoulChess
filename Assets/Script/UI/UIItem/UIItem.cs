@@ -9,6 +9,10 @@ public abstract class UIItem : MonoBehaviour,IPointerClickHandler
     {
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Recycle);
     }
+    private void OnDestroy()
+    {
+        EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), Recycle);
+    }
     public abstract void OnPointerClick(PointerEventData eventData);
     public abstract void Recycle();
      

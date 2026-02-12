@@ -159,10 +159,9 @@ GameObject:
   - component: {fileID: 5445168886996697135}
   - component: {fileID: 6062567807294990409}
   - component: {fileID: 493359355613956276}
-  - component: {fileID: 1305738676743390492}
-  - component: {fileID: 8510336462404995920}
   - component: {fileID: 5959387495151360518}
   - component: {fileID: 3654551808594416378}
+  - component: {fileID: 8676598996643042512}
   m_Layer: 0
   m_Name: "\u8981\u4E50\u5948"
   m_TagString: Untagged
@@ -234,8 +233,15 @@ MonoBehaviour:
       damage: 0
       damageType: 0
       damageElementType: 0
+      ifCrit: 0
       takeBuff:
         id: 3
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
@@ -245,7 +251,7 @@ MonoBehaviour:
       state:
         id: 3
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 34902e495a0ceb34baa8de242ee54d2c, type: 2}
+    stateGraph: {fileID: 11400000, guid: cb53f67c9f384e84496ed78db0664ee2, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -256,11 +262,14 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 3
-  animatorController: {fileID: 1305738676743390492}
+  animatorController: {fileID: 8676598996643042512}
   WhenEnterGame:
     m_PersistentCalls:
       m_Calls: []
   DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRemove:
     m_PersistentCalls:
       m_Calls: []
   references:
@@ -271,60 +280,92 @@ MonoBehaviour:
         initWeapon:
           id: 3
         findTarget:
-          id: 4
+          id: 3
         attackFunction:
-          id: 5
+          id: 4
         enemys: []
         interval: 0
     00000001:
-      type: {class: Passive_Mygo, ns: , asm: Assembly-CSharp}
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
       data:
-        eggcontroller: {fileID: 0}
+        effect:
+          id: 5
     00000002:
-      type: {class: SkillEffect_MultySkill, ns: , asm: Assembly-CSharp}
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
       data:
-        skills:
-        - id: 6
-        - id: 7
+        config: {fileID: 11400000, guid: 4d61d740cc89d1f4396af847f99597eb, type: 2}
+        readyChecker:
+          id: 6
+        effect:
+          id: 7
+        skillFinish:
+          id: 8
+        runtime:
+          id: 9
     00000003:
       type: {class: , ns: , asm: }
     00000004:
-      type: {class: IAllSearch_Cat, ns: , asm: Assembly-CSharp}
-    00000005:
-      type: {class: ShootBullet_Rana, ns: , asm: Assembly-CSharp}
+      type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
-        bullet: {fileID: 2098010854589325911, guid: cfeca1d416394e142bcf1271c9cd73bd, type: 3}
+        bullet: {fileID: 0}
+    00000005:
+      type: {class: PassiveSkill_MygoPassive_Rana, ns: , asm: Assembly-CSharp}
+      data:
+        interval: 0.25
+        baseFindtagret:
+          id: 10
+        baseBullet: {fileID: 2098010854589325911, guid: ef1d574504e77f543b7112daf661ffe0, type: 3}
+        upFindtarget:
+          id: 11
+        upBullet: {fileID: 2098010854589325911, guid: cfeca1d416394e142bcf1271c9cd73bd, type: 3}
     00000006:
+      type: {class: SkillReady_Multy, ns: , asm: Assembly-CSharp}
+      data:
+        skillReadies:
+        - id: 12
+        - id: 13
+    00000007:
       type: {class: SkillEffect_RanaFreezy, ns: , asm: Assembly-CSharp}
       data:
         freezyBuff:
-          id: 8
+          id: 14
         freezyEffect: {fileID: 2828106483678350415, guid: 8413b31e70f207d48befde48a2412a64, type: 3}
-    00000007:
-      type: {class: SkillEffect_Rana, ns: , asm: Assembly-CSharp}
-      data:
-        cat: {fileID: 11400000, guid: d315d35d900bc2e4b908997cef87d131, type: 2}
-        coldDown: 50
-        ifMouseDown: {fileID: 8510336462404995920}
     00000008:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    00000009:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    0000000A:
+      type: {class: StraightLaser, ns: , asm: Assembly-CSharp}
+    0000000B:
+      type: {class: IAllSearch_Rana, ns: , asm: Assembly-CSharp}
+    0000000C:
+      type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
+      data:
+        clickBox: {fileID: 5352847131170582030}
+    0000000D:
+      type: {class: SkillReady_Mygo, ns: , asm: Assembly-CSharp}
+      data:
+        min: 3
+    0000000E:
       type: {class: FreezyBuff, ns: , asm: Assembly-CSharp}
       data:
-        buffName: "\u51B0\u51BB"
+        buffName: "\u51BB\u7ED3"
         target: {fileID: 0}
-        buffNum: 0
-        continueTime: 3
+        continueTime: 5
+        Dizznesseffect: {fileID: 0}
         buff:
-          id: 9
+          id: 15
         FreezyEffect: {fileID: 5229756143895117830, guid: 7acb01e944c545b4fb4b0f5b7bc250e8, type: 3}
-    00000009:
+    0000000F:
       type: {class: ColdBuff, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u51B0\u51B7"
         target: {fileID: 0}
-        buffNum: 0
-        continueTime: 10
+        continueTime: 15
         slowRate: -0.5
-        coldBuff: {fileID: 0}
+        coldBuff: {fileID: 7196381099807767998, guid: d4c0260bead243647a0d53dc079b158e, type: 3}
 --- !u!61 &6062567807294990409
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -370,32 +411,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1305738676743390492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4629388887418813151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab05881c8a3d8f3499b008e4104a944e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 493359355613956276}
-  sprite: {fileID: 3630875652255051472}
---- !u!114 &8510336462404995920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4629388887418813151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95e3e8e2f74f00043b3ceb4a62af6993, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5959387495151360518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,6 +530,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8676598996643042512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4629388887418813151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687eea4d5a1356149a63151cba61d8b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 493359355613956276}
+  sprite: {fileID: 3630875652255051472}
 --- !u!1 &4754066776678445904
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,6 +701,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6675327149307184351}
   - component: {fileID: 3630875652255051472}
+  - component: {fileID: 5352847131170582030}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -744,6 +774,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &5352847131170582030
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6833410943941045642}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.046549916, y: 0.53339994}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.4}
+    oldSize: {x: 4, y: 3.9375}
+    newSize: {x: 4, y: 3.9375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.703532, y: 2.7582328}
+  m_EdgeRadius: 0
 --- !u!1 &7844844578560446703
 GameObject:
   m_ObjectHideFlags: 0

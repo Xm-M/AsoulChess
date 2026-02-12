@@ -2,55 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillEffect_SummonBlackHole : ISkill
+public class SkillEffect_SummonBlackHole : ISkillEffect
 {
-    //public float startTime;
-    public float coldDown;//CD
-    public float loopTime;
-    public int FontNum=4;
-    public Transform sunLightPos;
+    public int FontNum = 4;
     public GameObject blackHole;
-    public MouseDownSkill ifMouseDown;
-    float t;
-    Timer timer;
     GameObject black;
-    Chess user;
-    public bool IfSkillReady(Chess user)
-    {
-        t += Time.deltaTime;
-        
-        if (t > user.propertyController.GetColdDown(coldDown))
-        {
-            user.animatorController.ChangeFlash(-1);
-            if (ifMouseDown.IfDown)
-            {
-                t = 0;
-                user.animatorController.ChangeFlash(1);
-                return true;
-            }
-            return false;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public void InitSkill(Chess user)
-    {
-         this.user = user;
-    }
-
-    public void LeaveSkill(Chess user)
-    {
-        if (timer != null)
-        {
-            timer.Stop();
-            timer = null;
-        }
-    }
-
-    public void UseSkill(Chess user)
+    public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
         black = ObjectPool.instance.Create(blackHole);
         black.tag = user.tag;
@@ -58,27 +15,37 @@ public class SkillEffect_SummonBlackHole : ISkill
         Vector2Int standPos = user.moveController.standTile.mapPos;
         if (standPos.x + FontNum < MapManage.instance.mapSize.x)
         {
-            tile = MapManage.instance.tiles[standPos.x + FontNum,standPos.y];
+            tile = MapManage.instance.tiles[standPos.x + FontNum, standPos.y];
         }
         else
         {
-            tile=MapManage.instance.tiles[MapManage.instance.mapSize.x-1, standPos.y];
+            tile = MapManage.instance.tiles[MapManage.instance.mapSize.x - 1, standPos.y];
         }
         black.transform.position = tile.transform.position;
-        black.GetComponent<BlackHole>().Init(tile,loopTime);
-        timer = GameManage.instance.timerManage.AddTimer(ChangeState, loopTime, false);
-        
-    }
-    public void ChangeState()
-    {
-        //ObjectPool.instance.ReycleObject(black);
-        user.stateController.ChangeState(StateName.IdleState);
-        user.animatorController.ChangeFlash(0);
+        black.GetComponent<BlackHole>().Init(tile, config.baseDamage[0]);
+         
+
     }
 
-    public void WhenEnter(Chess user)
+ 
+}
+public class LevelUpPlant_Mygo : LevelUpPlant
+{
+    public override bool ifCanPlant(PropertyCreator creator, Tile tile)
     {
-        t =0;
-        user.animatorController.ChangeFlash(0);
+        bool ans = tile.stander && (tile.stander.propertyController.creator == basePlant);
+        Chess stander = tile.stander;
+        if ( ans)
+        {
+            int mygo = 0;
+            stander.skillController.context.TryGet<int>("mygo",out mygo);
+            if (mygo == 4)
+            {
+                //tile.stander.Death();
+                stander.Death();
+                return  true;
+            }
+        }
+        return false;
     }
 }

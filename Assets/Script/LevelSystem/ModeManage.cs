@@ -9,7 +9,4 @@ public enum LevelMode
     SurvivalMode,//生存模式
     TestMode,//测试模式
 }
-public class ModeManage  
-{
-     
-}
+

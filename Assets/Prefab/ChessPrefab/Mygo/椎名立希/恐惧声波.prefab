@@ -110,7 +110,6 @@ MonoBehaviour:
   shooter: {fileID: 0}
   startPos: {x: 0, y: 0}
   targetPos: {x: 0, y: 0}
-  lockTarget: {fileID: 0}
   Dm:
     damageFrom: {fileID: 0}
     damageTo: {fileID: 0}
@@ -119,7 +118,7 @@ MonoBehaviour:
     damageElementType: 6
     ifCrit: 0
     takeBuff:
-      id: 0
+      id: 2
   references:
     version: 1
     00000000:
@@ -128,6 +127,30 @@ MonoBehaviour:
       type: {class: IBulletMoveRight, ns: , asm: Assembly-CSharp}
       data:
         speed: 2.5
+    00000002:
+      type: {class: MultyBuff, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "taki\u590D\u5408\u6548\u679C"
+        target: {fileID: 0}
+        buffs:
+        - id: 3
+        - id: 4
+    00000003:
+      type: {class: Buff_Fear, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u6050\u60E7"
+        target: {fileID: 0}
+        continueTime: 5
+        FearEffect: {fileID: 60859552351474783, guid: 5bb58ad649f96fd47b6e29b885d8ff28, type: 3}
+        moveRate: 0.5
+    00000004:
+      type: {class: Buff_StressBuff_Death, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u538B\u529B"
+        target: {fileID: 0}
+        stressLimit: 100
+        extraStress: 1
+        stressTextPre: {fileID: 0}
 --- !u!61 &3181357889834197212
 BoxCollider2D:
   m_ObjectHideFlags: 0

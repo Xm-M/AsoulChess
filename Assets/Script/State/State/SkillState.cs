@@ -22,7 +22,7 @@ public class SkillState : State
     public override void Exit(Chess chess)
     {
         base.Exit(chess);
-        //chess.skillController.LoopSkill(); 
+        chess.skillController.SkillOver(chess);
     }
     public override State Clone()
     {

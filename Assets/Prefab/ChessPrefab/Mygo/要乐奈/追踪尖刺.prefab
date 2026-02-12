@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0521eb3542eec247b60a889777d903f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHitNum: 1
+  MaxHitNum: 100
   rate: 1
   WhenBulletHit:
     m_PersistentCalls:
@@ -156,13 +156,13 @@ MonoBehaviour:
   shooter: {fileID: 0}
   startPos: {x: 0, y: 0}
   targetPos: {x: 0, y: 0}
-  lockTarget: {fileID: 0}
   Dm:
     damageFrom: {fileID: 0}
     damageTo: {fileID: 0}
     damage: 0
     damageType: 0
     damageElementType: 2
+    ifCrit: 0
     takeBuff:
       id: 0
   references:

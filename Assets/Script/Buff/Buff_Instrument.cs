@@ -15,17 +15,17 @@ public class Buff_Vocal : Buff
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
-        target.propertyController.onTakeDamage.AddListener(WhenTakeDamage);
+        target.equipWeapon.OnAttack.AddListener(WhenTakeDamage);
     }
 
-    public void WhenTakeDamage(DamageMessege Dm)
+    public void WhenTakeDamage(Chess chess)
     {
         count++;
         if(count == maxCount)
         {
             count = 0;
             Bullet b=ObjectPool.instance.Create(extraBullet).GetComponent<Bullet>();
-            b.InitBullet(Dm.damageFrom, Dm.damageFrom.equipWeapon.weaponPos.position, Dm.damageTo, Dm.damageFrom.transform.right);
+            b.InitBullet(chess, chess.equipWeapon.weaponPos.position, null, chess.transform.right);
             ////这里要给takebuff 添加随机buff
             //b.Dm.takeBuff=
             ////如果有多种颜色的话 就用这个吧
@@ -36,12 +36,12 @@ public class Buff_Vocal : Buff
     public override void BuffOver()
     {
         base.BuffOver();
-        target.propertyController.onTakeDamage.RemoveListener(WhenTakeDamage);
+        target.equipWeapon.OnAttack.RemoveListener(WhenTakeDamage);
     }
 
-    public override void BuffReset()
+    public override void BuffReset(Buff resetBuff)
     {
-        base.BuffReset();
+        base.BuffReset(resetBuff);
     }
 }
 /// <summary>
@@ -68,9 +68,9 @@ public class Buff_Bass : Buff
         cold = true;
     }
 
-    public override void BuffReset()
+    public override void BuffReset(Buff resetBuff)
     {
-        base.BuffReset();
+        base.BuffReset(resetBuff);
     }
     public void OnGetDamage(DamageMessege dm)
     {
@@ -108,7 +108,7 @@ public class Buff_BassHide : TimeBuff
         base.BuffEffect(target);
         target.UnSelectable();
         target.animatorController.ChangeColor(new Color(1, 1, 1, 0.5f));
-        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime);
+        
     }
 
     public override void BuffOver()
@@ -139,9 +139,9 @@ public class Buff_Guitar : Buff
         target.propertyController.ChangeCrit(-extraCrit);
         target.propertyController.ChangeCritDamage(-extraCritDamage);
     }
-    public override void BuffReset()
+    public override void BuffReset(Buff resetBuff)
     {
-        base.BuffReset();
+        base.BuffReset(resetBuff);
     }
     
 }
@@ -178,8 +178,8 @@ public class Buff_KeyBoard : Buff
             target.propertyController.ChangeAR(-extraArmor);
         }
     }
-    public override void BuffReset()
+    public override void BuffReset(Buff resetBuff)
     {
-        base.BuffReset();
+        base.BuffReset(resetBuff);
     }
 }// 

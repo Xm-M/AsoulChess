@@ -76,27 +76,34 @@ MonoBehaviour:
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      id: 0
     activeSkill:
-      id: 2
+      id: 1
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
       damage: 0
-      damageType: 0
-      damageElementType: 0
+      damageType: 2
+      damageElementType: 20
+      ifCrit: 0
       takeBuff:
-        id: 1
+        id: 0
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 1
+        id: 0
       transitions: []
     preState:
       state:
-        id: 1
+        id: 0
       transitions: []
-    stateGraph: {fileID: 11400000, guid: d3f806ded704e7b49a3847bb374524ec, type: 2}
+    stateGraph: {fileID: 11400000, guid: 11a8d3c8ba4dd994b961ba2e19cad4f6, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -106,7 +113,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 0
   animatorController: {fileID: 3422729858800049069}
   WhenEnterGame:
     m_PersistentCalls:
@@ -126,46 +133,43 @@ MonoBehaviour:
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1
     00000000:
-      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
-      data:
-        initWeapon:
-          id: 1
-        findTarget:
-          id: 3
-        attackFunction:
-          id: 4
-        enemys: []
-        interval: 0
-    00000001:
       type: {class: , ns: , asm: }
-    00000002:
-      type: {class: SkillEffect_Explode, ns: , asm: Assembly-CSharp}
+    00000001:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
       data:
-        findTarget:
+        config: {fileID: 11400000, guid: bc45537a4dc423b44af1ada756783cc6, type: 2}
+        readyChecker:
+          id: 2
+        effect:
+          id: 3
+        skillFinish:
+          id: 4
+        runtime:
           id: 5
-        explodeRate: 10
-        coldDown: 0
-    00000003:
-      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
-    00000004:
-      type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
+    00000002:
+      type: {class: SkillReady_IfTargetInRange, ns: , asm: Assembly-CSharp}
       data:
-        effect: {fileID: 0}
-        DM:
-          damageFrom: {fileID: 0}
-          damageTo: {fileID: 0}
-          damage: 0
-          damageType: 0
-          damageElementType: 0
-          takeBuff:
-            id: 1
+        search:
+          id: 6
+    00000003:
+      type: {class: SkillEffect_KitaExplode, ns: , asm: Assembly-CSharp}
+    00000004:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
     00000005:
-      type: {class: ICircleSerach_EnemyListSearch, ns: , asm: Assembly-CSharp}
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    00000006:
+      type: {class: ICircleSearch, ns: , asm: Assembly-CSharp}
       data:
         checkRange: 3.75
+        dx: {x: 0, y: 0, z: 0}
 --- !u!61 &3388934493555030511
 BoxCollider2D:
   m_ObjectHideFlags: 0

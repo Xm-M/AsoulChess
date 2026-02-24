@@ -40,7 +40,8 @@ public class Tile : MonoBehaviour
         //if (chess.propertyController.creator.plantType!=PlantType.SupportPlant) stander = chess;
         if (chess.propertyController.creator.plantType == PlantType.MainPlant)
             stander = chess;
-        OnPlant?.Invoke(chess);
+        if(chess.CompareTag("Player"))
+            OnPlant?.Invoke(chess);
     }
     /// <summary>
     /// 增加地面特效

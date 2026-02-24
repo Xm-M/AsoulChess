@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u7231\u82AE"
+  m_EditorClassIdentifier: 
+  chessName: "\u7231\u82AE"
+  chessDescription: 
+  chessEffect: 
+  baseProperty:
+    attack: 180
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 500
+    HpMax: 500
+    lifeStealing: 0
+    healRate: 1
+    speed: 0
+    acceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 3.75
+    price: 50
+    rarity: 4000
+    waveLimit: 1
+    CD: 30
+    Size: 1
+  chessPre: {fileID: 9032781921311277065, guid: 5fa9bfa1ade9c784e93cb91ac45963f8, type: 3}
+  chessSprite: {fileID: 21300000, guid: 262b2adf76bdc4f41be1de8eb30de9a9, type: 3}
+  plantTags: []
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    id: 0
+  plantIfCanBuyCard:
+    id: 1
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
+  references:
+    version: 1
+    00000000:
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+    00000001:
+      type: {class: , ns: , asm: }

@@ -78,8 +78,9 @@ public class AnimatorController_SampleZombie : AnimatorController
                         //这里要添加一个持续掉血buff
                         chess.buffController.AddBuff(bloodBuff);
                         GameObject lhead = ObjectPool.instance.Create(leftHead);
-                        lhead.transform.SetParent(transform);
-                        lhead.transform.localPosition = Vector3.zero;
+                        lhead.transform.position = transform.position;
+                        //lhead.transform.SetParent(transform);
+                        //lhead.transform.localPosition = Vector3.zero;
 
                         //这里生成一个掉头特效
                     }

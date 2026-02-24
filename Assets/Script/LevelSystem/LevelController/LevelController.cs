@@ -20,13 +20,13 @@ public class LevelController : MonoBehaviour
     public LevelData levelData;//关卡数据 但是是从LevelManage里设置的
     [ShowInInspector, ReadOnly]
     [ShowIf("@UnityEngine.Application.isPlaying")]
-    int currentWave;//当前波数
+    protected int currentWave;//当前波数
     [ShowInInspector, ReadOnly]
     [ShowIf("@UnityEngine.Application.isPlaying")]
-    float t;//还是要用独立的时间控制器 不然还是太混乱了
+    protected float t;//还是要用独立的时间控制器 不然还是太混乱了
     [ShowInInspector, ReadOnly]
     [ShowIf("@UnityEngine.Application.isPlaying")]
-    List<WaveData> waveDatas;//每波的数据
+    protected List<WaveData> waveDatas;//每波的数据
     [ShowInInspector, ReadOnly]
     [ShowIf("@UnityEngine.Application.isPlaying")]
     public float mintime;//每波的最小时间
@@ -37,9 +37,10 @@ public class LevelController : MonoBehaviour
     //插件也是放在LevelData里面的
 
 
-    private void OnEnable()
+    protected virtual  void OnEnable()
     {
         LevelManage.instance.SetController(this);
+        
     }
     public virtual void Init(LevelData levelData)
     {
@@ -204,6 +205,9 @@ public class LevelController : MonoBehaviour
             UIManage.GetView<TextPanel>().GameOver();
         }
         UIManage.Close<ProgressBar>();
+        foreach (var wave in waveDatas) { 
+            wave.ClearWave();
+        }
     }
     public void OverPlugin()
     {
@@ -226,26 +230,27 @@ public class WaveData
     {
         public PropertyCreator zombieCreate;
         public int zombieNum;
+        //public float interval;//锤僵尸用的间隔时间
     }
     [FoldoutGroup("zombieData")]
     public  List<float> fateList;
     [FoldoutGroup("zombieData")]
-    public List<ZombieInWaveData> zombieList;
+     public List<ZombieInWaveData> zombieList;
     [ShowInInspector]
-    List<Chess> liveZombie;
-    float enterPecent;
-    float hpmax;
-    int wave;
-    bool createOver;
+    protected List<Chess> liveZombie;
+    protected float enterPecent;
+    protected float hpmax;
+    protected int wave;
+    protected bool createOver;
     [FoldoutGroup("zombieData"),ShowInInspector]
-    int maxZombieValue = 0;
-    ILevelOutcome outcome;
+    protected int maxZombieValue = 0;
+    protected ILevelOutcome outcome;
     /// <summary>
     /// 总之先这样写吧
     /// </summary>
     /// <param name="wave"></param>
     /// <param name="data"></param>
-    public void InitWave(int wave,LevelData data)
+    public virtual void InitWave(int wave,LevelData data)
     {
         int raritySum = 0;
         this.wave = wave;
@@ -291,7 +296,7 @@ public class WaveData
         fateList.Add((float)(zombieList[0].zombieCreate.baseProperty.rarity) / raritySum);
         for (int i = 1; i < zombieList.Count; i++)
         {
-            fateList.Add(fateList[i - 1] + (float)(zombieList[0].zombieCreate.baseProperty.rarity) / raritySum);
+            fateList.Add(fateList[i - 1] + (float)(zombieList[i].zombieCreate.baseProperty.rarity) / raritySum);
             //Debug.Log(fateList[i]);
         }
 
@@ -301,7 +306,7 @@ public class WaveData
             if (data.createZombieType == CreateZombieType.一类有限制 || data.createZombieType == CreateZombieType.一类无限制)
                 maxZombieValue = ((int)((wave - 1) / 3) + data.n) * data.t;
             else
-                maxZombieValue = ((int)((wave - 1) * 2/5) + data.n) * data.t;
+                maxZombieValue = ((int)((wave - 1) * 2 / 5) + data.n) * data.t;
         }   
         else
         {
@@ -341,7 +346,7 @@ public class WaveData
     /// 在这里生成这波的所有僵尸，并且生成的位置要符合规则
     /// 今天下午把他写完吧 其实可以用携程写 这样不会卡
     /// </summary>
-    public void EnterWave()
+    public virtual void EnterWave()
     {
         
         LevelManage.instance.StartCoroutine(Create());
@@ -376,7 +381,7 @@ public class WaveData
         }
         createOver = true;
     }
-    public Chess CreateChess(PropertyCreator creator)
+    public virtual Chess CreateChess(PropertyCreator creator)
     {
         Tile standTile = null;
         List<Tile> tiles = new List<Tile>();
@@ -397,7 +402,7 @@ public class WaveData
         return chess;
     }
 
-    public bool CheckZombieHp()
+    public virtual bool CheckZombieHp()
     {
         if(!createOver)return false;
         if(liveZombie.Count==0)return true;
@@ -436,5 +441,9 @@ public class WaveData
         
         }
         else return false;
+    }
+    public virtual void ClearWave()
+    {
+
     }
 }

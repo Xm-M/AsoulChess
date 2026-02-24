@@ -36,20 +36,22 @@ public class HeadArmor :ArmorBase
             dm.damage = 0;
 
             currentRender.material.SetFloat("_FlashAmount", Time.time);
-            if ((dm.damageElementType & ElementType.CloseAttack) == 0)
+            //if ((dm.damageElementType & ElementType.CloseAttack) == 0)
                 player?.RandomPlay();
         }
         else
         {
             //Debug.Log("·À¾ßÒç³ö");
-            dm.damage -= armorCurrent;
+            if((dm.damageElementType!= ElementType.CloseAttack))
+                dm.damage -= armorCurrent;
+            else dm.damage= 0;  
             armorCurrent = 0;
             if ((dm.damageElementType & ElementType.Explode) == 0)
             {
                 GameObject fall = ObjectPool.instance.Create(effect);
                 fall.transform.SetParent(user.transform, false);
                 fall.transform.localPosition = Vector3.zero;
-                if ((dm.damageElementType & ElementType.CloseAttack) == 0)
+                //if ((dm.damageElementType & ElementType.CloseAttack) == 0)
                     player?.RandomPlay();
             }
             BrokenArmor();

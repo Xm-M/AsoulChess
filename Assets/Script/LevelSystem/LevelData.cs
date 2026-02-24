@@ -38,7 +38,7 @@ public class LevelData : ScriptableObject
     public int t;//
     [LabelText("僵尸列表")]
     public List<PropertyCreator> zombieList;
-    [LabelText("最大波数")]
+    [LabelText("出怪逻辑")]
     public CreateZombieType createZombieType;
     [LabelText("下一关")]
     public LevelData nextLevel;
@@ -60,6 +60,6 @@ public enum CreateZombieType
     一类有限制,
     二类有限制,
     一类无限制,
-    二类无限制
+    二类无限制,
 }
 

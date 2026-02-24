@@ -52,6 +52,7 @@ public class Chess : MonoBehaviour
         skillController.InitController(this);
         moveController.InitController(this);
         buffController.InitController(this);
+        if (animatorController == null) animatorController = GetComponent<AnimatorController>();
         animatorController.InitController(this);
         col = GetComponent<Collider2D>();
         //animController.InitController(this);

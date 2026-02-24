@@ -6,6 +6,7 @@ public class AnimtorController_Multy : AnimatorController
 {
     public string skillTag;
     public List<string> skillNames;
+
     public override void PlaySkill()
     {
         base.PlaySkill();

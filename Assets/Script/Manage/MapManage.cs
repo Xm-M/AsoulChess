@@ -16,6 +16,7 @@ public class MapManage : MonoBehaviour
     public Vector2 tileSize = new Vector2(1.25f, 1);
     [SerializeReference]
     public IInitMapManage initMapManage;
+    public AudioPlayer BGMPlayer;
     private void Awake()
     {
         if (instance == null||instance!=this)

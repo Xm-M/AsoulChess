@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u9524\u50F5\u5C38"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: "\u9524\u50F5\u5C38"
+  levelName: "\u9524\u50F5\u5C38"
+  levelSprit: {fileID: 7593079474942084812, guid: 421afde933c35af4d8db856d5e639cd4, type: 3}
+  levelMode: 1
+  EnterMapPlugin:
+  - id: 0
+  PreParePlugin:
+  - id: 1
+  GameStartPlugin:
+  - id: 2
+  - id: 3
+  - id: 4
+  MaxWave: 10
+  n: 10
+  t: 1
+  zombieList:
+  - {fileID: 11400000, guid: 9d155699f8da1694187536396172e995, type: 2}
+  - {fileID: 11400000, guid: 4ec3fcd038a6e77468e07b9e150df5ed, type: 2}
+  - {fileID: 11400000, guid: b892c3b8e14c95843aa2f08b4da05de7, type: 2}
+  createZombieType: 0
+  nextLevel: {fileID: 0}
+  outcome:
+    id: 5
+  references:
+    version: 1
+    00000000:
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    00000001:
+      type: {class: GameStartPlugin_LimitShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 0
+        creators:
+        - {fileID: 11400000, guid: cfac8ba4c0629a44da5aaf72c9d4d903, type: 2}
+        - {fileID: 11400000, guid: 7ca129a1c2891ba42b9d2464d33100bf, type: 2}
+        - {fileID: 11400000, guid: 35ba3114aaca8f14d9818640ae354065, type: 2}
+    00000002:
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u8BA4\u771F\u8BB0\u4EC7\u4E2D"
+    00000003:
+      type: {class: GameStartPlugin_QXHammer, ns: , asm: Assembly-CSharp}
+      data:
+        data:
+          preSprite: {fileID: 0}
+          creator: {fileID: 0}
+          tag: 
+          DM:
+            damageFrom: {fileID: 0}
+            damageTo: {fileID: 0}
+            damage: 900
+            damageType: 2
+            damageElementType: 1
+            ifCrit: 0
+            takeBuff:
+              id: 5
+        hammer:
+          id: 6
+    00000004:
+      type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
+      data:
+        fastEnterTime: 4
+    00000005:
+      type: {class: , ns: , asm: }
+    00000006:
+      type: {class: HammerPanel_QX, ns: , asm: Assembly-CSharp}
+      data:
+        damage: 900

@@ -17,12 +17,16 @@ public class AnimatorController : MonoBehaviour,Controller
     {
         ChangeColor(Color.white);
     }
+    private void Update(){
+        Vector3 currentPos= chess.transform.position;
+        chess.transform.position=new Vector3(currentPos.x,currentPos.y,0.1f*currentPos.x+currentPos.y);
+    }
     public bool IfAnimPlayOver()
     {
         AnimatorStateInfo animStateInfo = chess.animatorController.animator.GetCurrentAnimatorStateInfo(0);
         if (animStateInfo.normalizedTime >=1f && !animator.IsInTransition(0))
         {
-            //Debug.Log("¶¯»­²¥·Å½áÊø");
+            //Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å½ï¿½ï¿½ï¿½");
             return true;
         }
         return false;
@@ -97,12 +101,16 @@ public class AnimatorController : MonoBehaviour,Controller
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
         string fullPathName = anim.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-        //Debug.Log("µ±Ç°¶¯»­Ãû£º" + fullPathName);
         return fullPathName;
     }
     public void SetOutline(Color _OutlineColor,float _OutlineSize)
     {
         sprite.material.SetColor("_OutlineColor", _OutlineColor);
         sprite.material.SetFloat("_OutlineSize",_OutlineSize);
+    }
+    public virtual void ChangeRandom(int max)
+    {
+        int n=Random.Range(0,max);
+        animator.SetInteger("random", n);
     }
 }

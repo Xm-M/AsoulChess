@@ -45,6 +45,17 @@ public class ShopIcon : MonoBehaviour
         else t = 0;
         ifCanbuy = true;
     }
+    public void InitShopIcon(PropertyCreator creator)
+    {
+        good = creator;
+        goodImage.sprite = good.chessSprite;
+        price = good.baseProperty.price;
+        goodPrice.text = creator.baseProperty.price.ToString();
+        coldDown = good.baseProperty.CD;
+        if (coldDown < 30) t = coldDown;
+        else t = 0;
+        ifCanbuy = true;
+    }
 
     public void RefreshGood(PropertyCreator creator){
 

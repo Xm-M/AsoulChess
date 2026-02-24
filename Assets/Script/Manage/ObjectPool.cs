@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.Linq;
 public class ObjectPool : MonoBehaviour
 {
     public static ObjectPool instance;
@@ -62,7 +63,9 @@ public class ObjectPool : MonoBehaviour
         }
         else
         {
+            //Destroy(a);
             Debug.LogWarning("没有这个物体" + a.name);
+
         }
         a.SetActive(false);
     }

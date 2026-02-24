@@ -88,23 +88,7 @@ public class EnterWarPlugin_CarCreate : ILevelPlugin
         DestroyCars();
     }
 }
-/// <summary>
-/// 展示植物选择框
-/// </summary>
-public class PreParePlugun_ShowPlantShop : ILevelPlugin
-{
-    public int baseSunLight = 50;
-    public void StadgeEffect(LevelController levelController)
-    {
-        //throw new System.NotImplementedException();
-        UIManage.Show<PlantsShop>();
-        SunLightPanel.instance.SetSunLight(baseSunLight);
-    }
-    public void OverPlugin(LevelController levelController)
-    {
-        UIManage.Close<PlantsShop>();
-    }
-}
+
 
 /// <summary>
 /// 这个其实是坚果保龄球的插件 因为会生成一条红线 红线外不可种植
@@ -113,7 +97,7 @@ public class PreParePlugin_Conveyor : ILevelPlugin
 {
     public List<PropertyCreator> creators;
     public GameObject redLine;
-    GameObject gameObject;
+    //GameObject gameObject;
     GameObject line;
     public void StadgeEffect(LevelController levelController)
     {
@@ -209,7 +193,8 @@ public class GameStartPlugin_PlayAudio : ILevelPlugin
     public string audioName;
     public void StadgeEffect(LevelController levelController)
     {
-        (MapManage.instance as MapManage_PVZ).au.ChangeAudio(audioName);
+        MapManage.instance.BGMPlayer.ChangeAudio(audioName);
+        MapManage.instance.BGMPlayer.Play();
     }
     public void OverPlugin(LevelController levelController)
     {

@@ -24,10 +24,10 @@ public class GameStartPlugin_QXHammer : ILevelPlugin
 }
 public class HammerPanel_QX : BaseHandPanel
 {
-     float damage;
+    public float damage=900;
     public override IEnumerator Plants(UnityAction CancelPlant, UnityAction<Chess> Plant, PrePlantImage_Data data)
     {
-        damage = data.DM.damage;
+        //damage = data.DM.damage;
         PrePlantImage.instance.PlayChildAnim("qianxia_idle");
         while (true)
         {

@@ -9,6 +9,7 @@ public class SkillEffect_KitaExplode : ISkillEffect
 {
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
+        user.UnSelectable();
         for (int i = 0; i < targets.Count; i++)
         {
             user.skillController.DM.damageFrom = user;

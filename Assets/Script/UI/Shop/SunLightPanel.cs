@@ -10,6 +10,10 @@ public class SunLightPanel : MonoBehaviour
     {
         instance = this;
     }
+    private void OnEnable()
+    {
+        if(instance != this) instance = this;
+    }
     public int sunLight{get;private set;}
     public void ChangeSunLight(int num)
     {

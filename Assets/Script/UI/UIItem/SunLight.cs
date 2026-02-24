@@ -38,6 +38,7 @@ public class SunLight : UIItem, IPointerEnterHandler
         Vector2 screenstartPos=Camera.main.WorldToScreenPoint(startPos);
         this.target = target.transform.position;
         //transform.position = screenPos;
+        SunLightNum = num;
         recyclePos = SunLightPanel.instance.sunLightText.transform.position;
         ifPick = false;
         //t = 0;

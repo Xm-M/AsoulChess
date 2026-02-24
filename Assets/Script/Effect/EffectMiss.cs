@@ -7,7 +7,11 @@ public class EffectMiss : MonoBehaviour
     public GameObject Effect;
     public void CreateEffect()
     {
-        ObjectPool.instance.Create(Effect).transform.position=transform.position;
+        ObjectPool.instance.Create(Effect).transform.position = transform.position;
+    }
+    public void CreateEffects(GameObject Effect)
+    {
+        ObjectPool.instance.Create(Effect).transform.position = transform.position;
     }
     private void Awake()
     {

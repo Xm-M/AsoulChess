@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 /// <summary>
 /// 运行中的暂停页面
 /// 有两种暂停,一种是space 一种是esc
@@ -8,17 +9,23 @@ using UnityEngine;
 public class ParsePanel : View
 {
     public GameObject menuPanel;
+    public GameObject pauseButton;
+    public Slider BGM,AudioEffect;
+    public AudioPlayer au;
     bool pause;
     public override void Init()
     {
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Hide);
         EventController.Instance.AddListener(EventName.SelectState.ToString(), Show);
+        au= GetComponent<AudioPlayer>();
+        BGM.value = AudioManage.BgmValue;
+        AudioEffect.value = AudioManage.SoundEffectValue;
+        //au.Stop();
     }
     public override void Show()
     {
         base.Show();
-        //Debug.Log("show");
-        //GameManage.instance.timerManage.ChangeTimeSpeed(0);
+        au.audioSource.enabled = true;
         UIManage.Show<DamagePanel>();//这一句要放在之后的开关里面使用 跟其他设置一样
     }
     public override void Hide()
@@ -55,6 +62,7 @@ public class ParsePanel : View
             menuPanel.SetActive(true);
             GameManage.instance.timerManage.ChangeTimeSpeed(0);
             EventController.Instance.TriggerEvent(EventName.PauseGame.ToString());
+            pauseButton.gameObject.SetActive(false);
         }
     }
     /// <summary>
@@ -68,6 +76,7 @@ public class ParsePanel : View
             menuPanel.SetActive(false);
             GameManage.instance.timerManage.ChangeTimeSpeed(1);
             EventController.Instance.TriggerEvent(EventName.ResumeGame.ToString());
+            pauseButton.gameObject.SetActive(true);
         }
     }
     /// <summary>

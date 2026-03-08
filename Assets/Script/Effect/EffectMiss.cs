@@ -17,7 +17,7 @@ public class EffectMiss : MonoBehaviour
     {
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Miss);
     }
-    private void Start()
+    protected virtual void Start()
     {
         //if(GetComponent<SpriteRenderer>()!=null)
         //GetComponent<SpriteRenderer>().sortingLayerName = "Effect";
@@ -27,6 +27,11 @@ public class EffectMiss : MonoBehaviour
     {
         if(gameObject.activeSelf)
             ObjectPool.instance.Recycle(gameObject);
+    }
+    public void DestroySelf()
+    {
+        Debug.Log("µ÷ÓÃ");
+        Destroy(gameObject);
     }
     private void OnDestroy()
     {

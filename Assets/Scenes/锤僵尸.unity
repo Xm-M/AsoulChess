@@ -1310,7 +1310,7 @@ Transform:
   m_LocalScale: {x: 1.5450668, y: 1.5450668, z: 1.5450668}
   m_Children: []
   m_Father: {fileID: 1401791534}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &291390941
 SpriteRenderer:
@@ -1951,7 +1951,7 @@ Transform:
   m_LocalScale: {x: 1.5450668, y: 1.5450668, z: 1.5450668}
   m_Children: []
   m_Father: {fileID: 1401791534}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &431206003
 SpriteRenderer:
@@ -4428,7 +4428,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1401791534}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1054649105
 PrefabInstance:
@@ -4864,7 +4864,7 @@ Transform:
   m_LocalScale: {x: 3.0021322, y: 3.339872, z: 3.0021322}
   m_Children: []
   m_Father: {fileID: 1401791534}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1179155980
 SpriteRenderer:
@@ -4944,11 +4944,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1202776518}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.9, y: -0.2, z: -14.473302}
-  m_LocalScale: {x: 0.47334343, y: 0.47334343, z: 0.4911622}
+  m_LocalPosition: {x: -6.9000006, y: -0.19999982, z: -14.473302}
+  m_LocalScale: {x: 0.47334346, y: 0.47334346, z: 0.4911622}
   m_Children: []
   m_Father: {fileID: 1401791534}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1202776520
 MonoBehaviour:
@@ -5608,13 +5608,13 @@ Transform:
   m_LocalPosition: {x: 8.27, y: 4.59, z: -0.29291}
   m_LocalScale: {x: 0.6472212, y: 0.6472212, z: 0.6472212}
   m_Children:
-  - {fileID: 1202776519}
   - {fileID: 997539203}
   - {fileID: 2058858936}
   - {fileID: 1179155979}
   - {fileID: 291390940}
   - {fileID: 431206002}
   - {fileID: 2060575729}
+  - {fileID: 1202776519}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6927,7 +6927,6 @@ MonoBehaviour:
   - {fileID: 1835301133}
   - {fileID: 1272998180}
   deathTile: {fileID: 471638947}
-  au: {fileID: 1780611831}
   dir: {fileID: 1401791535}
   car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
   GlobleLight: {fileID: 194912344}
@@ -8101,7 +8100,7 @@ Transform:
   m_Children:
   - {fileID: 827717458}
   m_Father: {fileID: 1401791534}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2058858937
 SpriteRenderer:
@@ -8187,7 +8186,7 @@ Transform:
   - {fileID: 522071044}
   - {fileID: 1520518012}
   m_Father: {fileID: 1401791534}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2103832979
 GameObject:

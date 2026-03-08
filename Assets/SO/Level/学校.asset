@@ -35,6 +35,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ae5039e4a3290274e985148dba09a9fd, type: 2}
   - {fileID: 11400000, guid: 895c68db05cf2d7489a61f83bd3b78ed, type: 2}
   - {fileID: 11400000, guid: ca3a1861f010b5546aaa7688b384c23e, type: 2}
+  - {fileID: 11400000, guid: 54b660ca58dee1f45b098cc3f928c826, type: 2}
   createZombieType: 0
   nextLevel: {fileID: 0}
   outcome:
@@ -53,6 +54,7 @@ MonoBehaviour:
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:
         audioName: "\u767D\u5929"
+        deleyPlayTime: 3
     00000003:
       type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
       data:
@@ -75,7 +77,7 @@ MonoBehaviour:
       type: {class: GameStartPlugin_Smoke, ns: , asm: Assembly-CSharp}
       data:
         smoke: {fileID: 2249338947425205373, guid: 98971166b4b9fab41a1025fb5a557318, type: 3}
-        smokeDis: 50
+        smokeDis: 12.5
     00000007:
       type: {class: LevelOutCome_ContinueStart, ns: , asm: Assembly-CSharp}
     00000008:

@@ -12,18 +12,18 @@ public class RightMove : FindTileMethod
         this.c = c;
         return null;
     }
-    public override void StartMoving()
+    public override void StartMoving(Chess c)
     {
         //base.StartMoving();
     }
-    public override void WhenMoving()
+    public override void WhenMoving(Chess c)
     {
  
         c.transform.position = Vector2.MoveTowards(c.transform.position, (Vector2)c.transform.position +moveDir,
             Time.deltaTime * c.propertyController.GetMoveSpeed());
  
     }
-    public override void EndMoving()
+    public override void EndMoving(Chess c)
     {
         //base.EndMoving();
     }

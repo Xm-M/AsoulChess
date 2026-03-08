@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u575A\u679C\u4FDD\u9F84\u7403"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: "\u524D\u9662"
+  levelName: 1-5
+  levelSprit: {fileID: 6900602534208042656, guid: 421afde933c35af4d8db856d5e639cd4, type: 3}
+  levelMode: 0
+  EnterMapPlugin:
+  - id: 0
+  PreParePlugin:
+  - id: 1
+  GameStartPlugin:
+  - id: 2
+  - id: 3
+  MaxWave: 10
+  n: 1
+  t: 4
+  zombieList:
+  - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+  - {fileID: 11400000, guid: 895c68db05cf2d7489a61f83bd3b78ed, type: 2}
+  - {fileID: 11400000, guid: ae5039e4a3290274e985148dba09a9fd, type: 2}
+  createZombieType: 0
+  nextLevel: {fileID: 0}
+  outcome:
+    id: 4
+  references:
+    version: 1
+    00000000:
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    00000001:
+      type: {class: PreParePlugin_Conveyor, ns: , asm: Assembly-CSharp}
+      data:
+        creators:
+        - {fileID: 11400000, guid: 13bad971bd87897418821c4c2b994b3d, type: 2}
+        - {fileID: 11400000, guid: c7ea811ce37a4f940be332fbab2885ac, type: 2}
+        - {fileID: 11400000, guid: 07da9a693b5548446bc66568959a8ef6, type: 2}
+        redLine: {fileID: 3671030992737509748, guid: 84d7d11d486cde04c91f38dee7fbfece, type: 3}
+    00000002:
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u5C0F\u6E38\u620F"
+        deleyPlayTime: 2
+    00000003:
+      type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
+      data:
+        fastEnterTime: 4
+    00000004:
+      type: {class: , ns: , asm: }

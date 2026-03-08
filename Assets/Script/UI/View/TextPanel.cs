@@ -32,7 +32,8 @@ public class TextPanel : View
     public void GameOver()
     {
         animator.Play("gameover");
-        ((MapManage_PVZ.instance) as MapManage_PVZ).au.PlayAudio("сно╥й╖╟э");
+        MapManage.instance.BGMPlayer.PlayAudio("сно╥й╖╟э");
+        MapManage.instance.BGMPlayer.SetLoop(false);
         gameOver.SetActive(true);   
     }
     public void GameStart()

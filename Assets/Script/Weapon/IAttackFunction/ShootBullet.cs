@@ -10,7 +10,7 @@ public class ShootBullet : IAttackFunction
     public GameObject bullet;
     public void Attack(Chess user, List<Chess> targets)
     {
-         GameObject b=ObjectPool.instance.Create(bullet);
+        GameObject b=ObjectPool.instance.Create(bullet);
         Bullet zidan=b.GetComponent<Bullet>();
         if (targets.Count != 0)
         {

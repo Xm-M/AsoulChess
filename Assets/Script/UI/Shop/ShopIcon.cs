@@ -84,11 +84,12 @@ public class ShopIcon : MonoBehaviour
             Destroy(gameObject);
             return false;
         }
-        //if(sunLight>=baseProperty.price){
-        //    
-        //}
-        //return false;
-        return good.IfCanBuyCard()&& SunLightPanel.instance.sunLight>=price;
+        bool ans=false;
+        foreach(var tile in MapManage.instance.tiles)
+        {
+            ans=ans|good.IfCanPlant(tile);
+        }
+        return ans&& good.IfCanBuyCard()&& SunLightPanel.instance.sunLight>=price;
     }
     public bool IfColdDown()
     {

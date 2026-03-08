@@ -42,7 +42,7 @@ public class LevelUpPlant_Mygo : LevelUpPlant
             if (mygo == 4)
             {
                 //tile.stander.Death();
-                stander.Death();
+                //stander.Death();
                 return  true;
             }
         }

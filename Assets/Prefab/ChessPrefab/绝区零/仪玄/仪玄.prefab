@@ -211,14 +211,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02fa15efef8014b459c988990a0e5254, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  user: {fileID: 6819295014526414008}
+  user: {fileID: 933704969376391584}
   type: 1
   dm:
     damageFrom: {fileID: 0}
     damageTo: {fileID: 0}
     damage: 0
     damageType: 2
-    damageElementType: 1
+    damageElementType: 128
     ifCrit: 0
     takeBuff:
       id: 0
@@ -321,12 +321,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2431824266618159603}
-  - component: {fileID: 6819295014526414008}
   - component: {fileID: 2452383464512666799}
   - component: {fileID: 4697661860900029344}
   - component: {fileID: 6582168509993116770}
   - component: {fileID: 3126524795151732870}
   - component: {fileID: 3873070837403103106}
+  - component: {fileID: 933704969376391584}
   m_Layer: 0
   m_Name: "\u4EEA\u7384"
   m_TagString: Untagged
@@ -351,112 +351,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6819295014526414008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4272613491256079814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8729a6c8903dcef4da08f715be80c379, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  instanceID: 0
-  equipWeapon:
-    master: {fileID: 0}
-    weaponPos: {fileID: 0}
-    weapon:
-      id: 0
-    OnAttack:
-      m_PersistentCalls:
-        m_Calls: []
-    attackOver: 0
-  propertyController:
-    creator: {fileID: 11400000, guid: c7ea811ce37a4f940be332fbab2885ac, type: 2}
-    onGetDamage:
-      m_PersistentCalls:
-        m_Calls: []
-    onSetDamage:
-      m_PersistentCalls:
-        m_Calls: []
-    onTakeDamage:
-      m_PersistentCalls:
-        m_Calls: []
-  skillController:
-    user: {fileID: 0}
-    passiveSkill:
-      id: 1
-    activeSkill:
-      id: 2
-    DM:
-      damageFrom: {fileID: 0}
-      damageTo: {fileID: 0}
-      damage: 0
-      damageType: 0
-      damageElementType: 0
-      ifCrit: 0
-      takeBuff:
-        id: 1
-  stateController:
-    currentState:
-      state:
-        id: 1
-      transitions: []
-    preState:
-      state:
-        id: 1
-      transitions: []
-    stateGraph: {fileID: 11400000, guid: 63450718e31a9fc4aac2f0b324ea2006, type: 2}
-    EnterWarState: 4
-  buffController:
-    chess: {fileID: 0}
-    onEnterBuff: []
-  moveController:
-    chess: {fileID: 0}
-    standTile: {fileID: 0}
-    nextTile: {fileID: 0}
-    tileMethod:
-      id: 3
-  animatorController: {fileID: 6582168509993116770}
-  WhenEnterGame:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3873070837403103106}
-        m_TargetAssemblyTypeName: AudioPlayer, Assembly-CSharp
-        m_MethodName: RandomPlay
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  DeathEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  references:
-    version: 1
-    00000000:
-      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
-      data:
-        initWeapon:
-          id: 1
-        findTarget:
-          id: 1
-        attackFunction:
-          id: 1
-        enemys: []
-        interval: 0
-    00000001:
-      type: {class: , ns: , asm: }
-    00000002:
-      type: {class: SkillEffect_Pingun, ns: , asm: Assembly-CSharp}
-    00000003:
-      type: {class: HorMove, ns: , asm: Assembly-CSharp}
 --- !u!61 &2452383464512666799
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -485,7 +379,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &4697661860900029344
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -498,10 +392,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &6582168509993116770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -633,6 +529,111 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: e9ca029bbb7bbfd4b95d1efa5b19c107, type: 3}
   - name: "\u4EEA\u73842"
     clip: {fileID: 8300000, guid: 82c64a57e97f83b469b47e35c9cb26e4, type: 3}
+--- !u!114 &933704969376391584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4272613491256079814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8729a6c8903dcef4da08f715be80c379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instanceID: 0
+  equipWeapon:
+    master: {fileID: 0}
+    weaponPos: {fileID: 0}
+    weapon:
+      id: 0
+    OnAttack:
+      m_PersistentCalls:
+        m_Calls: []
+    attackOver: 0
+  propertyController:
+    creator: {fileID: 11400000, guid: c7ea811ce37a4f940be332fbab2885ac, type: 2}
+    onGetDamage:
+      m_PersistentCalls:
+        m_Calls: []
+    onSetDamage:
+      m_PersistentCalls:
+        m_Calls: []
+    onTakeDamage:
+      m_PersistentCalls:
+        m_Calls: []
+  skillController:
+    user: {fileID: 0}
+    passiveSkill:
+      id: 0
+    activeSkill:
+      id: 0
+    DM:
+      damageFrom: {fileID: 0}
+      damageTo: {fileID: 0}
+      damage: 0
+      damageType: 0
+      damageElementType: 0
+      ifCrit: 0
+      takeBuff:
+        id: 0
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
+  stateController:
+    currentState:
+      state:
+        id: 0
+      transitions: []
+    preState:
+      state:
+        id: 0
+      transitions: []
+    stateGraph: {fileID: 11400000, guid: bff11870172029545bd1f7db20347f1a, type: 2}
+    EnterWarState: 4
+  buffController:
+    chess: {fileID: 0}
+    onEnterBuff: []
+  moveController:
+    chess: {fileID: 0}
+    standTile: {fileID: 0}
+    nextTile: {fileID: 0}
+    tileMethod:
+      id: 1
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
+  animatorController: {fileID: 6582168509993116770}
+  WhenEnterGame:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3873070837403103106}
+        m_TargetAssemblyTypeName: AudioPlayer, Assembly-CSharp
+        m_MethodName: RandomPlay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 1
+    00000000:
+      type: {class: , ns: , asm: }
+    00000001:
+      type: {class: HorMove, ns: , asm: Assembly-CSharp}
 --- !u!1001 &174355887133384771
 PrefabInstance:
   m_ObjectHideFlags: 0

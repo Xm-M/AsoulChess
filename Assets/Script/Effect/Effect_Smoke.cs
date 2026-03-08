@@ -7,6 +7,7 @@ public class Effect_Smoke : MonoBehaviour
     public static Effect_Smoke Instance;
     public GameObject smokeTile;
     public float movespeed;
+    public List<Sprite> randomSmoke;
     List<LittleSmoke> smokes;
     float totalDis;
     float targetX;
@@ -23,6 +24,7 @@ public class Effect_Smoke : MonoBehaviour
         foreach(var tile in MapManage.instance.tiles)
         {
             GameObject smoke= ObjectPool.instance.Create(smokeTile);
+            smoke.GetComponent<SpriteRenderer>().sprite = randomSmoke[Random.Range(0, randomSmoke.Count)];
             LittleSmoke LS = new LittleSmoke();
             LS.smoke = smoke;
             smokes.Add(LS);

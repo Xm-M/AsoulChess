@@ -19,6 +19,7 @@ public class AttackController :  Controller
     public bool attackOver;
     Timer timer;//这个是计时器
     bool loop;
+    public bool AttackAble { get; set; }
     public virtual void InitController(Chess chess)
     {
         master=chess;
@@ -34,6 +35,7 @@ public class AttackController :  Controller
     {
         //attackSpeed = master.propertyController.GetAttackInterval();
         attackOver=true;
+        AttackAble = true;
         weapon.InitWeapon(this);        
     }
     public virtual void WhenControllerLeaveWar()
@@ -48,6 +50,7 @@ public class AttackController :  Controller
     /// <param name="atk"></param>
     public virtual void Attack(string atk="attack") {
         //master.animator.Play(atk);
+        if (!AttackAble) return;
         master.animatorController.PlayAttack();
         loop=true;
         //这一段是重复播放attack动画 

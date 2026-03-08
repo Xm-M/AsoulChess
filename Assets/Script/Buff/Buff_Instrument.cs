@@ -52,7 +52,7 @@ public class Buff_Bass : Buff
     public float extraHpMax;//额外最大生命值
     public float extraHpSteal;//额外生命偷取
     public int extraSize;//额外体型 应该是0/0/1/1/2 也就是说如果开5贝斯 凉是可以吃巨人的
-    public float coldDowm=50;
+    public float coldDowm=30;
     [SerializeReference]
     public Buff_BassHide buff;
     Timer timer;
@@ -74,7 +74,7 @@ public class Buff_Bass : Buff
     }
     public void OnGetDamage(DamageMessege dm)
     {
-        if (dm.damage>target.propertyController.GetHp()&&cold)
+        if ((target.propertyController.GetHp()- dm.damage)<target.propertyController.GetMaxHp()/2&& cold)
         {
             cold = false;
             dm.damage = 0;

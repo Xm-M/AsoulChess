@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: "\u4EEA\u7384"
   m_EditorClassIdentifier: 
   chessName: "\u4EEA\u7384"
+  chessDescription: 
+  chessShortDescription: 
+  chessEffect: 
   baseProperty:
     attack: 1800
     attackRate: 0
     crit: 0
     critDamage: 1.3
+    dodgeRate: 0
     extraDamge: 0
     AR: 0
     extraDefence: 0
@@ -27,13 +31,15 @@ MonoBehaviour:
     healRate: 1
     speed: 4
     acceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
     attackRange: 1
     price: 50
     rarity: 2000
     waveLimit: 1
     CD: 7.5
     Size: 1
-  chessPre: {fileID: 6819295014526414008, guid: dbdcbdc8122075646aaba9a920de08a6, type: 3}
+  chessPre: {fileID: 933704969376391584, guid: dbdcbdc8122075646aaba9a920de08a6, type: 3}
   chessSprite: {fileID: 6101825145129238035, guid: 824f25fddd5c6ab40868bbb1dbafdfbd, type: 3}
   plantTags: []
   chessTileType: 1
@@ -42,9 +48,11 @@ MonoBehaviour:
     id: 0
   plantIfCanBuyCard:
     id: 1
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
   references:
     version: 1
     00000000:
-      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      type: {class: NonePlant, ns: , asm: Assembly-CSharp}
     00000001:
       type: {class: , ns: , asm: }

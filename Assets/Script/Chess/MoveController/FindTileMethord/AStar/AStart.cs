@@ -7,15 +7,15 @@ using Unity.Jobs;
 
 public class FindTileMethod{
     public virtual Tile FindNextTile(Chess c){return null;}
-    public virtual void StartMoving()
+    public virtual void StartMoving(Chess c)
     {
         
     }
-    public virtual void WhenMoving()
+    public virtual void WhenMoving(Chess c)
     {
 
     }
-    public virtual void EndMoving()
+    public virtual void EndMoving(Chess c)
     {
 
     }

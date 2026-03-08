@@ -26,16 +26,6 @@ public class HorMove : FindTileMethod
         }
         return c.moveController.standTile;
     }
-    public override void StartMoving()
-    {
-        base.StartMoving();
-    }
-    public override void WhenMoving()
-    {
-        base.WhenMoving();
-    }
-    public override void EndMoving()
-    {
-        base.EndMoving();
-    }
+ 
+     
 }

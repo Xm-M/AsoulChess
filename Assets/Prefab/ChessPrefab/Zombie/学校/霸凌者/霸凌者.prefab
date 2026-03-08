@@ -192,6 +192,9 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 4
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 7188873067872320959}
   WhenEnterGame:
     m_PersistentCalls:
@@ -256,17 +259,15 @@ MonoBehaviour:
       data:
         bullyBuff:
           id: 11
-        findTarget:
-          id: 12
+        checkRange: 25
     00000008:
       type: {class: ISkillEffect_Zombie_BullyMan, ns: , asm: Assembly-CSharp}
     00000009:
-      type: {class: DurationFinish, ns: , asm: Assembly-CSharp}
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
     0000000A:
-      type: {class: SkillRuntimeInfo_Duration, ns: , asm: Assembly-CSharp}
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
       data:
         currentTime: 0
-        maxTime: 3
     0000000B:
       type: {class: Buff_Zombie_BullyBuff, ns: , asm: Assembly-CSharp}
       data:
@@ -274,8 +275,6 @@ MonoBehaviour:
         target: {fileID: 0}
         Effect: {fileID: 2341415768192529615, guid: 494c4a7dbb6d33e4c945e66d9f525310, type: 3}
         extraDamageRate: 0.1
-    0000000C:
-      type: {class: StraightLaser, ns: , asm: Assembly-CSharp}
 --- !u!61 &3026287386306570392
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -304,7 +303,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &5583582333965754914
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -317,10 +316,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &7188873067872320959
 MonoBehaviour:
   m_ObjectHideFlags: 0

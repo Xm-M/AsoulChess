@@ -30,11 +30,10 @@ MonoBehaviour:
       data:
         buffName: "\u8D1D\u65AFbuff"
         target: {fileID: 0}
-        buffNum: 0
-        extraHpMax: 1000
-        extraHpSteal: 10
+        extraHpMax: 500
+        extraHpSteal: 0.1
         extraSize: 0
-        coldDowm: 50
+        coldDowm: 30
         buff:
           id: 2
     00000002:
@@ -42,5 +41,4 @@ MonoBehaviour:
       data:
         buffName: "\u8D1D\u65AF\u9690\u8EAB"
         target: {fileID: 0}
-        buffNum: 0
         continueTime: 5

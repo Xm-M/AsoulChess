@@ -22,8 +22,10 @@ public class GameManage : MonoBehaviour
     public ChessTeamManage chessTeamManage;
     [SerializeReference]
     public FetterController fetterManage;
-    public static GameManage instance;
+    [SerializeReference]
+    public GameCameraManage cameraManage;
     public Camera mainCamera;
+    public static GameManage instance;
     public List<PropertyCreator> allChess;
     public List<GameObject> PlayerChess;
     public UnityEvent WhenGameOver,WhenGameStart;
@@ -42,6 +44,8 @@ public class GameManage : MonoBehaviour
         checObjectPoolManage = new CheckObjectPoolManage();
         chessFactory = new ChessFactory();
         chessTeamManage = new ChessTeamManage();
+        cameraManage = new GameCameraManage();
+        cameraManage.SetCamera(mainCamera);
 
     }
     private void Start()
@@ -49,12 +53,14 @@ public class GameManage : MonoBehaviour
         timerManage.InitManage();
         chessFactory.InitManage();
         fetterManage.InitController();
+        cameraManage.InitManage();
         UIManage=new UIManage();
     }
     
     private void Update()
     {
         timerManage.Update();
+        cameraManage.Tick(Time.deltaTime);
         if (mode == GameMode.Test && Input.GetKeyUp(KeyCode.T))
         {
             UIManage.Show<TestScenePanel>();
@@ -62,14 +68,18 @@ public class GameManage : MonoBehaviour
         {
             UIManage.Close<TestScenePanel>();
         }
-        if (Input.GetKeyUp(KeyCode.X)&&LevelManage.instance.IfGameStart)
+        if (mode == GameMode.Test && Input.GetKeyUp(KeyCode.X)&&LevelManage.instance.IfGameStart)
         {
             LevelManage.instance.GamePause();
             Debug.Log("ÔÝÍ£");
-        }else if (Input.GetKeyUp(KeyCode.X) && !LevelManage.instance.IfGameStart)
+        }else if (mode == GameMode.Test && Input.GetKeyUp(KeyCode.X) && !LevelManage.instance.IfGameStart)
         {
             LevelManage.instance.GameContinue();
             Debug.Log("¼ÌÐø");
+        }
+        if(mode == GameMode.Test && Input.GetKeyUp(KeyCode.S) && LevelManage.instance.IfGameStart)
+        {
+            SunLightPanel.instance.ChangeSunLight(10000);
         }
     }
     public void QuitGame()

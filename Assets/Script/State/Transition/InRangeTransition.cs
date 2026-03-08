@@ -8,7 +8,7 @@ public class InRangeTransition : Transition
      
     public override bool ifReach(Chess chess)
     {
-        return chess.equipWeapon.weapon.FindEnemy(chess)>0;
+        return chess.equipWeapon.AttackAble&&chess.equipWeapon.weapon.FindEnemy(chess)>0;
     }
     public override Transition Clone()
     {

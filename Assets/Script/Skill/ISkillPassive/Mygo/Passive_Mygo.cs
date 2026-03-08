@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-using static UnityEditor.Recorder.OutputPath;
 /// <summary>
 /// 所有Mygo的被动
 /// 思考一下要怎么写好吧 

@@ -18,6 +18,8 @@ public class MoveController:Controller
     public FindTileMethod tileMethod;
     bool ifMove;
     Vector2 targetPos;
+    [HideInInspector]
+    public UnityEvent<Chess, Tile> OnReachTile;
     public virtual void InitController(Chess chess)
     {
         this.chess = chess;
@@ -26,6 +28,7 @@ public class MoveController:Controller
     public void WhenControllerEnterWar()
     {
         ifMove=false;
+        OnReachTile.RemoveAllListeners();
     }
 
     public void WhenControllerLeaveWar()
@@ -34,23 +37,34 @@ public class MoveController:Controller
         standTile = null;
         nextTile = null;
         ifMove = false;
+        OnReachTile.RemoveAllListeners();
     }
     
     public virtual void StartMoving(string anim="run")
     {
         chess.animatorController.PlayMove();
         nextTile=tileMethod.FindNextTile(chess);
-        tileMethod.StartMoving();
+        tileMethod.StartMoving(chess);
     }
     public virtual void WhenMoving()
     {
-        tileMethod.WhenMoving();
+        tileMethod.WhenMoving(chess);
         if (ifMove) return;
         if (nextTile != null && Vector2.Distance(chess.transform.position, nextTile.transform.position) > 0.01)
         {
-            chess.transform.position = Vector2.MoveTowards(chess.transform.position, nextTile.transform.position,
-                chess.propertyController.GetMoveSpeed()*Time.deltaTime);
-            if(Vector2.Distance(chess.transform.position, nextTile.transform.position) < 1.25)
+            //chess.transform.position = Vector2.MoveTowards(chess.transform.position, nextTile.transform.position,
+            //    chess.propertyController.GetMoveSpeed()*Time.deltaTime);
+            Vector3 pos = chess.transform.position;
+            Vector3 target = nextTile.transform.position;
+
+            float speed = chess.propertyController.GetMoveSpeed();
+
+            float newX = Mathf.MoveTowards(pos.x, target.x, speed * Time.deltaTime);
+            float newY = Mathf.MoveTowards(pos.y, target.y, speed * 2f * Time.deltaTime);
+
+            chess.transform.position = new Vector3(newX, newY, pos.z);
+            //我当时写这一句的目的是 哪个wineTile可以准确的放到下一格 或者说脚下的那一格对吧 不然没什么用这个的道理啊
+            if (Vector2.Distance(chess.transform.position, nextTile.transform.position) < 1.25)
                 standTile = nextTile;
         }
         else if (nextTile != null)
@@ -58,6 +72,7 @@ public class MoveController:Controller
             if (Vector2.Distance(chess.transform.position, nextTile.transform.position) <= 0.01)
             {
                 standTile = nextTile;
+                OnReachTile?.Invoke(chess,standTile);
                 nextTile = tileMethod.FindNextTile(chess);
             }
         }
@@ -158,7 +173,7 @@ public class MoveController:Controller
 
     public virtual void EndMoving()
     {
-        tileMethod.EndMoving();
+        tileMethod.EndMoving(chess);
     }
 
    

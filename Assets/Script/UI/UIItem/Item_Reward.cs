@@ -48,7 +48,7 @@ public class Item_Reward : UIItem
 
             yield return null;
         }
-         
+        LevelManage.instance.GamePause();
         // 最终归位
         //rectTransform.anchoredPosition = targetPos;
     }
@@ -86,9 +86,13 @@ public class Item_Reward : UIItem
         if (!click)
         {
             //Debug.Log("点到游戏胜利了");
-            ((MapManage_PVZ.instance) as MapManage_PVZ).au.PlayAudio("游戏胜利");
+            LevelManage.instance.GamePause();
+            MapManage.instance.BGMPlayer.PlayAudio("游戏胜利");
+            MapManage.instance.BGMPlayer.SetLoop(false);
             GetComponent<Animator>().Play("win");
             UIManage.GetView<PlantsShop>().Hide();
+            UIManage.Close<ItemPanel>();
+            //("win");
             MoveToCenter();
             SceneManage.instance.Win();
         }

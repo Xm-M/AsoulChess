@@ -60,10 +60,15 @@ public class AnimatorController_Zombieking : AnimatorController
         //animator.Play(string.Format("anim_RV_{0},n"));//砸车 2*3碾压伤害 这个也应该是多个动画来着
         //animator.Play("anim_bungeee_1_enter");//放蹦极(这个应该也有多个动画来着 不知道为什么都只有一个了)
         //animator.Play(string.Format("anim_head_attack_n"));
-        animator.Play(string.Format("anim_spawn_{0}",1));
+        //animator.Play(string.Format("anim_spawn_{0}",1));
+        animator.Play(string.Format("anim_head_attack_1"));
     }
     public void UseSkill()
     {
         chess.UseSkill();
+    }
+    public override void PlayDeath()
+    {
+        animator.Play(("anim_death"));
     }
 }

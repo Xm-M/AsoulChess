@@ -30,5 +30,18 @@ public class SkillEffect_ZombieKing_FireBall: ISkillEffect
     {
         int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x * 3;
         int y = 4;//这个其实应该是随机的
+        Tile tile = MapManage.instance.tiles[x, y];
+        GameObject b=GameObject.Instantiate(ball);
+        b.tag = user.tag;
+        b.GetComponent<CarArmor>().user = user;
+        b.transform.position = tile.transform.position;
+    }
+}
+
+public class SkillEffect_ZombieKing_RV : ISkillEffect
+{
+    public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
+    {
+        throw new System.NotImplementedException();
     }
 }

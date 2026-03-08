@@ -1,0 +1,24 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Passive_GitaHero : ISkillEffect
+{
+    Chess user;
+    public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
+    {
+        this.user = user;
+        EventController.Instance.AddListener<Chess>(EventName.WhenPlantChess.ToString(), OnPlantChess);
+    }
+    public void OnDeath() => EventController.Instance.RemoveListener<Chess>(EventName.WhenPlantChess.ToString(), OnPlantChess);
+    public void OnPlantChess(Chess c)
+    {
+        if (c == null) return;
+        PropertyCreator creator = c.propertyController.creator;
+        if (creator.chessName.Contains("ºçÏÄ")|| creator.chessName.Contains("Á¹")
+            || creator.chessName.Contains("Ï²¶à")|| creator.chessName.Contains("²¨Ææ"))
+        {
+            user.skillController.context.Set<Chess>("³ÉÔ±",c);
+        }
+    }
+}

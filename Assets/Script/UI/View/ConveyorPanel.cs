@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 /// <summary>
 /// 传送带
 /// 1.只有在GameStart事件触发以后才能开始生成  
@@ -14,6 +14,7 @@ public class ConveyorPanel : View
     public Transform startPos; 
     public float moveSpeed;
     public float iconSize;
+    public AudioPlayer shopAudio;
     List<PropertyCreator> creators;
     List<Item_PlantCard> cards;
     float interval;
@@ -93,7 +94,12 @@ public class ConveyorPanel : View
             }
         }
     }
-
+    public void DigPlant(Image image)
+    {
+        PrePlantImage_Data data = new PrePlantImage_Data();
+        data.preSprite = image.sprite;
+        PrePlantImage.instance.TryToPlant(() => shopAudio.PlaySub(0, "cancel"), (Chess) => shopAudio.PlaySub(0, "dig"), data, HandItemType.Shovel);
+    }
     public override void Hide()
     {
         

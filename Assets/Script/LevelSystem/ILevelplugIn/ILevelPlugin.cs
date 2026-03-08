@@ -185,22 +185,6 @@ public class GameStartPlugin_FastCreateZombie : ILevelPlugin
     }
 }
 
-/// <summary>
-/// 播放音乐插件
-/// </summary>
-public class GameStartPlugin_PlayAudio : ILevelPlugin
-{
-    public string audioName;
-    public void StadgeEffect(LevelController levelController)
-    {
-        MapManage.instance.BGMPlayer.ChangeAudio(audioName);
-        MapManage.instance.BGMPlayer.Play();
-    }
-    public void OverPlugin(LevelController levelController)
-    {
-
-    }
-}
 //也就是说这个buff 1.要对场上的所有单位生效 2.要对出场的僵尸生效
 /// <summary>
 /// 校园铃声插件

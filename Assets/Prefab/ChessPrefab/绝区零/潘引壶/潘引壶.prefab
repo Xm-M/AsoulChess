@@ -550,26 +550,32 @@ MonoBehaviour:
     passiveSkill:
       id: 1
     activeSkill:
-      id: 2
+      id: 0
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
       damage: 0
-      damageType: 0
-      damageElementType: 0
+      damageType: 2
+      damageElementType: 16
       ifCrit: 0
       takeBuff:
-        id: 3
+        id: 0
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
   stateController:
     currentState:
       state:
-        id: 3
+        id: 0
       transitions: []
     preState:
       state:
-        id: 3
+        id: 0
       transitions: []
-    stateGraph: {fileID: 11400000, guid: bc20c945acd65c449b37523a3b36f1c3, type: 2}
+    stateGraph: {fileID: 11400000, guid: bff11870172029545bd1f7db20347f1a, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -579,7 +585,10 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 4
+      id: 2
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 5113517725710576007}
   WhenEnterGame:
     m_PersistentCalls:
@@ -599,35 +608,24 @@ MonoBehaviour:
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
   references:
     version: 1
     00000000:
-      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
-      data:
-        initWeapon:
-          id: 3
-        findTarget:
-          id: 3
-        attackFunction:
-          id: 3
-        enemys: []
-        interval: 0
-    00000001:
-      type: {class: PassiveSkill_HitExplode, ns: , asm: Assembly-CSharp}
-      data:
-        findTarget:
-          id: 5
-        explodeRate: 10
-        armor: {fileID: 6240661821019851643}
-    00000002:
-      type: {class: SkillEffect_Pingun, ns: , asm: Assembly-CSharp}
-    00000003:
       type: {class: , ns: , asm: }
-    00000004:
-      type: {class: HorMove, ns: , asm: Assembly-CSharp}
-    00000005:
-      type: {class: ICircleSerach_EnemyListSearch, ns: , asm: Assembly-CSharp}
+    00000001:
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
       data:
+        effect:
+          id: 3
+    00000002:
+      type: {class: HorMove, ns: , asm: Assembly-CSharp}
+    00000003:
+      type: {class: Passive_hitExplode, ns: , asm: Assembly-CSharp}
+      data:
+        armor: {fileID: 6240661821019851643}
         checkRange: 3.75
 --- !u!61 &8239592035577178447
 BoxCollider2D:
@@ -657,7 +655,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &8898573529395577057
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -670,10 +668,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &5113517725710576007
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -53,6 +53,7 @@ public class PropertyController:Controller
         if (mes.damageType == DamageType.Heal)
         {
             //Debug.Log(mes.damageFrom + " " + mes.damageType);
+            chess.animatorController.OnGetDamage(mes);
             Heal(mes.damage);
             return;
         }
@@ -63,7 +64,15 @@ public class PropertyController:Controller
             //Debug.Log("倍率" + (1 - (Data.AR / (Data.AR + 100))));
             mes.damage *= (1 - (Data.AR / (Data.AR + 100)));
         }
-        
+        if ((mes.damageElementType&ElementType.Grind)!=0&&mes.damageFrom!=null)
+        {
+            if (mes.damageFrom.propertyController.GetSize()>GetSize())
+            {
+                Debug.Log(chess.name + "压死");
+                chess.Death();
+                return;
+            }
+        }
         //Debug.Log("当前伤害" + mes.damage);
         mes.damage *= (1 - Data.extraDefence);
         float n = UnityEngine.Random.Range(0, 1f);
@@ -126,6 +135,7 @@ public class PropertyController:Controller
     public void Heal(float heal)
     {
         heal *= Data.healRate;
+        //Debug.Log(chess.name+"治疗量"+heal);
         if (Data.HpMax > Data.Hp + heal)
         {
             Data.Hp =   Data.Hp + heal;
@@ -133,8 +143,8 @@ public class PropertyController:Controller
         }
         else
         {
-            float dheal = Data.HpMax - heal;
-            if(dheal>1) UIManage.GetView<DamagePanel>().ShowHeal(dheal, chess);
+            float dheal = Data.HpMax - Data.Hp;
+            UIManage.GetView<DamagePanel>().ShowHeal(dheal, chess);
             Data.Hp = Data.HpMax;
         }
         
@@ -253,10 +263,6 @@ public class PropertyController:Controller
     {
         return Data.HpMax;
     }
-    //public float GetShiledNum()
-    //{
-    //    return Data.shiledNum;
-    //}
     public float GetCrit()
     {
         return Data.crit;
@@ -438,6 +444,7 @@ public enum ElementType
     Explode=1<<4,//爆炸
     Fire=1<<5,//火焰伤害
     Cutting=1<<6,//切割伤害
+    Grind=1<<7,
 }
 public class ShiledNum
 {

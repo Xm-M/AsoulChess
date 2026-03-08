@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: 1-5
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: "\u524D\u9662"
+  levelName: 1-5
+  levelSprit: {fileID: 0}
+  levelMode: 0
+  EnterMapPlugin:
+  - id: 0
+  - id: 1
+  PreParePlugin:
+  - id: 2
+  GameStartPlugin:
+  - id: 3
+  - id: 4
+  MaxWave: 10
+  n: 1
+  t: 4
+  zombieList:
+  - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+  createZombieType: 0
+  nextLevel: {fileID: 11400000, guid: c225673d9c4fa4a4cb6e17749e241d03, type: 2}
+  outcome:
+    id: 5
+  references:
+    version: 1
+    00000000:
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    00000001:
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u9009\u724C"
+        deleyPlayTime: 0
+    00000002:
+      type: {class: PreParePlugin_Conveyor, ns: , asm: Assembly-CSharp}
+      data:
+        creators:
+        - {fileID: 11400000, guid: 13bad971bd87897418821c4c2b994b3d, type: 2}
+        redLine: {fileID: 3671030992737509748, guid: 84d7d11d486cde04c91f38dee7fbfece, type: 3}
+    00000003:
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u5C0F\u6E38\u620F"
+        deleyPlayTime: 3
+    00000004:
+      type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
+      data:
+        fastEnterTime: 4
+    00000005:
+      type: {class: LevelOutCome_PlantReward, ns: , asm: Assembly-CSharp}
+      data:
+        rewardPlant: {fileID: 11400000, guid: 93e4d5ea07618ee42babdd49a4e6ebc5, type: 2}

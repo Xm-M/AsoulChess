@@ -40,9 +40,11 @@ public class ObjectPool : MonoBehaviour
             if (objectPool[a.name].Count != 0)
             {
                 creat= objectPool[a.name].Pop();
-                //Debug.Log(objectPool[a.name].Count);
-                creat.SetActive(true);
-                return creat;
+                if (creat != null)
+                {
+                    creat.SetActive(true);
+                    return creat;
+                }
             }          
         }
         else
@@ -65,6 +67,7 @@ public class ObjectPool : MonoBehaviour
         {
             //Destroy(a);
             Debug.LogWarning("没有这个物体" + a.name);
+            Destroy(a);
 
         }
         a.SetActive(false);

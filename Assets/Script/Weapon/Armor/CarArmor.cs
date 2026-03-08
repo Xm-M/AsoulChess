@@ -28,6 +28,7 @@ public class CarArmor : ArmorBase
     }
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
+       
         if (!collision.CompareTag(user.tag))
         {
             Chess chess =  collision.GetComponent<Chess>();

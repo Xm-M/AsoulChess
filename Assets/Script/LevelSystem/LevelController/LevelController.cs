@@ -310,7 +310,8 @@ public class WaveData
         }   
         else
         {
-            maxZombieValue = (wave - 1) * 5 +data.n;
+            maxZombieValue = (data.t + 1) * 5;
+            Debug.Log("大波僵尸"+maxZombieValue);
         }
         maxZombieValue *= 25;
         Debug.Log("本波僵尸价值为" + maxZombieValue);
@@ -422,6 +423,7 @@ public class WaveData
             //if (nextLevelData != null)
             //    Debug.Log(nextLevelData.levelName); 
             //也就是说我是在这里搞对吧
+            
             if (outcome == null)
             {
                 Item_Reward reward = UIManage.GetView<ItemPanel>().Create<Item_Reward>();

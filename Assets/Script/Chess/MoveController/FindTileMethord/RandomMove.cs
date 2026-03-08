@@ -20,13 +20,5 @@ public class RandomMove : FindTileMethod
         y = Mathf.Max(y,0);
         return MapManage.instance.tiles[x,y];
     }
-    public override void WhenMoving()
-    {
-        base.WhenMoving();
-    }
-
-    public override void StartMoving()
-    {
-        base.StartMoving();
-    }
+ 
 }

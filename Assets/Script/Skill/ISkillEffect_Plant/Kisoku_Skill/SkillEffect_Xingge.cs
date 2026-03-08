@@ -24,7 +24,7 @@ public class SkillEffect_Xingge : ISkillEffect
                 GameObject b = ObjectPool.instance.Create(money);
                 Bullet_Aming zidan = b.GetComponent<Bullet_Aming>();
                 zidan.InitBullet(user, user.equipWeapon.weaponPos.position, chess, user.transform.right);
-                zidan.Dm.damage = 0;
+                zidan.Dm.damage = user.propertyController.GetAttack();
                 zidan.Dm.damageTo = chess;
             }
         }

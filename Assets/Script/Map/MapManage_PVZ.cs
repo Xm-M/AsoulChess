@@ -13,7 +13,7 @@ public class MapManage_PVZ : MapManage
     public List<Tile> zombiePreTile;
     public List<Tile> roomTile;
     public Tile deathTile;
-    public AudioPlayer au;
+    //public AudioPlayer au;
     public PlayableDirector dir;
     public PropertyCreator car;
     public Light2D GlobleLight;
@@ -38,7 +38,7 @@ public class MapManage_PVZ : MapManage
     }
     public void WhenGameOver()
     {
-        au.Stop();
+        //au.Stop();
 
     }
      

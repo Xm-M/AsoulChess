@@ -27,6 +27,7 @@ public class PlantsPanel : BaseHandPanel
                     Tile t = hit.collider.GetComponent<Tile>();
                     if (data.creator.IfCanPlant(t))
                     {
+                        if (data.creator.plantFunction is LevelUpPlant) t.stander.Death();
                         Chess c = ChessTeamManage.Instance.CreateChess(data.creator, t, data.tag);
                         if (data.tag == "Player")
                         {

@@ -308,7 +308,7 @@ MonoBehaviour:
   onHit:
     m_PersistentCalls:
       m_Calls: []
-  col: {fileID: 0}
+  col: {fileID: 6983935833105043022}
   references:
     version: 1
     00000000:
@@ -388,9 +388,9 @@ MonoBehaviour:
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 0
-    activeSkill:
       id: 1
+    activeSkill:
+      id: 0
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -415,7 +415,7 @@ MonoBehaviour:
       state:
         id: 0
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 11a8d3c8ba4dd994b961ba2e19cad4f6, type: 2}
+    stateGraph: {fileID: 11400000, guid: bff11870172029545bd1f7db20347f1a, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -425,7 +425,10 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 0
+      id: 2
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 3744606940738722277}
   WhenEnterGame:
     m_PersistentCalls:
@@ -453,28 +456,16 @@ MonoBehaviour:
     00000000:
       type: {class: , ns: , asm: }
     00000001:
-      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
       data:
-        config: {fileID: 11400000, guid: b00ea469121ca1f4587856374fbc3373, type: 2}
-        readyChecker:
-          id: 0
         effect:
-          id: 2
-        skillFinish:
           id: 3
-        runtime:
-          id: 4
     00000002:
-      type: {class: SkillEffect_Bowling_, ns: , asm: Assembly-CSharp}
+      type: {class: BowlingMove, ns: , asm: Assembly-CSharp}
       data:
         armor: {fileID: 5186064477592837383}
     00000003:
-      type: {class: DurationFinish, ns: , asm: Assembly-CSharp}
-    00000004:
-      type: {class: SkillRuntimeInfo_Duration, ns: , asm: Assembly-CSharp}
-      data:
-        currentTime: 0
-        maxTime: 50000
+      type: {class: SkillEffect_Bowling_, ns: , asm: Assembly-CSharp}
 --- !u!61 &1897016762848573687
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -503,7 +494,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &375257514814976545
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -516,10 +507,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &3744606940738722277
 MonoBehaviour:
   m_ObjectHideFlags: 0

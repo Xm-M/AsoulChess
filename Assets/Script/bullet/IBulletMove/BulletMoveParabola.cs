@@ -12,36 +12,41 @@ using UnityEngine;
 /// </summary>
 public class BulletMoveParabola : IBulletMove
 {
-    public float moveTime;//固定的水平移动速度
-    public float maxHeight;//竖直的最大高度
-    Vector2 startPos;
-    Vector2 endPos;
-    float initVSpeed;//初始y速度
-    float gravity;//重力
+    public float moveTime;
+    public float maxHeight;
+
     float t;
-    float timeToApex;
-    Vector2 startPosition,targetPosition;  
+
+    Vector2 startPosition;
+    Vector2 targetPosition;
+
     public void InitMove(Bullet bullet)
     {
         t = 0;
-        initVSpeed=2*maxHeight/moveTime;
-        gravity = initVSpeed / (moveTime / 2);
-        timeToApex = moveTime / 2;
         startPosition = bullet.startPos;
-        //Debug.Log(startPosition);       
         targetPosition = bullet.targetPos;
     }
 
     public void MoveBullet(Bullet bullet)
     {
-        t+=Time.deltaTime;
-        if (t<moveTime)
+        t += Time.deltaTime;
+
+        if (t < moveTime)
         {
-            float horizontalProgress = t / moveTime;
-            float verticalProgress = -gravity * Mathf.Pow(t, 2)/2 + initVSpeed* (t);
-            Vector2 nextPos = Vector2.Lerp(startPosition, targetPosition, horizontalProgress);
-            nextPos.y = startPosition.y + verticalProgress;
-            bullet.transform.position = nextPos;
+            float progress = t / moveTime;
+
+            // 水平位置
+            float x = Mathf.Lerp(startPosition.x, targetPosition.x, progress);
+
+            // 直线y
+            float baseY = Mathf.Lerp(startPosition.y, targetPosition.y, progress);
+
+            // 抛物线高度
+            float arc = -4 * maxHeight * (progress - 0.5f) * (progress - 0.5f) + maxHeight;
+
+            float y = baseY + arc;
+
+            bullet.transform.position = new Vector2(x, y);
         }
         else
         {

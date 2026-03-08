@@ -14,6 +14,9 @@ public class PropertyCreator : ScriptableObject
     [LabelText("棋子描述")]
     [Multiline]
     public string chessDescription;
+    [LabelText("简短描述")]
+    [Multiline]
+    public string chessShortDescription;
     [LabelText("棋子效果")]
     [Multiline ]
     public string chessEffect;
@@ -157,11 +160,12 @@ public class LevelUpPlant : IPlantFunction
     {
          
        bool ans= tile.stander&&(tile.stander.propertyController.creator==basePlant);
-        if (ans)
-        {
-            tile.stander.Death();
-            return ans;
-        }return false;
+        //if (ans)
+        //{
+        //    tile.stander.Death();
+        //    return ans;
+        //}return false;
+        return ans;
     }
 }
 public class NonePlant : IPlantFunction

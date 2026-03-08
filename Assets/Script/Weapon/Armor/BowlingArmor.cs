@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class BowlingArmor : CarArmor
 {
-    //int prey=-1;
-    //float prePosy=-100;
-
     public Collider2D col;
     public override void InitArmor()
     {
@@ -21,29 +18,11 @@ public class BowlingArmor : CarArmor
         //prey = -1;
         col.enabled = true;
     }
-    //private void Update()
-    //{
-    //    if (Mathf.Abs(prePosy - user.transform.position.y) > 2.5f)
-    //    {
-    //        if (user.transform.position.y > prey)
-    //        {
-    //            prey += 1;
-    //            prePosy += 2.5f;
-    //        }
-    //        else {
-    //            prey -= 1;
-    //            prePosy -= 2.5f;
-    //        } 
-    //    }
-    //}
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (!collision.CompareTag(user.tag))
         {
             Chess chess = collision.GetComponent<Chess>();
-            //if (chess.moveController.standTile.mapPos.y != prey
-            //    &&Mathf.Abs(chess.transform.position.y-user.transform.position.y)<0.1f)
-            //Debug.Log(Mathf.Abs(chess.moveController.standTile.transform.position.y - user.transform.position.y));
             if (Mathf.Abs(chess.moveController.standTile.transform.position.y - user.transform.position.y) < 0.1f)
             {
                 dm.damageFrom = user;
@@ -68,9 +47,6 @@ public class BowlingArmor : CarArmor
         if (!collision.CompareTag(user.tag))
         {
             Chess chess = collision.GetComponent<Chess>();
-            //if (chess.moveController.standTile.mapPos.y != prey
-            //    &&Mathf.Abs(chess.transform.position.y-user.transform.position.y)<0.1f)
-            //Debug.Log(Mathf.Abs(chess.moveController.standTile.transform.position.y - user.transform.position.y));
             if(Mathf.Abs(chess.moveController.standTile.transform.position.y - user.transform.position.y) < 0.1f)
             {
                 dm.damageFrom = user;
@@ -83,9 +59,6 @@ public class BowlingArmor : CarArmor
                 {
                     player.RandomPlay();
                 }
-                //col.enabled = false;
-                //prey=chess.moveController.standTile.mapPos.y;
-                //prePosy = chess.moveController.standTile.transform.position.y;
                 StartCoroutine(ReHitAble());
             }
         }

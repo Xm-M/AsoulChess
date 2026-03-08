@@ -6,7 +6,7 @@ using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
-/// 我感觉我这个buff系统写的也很垃圾 
+/// 我感觉我这个buff系统写的也很垃圾  
 /// </summary>
 #region 基础框架buff
 [Serializable]
@@ -125,6 +125,7 @@ public class LightBuff : Buff
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
+        if(Effect_Smoke.Instance!=null)
         Effect_Smoke.Instance.HideSmoke(target.transform.position, range, hideTime);
         BuffOver();
     }
@@ -262,6 +263,29 @@ public class AngryBuff:Buff
         
     }
 }
+
+/// <summary>
+/// 缴械buff
+/// </summary>
+public class DisarmBuff : Buff
+{
+    public GameObject disaarnEffect;//缴械特效
+    public DisarmBuff()
+    {
+        buffName = "缴械";
+    }
+    public override void BuffEffect(Chess target)
+    {
+        base.BuffEffect(target);
+        target.equipWeapon.AttackAble = false;
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        target.equipWeapon.AttackAble = true;
+    }
+
+}
 #endregion
 #region 治疗类buff
 /// <summary>
@@ -395,6 +419,7 @@ public class Buff_Create:Buff
     public void PlantOver(Chess target)
     {
         //Debug.Log("创建了 "+target); 为什么第二次用这个技能的时候会秒种呢 而且还种下去了 hyw呢
+        //debug
         user.skillController.context.Set<Chess>(buffName, target);
         target.OnRemove.AddListener(OnPlantDeath);
         BuffOver();

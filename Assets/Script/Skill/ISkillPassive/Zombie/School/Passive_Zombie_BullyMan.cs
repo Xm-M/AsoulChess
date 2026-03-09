@@ -18,8 +18,8 @@ public class Passive_Zombie_BullyMan : ISkillEffect
     public void FindTarget(Chess user )
     {
         Chess target = null;
-        user.skillController.context.TryGet<Chess>("霸凌目标", out target);
-        //Debug.Log("寻找目标");
+        user.skillController.context.TryGet<Chess>("闇稿噷鐩爣", out target);
+        //Debug.Log("瀵绘壘鐩爣");
         if (target == null || target.IfDeath)
         {
             //findTarget.FindTarget(user,targets);
@@ -33,8 +33,8 @@ public class Passive_Zombie_BullyMan : ISkillEffect
                 int n = UnityEngine.Random.Range(0, num);
                 target = hits[n].collider.GetComponent<Chess>();
                target.buffController.AddBuff(bullyBuff);
-                user.skillController.context.Set<Chess>("霸凌目标", target);
-                //Debug.Log("霸凌目标" + target.name);
+                user.skillController.context.Set<Chess>("闇稿噷鐩爣", target);
+                //Debug.Log("闇稿噷鐩爣" + target.name);
             }
 
             CheckObjectPoolManage.ReleaseArray(100, hits);

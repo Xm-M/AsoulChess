@@ -4,10 +4,10 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 public class TileEffect_WineZone : TileEffect
 {
-    [LabelText("持续时间")]
+    [LabelText("鎸佺画鏃堕棿")]
     public float continueTime;
     [SerializeReference]
-    [LabelText("酒Buff")]
+    [LabelText("閰払uff")]
     public Buff wineBuff;
     Timer timer;
     Tile tile;

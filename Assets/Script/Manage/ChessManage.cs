@@ -16,7 +16,7 @@ public class ChessManage : IManager
     }
     public void OnGameOver()
     {
-        Debug.Log("清理队伍" + playerTag);
+        Debug.Log("娓呯悊闃熶紞" + playerTag);
         List<Chess> list=new List<Chess>(chesses);
         for(int i = 0; i < list.Count; i++)
         {
@@ -51,7 +51,7 @@ public class ChessManage : IManager
     {
         if (chesses.Contains(chess))
         {
-            //Debug.Log("回收" + chess.name);
+            //Debug.Log("鍥炴敹" + chess.name);
             chesses.Remove(chess);
             GameManage.instance.chessFactory.RecycleChess(chess, chess.propertyController.creator.chessName);
         }
@@ -75,7 +75,7 @@ public class EnemyManage:ChessManage
     
 }
 /// <summary>
-/// 可以在ChessTeamManage里面访问到队友和敌人
+/// 鍙互鍦–hessTeamManage閲岄潰璁块棶鍒伴槦鍙嬪拰鏁屼汉
 /// </summary>
 public class ChessTeamManage
 {

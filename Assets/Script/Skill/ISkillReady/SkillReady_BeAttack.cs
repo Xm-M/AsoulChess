@@ -15,7 +15,7 @@ public class SkillReady_BeAttack : ISkillReady
     }
     public void InitSkillReady(Chess user, SkillConfig config, List<Chess> targets)
     {
-        //Debug.Log("³õÊ¼»¯");
+        //Debug.Log("åˆå§‹åŒ–");
         user.propertyController.onGetDamage.AddListener(OnGetDamage);
     }
     void OnGetDamage(DamageMessege DM)=>beAttack=true;

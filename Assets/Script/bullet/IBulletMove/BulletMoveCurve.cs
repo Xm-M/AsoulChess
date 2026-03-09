@@ -7,8 +7,8 @@ using UnityEngine;
 /// </summary>
 public class BulletMoveCurve : IBulletMove
 {
-    public AnimationCurve curveX;//x的速度曲线
-    public AnimationCurve curveY;//y轴的速度曲线
+    public AnimationCurve curveX;//x鐨勯�熷害鏇茬嚎
+    public AnimationCurve curveY;//y杞寸殑閫熷害鏇茬嚎
     public float moveSpeed;
 
     public void InitMove(Bullet bullet)

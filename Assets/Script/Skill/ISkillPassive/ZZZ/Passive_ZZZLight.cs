@@ -13,7 +13,7 @@ public class Passive_ZZZLight : ISkillEffect
 }
 public class Buff_ZZZLight_CreateSword : Buff
 {
-    public GameObject swordPrefab;//½£µÄÔ¤ÖÆÌå
+    public GameObject swordPrefab;//å‰‘çš„é¢„åˆ¶ä½“
     List<SwordController> swordControllers;
     public override void BuffEffect(Chess target)
     {
@@ -51,7 +51,7 @@ public class Buff_ZZZLight_CreateSword : Buff
             sword.transform.position = RandomPos;
             List<SwordController> swordControllers;
             target.skillController.context.TryGet<List<SwordController>>("sword", out swordControllers);
-            if (swordControllers == null) Debug.LogError("ÕâÔõÃ´ÊÇ¿ÕµÄ");
+            if (swordControllers == null) Debug.LogError("è¿™æ€Žä¹ˆæ˜¯ç©ºçš„");
             else
             {
                 SwordController swordController = sword.GetComponent<SwordController>();

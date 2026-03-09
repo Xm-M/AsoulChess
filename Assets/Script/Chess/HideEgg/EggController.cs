@@ -4,13 +4,13 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using System;
 /// <summary>
-/// 这个是菜单控制器 
+/// 杩欎釜鏄彍鍗曟帶鍒跺櫒 
 /// </summary>
 public class EggController : MonoBehaviour
 {
     public Chess user;
     //[SerializeReference]
-    [LabelText("彩蛋列表")]
+    [LabelText("褰╄泲鍒楄〃")]
     public List<string> eggsNames;
     public List<HideEgg> hideEggs;
     int currentEgg;

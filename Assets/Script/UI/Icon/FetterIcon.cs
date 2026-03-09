@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 /// <summary>
-/// 单纯的用来显示羁绊的图标
+/// 鍗曠函鐨勭敤鏉ユ樉绀虹緛缁婄殑鍥炬爣
 /// </summary>
 public class FetterIcon : MonoBehaviour
 {

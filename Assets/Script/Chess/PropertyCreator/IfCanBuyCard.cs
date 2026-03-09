@@ -30,11 +30,11 @@ public class OnlyOne_Limit : IfCanBuyCard
         {
             if (chess.propertyController.creator == creator)
             {
-                //Debug.Log("ÓĞÏàÍ¬µ¥Î»"+chess.name);
+                //Debug.Log("æœ‰ç›¸åŒå•ä½"+chess.name);
                 return false;
             }
         }
-        //Debug.Log("Ã»ÓĞÏàÍ¬µ¥Î»");
+        //Debug.Log("æ²¡æœ‰ç›¸åŒå•ä½");
         return true;
     }
 }

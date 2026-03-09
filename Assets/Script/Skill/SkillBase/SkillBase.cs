@@ -44,10 +44,10 @@ public abstract class SkillBase<TConfig> : ISkill
     public virtual bool IsSkillFinished(Chess user)
     {
         if (skillFinish == null) return true;
-        if (runtime == null) return true; // »òÕßÖ±½Ó false£¬¿´ÄãÐèÇó
+        if (runtime == null) return true; // æˆ–è€…ç›´æŽ¥ falseï¼Œçœ‹ä½ éœ€æ±‚
         return skillFinish.IsFinished(user, config, runtime);
     }
 
     public abstract void SkillOver(Chess user);
-    public abstract void ReturnCD();//·µ»¹cd
+    public abstract void ReturnCD();//è¿”è¿˜cd
 }

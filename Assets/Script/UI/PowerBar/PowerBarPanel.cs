@@ -9,7 +9,7 @@ public class PowerBarPanel : View
     public override void Init()
     {
         powerBars = new List<PowerBar>();
-        var prefabs = Resources.LoadAll<Transform>("PowerBar");//¼ÓÔØËùÓĞPowerBar;
+        var prefabs = Resources.LoadAll<Transform>("PowerBar");//åŠ è½½æ‰€æœ‰PowerBar;
         foreach (Transform view in prefabs)
         {
             Transform prefab = Instantiate(view, transform);

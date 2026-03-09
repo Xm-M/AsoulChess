@@ -40,9 +40,9 @@
 //{
 
 //    [SerializeReference]
-//    [LabelText("Ñ°µĞ·½Ê½")]
+//    [LabelText("å¯»æ•Œæ–¹å¼")]
 //    public IFindTarget findTarget;
-//    [LabelText("±¬Õ¨ÉËº¦±¶ÂÊ")]
+//    [LabelText("çˆ†ç‚¸ä¼¤å®³å€ç‡")]
 //    public float explodeRate;
 //    public CarArmor armor;
 //    List<Chess> targets;
@@ -123,7 +123,7 @@
 
 //    public void WhenSakiPlant(Chess saki)
 //    {
-//        if (saki.propertyController.creator.chessName.Contains("·á´¨Ïé×Ó")&&
+//        if (saki.propertyController.creator.chessName.Contains("ä¸°å·ç¥¥å­")&&
 //            saki.moveController.standTile.mapPos.y==user.moveController.standTile.mapPos.y
 //            && user.stateController.currentState.state.stateName != StateName.MoveState)
 //        {

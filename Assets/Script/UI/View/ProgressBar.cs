@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class ProgressBar : View
 {
     public UIStatBar uiBar;
-    public Text stadgeName;//¹Ø¿¨Ãû
+    public Text stadgeName;//å…³å¡å
     public List<GameObject> flags;
     public override void Init()
     {

@@ -28,7 +28,7 @@ public class DoorTile : Tile
     {
         Chess chess = ChessTeamManage.Instance.CreateChess(creator, standTile, "Enemy");
         float dx = Random.Range(0, 3.75f);
-        chess.transform.position = standTile.transform.position;//Î»ÖÃÆ«ÒÆ
+        chess.transform.position = standTile.transform.position;//ä½ç½®åç§»
         return chess;
     }
 }

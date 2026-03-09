@@ -13,7 +13,7 @@ public class SkillEffect_GitaHero : ISkillEffect
     {
         Chess c = null;
         PropertyCreator creator = null;
-        user.skillController.context.TryGet<Chess>("≥…‘±",out c);
+        user.skillController.context.TryGet<Chess>("ÊàêÂëò",out c);
         if (c == null) return;
         creator = c.propertyController.creator;
         SearchTarget(c, targets);
@@ -22,7 +22,7 @@ public class SkillEffect_GitaHero : ISkillEffect
             DamageMessege dm = user.skillController.DM;
             GameObject effect = null;
             float damage = 0;
-            if (creator.chessName.Contains("∫Áœƒ"))
+            if (creator.chessName.Contains("ËôπÂ§è"))
             {
                 damage = config.baseDamage[0] * user.propertyController.GetAttack();//1.5f
                 dm.damageElementType=ElementType.AOE|ElementType.CloseAttack;
@@ -33,21 +33,21 @@ public class SkillEffect_GitaHero : ISkillEffect
                     SunLight lignt = UIManage.GetView<ItemPanel>().Create<SunLight>() as SunLight;
                     lignt.InitSunLight(target.moveController.standTile, 25, target.transform.position);
                 }
-            }else if (creator.chessName.Contains("¡π"))
+            }else if (creator.chessName.Contains("Âáâ"))
             {
                 damage = config.baseDamage[1] * user.propertyController.GetAttack();//4.5
                 dm.damageElementType = ElementType.AOE |ElementType.Grind;
                 dm.damageType = DamageType.Physical;
                 effect = effects[1];
             }
-            else if (creator.chessName.Contains("œ≤∂‡"))
+            else if (creator.chessName.Contains("ÂñúÂ§ö"))
             {
                 damage = config.baseDamage[2] * user.propertyController.GetAttack();
                 dm.damageElementType = ElementType.AOE | ElementType.Explode;
                 dm.damageType = DamageType.Real;
                 effect = effects[2];
             }
-            else if (creator.chessName.Contains("≤®∆Ê"))
+            else if (creator.chessName.Contains("Ê≥¢Â•á"))
             {
                 damage = config.baseDamage[3] * user.propertyController.GetAttack();
                 dm.damageElementType = ElementType.AOE | ElementType.CloseAttack;
@@ -64,7 +64,7 @@ public class SkillEffect_GitaHero : ISkillEffect
                 dm.damageTo = chess;
                 user.propertyController.TakeDamage(dm);
             }
-            user.skillController.context.Set<Chess>("≥…‘±", null);
+            user.skillController.context.Set<Chess>("ÊàêÂëò", null);
         }
     }
     public void SearchTarget(Chess user,List<Chess> targets)
@@ -73,7 +73,7 @@ public class SkillEffect_GitaHero : ISkillEffect
         Collider2D[] cols = CheckObjectPoolManage.GetColArray((int)(1000 * checkRange * checkRange));
         LayerMask layer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         int i = Physics2D.OverlapCircleNonAlloc(user.transform.position + dx, checkRange, cols, layer);
-        //Debug.Log("’“µΩ¡À" + i);
+        //Debug.Log("ÊâæÂà∞‰∫Ü" + i);
         for (int j = 0; j < i; j++)
         {
             Chess enemy = cols[j].GetComponent<Chess>();

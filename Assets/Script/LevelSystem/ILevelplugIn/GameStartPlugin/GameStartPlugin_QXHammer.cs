@@ -42,7 +42,7 @@ public class HammerPanel_QX : BaseHandPanel
                 PrePlantImage.instance.PlayChildAnim("qianxia_Attack");
                 if (hit.collider != null)
                 {
-                    //Debug.Log(hit.collider.gameObject.name + " ´¸ËÀÄã");
+                    //Debug.Log(hit.collider.gameObject.name + " é”¤æ­»ä½ ");
                     Chess chess = hit.collider.GetComponent<Chess>();
                     //chess.GetComponent<Chess>().Death();
                     data.DM.damage = damage;
@@ -53,7 +53,7 @@ public class HammerPanel_QX : BaseHandPanel
                 else
                 {
                     //CancelPlant?.Invoke();
-                    //break;ÕâÀïÓ¦¸ÃÊÇ²¥·ÅÇ§ÏÄµÄidle ¶¯»­
+                    //break;è¿™é‡Œåº”è¯¥æ˜¯æ’­æ”¾åƒå¤çš„idle åŠ¨ç”»
                 }
             }
             yield return null;

@@ -3,7 +3,7 @@
 //using UnityEngine;
 //using UnityEngine.Rendering;
 ///// <summary>
-///// attack->startloop(Ò»Ö¡)->(¸ù¾İweaponÖµ)->loop->startLoop ÕâÑù
+///// attack->startloop(ä¸€å¸§)->(æ ¹æ®weaponå€¼)->loop->startLoop è¿™æ ·
 ///// </summary>
 //public class Passive_FireDragonDiana : ISkill
 //{
@@ -12,7 +12,7 @@
 //    [SerializeField]
 //    public IAttackFunction shoot, close, laser;
 //    Chess user;
-//    //Init ÊÇ³õÊ¼»¯ Ö»»áµ÷ÓÃÒ»´Î
+//    //Init æ˜¯åˆå§‹åŒ– åªä¼šè°ƒç”¨ä¸€æ¬¡
 //    public void InitSkill(Chess chess)
 //    {
 //        user =chess;

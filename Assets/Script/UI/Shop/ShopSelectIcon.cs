@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Õâ¸öÊÇÔÚ²Ö¿âÀïµÄÑ¡ÏîÅÆ 
+/// è¿™ä¸ªæ˜¯åœ¨ä»“åº“é‡Œçš„é€‰é¡¹ç‰Œ 
 /// </summary>
 public class ShopSelectIcon : MonoBehaviour
 {

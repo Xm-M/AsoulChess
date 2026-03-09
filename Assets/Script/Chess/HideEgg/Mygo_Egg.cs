@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 /// <summary>
-/// annoºÍsoyoµÄ²Êµ°
-/// Ö»ÓĞµ±³¡ÉÏÓĞanonµÄÊ±ºòÖÖÖ²soyo²Å»á´¥·¢
+/// annoå’Œsoyoçš„å½©è›‹
+/// åªæœ‰å½“åœºä¸Šæœ‰anonçš„æ—¶å€™ç§æ¤soyoæ‰ä¼šè§¦å‘
 /// </summary>
 public class HideEgg_AnonSoyo : HideEgg
 {
     public List<PropertyCreator> mujicaLists;
-    [LabelText("¸ÅÂÊ")]
-    public float rate=0.2f;//¸ÅÂÊ
+    [LabelText("æ¦‚ç‡")]
+    public float rate=0.2f;//æ¦‚ç‡
     public override bool IfTriggerEgg(Chess chess, Chess target)
     {
         float n = Random.Range(0, 1f);
         //Debug.Log(target.propertyController.creator.chessName);
         //Debug.Log(n);
         //Debug.Log(target.moveController.standTile.mapPos.x - target.moveController.standTile.mapPos.x);
-        if (target.propertyController.creator.chessName == "³¤ÆéËØÊÀ" &&
+        if (target.propertyController.creator.chessName == "é•¿å´ç´ ä¸–" &&
             target.moveController.standTile.mapPos.x-self.moveController.standTile.mapPos.x==-1&&n<=rate)
         {
-            Debug.Log("´¥·¢²Ëµ¥_ÎÒÃ»ÓĞËµ²»È¥");
+            Debug.Log("è§¦å‘èœå•_æˆ‘æ²¡æœ‰è¯´ä¸å»");
             TriggerEggEffect(chess, target);
             return true;
         }
@@ -32,7 +32,7 @@ public class HideEgg_AnonSoyo : HideEgg
          this.self=user;
          rate = 1;
         mujicaLists = new List<PropertyCreator>();
-        var playerChess = Resources.LoadAll<PropertyCreator>("ChessData/Player");//¼ÓÔØUIPrefabÎÄ¼ş¼ĞÏÂµÄËùÓĞUIÔ¤ÖÆÌå
+        var playerChess = Resources.LoadAll<PropertyCreator>("ChessData/Player");//åŠ è½½UIPrefabæ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰UIé¢„åˆ¶ä½“
         foreach (PropertyCreator view in playerChess)
         {
             if (view.GetPre() != null)
@@ -56,13 +56,13 @@ public class HideEgg_AnonSoyo : HideEgg
 
     public override void WhenEggOver()
     {
-        //Éú³ÉÒ»ÕÅmujicaµÄ³ÉÔ±¿¨
+        //ç”Ÿæˆä¸€å¼ mujicaçš„æˆå‘˜å¡
         Item_PlantCard card= UIManage.GetView<ItemPanel>().Create<Item_PlantCard>();
         Vector2 pos = Camera.main.WorldToScreenPoint(self.transform.position);
         Debug.Log(pos);
         //card.InitCard(nailong, pos, pos, 1);
         card.InitCard(mujicaLists[Random.Range(0, mujicaLists.Count)],pos,pos,1);
-        //¾ßÌåÔõÃ´ÒÆ¶¯ Ö®ºóÔÙ¸Ä°É
+        //å…·ä½“æ€ä¹ˆç§»åŠ¨ ä¹‹åå†æ”¹å§
     }
 
     public override void WhenEnterWar(Chess user)
@@ -78,18 +78,18 @@ public class HideEgg_AnonSoyo : HideEgg
 public class HideEgg_AnonTomorin : HideEgg
 {
     public static int count;
-    [LabelText("ÄÌÁú")]
+    [LabelText("å¥¶é¾™")]
     public PropertyCreator nailong;
-    [LabelText("²Êµ°")]
-    public float rate = 1f;//¸ÅÂÊ
+    [LabelText("å½©è›‹")]
+    public float rate = 1f;//æ¦‚ç‡
     public override bool IfTriggerEgg(Chess chess, Chess target)
     {
         float n=Random.Range(0, 1f);
         Debug.Log(target.propertyController.creator.chessName);
-        if (n<=rate&&target.propertyController.creator.chessName == "¸ßËÉµÆ" &&
+        if (n<=rate&&target.propertyController.creator.chessName == "é«˜æ¾ç¯" &&
             target.moveController.standTile.mapPos.x-chess.moveController.standTile.mapPos.x==1)
         {
-            Debug.Log("´¥·¢²Êµ°_TWGgroup");
+            Debug.Log("è§¦å‘å½©è›‹_TWGgroup");
             TriggerEggEffect(chess, target);
             return true;
         }
@@ -102,12 +102,12 @@ public class HideEgg_AnonTomorin : HideEgg
         rate = 1;
         //mujicaLists = new List<PropertyCreator>();
         self = user;
-        var playerChess = Resources.LoadAll<PropertyCreator>("ChessData/Player");//¼ÓÔØUIPrefabÎÄ¼ş¼ĞÏÂµÄËùÓĞUIÔ¤ÖÆÌå
+        var playerChess = Resources.LoadAll<PropertyCreator>("ChessData/Player");//åŠ è½½UIPrefabæ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰UIé¢„åˆ¶ä½“
         foreach (PropertyCreator view in playerChess)
         {
             if (view.GetPre()!= null)
             {
-                if (view.chessName=="Âõ°ÍºÕ")
+                if (view.chessName=="è¿ˆå·´èµ«")
                 {
                     nailong = view;
                     return;
@@ -142,14 +142,14 @@ public class HideEgg_AnonTomorin : HideEgg
         //count++;
         if (count == 4)
         {
-            //Debug.Log("Éú³ÉÄÌÁú");
+            //Debug.Log("ç”Ÿæˆå¥¶é¾™");
             count = 0;
-            //Éú³ÉÒ»ÕÅ·ÛÉ«ÄÌÁú¿¨
+            //ç”Ÿæˆä¸€å¼ ç²‰è‰²å¥¶é¾™å¡
             Item_PlantCard card = UIManage.GetView<ItemPanel>().Create<Item_PlantCard>();
             Vector2 pos = Camera.main.WorldToScreenPoint(self.transform.position);
             Debug.Log(pos);
             card.InitCard(nailong , pos, pos, 1);
-            //¾ßÌåÔõÃ´ÒÆ¶¯ Ö®ºóÔÙ¸Ä°É
+            //å…·ä½“æ€ä¹ˆç§»åŠ¨ ä¹‹åå†æ”¹å§
         }
     }
 
@@ -163,4 +163,4 @@ public class HideEgg_AnonTomorin : HideEgg
         //wdthrow new System.NotImplementedException();
     }
 }
-//Ö®ºó¿ÉÒÔ×ö¸ö²Êµ°
+//ä¹‹åå¯ä»¥åšä¸ªå½©è›‹

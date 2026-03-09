@@ -4,25 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ÆäÊµÊÇ¶Ô±êPlantPanel
+/// å…¶å®æ˜¯å¯¹æ ‡PlantPanel
 /// </summary>
 public class TestScenePanel : View
 {
     public GameObject shopIconPre;
-    public Transform playerIconParent;//Ö²ÎïÁĞ±í
-    public Transform enemyIconParent;//½©Ê¬ÁĞ±í
+    public Transform playerIconParent;//æ¤ç‰©åˆ—è¡¨
+    public Transform enemyIconParent;//åƒµå°¸åˆ—è¡¨
     
 
     //public Animator anim;
     //public AudioPlayer shopAudio;
-    //[FoldoutGroup("³õÊ¼Î»ÖÃ")]
+    //[FoldoutGroup("åˆå§‹ä½ç½®")]
     //public Vector2 startPos1, startPos2;
-    //[FoldoutGroup("³õÊ¼Î»ÖÃ")]
+    //[FoldoutGroup("åˆå§‹ä½ç½®")]
     //public RectTransform p1, p2;
  
     public override void Init()
     {
-        var playerChess = Resources.LoadAll<PropertyCreator>("ChessData/Player");//¼ÓÔØUIPrefabÎÄ¼ş¼ĞÏÂµÄËùÓĞUIÔ¤ÖÆÌå
+        var playerChess = Resources.LoadAll<PropertyCreator>("ChessData/Player");//åŠ è½½UIPrefabæ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰UIé¢„åˆ¶ä½“
         foreach (PropertyCreator view in playerChess)
         {
             if (view.GetPre()!=null)
@@ -33,7 +33,7 @@ public class TestScenePanel : View
 
             }
         }
-        var enemyChess = Resources.LoadAll<PropertyCreator>("ChessData/Enemy");//¼ÓÔØUIPrefabÎÄ¼ş¼ĞÏÂµÄËùÓĞUIÔ¤ÖÆÌå
+        var enemyChess = Resources.LoadAll<PropertyCreator>("ChessData/Enemy");//åŠ è½½UIPrefabæ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰UIé¢„åˆ¶ä½“
         foreach (PropertyCreator view in enemyChess)
         {
             if (view.GetPre() != null)

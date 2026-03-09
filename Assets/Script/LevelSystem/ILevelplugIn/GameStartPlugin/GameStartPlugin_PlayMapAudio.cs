@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 /// <summary>
-/// ²¥·ÅÒôÀÖ²å¼ş
+/// æ’­æ”¾éŸ³ä¹æ’ä»¶
 /// </summary>
 public class GameStartPlugin_PlayAudio : ILevelPlugin
 {

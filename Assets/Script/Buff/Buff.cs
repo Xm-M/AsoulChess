@@ -6,15 +6,15 @@ using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
-/// ÎÒ¸Ğ¾õÎÒÕâ¸öbuffÏµÍ³Ğ´µÄÒ²ºÜÀ¬»ø  
+/// æˆ‘æ„Ÿè§‰æˆ‘è¿™ä¸ªbuffç³»ç»Ÿå†™çš„ä¹Ÿå¾ˆåƒåœ¾  
 /// </summary>
-#region »ù´¡¿ò¼Übuff
+#region åŸºç¡€æ¡†æ¶buff
 [Serializable]
 public abstract class Buff
 {
-    [LabelText("BuffÃû")]
-    public string buffName;//Õâ¸öbuffµÄÃû×Ö
-    [HideInInspector] public Chess target;//buffµÄ×÷ÓÃ¶ÔÏó
+    [LabelText("Buffå")]
+    public string buffName;//è¿™ä¸ªbuffçš„åå­—
+    [HideInInspector] public Chess target;//buffçš„ä½œç”¨å¯¹è±¡
      
     public virtual void BuffReset(Buff resetBuff)
     {
@@ -70,18 +70,18 @@ public class MultyBuff : Buff
 
 }
 #endregion
-#region ÔªËØÊôĞÔbuff
+#region å…ƒç´ å±æ€§buff
 /// <summary>
-/// ¼õËÙBuff
+/// å‡é€ŸBuff
 /// </summary>
 public class ColdBuff : TimeBuff
 {
-    [LabelText("¼õËÙĞ§ÂÊ")]
+    [LabelText("å‡é€Ÿæ•ˆç‡")]
     public float slowRate = -0.5f;
     public GameObject coldBuff;
     public ColdBuff()
     {
-        buffName = "±ù¶³";
+        buffName = "å†°å†»";
     }
     public override void BuffEffect(Chess target)
     {
@@ -105,10 +105,10 @@ public class ColdBuff : TimeBuff
 }
 public class FireBuff : Buff
 {
-    public float damage = 13;//¹Ì¶¨Öµ ¶øÇÒ»á±»¾ùÌ¯
+    public float damage = 13;//å›ºå®šå€¼ è€Œä¸”ä¼šè¢«å‡æ‘Š
     public FireBuff()
     {
-        buffName = "×ÆÉÕ";
+        buffName = "ç¼çƒ§";
     }
     public override void BuffEffect(Chess target)
     {
@@ -118,7 +118,7 @@ public class FireBuff : Buff
 }
 public class LightBuff : Buff
 {
-    [LabelText("¹âÕÕ·¶Î§")]
+    [LabelText("å…‰ç…§èŒƒå›´")]
     public float range;
     public float hideTime;
 
@@ -131,20 +131,20 @@ public class LightBuff : Buff
     }
     public LightBuff()
     {
-        buffName = "¹âÕÕ";
+        buffName = "å…‰ç…§";
     }
 }
 
 #endregion 
-#region ¿ØÖÆbuff
+#region æ§åˆ¶buff
 /// <summary>
-/// ÏÖÔÚÖØµãÊÇ¿Ö¾åµÄ»ØÍ·×ßÁ½²½ÒªÔõÃ´ÊµÏÖ...
+/// ç°åœ¨é‡ç‚¹æ˜¯ææƒ§çš„å›å¤´èµ°ä¸¤æ­¥è¦æ€ä¹ˆå®ç°...
 /// </summary>
 public class Buff_Fear : TimeBuff {
 
-    [LabelText("¿Ö¾åÌØĞ§")]
+    [LabelText("ææƒ§ç‰¹æ•ˆ")]
     public GameObject FearEffect;
-    [LabelText("»ºËÙĞ§ÂÊ")]
+    [LabelText("ç¼“é€Ÿæ•ˆç‡")]
     public float moveRate=0.5f;
     GameObject effect;
     StateName current;
@@ -199,12 +199,12 @@ public class Buff_Fear : TimeBuff {
 
 
 /// <summary>
-/// ÷È»óbuff
+/// é­…æƒ‘buff
 /// </summary>
 public class Buff_Charm : Buff
 {
     public Color color;
-    public GameObject charmEffect;//÷È»óÌØĞ§
+    public GameObject charmEffect;//é­…æƒ‘ç‰¹æ•ˆ
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
@@ -230,15 +230,15 @@ public class Buff_Charm : Buff
 
 
 /// <summary>
-/// ·ßÅ­Buff
+/// æ„¤æ€’Buff
 /// </summary>
 public class AngryBuff:Buff
 {
-    [LabelText("ÉúÆøÌØĞ§")]
+    [LabelText("ç”Ÿæ°”ç‰¹æ•ˆ")]
     public GameObject angryEffect;
-    [LabelText("¶îÍâ¹¥ËÙ")]
+    [LabelText("é¢å¤–æ”»é€Ÿ")]
     public float extraAttackSpeed=0.5f;
-    [LabelText("¶îÍâ³ĞÉË")]
+    [LabelText("é¢å¤–æ‰¿ä¼¤")]
     public float extraTake=1f;
     GameObject effect;
     public override void BuffEffect(Chess target)
@@ -265,14 +265,14 @@ public class AngryBuff:Buff
 }
 
 /// <summary>
-/// ½ÉĞµbuff
+/// ç¼´æ¢°buff
 /// </summary>
 public class DisarmBuff : Buff
 {
-    public GameObject disaarnEffect;//½ÉĞµÌØĞ§
+    public GameObject disaarnEffect;//ç¼´æ¢°ç‰¹æ•ˆ
     public DisarmBuff()
     {
-        buffName = "½ÉĞµ";
+        buffName = "ç¼´æ¢°";
     }
     public override void BuffEffect(Chess target)
     {
@@ -287,9 +287,9 @@ public class DisarmBuff : Buff
 
 }
 #endregion
-#region ÖÎÁÆÀàbuff
+#region æ²»ç–—ç±»buff
 /// <summary>
-/// »Ö¸´buff
+/// æ¢å¤buff
 /// </summary>
 public class ResumeBuff : Buff
 {
@@ -322,15 +322,15 @@ public class ResumeBuff : Buff
     }
 }
 #endregion
-#region ³¡µØBuff
+#region åœºåœ°Buff
 /// <summary>
-/// ³ÖĞø10s ÉÏ¿Îbuff
+/// æŒç»­10s ä¸Šè¯¾buff
 /// </summary>
 public class Buff_ClassBegin : TimeBuff
 {
-    [LabelText("¶îÍâ¼õÉË")]
+    [LabelText("é¢å¤–å‡ä¼¤")]
     public float extradefence=0.3f;
-    [LabelText("¼õÉÙÒÆËÙ")]
+    [LabelText("å‡å°‘ç§»é€Ÿ")]
     public float extraSpeed=0.25f;
     public override void BuffEffect(Chess target)
     {
@@ -338,7 +338,7 @@ public class Buff_ClassBegin : TimeBuff
         target.propertyController.ChangeExtraDefence(extraSpeed);
         target.propertyController.ChangeAcceleRate(-extraSpeed);
         Buff buff = null;
-        target.buffController.buffDic.TryGetValue("ÏÂ¿Î",out buff);
+        target.buffController.buffDic.TryGetValue("ä¸‹è¯¾",out buff);
         if(buff != null)
         {
             buff.BuffOver();
@@ -357,13 +357,13 @@ public class Buff_ClassBegin : TimeBuff
     }
 }
 /// <summary>
-/// ÏÂ¿Îbuff ³ÖĞø50s
+/// ä¸‹è¯¾buff æŒç»­50s
 /// </summary>
 public class Buff_ClassOver : TimeBuff
 {
-    [LabelText("¶îÍâ¹¥»÷")]
+    [LabelText("é¢å¤–æ”»å‡»")]
     public float extraAttack=0.3f;
-    [LabelText("¶îÍâÒÆËÙ")]
+    [LabelText("é¢å¤–ç§»é€Ÿ")]
     public float extraSpeed=0.25f;
     public override void BuffEffect(Chess target)
     {
@@ -371,7 +371,7 @@ public class Buff_ClassOver : TimeBuff
         target.propertyController.ChangeAttack(extraAttack);
         target.propertyController.ChangeAcceleRate(extraSpeed);
         Buff buff = null;
-        target.buffController.buffDic.TryGetValue("ÉÏ¿Î", out buff);
+        target.buffController.buffDic.TryGetValue("ä¸Šè¯¾", out buff);
         if (buff != null)
         {
             buff.BuffOver();
@@ -394,7 +394,7 @@ public class Buff_ClassOver : TimeBuff
 
 
 /// <summary>
-/// Õâ¸öbuffµÄ×÷ÓÃ¾ÍÊÇ´´½¨Ò»¸öÑÜÉúÎï
+/// è¿™ä¸ªbuffçš„ä½œç”¨å°±æ˜¯åˆ›å»ºä¸€ä¸ªè¡ç”Ÿç‰©
 /// </summary>
 public class Buff_Create:Buff
 {
@@ -418,7 +418,7 @@ public class Buff_Create:Buff
     }
     public void PlantOver(Chess target)
     {
-        //Debug.Log("´´½¨ÁË "+target); ÎªÊ²Ã´µÚ¶ş´ÎÓÃÕâ¸ö¼¼ÄÜµÄÊ±ºò»áÃëÖÖÄØ ¶øÇÒ»¹ÖÖÏÂÈ¥ÁË hywÄØ
+        //Debug.Log("åˆ›å»ºäº† "+target); ä¸ºä»€ä¹ˆç¬¬äºŒæ¬¡ç”¨è¿™ä¸ªæŠ€èƒ½çš„æ—¶å€™ä¼šç§’ç§å‘¢ è€Œä¸”è¿˜ç§ä¸‹å»äº† hywå‘¢
         //debug
         user.skillController.context.Set<Chess>(buffName, target);
         target.OnRemove.AddListener(OnPlantDeath);
@@ -426,13 +426,13 @@ public class Buff_Create:Buff
     }
     public void OnPlantDeath(Chess target)
     {
-        //Debug.Log("ÒÆ³ıÁË" + target.name);
+        //Debug.Log("ç§»é™¤äº†" + target.name);
         user.skillController.context.Remove(buffName);
     }
     public override void BuffReset(Buff resetBuff)
     {
         base.BuffReset(resetBuff);
-        Debug.LogError("²»¶Ô£¬ÄãÔõÃ´ÄÜÍ¬Ê±ÓµÓĞÁ½¸öÕâ¸öbuff");
+        Debug.LogError("ä¸å¯¹ï¼Œä½ æ€ä¹ˆèƒ½åŒæ—¶æ‹¥æœ‰ä¸¤ä¸ªè¿™ä¸ªbuff");
     }
     public override void BuffOver()
     {

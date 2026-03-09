@@ -40,7 +40,7 @@ public class ElementCloseAttack : IAttackFunction
                     DM.damageFrom = user;
                     DM.damageTo = targets[i];
                     DM.damage = skillDamge;
-                    Debug.Log("‘Ï≥……À∫¶" + DM.damage);
+                    Debug.Log("ÈÄ†Êàê‰º§ÂÆ≥" + DM.damage);
                     user.propertyController.TakeDamage(DM);
                 }
             }

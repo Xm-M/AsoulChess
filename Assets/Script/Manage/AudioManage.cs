@@ -10,7 +10,7 @@ public class AudioManage
     static List<AudioPlayer> players;
     public AudioManage()
     {
-        Debug.Log("³õÊ¼»¯");
+        Debug.Log("åˆå§‹åŒ–");
         players = new List<AudioPlayer>();
         EventController.Instance.AddListener(EventName.PauseGame.ToString(), Pause);
         EventController.Instance.AddListener(EventName.ResumeGame.ToString(), Resume);

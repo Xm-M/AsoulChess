@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 /// <summary>
-/// ´«ËÍ´ø
-/// 1.Ö»ÓĞÔÚGameStartÊÂ¼ş´¥·¢ÒÔºó²ÅÄÜ¿ªÊ¼Éú³É  
-/// 2.Ã»ÓĞÉ¾¸É¾» 
+/// ä¼ é€å¸¦
+/// 1.åªæœ‰åœ¨GameStartäº‹ä»¶è§¦å‘ä»¥åæ‰èƒ½å¼€å§‹ç”Ÿæˆ  
+/// 2.æ²¡æœ‰åˆ å¹²å‡€ 
 /// 
 /// </summary>
 public class ConveyorPanel : View
@@ -80,7 +80,7 @@ public class ConveyorPanel : View
         {
             rectPre = rect;
             rect = cards[i].GetComponent<RectTransform>();
-            //ÕâÀïÊÇÒÆ¶¯CardsµÄº¯Êı
+            //è¿™é‡Œæ˜¯ç§»åŠ¨Cardsçš„å‡½æ•°
             if (i == 0 && rect.anchoredPosition.x>0)
             {
                 rect.anchoredPosition = Vector2.MoveTowards(rect.anchoredPosition,

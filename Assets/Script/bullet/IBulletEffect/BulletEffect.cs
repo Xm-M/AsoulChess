@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BulletEfect_Wine : IBulletEffect
 {
-    public GameObject wineZone;//¾Æ×Õ
+    public GameObject wineZone;//é…’æ¸
     public void OnBulletHit(Bullet bullet)
     {
         GameObject wine = ObjectPool.instance.Create(wineZone);

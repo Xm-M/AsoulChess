@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
-/// Õâ¼¸°ÑÓÖÊÇ¸öÉ¶
+/// è¿™å‡ æŠŠåˆæ˜¯ä¸ªå•¥
 /// </summary>
 public class InitWeapon_ResetAnimator : IInitWeapon
 {

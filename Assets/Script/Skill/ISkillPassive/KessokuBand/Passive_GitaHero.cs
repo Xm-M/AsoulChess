@@ -15,10 +15,10 @@ public class Passive_GitaHero : ISkillEffect
     {
         if (c == null) return;
         PropertyCreator creator = c.propertyController.creator;
-        if (creator.chessName.Contains("ºçÏÄ")|| creator.chessName.Contains("Á¹")
-            || creator.chessName.Contains("Ï²¶à")|| creator.chessName.Contains("²¨Ææ"))
+        if (creator.chessName.Contains("è™¹å¤")|| creator.chessName.Contains("å‡‰")
+            || creator.chessName.Contains("å–œå¤š")|| creator.chessName.Contains("æ³¢å¥‡"))
         {
-            user.skillController.context.Set<Chess>("³ÉÔ±",c);
+            user.skillController.context.Set<Chess>("æˆå‘˜",c);
         }
     }
 }

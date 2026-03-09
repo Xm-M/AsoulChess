@@ -31,7 +31,7 @@ public class SweetBar : PowerBar
             ChangeStage(1);
         }
         bar.SetValue(sweetValue, maxSweet);
-        //µãÁÁÍ¼±ê
+        //ç‚¹äº®å›¾æ ‡
     }
     public bool ConsumeSweet(float value)
     {
@@ -44,7 +44,7 @@ public class SweetBar : PowerBar
             {
                 ChangeStage(-1);
             }
-            //¹Ø±ÕÍ¼±ê
+            //å…³é—­å›¾æ ‡
             return true;
         }
     }

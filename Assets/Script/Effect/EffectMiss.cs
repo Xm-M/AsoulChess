@@ -30,7 +30,7 @@ public class EffectMiss : MonoBehaviour
     }
     public void DestroySelf()
     {
-        Debug.Log("µ÷ÓÃ");
+        Debug.Log("è°ƒç”¨");
         Destroy(gameObject);
     }
     private void OnDestroy()

@@ -17,8 +17,8 @@ public class Animator_MMK : AnimatorController
                 nina = true;
             }
         }
-        //if (nina) Debug.Log("捕捉到了");
-        //else Debug.Log("没捕捉到");
+        //if (nina) Debug.Log("鎹曟崏鍒颁簡");
+        //else Debug.Log("娌℃崟鎹夊埌");
         EventController.Instance.AddListener<Chess>(EventName.WhenChessEnterWar.ToString(),CheckNima);
         EventController.Instance.AddListener<Chess>(EventName.WhenDeath.ToString(), CheckNinaOut);
         PlayIdle();

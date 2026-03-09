@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Õâ¸öb ItemÒ²ĞèÒªÓÃÂğ
+/// è¿™ä¸ªb Itemä¹Ÿéœ€è¦ç”¨å—
 /// </summary>
 public class ItemPanel : View
 {
@@ -16,7 +16,7 @@ public class ItemPanel : View
     {
         itemPre = new List<UIItem>();
         itemPool = new Dictionary<Type, Stack<UIItem>>();
-        var prefabs = Resources.LoadAll<Transform>("Item");//¼ÓÔØËùÓĞPowerBar;
+        var prefabs = Resources.LoadAll<Transform>("Item");//åŠ è½½æ‰€æœ‰PowerBar;
         foreach (Transform view in prefabs)
         {
             //Transform prefab = Instantiate(view, transform);
@@ -74,7 +74,7 @@ public class ItemPanel : View
                 break;
             }
         }
-        if (!pre) Debug.LogError("Ã»ÓĞÕâ¸öItem");
+        if (!pre) Debug.LogError("æ²¡æœ‰è¿™ä¸ªItem");
         GameObject item= GameObject.Instantiate(pre, transform);
         return item.GetComponent<T>();
     }
@@ -86,7 +86,7 @@ public class ItemPanel : View
             if (item.transform.parent != transform)
             {
                 item.transform.SetParent(transform);
-                //Debug.Log("»ØÊÕ²¢ÖØĞÂÉèÖÃ¸¸½Úµã");
+                //Debug.Log("å›æ”¶å¹¶é‡æ–°è®¾ç½®çˆ¶èŠ‚ç‚¹");
             }
             item.gameObject.SetActive(false);
             itemPool[typeof(T)].Push(item);

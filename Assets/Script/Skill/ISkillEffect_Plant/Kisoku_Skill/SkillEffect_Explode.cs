@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 /// <summary>
-/// 9ÕÅÅÆ  
+/// 9å¼ ç‰Œ  
 /// </summary>
 public class SkillEffect_KitaExplode : ISkillEffect
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 随机移动 给猫猫使用的
+/// 闅忔満绉诲姩 缁欑尗鐚娇鐢ㄧ殑
 /// </summary>
 public class RandomMove : FindTileMethod
 {

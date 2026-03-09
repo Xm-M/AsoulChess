@@ -28,7 +28,7 @@ public class BowlingArmor : CarArmor
                 dm.damageFrom = user;
                 dm.damageTo = chess;
                 dm.damage = user.propertyController.GetAttack();
-                //Debug.Log("Åö×²");
+                //Debug.Log("ç¢°æ’");
                 onHit?.Invoke();
                 user.propertyController.TakeDamage(dm);
                 if (player != null)
@@ -52,7 +52,7 @@ public class BowlingArmor : CarArmor
                 dm.damageFrom = user;
                 dm.damageTo = chess;
                 dm.damage = user.propertyController.GetAttack();
-                //Debug.Log("Åö×²");
+                //Debug.Log("ç¢°æ’");
                 onHit?.Invoke();
                 user.propertyController.TakeDamage(dm);
                 if (player != null)
@@ -71,6 +71,6 @@ public class BowlingArmor : CarArmor
         //Debug.Log(3.1f / user.propertyController.GetMoveSpeed());
         yield return new WaitForSeconds(2.5f / user.propertyController.GetMoveSpeed());
         col.enabled = true;
-        Debug.Log("Åö×²ÖØĞÂÆô¶¯");
+        Debug.Log("ç¢°æ’é‡æ–°å¯åŠ¨");
     }
 }

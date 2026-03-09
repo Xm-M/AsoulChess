@@ -72,7 +72,7 @@ public class TimerManage:IManager
     }
     public void ClearTime()
     {
-        Debug.Log("ÇåÀí¼ÆÊ±Æ÷");
+        Debug.Log("æ¸…ç†è®¡æ—¶å™¨");
         timerList.Clear();
         availableQueue.Clear();
     }
@@ -90,7 +90,7 @@ public class Timer
     {
         this.OnFinish = onFinished;
         finishTime = TimerManage.GameTime + delayTime;
-        //Debug.Log("Íê³ÉÊ±¼ä" + finishTime);
+        //Debug.Log("å®Œæˆæ—¶é—´" + finishTime);
         
         this.delayTime = delayTime;
         ifLoop = isLoop;
@@ -123,7 +123,7 @@ public class Timer
         finishTime = finishTime - delayTime+newDelayTime;
         delayTime = newDelayTime;
         //Debug.Log(newDelayTime);
-        //Debug.Log("½áÊøÊ±¼ä" + finishTime);
-        //Debug.Log("ÏÖÔÚÊ±¼ä" + TimerManage.GameTime);
+        //Debug.Log("ç»“æŸæ—¶é—´" + finishTime);
+        //Debug.Log("ç°åœ¨æ—¶é—´" + TimerManage.GameTime);
     }
 }

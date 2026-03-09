@@ -2,7 +2,7 @@
 //using System.Collections.Generic;
 //using UnityEngine;
 ///// <summary>
-///// 这个可以直接删啊
+///// 杩欎釜鍙互鐩存帴鍒犲晩
 ///// </summary>
 //public class Passive_HpAnimSet : ISkill
 //{
@@ -17,7 +17,7 @@
 //    {
 //        float p= dm.damageTo.propertyController.GetHpPerCent();
 //        anim.SetFloat(animName, p);
-//        //Debug.Log("受到伤害" + p);
+//        //Debug.Log("鍙楀埌浼ゅ" + p);
 //    }
  
 

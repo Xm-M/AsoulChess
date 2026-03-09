@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Ğ¡Ç§ÏÄ¾Í·ÅÔÚÕâÁË
+/// å°åƒå¤å°±æ”¾åœ¨è¿™äº†
 /// </summary>
 public class HammerPanel : BaseHandPanel
 {
@@ -17,7 +17,7 @@ public class HammerPanel : BaseHandPanel
             if (Input.GetMouseButtonDown(1))
             {
                 //CancelPlant?.Invoke();
-                //break; ÕâÀïÓ¦¸ÃÊÇ²¥·ÅÇ§ÏÄµÄidle ¶¯»­
+                //break; è¿™é‡Œåº”è¯¥æ˜¯æ’­æ”¾åƒå¤çš„idle åŠ¨ç”»
             }
             else if (Input.GetMouseButtonDown(0))
             {
@@ -25,7 +25,7 @@ public class HammerPanel : BaseHandPanel
                 RaycastHit2D hit = Physics2D.Raycast(rayPos, Vector2.zero, 0, 1 << 8);
                 if (hit.collider != null)
                 {
-                    Debug.Log(hit.collider.gameObject.name + " ´¸ËÀÄã");
+                    Debug.Log(hit.collider.gameObject.name + " é”¤æ­»ä½ ");
                     Chess chess = hit.collider.GetComponent<Chess>();
                     //chess.GetComponent<Chess>().Death();
                     data.DM.damage = damage;
@@ -36,7 +36,7 @@ public class HammerPanel : BaseHandPanel
                 else
                 {
                     //CancelPlant?.Invoke();
-                    //break;ÕâÀïÓ¦¸ÃÊÇ²¥·ÅÇ§ÏÄµÄidle ¶¯»­
+                    //break;è¿™é‡Œåº”è¯¥æ˜¯æ’­æ”¾åƒå¤çš„idle åŠ¨ç”»
                 }
             }
             yield return null;

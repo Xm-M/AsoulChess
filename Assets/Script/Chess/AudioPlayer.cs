@@ -62,7 +62,7 @@ public class AudioPlayer : MonoBehaviour
             }
         }
     }
-    [Button("²¥·Å")]
+    [Button("æ’­æ”¾")]
     public void Play()
     {
         audioSource.Play();

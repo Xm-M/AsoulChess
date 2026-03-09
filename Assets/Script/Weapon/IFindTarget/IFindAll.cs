@@ -9,8 +9,8 @@ public class IFindAll_Circle : IFindTarget
         targets.Clear();
         Collider2D[] hits = CheckObjectPoolManage.GetColArray(100);
         int enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
-        int friendLayer = 1 << user.gameObject.layer; // ½« Layer Index ×ª»»³É LayerMask
-        int combinedLayerMask = enemyLayer | friendLayer; // Í¬Ê±¼ì²âµÐÎÒ
+        int friendLayer = 1 << user.gameObject.layer; // å°† Layer Index è½¬æ¢æˆ LayerMask
+        int combinedLayerMask = enemyLayer | friendLayer; // åŒæ—¶æ£€æµ‹æ•Œæˆ‘
         int n= Physics2D.OverlapCircleNonAlloc(user.transform.position, user.propertyController.GetAttackRange(),hits, combinedLayerMask);
         for(int i=0;i<n;i++)
         {
@@ -28,9 +28,9 @@ public class StraightLaser_AllChess : IFindTarget
         targets.Clear();
         RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(100);
         int enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
-        int friendLayer = 1 << user.gameObject.layer; // ½« Layer Index ×ª»»³É LayerMask
+        int friendLayer = 1 << user.gameObject.layer; // å°† Layer Index è½¬æ¢æˆ LayerMask
 
-        int combinedLayerMask = enemyLayer | friendLayer; // Í¬Ê±¼ì²âµÐÎÒ
+        int combinedLayerMask = enemyLayer | friendLayer; // åŒæ—¶æ£€æµ‹æ•Œæˆ‘
 
         int n = Physics2D.RaycastNonAlloc(
             user.transform.position,

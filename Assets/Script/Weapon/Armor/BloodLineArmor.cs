@@ -8,17 +8,17 @@ using Sirenix.OdinInspector;
 
 public class BloodLineArmor : ArmorBase
 {
-    [LabelText("ºìÏßÆğÊ¼µã")]
+    [LabelText("çº¢çº¿èµ·å§‹ç‚¹")]
     public Transform startPos;
-    [LabelText("ºìÏßÇ£ÒıÄ¿±ê")]
+    [LabelText("çº¢çº¿ç‰µå¼•ç›®æ ‡")]
     public Chess targetChess;
-    //public BloodBuff buff;//µ±È»²»¿ÉÄÜÊÇbloodBuffÀ² 
-    public DamageMessege dm;//Ö±½ÓÓÃdm¾ÍºÃ
-    [LabelText("ºìÏßÉËº¦")]
-    public float damage=10;//ÉËº¦
-    [LabelText("ÉËº¦¼ä¸ô")]
-    public float interval = 1;//ÉËº¦¼ä¸ô
-    [LabelText("ºìÏß")]
+    //public BloodBuff buff;//å½“ç„¶ä¸å¯èƒ½æ˜¯bloodBuffå•¦ 
+    public DamageMessege dm;//ç›´æ¥ç”¨dmå°±å¥½
+    [LabelText("çº¢çº¿ä¼¤å®³")]
+    public float damage=10;//ä¼¤å®³
+    [LabelText("ä¼¤å®³é—´éš”")]
+    public float interval = 1;//ä¼¤å®³é—´éš”
+    [LabelText("çº¢çº¿")]
     public LineRenderer bloodLine;
     public EdgeCollider2D edgeCollider;
     float t;
@@ -49,7 +49,7 @@ public class BloodLineArmor : ArmorBase
             for (int i = 0; i < pointCount; i++)
             {
                 Vector3 worldPos = bloodLine.GetPosition(i);
-                colliderPoints[i] = new Vector2(worldPos.x, worldPos.y); // ×ª»»Îª2D
+                colliderPoints[i] = new Vector2(worldPos.x, worldPos.y); // è½¬æ¢ä¸º2D
             }
             edgeCollider.points = colliderPoints;
         }
@@ -79,7 +79,7 @@ public class BloodLineArmor : ArmorBase
         }
         else
         {
-            //ºóĞøÓ¦¸Ã»áÌí¼ÓÒ»¸ö ¶ÏÏßµÄĞ§¹û
+            //åç»­åº”è¯¥ä¼šæ·»åŠ ä¸€ä¸ª æ–­çº¿çš„æ•ˆæœ
             BrokenArmor();
         }
     }

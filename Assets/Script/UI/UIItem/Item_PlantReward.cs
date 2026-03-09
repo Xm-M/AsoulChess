@@ -46,7 +46,7 @@ public class Item_PlantReward : UIItem
         float starty = startPos.y;
         while (elapsed < totalTime && !click)
         {
-            //t(curveµÄx²ÎÊı)=elspsed(Êµ¼Ê¾­¹ıµÄÊ±¼ä)/×ÜÊ±¼ä
+            //t(curveçš„xå‚æ•°)=elspsed(å®é™…ç»è¿‡çš„æ—¶é—´)/æ€»æ—¶é—´
             t = elapsed + x0;
             float yOffset = (curve.Evaluate(t) - y0);
             startPos = new Vector2(startPos.x + moveSpeed * Time.deltaTime, starty + (yOffset * height));
@@ -70,13 +70,13 @@ public class Item_PlantReward : UIItem
         isMoving = true;
         RectTransform rectTransform = GetComponent<RectTransform>();
         Vector2 startPos = rectTransform.anchoredPosition;
-        Vector2 endPos = Vector2.zero; // ÖĞĞÄÎ»ÖÃ
+        Vector2 endPos = Vector2.zero; // ä¸­å¿ƒä½ç½®
         float elapsed = 0f;
 
         while (elapsed < moveDuration)
         {
             float t = elapsed / moveDuration;
-            t = Mathf.SmoothStep(0, 1, t); // »º¶¯Ğ§¹û
+            t = Mathf.SmoothStep(0, 1, t); // ç¼“åŠ¨æ•ˆæœ
             rectTransform.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
 
             elapsed += Time.deltaTime;
@@ -91,7 +91,7 @@ public class Item_PlantReward : UIItem
         if (!click)
         {
             LevelManage.instance.GamePause();
-            MapManage.instance.BGMPlayer.PlayAudio("ÓÎÏ·Ê¤Àû");
+            MapManage.instance.BGMPlayer.PlayAudio("æ¸¸æˆèƒœåˆ©");
             MapManage.instance.BGMPlayer.SetLoop(false);
             GetComponent<Animator>().Play("win");
             UIManage.GetView<PlantsShop>().Hide();
@@ -100,11 +100,11 @@ public class Item_PlantReward : UIItem
         }
     }
     /// <summary>
-    /// ÓĞÏÂÒ»¹Ø¾ÍÈ¥ÏÂÒ»¹Ø Ã»ÓĞ¾Í»Øµ½Ö÷²Ëµ¥
+    /// æœ‰ä¸‹ä¸€å…³å°±å»ä¸‹ä¸€å…³ æ²¡æœ‰å°±å›åˆ°ä¸»èœå•
     /// </summary>
     public void Win()
     {
-        //LevelManage.instance.GameOver(true);//ËùÒÔËµÎÒµÄÓÎÏ·½áÊøÊµ¼ÊÊÇ°ó¶¨ÔÚÁËÉú³ÉÕâ¸öÉÏÃæ
+        //LevelManage.instance.GameOver(true);//æ‰€ä»¥è¯´æˆ‘çš„æ¸¸æˆç»“æŸå®é™…æ˜¯ç»‘å®šåœ¨äº†ç”Ÿæˆè¿™ä¸ªä¸Šé¢
         
         UIManage.Show<AwardPanel>();
         UIManage.Close<ItemPanel>();

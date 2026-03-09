@@ -32,13 +32,13 @@ public class TextPanel : View
     public void GameOver()
     {
         animator.Play("gameover");
-        MapManage.instance.BGMPlayer.PlayAudio("游戏失败");
+        MapManage.instance.BGMPlayer.PlayAudio("娓告垙澶辫触");
         MapManage.instance.BGMPlayer.SetLoop(false);
         gameOver.SetActive(true);   
     }
     public void GameStart()
     {
-        manage.PlayAudio("准备种植");
+        manage.PlayAudio("鍑嗗绉嶆");
         animator.Play("gamestart");
     }
     public void RestartGame()

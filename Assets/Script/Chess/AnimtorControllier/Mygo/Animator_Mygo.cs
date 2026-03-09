@@ -22,7 +22,7 @@ public class Animator_Mygo : AnimatorController
         {
             if (value > 0 && !friend)
             {
-                //Debug.Log("³ÉÔ±´óÓÚ1"+chess.moveController.standTile.mapPos);
+                //Debug.Log("æˆå‘˜å¤§äº1"+chess.moveController.standTile.mapPos);
                 if(chess.stateController.currentState.state != null && chess.stateController.currentState.state.stateName == StateName.IdleState)
                     animator.Play("change");
                 friend = true;
@@ -31,14 +31,14 @@ public class Animator_Mygo : AnimatorController
             {
                 if(chess.stateController.currentState.state != null && chess.stateController.currentState.state.stateName == StateName.IdleState)
                     animator.Play("change1");
-                //Debug.Log("³ÉÔ±Ğ¡ÓÚ1");
+                //Debug.Log("æˆå‘˜å°äº1");
                 friend = false;
 
             }
         }
     }
     /// <summary>
-    /// ÆäÊµÖ÷Òª¾ÍÊÇidleµÄÎÊÌâ¶Ô°É
+    /// å…¶å®ä¸»è¦å°±æ˜¯idleçš„é—®é¢˜å¯¹å§
     /// </summary>
     public override void PlayIdle()
     {

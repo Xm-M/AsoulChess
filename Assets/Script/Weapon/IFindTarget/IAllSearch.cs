@@ -46,7 +46,7 @@ public class IAllSearch_Rana : IFindTarget
 //        float mindis = 1000;
 //        foreach(var enemy in GameManage.instance.chessTeamManage.GetEnemyTeam(user.tag))
 //        {
-//            //这里应该有一个优先检测气球僵尸的
+//            //杩欓噷搴旇鏈変竴涓紭鍏堟娴嬫皵鐞冨兊灏哥殑
 //            if (Vector2.Distance(user.transform.position, enemy.transform.position)<mindis)
 //            {
 

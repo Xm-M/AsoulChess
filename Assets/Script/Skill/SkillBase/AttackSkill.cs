@@ -51,5 +51,16 @@ public class AttackSkill : SkillBase<SkillConfig_Attack>
         t=config.attackTimeCold;
     }
     public void CaculateAttackTime(Chess chess) => t += 1;
-    
+
+    public override void WriteToSaveData(SkillStateSaveData data)
+    {
+        if (data == null) return;
+        data.skillType = nameof(AttackSkill);
+        data.Set("t", t);
+    }
+    public override void RestoreFromSaveData(SkillStateSaveData data, Chess user)
+    {
+        if (data == null) return;
+        t = data.GetInt("t", config.startAttackTime);
+    }
 }

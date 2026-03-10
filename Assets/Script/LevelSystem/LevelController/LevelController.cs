@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Sirenix.OdinInspector;
 using System;
 
@@ -72,6 +73,7 @@ public class LevelController : MonoBehaviour
     public virtual void RestorePlayerPlants(List<ChessSaveData> plants)
     {
         if (plants == null || MapManage.instance == null) return;
+        SkillContext.PendingChessRefs.Clear();
         foreach (var p in plants)
         {
             var creator = GetCreatorByChessName(p.creatorId);
@@ -88,7 +90,53 @@ public class LevelController : MonoBehaviour
                 foreach (var b in p.buffs)
                     chess.buffController.AddBuffFromSave(b);
             }
+            var sc = chess.skillController;
+            if (p.skillContextData != null && sc?.context != null)
+                sc.context.RestoreFromSaveData(p.skillContextData, chess);
+            if (p.skillStateData != null && sc?.activeSkill != null)
+                sc.activeSkill.RestoreFromSaveData(p.skillStateData, chess);
+            if (p.skillRuntimeData != null && sc?.activeSkill is IHasRuntimeInfo hi && hi.Runtime != null)
+                hi.Runtime.RestoreFromSaveData(p.skillRuntimeData);
+            var savedState = (StateName)p.stateName;
+            if (savedState == StateName.SkillState)
+            {
+                if (p.skillEffectFired)
+                    sc?.SkillOver(chess);
+                else
+                {
+                    sc?.activeSkill?.ReturnCD();
+                    sc?.SkillOver(chess);
+                }
+            }
+            else if (savedState == StateName.ResumeState)
+                chess.stateController.ChangeState(StateName.ResumeState);
         }
+        RestorePendingChessRefsNextFrame();
+    }
+
+    void RestorePendingChessRefsNextFrame()
+    {
+        if (SkillContext.PendingChessRefs.Count == 0) return;
+        StartCoroutine(RestorePendingChessRefsCoroutine());
+    }
+    System.Collections.IEnumerator RestorePendingChessRefsCoroutine()
+    {
+        yield return null;
+        var team = ChessTeamManage.Instance?.GetTeam("Player");
+        if (team == null) yield break;
+        foreach (var (owner, key, chessData) in SkillContext.PendingChessRefs)
+        {
+            var parts = chessData.Split('|');
+            if (parts.Length < 3) continue;
+            int tx = int.TryParse(parts[1], out int x) ? x : -1;
+            int ty = int.TryParse(parts[2], out int y) ? y : -1;
+            if (tx < 0 || ty < 0 || MapManage.instance == null || !MapManage.instance.IfInMapRange(tx, ty)) continue;
+            var tile = MapManage.instance.tiles[tx, ty];
+            var target = tile?.stander;
+            if (target != null && owner?.skillController?.context != null)
+                owner.skillController.context.Set(key, target);
+        }
+        SkillContext.PendingChessRefs.Clear();
     }
 
     private static PropertyCreator GetCreatorByChessName(string chessName)
@@ -209,17 +257,37 @@ public class LevelController : MonoBehaviour
             RestorePlayerPlants(SaveLoadContext.CurrentSaveData.playerPlants);
         }
         LevelManage.instance.GameStart();
-        UIManage.Show<TextPanel>();
-        UIManage.GetView<TextPanel>().GameStart();
+        if (!isLoadFromSave)
+        {
+            UIManage.Show<TextPanel>();
+            UIManage.GetView<TextPanel>().GameStart();
+            SaveSystem.SaveCurrentLevel();
+        }
         if (isLoadFromSave && currentWave >= 0)
         {
-            var progressBar = UIManage.GetView<ProgressBar>();
-            if (progressBar != null)
-            {
-                UIManage.Show<ProgressBar>();
-                progressBar.SetFlag(levelData.MaxWave / 10);
-                progressBar.MoveBar(currentWave + 1, levelData.MaxWave);
-            }
+            UIManage.Show<ProgressBar>();
+            UIManage.GetView<ProgressBar>().SetFlag(levelData.MaxWave / 10);
+            UIManage.GetView<ProgressBar>().MoveBar(currentWave + 1, levelData.MaxWave);
+            if (t >= mintime)
+                DoEnterNextWave();
+        }
+    }
+    protected virtual void DoEnterNextWave()
+    {
+        t = -2;
+        UIManage.GetView<ProgressBar>().MoveBar(currentWave + 1, levelData.MaxWave);
+        if (currentWave + 1 < levelData.MaxWave)
+            waveDatas[currentWave + 1].EnterWave();
+        currentWave++;
+        if (currentWave % 10 == 9)
+        {
+            mintime = 4;
+            maxtime = 50;
+        }
+        else
+        {
+            mintime =4;
+            maxtime = UnityEngine.Random.Range(0, 6) + 23;
         }
     }
 
@@ -234,6 +302,7 @@ public class LevelController : MonoBehaviour
             t += Time.deltaTime;
             if (currentWave == -1&&t>mintime)
             {
+                SaveSystem.SaveCurrentLevel();
                 waveDatas[currentWave+1].EnterWave();
                 UIManage.GetView<TextPanel>().FirstZombieCom();
                 EventController.Instance.TriggerEvent(EventName.FirstZombieComming.ToString());
@@ -246,25 +315,10 @@ public class LevelController : MonoBehaviour
             }
             else if (currentWave!=-1&&((waveDatas[currentWave].CheckZombieHp() && t > mintime) || (t > maxtime)))
             {
+                if (waveDatas[currentWave].GetCurrentZombieHpSum() <= 0)
+                    SaveSystem.SaveCurrentLevel();
                 t = 0;
-                UIManage.GetView<ProgressBar>().MoveBar(currentWave+1, levelData.MaxWave);
-                if (currentWave + 1 < levelData.MaxWave)
-                {
-                    waveDatas[currentWave + 1].EnterWave();
-                    t = -2;
-                    currentWave++;
-                }
-                if (currentWave % 10 == 9)
-                {
-                    mintime = UnityEngine.Random.Range(0, 6);
-                    maxtime = 50; 
-                }
-                else
-                {
-                    mintime =UnityEngine. Random.Range(0, 6);
-                    maxtime = mintime + 23;
-                }
-                
+                DoEnterNextWave();
             }
         }
     }
@@ -529,6 +583,18 @@ public class WaveData
         
         }
         else return false;
+    }
+    /// <summary>当前波僵尸生命值总和，用于判断是否全场已死（hp<=0 时虽未触发 Death 但僵尸已全死）</summary>
+    public virtual float GetCurrentZombieHpSum()
+    {
+        if (!createOver || liveZombie == null) return float.MaxValue;
+        float sum = 0;
+        for (int i = 0; i < liveZombie.Count; i++)
+        {
+            if (!liveZombie[i].IfDeath)
+                sum += liveZombie[i].propertyController.GetHp();
+        }
+        return sum;
     }
     public virtual void ClearWave()
     {

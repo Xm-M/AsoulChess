@@ -10,9 +10,7 @@ public class SkillState : State
     public override void Enter(Chess chess)
     {
         base.Enter(chess);
-        //多种技能的话 就在技能内部用animator.SetFloat();的方法来改变播放内容
-        //chess.animator.Play("skill");
-        //Debug.Log("技能");
+        chess.skillController.skillEffectFiredThisCast = false;
         chess.animatorController.PlaySkill();    
     }
     public override void Execute(Chess chess)

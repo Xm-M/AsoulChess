@@ -108,6 +108,7 @@ public class LevelController_HammerZombie : LevelController
             t += Time.deltaTime;
             if (currentWave == -1 && t > mintime)
             {
+                SaveSystem.SaveCurrentLevel();
                 waveDatas[currentWave + 1].EnterWave();
                 currentWave++;
                 t = 0;
@@ -116,25 +117,22 @@ public class LevelController_HammerZombie : LevelController
             }
             else if (currentWave != -1 && (waveDatas[currentWave].CheckZombieHp() && t> maxtime && currentWave < levelData.MaxWave))
             {
+                if (waveDatas[currentWave].GetCurrentZombieHpSum() <= 0)
+                    SaveSystem.SaveCurrentLevel();
                 t = 0;
-                UIManage.GetView<ProgressBar>().MoveBar(currentWave + 1, levelData.MaxWave);
-                if (currentWave + 1 < levelData.MaxWave)
-                {
-                    waveDatas[currentWave + 1].EnterWave();
-                    currentWave++;
-                }
-                //每一波都要检查墓碑数量 小于5则补满5 大于5则只加一
-                if (stones.Count < 5)
-                {
-                    CreateStone(5-stones.Count);
-                }
-                else {
-                    CreateStone(1);
-                }
+                DoEnterNextWave();
             }
         }
     }
 
+    protected override void DoEnterNextWave()
+    {
+        base.DoEnterNextWave();
+        if (stones.Count < 5)
+            CreateStone(5 - stones.Count);
+        else
+            CreateStone(1);
+    }
     public static List<Vector2Int> GetRandomPositions(int width, int height, int n)
     {
         List<Vector2Int> all = new List<Vector2Int>();

@@ -53,4 +53,16 @@ public class ColdSkill : SkillBase<SkillConfig_Cold>
         t=config.baseCd;
         returnCD=true;
     }
+
+    public override void WriteToSaveData(SkillStateSaveData data)
+    {
+        if (data == null) return;
+        data.skillType = nameof(ColdSkill);
+        data.Set("t", t);
+    }
+    public override void RestoreFromSaveData(SkillStateSaveData data, Chess user)
+    {
+        if (data == null) return;
+        t = data.GetFloat("t", config.startCd);
+    }
 }

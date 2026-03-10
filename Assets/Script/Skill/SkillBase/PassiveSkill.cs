@@ -54,4 +54,7 @@ public class PassiveSkill : ISkill
     public void WhenEnter(Chess user)
     {
     }
+
+    public void WriteToSaveData(SkillStateSaveData data) { }
+    public void RestoreFromSaveData(SkillStateSaveData data, Chess user) { }
 }

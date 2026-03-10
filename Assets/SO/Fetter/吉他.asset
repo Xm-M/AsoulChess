@@ -30,6 +30,23 @@ MonoBehaviour:
       data:
         buffName: "\u5409\u4ED6buff"
         target: {fileID: 0}
-        buffNum: 0
-        extraCrit: 0.2
-        extraCritDamage: 0.2
+        critBuff:
+          id: 2
+        critDamageBuff:
+          id: 3
+        _extraCrit: 0.2
+        _extraCritDamage: 0.2
+    00000002:
+      type: {class: Buff_BaseValueBuff_Crit, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u66B4\u51FB\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        crit: 0.2
+    00000003:
+      type: {class: Buff_BaseValueBuff_CritDamage, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u66B4\u51FB\u4F24\u5BB3\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        critDamage: 0.2

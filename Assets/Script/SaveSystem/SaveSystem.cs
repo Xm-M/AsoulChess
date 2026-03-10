@@ -11,6 +11,13 @@ public static class SaveSystem
 {
     private const string SaveFolder = "LevelSaves";
     private const string SaveExtension = ".json";
+    /// <summary>当前存档格式版本，结构变更时递增</summary>
+    public const int CurrentSaveVersion = 1;
+
+    /// <summary>上次读档是否失败（供 UI 提示用）</summary>
+    public static bool LastLoadFailed { get; private set; }
+    /// <summary>上次读档失败原因</summary>
+    public static string LastLoadError { get; private set; }
 
     private static string GetSavePath(string levelId)
     {
@@ -68,10 +75,12 @@ public static class SaveSystem
     }
 
     /// <summary>
-    /// 加载指定关卡的存档
+    /// 加载指定关卡的存档。失败时删除损坏的存档文件，并设置 LastLoadFailed / LastLoadError
     /// </summary>
     public static GameSaveData LoadSaveData(LevelData levelData)
     {
+        LastLoadFailed = false;
+        LastLoadError = null;
         if (levelData == null) return null;
         string path = GetSavePath(levelData.sceneName);
         if (!File.Exists(path))
@@ -81,13 +90,43 @@ public static class SaveSystem
         {
             string json = File.ReadAllText(path);
             GameSaveData data = JsonUtility.FromJson<GameSaveData>(json);
-            Debug.Log($"[SaveSystem] 读档成功: {path}");
+            if (data == null)
+            {
+                LastLoadFailed = true;
+                LastLoadError = "存档解析结果为空";
+                DeleteCorruptedSave(path);
+                return null;
+            }
+            if (data.saveVersion < 1 || data.saveVersion > CurrentSaveVersion)
+            {
+                Debug.LogWarning($"[SaveSystem] 存档版本不兼容: {data.saveVersion}，当前 {CurrentSaveVersion}");
+            }
+            Debug.Log($"[SaveSystem] 读档成功: {path} (v{data.saveVersion})");
             return data;
         }
         catch (Exception e)
         {
-            Debug.LogError($"[SaveSystem] 读档失败: {e.Message}");
+            LastLoadFailed = true;
+            LastLoadError = e.Message;
+            Debug.LogError($"[SaveSystem] 读档失败: {e.Message}\n{e.StackTrace}");
+            DeleteCorruptedSave(path);
             return null;
+        }
+    }
+
+    static void DeleteCorruptedSave(string path)
+    {
+        try
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                Debug.Log($"[SaveSystem] 已删除损坏的存档: {path}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[SaveSystem] 删除损坏存档失败: {ex.Message}");
         }
     }
 
@@ -118,6 +157,7 @@ public static class SaveSystem
         var playerPlants = CapturePlayerPlants();
         var data = new GameSaveData
         {
+            saveVersion = CurrentSaveVersion,
             levelId = level.sceneName,
             saveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             levelData = CaptureLevelProgress(controller),
@@ -154,6 +194,22 @@ public static class SaveSystem
             if (tile == null) continue;
 
             var buffs = chess.buffController?.GetSaveData();
+            var state = chess.stateController?.currentState?.state?.stateName ?? StateName.IdleState;
+            var sc = chess.skillController;
+            var skillEffectFired = state == StateName.SkillState && sc != null && sc.skillEffectFiredThisCast;
+            var ctxData = sc?.context?.WriteToSaveData();
+            SkillStateSaveData skillStateData = null;
+            SkillRuntimeSaveData skillRuntimeData = null;
+            if (sc?.activeSkill != null)
+            {
+                skillStateData = new SkillStateSaveData();
+                sc.activeSkill.WriteToSaveData(skillStateData);
+                if (skillEffectFired && sc.activeSkill is IHasRuntimeInfo hi && hi.Runtime != null)
+                {
+                    skillRuntimeData = new SkillRuntimeSaveData();
+                    hi.Runtime.WriteToSaveData(skillRuntimeData);
+                }
+            }
             list.Add(new ChessSaveData
             {
                 creatorId = chess.propertyController?.creator?.chessName ?? "",
@@ -161,7 +217,12 @@ public static class SaveSystem
                 tileY = tile.mapPos.y,
                 hp = chess.propertyController.GetHp(),
                 hpMax = chess.propertyController.GetMaxHp(),
-                buffs = buffs ?? new System.Collections.Generic.List<BuffSaveData>()
+                buffs = buffs ?? new System.Collections.Generic.List<BuffSaveData>(),
+                stateName = (int)state,
+                skillEffectFired = skillEffectFired,
+                skillContextData = ctxData?.keys?.Count > 0 ? ctxData : null,
+                skillStateData = !string.IsNullOrEmpty(skillStateData?.skillType) ? skillStateData : null,
+                skillRuntimeData = skillRuntimeData
             });
         }
 

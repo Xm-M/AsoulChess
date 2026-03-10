@@ -29,4 +29,7 @@ public class ConsumablesSkill : SkillBase<SkillConfig>
     {
         throw new System.NotImplementedException();
     }
+
+    public override void WriteToSaveData(SkillStateSaveData data) { }
+    public override void RestoreFromSaveData(SkillStateSaveData data, Chess user) { }
 }

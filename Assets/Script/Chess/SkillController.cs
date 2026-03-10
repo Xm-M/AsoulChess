@@ -21,6 +21,8 @@ public class SkillController:Controller
     public SkillContext context;
     [HideInInspector]public UnityEvent<Chess> onUseSkill;
     [HideInInspector]public UnityEvent<Chess> onSkillOver;
+    /// <summary>当前技能释放中是否已触发 SkillEffect（动画某帧调用 UseSkill），读档时用于判断返还 CD 或正常结束</summary>
+    [HideInInspector]public bool skillEffectFiredThisCast;
     public void InitController(Chess c){
         this.user=c;
         passiveSkill?.InitSkill(user);
@@ -50,6 +52,7 @@ public class SkillController:Controller
     /// </summary>
     public void UseSkill()
     {
+        skillEffectFiredThisCast = true;
         onUseSkill?.Invoke(user);
         activeSkill?.UseSkill(user);
     }
@@ -73,8 +76,7 @@ public class SkillController:Controller
 }
 public class SkillContext
 {
-    // 扩展用的字典（可选）
-    Dictionary<string, object> extra;
+    internal Dictionary<string, object> extra;
     public UnityEvent OnValueChange;
     public SkillContext()
     {
@@ -117,4 +119,47 @@ public class SkillContext
         extra.Remove(key);
         OnValueChange?.Invoke();
     }
+
+    static bool ShouldSkipKey(string key)
+    {
+        return key == "霸凌目标" || key == "stand" || key == "sword";
+    }
+
+    public SkillContextSaveData WriteToSaveData()
+    {
+        var data = new SkillContextSaveData();
+        if (extra == null) return data;
+        foreach (var kv in extra)
+        {
+            if (ShouldSkipKey(kv.Key)) continue;
+            if (kv.Value is int i) data.Add(kv.Key, "int", i.ToString());
+            else if (kv.Value is float f) data.Add(kv.Key, "float", f.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            else if (kv.Value is bool b) data.Add(kv.Key, "bool", b.ToString());
+            else if (kv.Value is Chess c && c != null && c.moveController?.standTile != null)
+            {
+                var creator = c.propertyController?.creator?.chessName ?? "";
+                data.Add(kv.Key, "chess", $"{creator}|{c.moveController.standTile.mapPos.x}|{c.moveController.standTile.mapPos.y}");
+            }
+        }
+        return data;
+    }
+
+    public void RestoreFromSaveData(SkillContextSaveData data, Chess owner)
+    {
+        if (data?.keys == null) return;
+        extra ??= new Dictionary<string, object>();
+        for (int i = 0; i < data.keys.Count; i++)
+        {
+            var key = data.keys[i];
+            var type = i < data.types?.Count ? data.types[i] : "";
+            var val = i < data.values?.Count ? data.values[i] : "";
+            if (type == "int" && int.TryParse(val, out int vi)) extra[key] = vi;
+            else if (type == "float" && float.TryParse(val, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float vf)) extra[key] = vf;
+            else if (type == "bool" && bool.TryParse(val, out bool vb)) extra[key] = vb;
+            else if (type == "chess") PendingChessRefs.Add((owner, key, val));
+        }
+    }
+
+    /// <summary>待恢复的 Chess 引用：(owner, key, "creatorId|tileX|tileY")，读档后下一帧解析</summary>
+    public static System.Collections.Generic.List<(Chess owner, string key, string chessData)> PendingChessRefs = new System.Collections.Generic.List<(Chess, string, string)>();
 }

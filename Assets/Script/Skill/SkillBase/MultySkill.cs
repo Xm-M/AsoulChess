@@ -75,5 +75,19 @@ public class MultySkill : ISkill
     {
         currentSkill.ReturnCD();
     }
+
+    public void WriteToSaveData(SkillStateSaveData data)
+    {
+        if (data == null) return;
+        data.skillType = nameof(MultySkill);
+        int idx = currentSkill != null ? skills.IndexOf(currentSkill) : 0;
+        data.Set("currentIndex", idx);
+    }
+    public void RestoreFromSaveData(SkillStateSaveData data, Chess user)
+    {
+        if (data == null) return;
+        int idx = data.GetInt("currentIndex", 0);
+        if (idx >= 0 && idx < skills?.Count) currentSkill = skills[idx];
+    }
 }
 

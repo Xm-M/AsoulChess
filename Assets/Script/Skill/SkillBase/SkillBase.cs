@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class SkillBase<TConfig> : ISkill
+public abstract class SkillBase<TConfig> : ISkill, IHasRuntimeInfo
     where TConfig : SkillConfig
 {
     public TConfig config;
@@ -49,5 +49,8 @@ public abstract class SkillBase<TConfig> : ISkill
     }
 
     public abstract void SkillOver(Chess user);
-    public abstract void ReturnCD();//返还cd
+    public abstract void ReturnCD();
+    public virtual void WriteToSaveData(SkillStateSaveData data) { }
+    public virtual void RestoreFromSaveData(SkillStateSaveData data, Chess user) { }
+    SkillRuntimeInfo IHasRuntimeInfo.Runtime => runtime;
 }

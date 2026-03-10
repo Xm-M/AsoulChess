@@ -55,11 +55,6 @@ public class LevelManage: MonoBehaviour
     }
     public void ReturnMenu()
     {
-        // 仅在游戏已开始时退出才触发存档
-        if (IfGameStart)
-        {
-            SaveSystem.SaveCurrentLevel();
-        }
         GameManage.instance.sceneManage.LoadScene("开始",()=>
         UIManage.GetView<StartUI>().Show(), () => { LeaveState(); });
         StopAllCoroutines();

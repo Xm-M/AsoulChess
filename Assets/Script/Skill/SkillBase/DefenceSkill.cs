@@ -49,4 +49,16 @@ public class DefenceSkill : SkillBase<SkillConfig_Defence>
         t=config.defenceTime;
         returnCD = true;
     }
+
+    public override void WriteToSaveData(SkillStateSaveData data)
+    {
+        if (data == null) return;
+        data.skillType = nameof(DefenceSkill);
+        data.Set("t", t);
+    }
+    public override void RestoreFromSaveData(SkillStateSaveData data, Chess user)
+    {
+        if (data == null) return;
+        t = data.GetInt("t", config.startDefenceTime);
+    }
 }

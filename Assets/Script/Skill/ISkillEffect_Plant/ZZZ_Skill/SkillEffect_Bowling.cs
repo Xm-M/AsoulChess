@@ -49,23 +49,7 @@ public class SkillEffect_Bowling_ : ISkillEffect
     //    }
     //    //Debug.Log(targetPos);
     //    user.moveController.MoveToTarget(targetPos, moveDir, OnHit);
-    //}
-
-
-
-    //public void WhenEnter(Chess user)
-    //{
-    //    Debug.Log("橘福福使用技能");
-    //    this.user = user;
-    //    armor.onHit.AddListener(OnHit);
-    //    user.OnRemove.AddListener(LeaveSkill);
-    //    user.transform.right = Vector3.right;
-    //    ymax = MapManage_PVZ.instance.tiles[0, MapManage_PVZ.instance.mapSize.y - 1].transform.position.y;
-    //    ymin = MapManage.instance.tiles[0, 0].transform.position.y;
-    //    moveDir = new Vector2(1, 0);
-    //    targetPos = user.transform.position + user.transform.right * 1000;
-    //}
-
+ 
     //public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     //{
     //    WhenEnter(user);

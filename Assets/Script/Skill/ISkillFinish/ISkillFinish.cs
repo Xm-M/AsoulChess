@@ -79,6 +79,8 @@ public class BuffOverFinish : ISkillFinish
 
 public abstract class SkillRuntimeInfo {
     public abstract void Clear(Chess user);
+    public virtual void WriteToSaveData(SkillRuntimeSaveData data) { }
+    public virtual void RestoreFromSaveData(SkillRuntimeSaveData data) { }
 }
 
 public class SkillRuntimeInfo_Duration:SkillRuntimeInfo
@@ -89,7 +91,14 @@ public class SkillRuntimeInfo_Duration:SkillRuntimeInfo
     {
         currentTime = 0;
     }
-    //public Timer timer;
+    public override void WriteToSaveData(SkillRuntimeSaveData data)
+    {
+        if (data != null) { data.runtimeType = nameof(SkillRuntimeInfo_Duration); data.currentTime = currentTime; }
+    }
+    public override void RestoreFromSaveData(SkillRuntimeSaveData data)
+    {
+        if (data != null) currentTime = data.currentTime;
+    }
 }
 public class SkillRuntimeInfo_AttackTime : SkillRuntimeInfo
 {
@@ -103,6 +112,14 @@ public class SkillRuntimeInfo_AttackTime : SkillRuntimeInfo
     public void Count(Chess user)
     {
         currentAttackTime++;
+    }
+    public override void WriteToSaveData(SkillRuntimeSaveData data)
+    {
+        if (data != null) { data.runtimeType = nameof(SkillRuntimeInfo_AttackTime); data.currentAttackTime = currentAttackTime; }
+    }
+    public override void RestoreFromSaveData(SkillRuntimeSaveData data)
+    {
+        if (data != null) currentAttackTime = data.currentAttackTime;
     }
 }
 public class SkillRuntimeInfo_Anim : SkillRuntimeInfo
@@ -119,6 +136,24 @@ public class SkillRuntimeInfo_Multy:SkillRuntimeInfo
     public override void Clear(Chess user)
     {
         foreach (var info in infos) info.Clear(user);
+    }
+    public override void WriteToSaveData(SkillRuntimeSaveData data)
+    {
+        if (data == null || infos == null) return;
+        data.runtimeType = nameof(SkillRuntimeInfo_Multy);
+        data.childInfos = new List<SkillRuntimeSaveData>();
+        foreach (var info in infos)
+        {
+            var child = new SkillRuntimeSaveData();
+            info.WriteToSaveData(child);
+            data.childInfos.Add(child);
+        }
+    }
+    public override void RestoreFromSaveData(SkillRuntimeSaveData data)
+    {
+        if (data?.childInfos == null || infos == null) return;
+        for (int i = 0; i < data.childInfos.Count && i < infos.Count; i++)
+            infos[i].RestoreFromSaveData(data.childInfos[i]);
     }
 }
 

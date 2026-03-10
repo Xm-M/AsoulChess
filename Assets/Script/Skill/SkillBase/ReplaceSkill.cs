@@ -97,6 +97,19 @@ public class ReplaceSkill : ISkill
         currentSkill.ReturnCD();
     }
 
+    public void WriteToSaveData(SkillStateSaveData data)
+    {
+        if (data == null) return;
+        data.skillType = nameof(ReplaceSkill);
+        data.Set("n", n);
+    }
+    public void RestoreFromSaveData(SkillStateSaveData data, Chess user)
+    {
+        if (data == null) return;
+        n = data.GetInt("n", 0);
+        if (n >= 0 && n < replaces?.Count) currentSkill = replaces[n];
+    }
+
     /// <summary>
     /// 如果是技能中就等待技能结束的时候切换 如果不是技能中就直接切换
     /// </summary>

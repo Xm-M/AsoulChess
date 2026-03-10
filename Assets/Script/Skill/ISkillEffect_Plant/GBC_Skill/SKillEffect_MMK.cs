@@ -64,6 +64,20 @@ public class Buff_MMKFirm : TimeBuff
     bool cold;
     Chess user;
     Timer timer;
+    public override int GetStackCount() => buffCount;
+    public override void SetStackCount(int v) => buffCount = v;
+    public override void WriteExtraToSaveData(BuffSaveData data)
+    {
+        base.WriteExtraToSaveData(data);
+        if (data == null) return;
+        data.SetExtra("Cold", cold);
+    }
+    public override void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        base.RestoreExtraFromSaveData(data);
+        if (data == null) return;
+        cold = data.GetExtraBool("Cold", true);
+    }
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);

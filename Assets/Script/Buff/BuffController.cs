@@ -102,13 +102,44 @@ public class BuffController
     {
         if (buffDic.ContainsKey(buff.buffName))
         {
-            //buffDic[buff.buffName].BuffOver();
             buffDic.Remove(buff.buffName);
-            //Debug.Log("移除了" + buff.buffName);
         }
         else
         {
             Debug.Log("没有这个buff");
         }
+    }
+
+    /// <summary>
+    /// 采集 Buff 存档数据，跳过纯 Buff_BaseValueBuff
+    /// </summary>
+    public List<BuffSaveData> GetSaveData()
+    {
+        var list = new List<BuffSaveData>();
+        if (buffDic == null) return list;
+        foreach (var kv in buffDic)
+        {
+            if (kv.Value is Buff_BaseValueBuff) continue;
+            var data = new BuffSaveData();
+            kv.Value.WriteToSaveData(data);
+            list.Add(data);
+        }
+        return list;
+    }
+
+    /// <summary>
+    /// 读档时恢复 Buff：从注册表取类型 → Create → RestoreFromSaveData → AddBuff
+    /// </summary>
+    public void AddBuffFromSave(BuffSaveData data)
+    {
+        if (data == null || string.IsNullOrEmpty(data.id)) return;
+        var buffType = BuffDatabase.GetBuffType(data.id) ?? data.buffType;
+        if (string.IsNullOrEmpty(buffType)) return;
+        var template = BuffFactory.Create(buffType);
+        if (template == null) return;
+        var clone = template.Clone();
+        clone.buffName = data.id;
+        clone.RestoreFromSaveData(data);
+        AddBuff(clone);
     }
 }

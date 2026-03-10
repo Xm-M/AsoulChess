@@ -9,11 +9,23 @@ public class DizzyBuff : Buff
 {
     public float dizzyTime;
     protected Timer timer;
+    public override void WriteToSaveData(BuffSaveData data)
+    {
+        base.WriteToSaveData(data);
+        if (data != null && timer != null) data.remainingTime = timer.LeftTime();
+    }
+    public override void RestoreFromSaveData(BuffSaveData data)
+    {
+        base.RestoreFromSaveData(data);
+        if (data != null && data.remainingTime >= 0) _restoreRemainingTime = data.remainingTime;
+    }
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
         target.stateController.ChangeState(StateName.DizzyState);
-        this.timer = GameManage.instance.timerManage.AddTimer(BuffOver, dizzyTime);
+        float duration = _restoreRemainingTime >= 0 ? _restoreRemainingTime : dizzyTime;
+        _restoreRemainingTime = -1f;
+        this.timer = GameManage.instance.timerManage.AddTimer(BuffOver, duration);
     }
     public override void BuffOver()
     {

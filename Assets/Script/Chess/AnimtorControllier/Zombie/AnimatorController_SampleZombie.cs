@@ -119,6 +119,25 @@ public class BloodBuff : Buff
     float speed;
     Timer timer;
     float leftHp;
+    public override void WriteToSaveData(BuffSaveData data)
+    {
+        base.WriteToSaveData(data);
+        if (data != null && timer != null) data.remainingTime = timer.LeftTime();
+    }
+    public override void WriteExtraToSaveData(BuffSaveData data)
+    {
+        base.WriteExtraToSaveData(data);
+        if (data == null) return;
+        data.SetExtra("Speed", speed);
+        data.SetExtra("LeftHp", leftHp);
+    }
+    public override void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        base.RestoreExtraFromSaveData(data);
+        if (data == null) return;
+        speed = data.GetExtraFloat("Speed", 0);
+        leftHp = data.GetExtraFloat("LeftHp", 0);
+    }
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
@@ -126,11 +145,14 @@ public class BloodBuff : Buff
         dm.damageFrom = target;
         this.target = target;
         target.propertyController.ChangeAttack(-target.propertyController.GetAttack());
-        speed = UnityEngine.Random.Range(1, 1.5f);
-        //continueTime = speed;
-        leftHp = target.propertyController.GetHp();
-        timer = GameManage.instance.timerManage.AddTimer(BloodDamage, 0.1f, true);
-         
+        if (speed <= 0 || leftHp <= 0)
+        {
+            speed = UnityEngine.Random.Range(1, 1.5f);
+            leftHp = target.propertyController.GetHp();
+        }
+        float delay = _restoreRemainingTime >= 0 ? _restoreRemainingTime : 0.1f;
+        _restoreRemainingTime = -1f;
+        timer = GameManage.instance.timerManage.AddTimer(BloodDamage, delay, true);
     }
     public void BloodDamage()
     {

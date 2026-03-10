@@ -29,5 +29,6 @@ public static class SaveLoadContext
         IsLoadFromSave = false;
         CurrentSaveData = null;
         LoadFlowExecuted = false;
+        BuffDatabase.Clear();
     }
 }

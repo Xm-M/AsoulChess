@@ -115,12 +115,14 @@ public static class SaveSystem
         if (level == null || controller == null)
             return null;
 
+        var playerPlants = CapturePlayerPlants();
         var data = new GameSaveData
         {
             levelId = level.sceneName,
             saveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             levelData = CaptureLevelProgress(controller),
-            playerPlants = CapturePlayerPlants()
+            playerPlants = playerPlants,
+            buffRegistry = BuffDatabase.CaptureRegistry(playerPlants)
         };
 
         CapturePluginStates(level, data);
@@ -151,13 +153,15 @@ public static class SaveSystem
             var tile = chess.moveController?.standTile;
             if (tile == null) continue;
 
+            var buffs = chess.buffController?.GetSaveData();
             list.Add(new ChessSaveData
             {
                 creatorId = chess.propertyController?.creator?.chessName ?? "",
                 tileX = tile.mapPos.x,
                 tileY = tile.mapPos.y,
                 hp = chess.propertyController.GetHp(),
-                hpMax = chess.propertyController.GetMaxHp()
+                hpMax = chess.propertyController.GetMaxHp(),
+                buffs = buffs ?? new System.Collections.Generic.List<BuffSaveData>()
             });
         }
 

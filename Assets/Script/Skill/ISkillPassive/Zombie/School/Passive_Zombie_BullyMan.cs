@@ -42,31 +42,37 @@ public class Passive_Zombie_BullyMan : ISkillEffect
         }
     }
 }
+/// <summary>
+/// 霸凌 Buff：ExtraDefence(负值=额外承伤) + 特效
+/// </summary>
 public class Buff_Zombie_BullyBuff : Buff
 {
     public GameObject Effect;
-    public float extraDamageRate;
-    //public Buff_BaseValueBuff Buff_BaseValueBuff;
+    [SerializeReference] public Buff_BaseValueBuff_ExtraDefence extraDefenceBuff;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraDamageRate")] public float _extraDamageRate;
     GameObject effect;
-
+    void EnsureBuffs()
+    {
+        if (extraDefenceBuff == null) extraDefenceBuff = new Buff_BaseValueBuff_ExtraDefence { extraDefence = -_extraDamageRate };
+    }
+    protected override void PrepareForRestore() => EnsureBuffs();
     public override void BuffEffect(Chess target)
     {
+        EnsureBuffs();
         base.BuffEffect(target);
         if (Effect != null)
         {
-            effect= ObjectPool.instance.Create(Effect);
+            effect = ObjectPool.instance.Create(Effect);
             effect.transform.SetParent(target.transform);
             effect.transform.localPosition = Vector3.zero;
         }
-        target.propertyController.ChangeExtraDefence(-extraDamageRate);
+        extraDefenceBuff.target = target;
+        extraDefenceBuff.BuffEffect(target);
     }
     public override void BuffOver()
     {
+        if (extraDefenceBuff != null) extraDefenceBuff.BuffOver();
+        if (effect != null) { ObjectPool.instance.Recycle(effect); effect = null; }
         base.BuffOver();
-        if (effect != null)
-        {
-            ObjectPool.instance.Recycle(effect);
-        }
-        target.propertyController.ChangeExtraDefence(+extraDamageRate);
     }
 }

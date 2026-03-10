@@ -151,6 +151,18 @@ public class Buff_StressBuff_MMK : Buff_StressBuff_Death
 public class Buff_StressBuff_Rupa: Buff_StressBuff_Death
 {
     float damagePool;
+    public override void WriteExtraToSaveData(BuffSaveData data)
+    {
+        base.WriteExtraToSaveData(data);
+        if (data == null) return;
+        data.SetExtra("DamagePool", damagePool);
+    }
+    public override void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        base.RestoreExtraFromSaveData(data);
+        if (data == null) return;
+        damagePool = data.GetExtraFloat("DamagePool", 0);
+    }
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);

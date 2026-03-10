@@ -72,59 +72,76 @@ public class SkillEffect_NinaTaunt : ISkillEffect
  
 
 /// <summary>
-/// 吉野家的牛肉饭 吃完后加20%攻击力 如果目标是小孩姐 则切换成
-/// 有谁能告诉我为什么Nina的这个牛肉饭要搞的这么复杂吗
+/// 牛肉饭 Buff：Attack + AcceleRate + 事件（井芹仁菜特殊：改攻击距离+高攻）
 /// </summary>
 public class BeafRiceBuff : Buff
 {
-    [LabelText("额外百分比攻击力")]
-    public float extraAttack = 0.1f;
-    [LabelText("修改攻击距离")]
-    public float closeAttackRange = 3.75f;
-    [LabelText("额外攻速")]
-    public float extraSpeed = 0.25f;
+    [SerializeReference] public Buff_BaseValueBuff_Attack attackBuff;
+    [SerializeReference] public Buff_BaseValueBuff_AcceleRate acceleRateBuff;
+    [LabelText("修改攻击距离")] public float closeAttackRange = 3.75f;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraAttack")] public float _extraAttack = 0.1f;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraSpeed")] public float _extraSpeed = 0.25f;
     float baseAttackRange;
     public GameObject effect;
+    public override void WriteExtraToSaveData(BuffSaveData data)
+    {
+        base.WriteExtraToSaveData(data);
+        if (data == null) return;
+        data.SetExtra("BaseAttackRange", baseAttackRange);
+    }
+    public override void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        base.RestoreExtraFromSaveData(data);
+        if (data == null) return;
+        baseAttackRange = data.GetExtraFloat("BaseAttackRange", 0);
+    }
+    void EnsureBuffs()
+    {
+        if (attackBuff == null) attackBuff = new Buff_BaseValueBuff_Attack { extraAttack = _extraAttack };
+        if (acceleRateBuff == null) acceleRateBuff = new Buff_BaseValueBuff_AcceleRate { rate = _extraSpeed };
+    }
+    protected override void PrepareForRestore() => EnsureBuffs();
     public override void BuffEffect(Chess target)
     {
+        EnsureBuffs();
         base.BuffEffect(target);
         if (target.propertyController.creator.chessName == "井芹仁菜")
         {
+            if (baseAttackRange == 0) baseAttackRange = target.propertyController.GetAttackRange();
             target.propertyController.SetAtttackRange(closeAttackRange);
             target.skillController.context.Set<bool>("BeafRice", true);
-            target.propertyController.ChangeAttack(1);
+            attackBuff.extraAttack = 1f;
+            attackBuff.target = target;
+            attackBuff.BuffEffect(target);
         }
         else
         {
-            target.propertyController.ChangeAttack(extraAttack);
+            attackBuff.target = target;
+            attackBuff.BuffEffect(target);
+            acceleRateBuff.target = target;
+            acceleRateBuff.BuffEffect(target);
         }
-        if (effect != null)
-        {
-            GameObject newEffect = ObjectPool.instance.Create(effect);
-            newEffect.transform.position = target.transform.position;
-        }
+        if (effect != null) { var e = ObjectPool.instance.Create(effect); e.transform.position = target.transform.position; }
     }
- 
-
     public override void BuffOver()
     {
-        base.BuffOver();
         target.animatorController.ChangeFloat("type", 0);
-        target.propertyController.ChangeAttack(-extraAttack);
-        if (target.propertyController.creator.name == "井芹仁菜")
+        if (target.propertyController.creator.chessName == "井芹仁菜")
         {
             target.propertyController.SetAtttackRange(baseAttackRange);
-            target.propertyController.ChangeAttack(-extraAttack * 4f);
+            target.propertyController.ChangeAttack(-_extraAttack * 4f);
         }
+        else
+        {
+            if (attackBuff != null) attackBuff.BuffOver();
+            if (acceleRateBuff != null) acceleRateBuff.BuffOver();
+        }
+        base.BuffOver();
     }
     public override void BuffReset(Buff resetBuff)
     {
         base.BuffReset(resetBuff);
         if (target.propertyController.creator.chessName == "井芹仁菜")
-        {
-            
             target.skillController.context.Set<bool>("BeafRice", true);
-             
-        }
     }
 }

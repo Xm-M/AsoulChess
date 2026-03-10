@@ -84,21 +84,21 @@ public class Guitar : Fetter
         //先随便写点吧
         if (num==2)
         {
-            guitarBuff.extraCrit = 0.2f;
-            guitarBuff.extraCritDamage = 0.2f;
+            guitarBuff.critBuff.crit = 0.2f;
+            guitarBuff.critDamageBuff.critDamage = 0.2f;
         }else if (num==3)
         {
-            guitarBuff.extraCrit = 0.4f;
-            guitarBuff.extraCritDamage = 0.4f;
+            guitarBuff.critBuff.crit = 0.4f;
+            guitarBuff.critDamageBuff.critDamage = 0.4f;
         }else if (num == 4)
         {
-            guitarBuff.extraCrit = 0.75f;
-            guitarBuff.extraCritDamage = 0.75f;
+            guitarBuff.critBuff.crit = 0.75f;
+            guitarBuff.critDamageBuff.critDamage = 0.75f;
         }
         else
         {
-            guitarBuff.extraCrit = 1;
-            guitarBuff.extraCritDamage = 1;
+            guitarBuff.critBuff.crit = 1;
+            guitarBuff.critDamageBuff.critDamage = 1;
         }
 
         EventController.Instance.AddListener<Chess>(EventName.WhenChessEnterWar.ToString(), AddBuff);

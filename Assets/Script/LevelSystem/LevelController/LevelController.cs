@@ -83,6 +83,11 @@ public class LevelController : MonoBehaviour
                 tile.PlantChess(chess);
             chess.propertyController.ChangeHPMax(p.hpMax - chess.propertyController.GetMaxHp());
             chess.propertyController.ChangeHp(p.hp);
+            if (p.buffs != null)
+            {
+                foreach (var b in p.buffs)
+                    chess.buffController.AddBuffFromSave(b);
+            }
         }
     }
 
@@ -200,6 +205,7 @@ public class LevelController : MonoBehaviour
         }
         if (isLoadFromSave)
         {
+            BuffDatabase.RestoreRegistry(SaveLoadContext.CurrentSaveData.buffRegistry);
             RestorePlayerPlants(SaveLoadContext.CurrentSaveData.playerPlants);
         }
         LevelManage.instance.GameStart();

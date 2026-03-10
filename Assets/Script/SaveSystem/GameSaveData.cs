@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 /// <summary>
 /// 关卡存档根数据结构
@@ -42,6 +43,11 @@ public class GameSaveData
     /// 插件 Timer 存档（pluginId -> TimerSaveEntry）
     /// </summary>
     public List<TimerSaveEntry> timerSaveData;
+
+    /// <summary>
+    /// Buff 注册表：id → buffType，读档时按 id 取类型创建实例
+    /// </summary>
+    public List<BuffRegistryEntry> buffRegistry;
 
     public TimerSaveEntry GetOrCreateTimerEntry(string pluginId)
     {
@@ -160,4 +166,100 @@ public class ChessSaveData
     /// 最大生命值
     /// </summary>
     public float hpMax;
+
+    /// <summary>
+    /// 该棋子身上的 Buff 列表（不含纯 Buff_BaseValueBuff）
+    /// </summary>
+    public List<BuffSaveData> buffs;
+}
+
+/// <summary>
+/// Buff 注册表条目：id → buffType
+/// </summary>
+[Serializable]
+public class BuffRegistryEntry
+{
+    public string id;
+    public string buffType;
+}
+
+/// <summary>
+/// 单个 Buff 存档数据：id、buffType、剩余时间、层数、数值、额外参数
+/// </summary>
+[Serializable]
+public class BuffSaveData
+{
+    public string id;
+    public string buffType;
+    public float remainingTime = -1f;
+    public int stackCount = 1;
+    public List<string> valueKeys;
+    public List<string> valueValues;
+    /// <summary>额外参数键（层数、currentAttack、count、OutlineColor 等）</summary>
+    public List<string> extraKeys;
+    /// <summary>额外参数值（统一存 string，读取时按类型解析）</summary>
+    public List<string> extraValues;
+
+    public void SetValue(string key, float v) { Ensure(); valueKeys.Add(key); valueValues.Add(v.ToString()); }
+    public void SetValue(string key, int v) { Ensure(); valueKeys.Add(key); valueValues.Add(v.ToString()); }
+    public float GetValueFloat(string key, float def = 0) { if (valueKeys == null) return def; int i = valueKeys.IndexOf(key); if (i >= 0 && i < valueValues?.Count && float.TryParse(valueValues[i], out float v)) return v; return def; }
+    public int GetValueInt(string key, int def = 0) { if (valueKeys == null) return def; int i = valueKeys.IndexOf(key); if (i >= 0 && i < valueValues?.Count && int.TryParse(valueValues[i], out int v)) return v; return def; }
+    void Ensure() { if (valueKeys == null) valueKeys = new List<string>(); if (valueValues == null) valueValues = new List<string>(); }
+
+    static readonly JsonSerializerSettings _extraSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+
+    /// <summary>用 Newtonsoft 序列化任意类型，支持 Color、Vector 等</summary>
+    public void SetExtra(string key, object value)
+    {
+        EnsureExtra();
+        extraKeys.Add(key);
+        extraValues.Add(JsonConvert.SerializeObject(value, _extraSettings));
+    }
+    public void SetExtra(string key, float v) => SetExtra(key, (object)v);
+    public void SetExtra(string key, int v) => SetExtra(key, (object)v);
+    public void SetExtra(string key, bool v) => SetExtra(key, (object)v);
+    public void SetExtra(string key, Color v)
+    {
+        EnsureExtra();
+        extraKeys.Add(key);
+        extraValues.Add($"{v.r.ToString(System.Globalization.CultureInfo.InvariantCulture)},{v.g.ToString(System.Globalization.CultureInfo.InvariantCulture)},{v.b.ToString(System.Globalization.CultureInfo.InvariantCulture)},{v.a.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
+    }
+    public void SetExtra(string key, Vector2 v) => SetExtra(key, (object)v);
+    public void SetExtra(string key, Vector3 v) => SetExtra(key, (object)v);
+    public void SetExtra(string key, string v) => SetExtra(key, (object)v);
+
+    /// <summary>用 Newtonsoft 反序列化，可直接 as 转换：var c = data.GetExtra&lt;object&gt;(key) as Color</summary>
+    public T GetExtra<T>(string key, T def = default)
+    {
+        if (extraKeys == null) return def;
+        int i = extraKeys.IndexOf(key);
+        if (i < 0 || i >= extraValues?.Count) return def;
+        try
+        {
+            var obj = JsonConvert.DeserializeObject(extraValues[i], typeof(T), _extraSettings);
+            if (obj == null) return def;
+            return (T)obj;
+        }
+        catch { return def; }
+    }
+    public float GetExtraFloat(string key, float def = 0) => GetExtra(key, def);
+    public int GetExtraInt(string key, int def = 0) => GetExtra(key, def);
+    public bool GetExtraBool(string key, bool def = false) => GetExtra(key, def);
+    public Color GetExtraColor(string key, Color def)
+    {
+        if (extraKeys == null) return def;
+        int i = extraKeys.IndexOf(key);
+        if (i < 0 || i >= extraValues?.Count) return def;
+        var p = extraValues[i].Split(',');
+        if (p.Length >= 4 && float.TryParse(p[0], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float r)
+            && float.TryParse(p[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float g)
+            && float.TryParse(p[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float b)
+            && float.TryParse(p[3], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float a))
+            return new Color(r, g, b, a);
+        return def;
+    }
+    public Vector2 GetExtraVector2(string key, Vector2 def) => GetExtra(key, def);
+    public Vector3 GetExtraVector3(string key, Vector3 def) => GetExtra(key, def);
+    public string GetExtraString(string key, string def = null) => GetExtra<string>(key) ?? def;
+    void EnsureExtra() { if (extraKeys == null) extraKeys = new List<string>(); if (extraValues == null) extraValues = new List<string>(); }
 }

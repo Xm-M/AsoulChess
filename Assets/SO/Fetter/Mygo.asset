@@ -30,7 +30,23 @@ MonoBehaviour:
       data:
         buffName: Mygo
         target: {fileID: 0}
-        extraDamage: 0.2
-        extraDefence: 0.2
+        extraDamageBuff:
+          id: 2
+        extraDefenceBuff:
+          id: 3
         outlineColor: {r: 0, g: 0.69486374, b: 0.8679245, a: 1}
         outlineSize: 1
+    00000002:
+      type: {class: Buff_BaseValueBuff_ExtraDamage, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u589E\u4F24\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        extraDamage: 0.1
+    00000003:
+      type: {class: Buff_BaseValueBuff_ExtraDefence, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u51CF\u4F24\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        extraDefence: 0.1

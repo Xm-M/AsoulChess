@@ -12,6 +12,18 @@ public class Buff_Vocal : Buff
     //这里用添加可能施加的随机buff 
     //public List<Buff> buffs;
     protected int count;
+    public override void WriteExtraToSaveData(BuffSaveData data)
+    {
+        base.WriteExtraToSaveData(data);
+        if (data == null) return;
+        data.SetExtra("Count", count);
+    }
+    public override void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        base.RestoreExtraFromSaveData(data);
+        if (data == null) return;
+        count = data.GetExtraInt("Count", 0);
+    }
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
@@ -45,31 +57,44 @@ public class Buff_Vocal : Buff
     }
 }
 /// <summary>
-/// 贝斯手 buff 效果是获得一些数值 以及
+/// 贝斯 Buff：HPmax + 生命偷取 + 体型 + 事件（半血触发隐身）
 /// </summary>
 public class Buff_Bass : Buff
 {
-    public float extraHpMax;//额外最大生命值
-    public float extraHpSteal;//额外生命偷取
-    public int extraSize;//额外体型 应该是0/0/1/1/2 也就是说如果开5贝斯 凉是可以吃巨人的
-    public float coldDowm=30;
-    [SerializeReference]
-    public Buff_BassHide buff;
+    [SerializeReference] public Buff_BaseValueBuff_HPmax hpMaxBuff;
+    [SerializeReference] public Buff_BaseValueBuff_LifeSteal lifeStealBuff;
+    [SerializeReference] public Buff_BaseValueBuff_Size sizeBuff;
+    [SerializeReference] public Buff_BassHide buff;
+    public float coldDowm = 30;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraHpMax")] public float _extraHpMax;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraHpSteal")] public float _extraHpSteal;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraSize")] public int _extraSize;
     protected Timer timer;
     protected bool cold;
+    void EnsureBuffs()
+    {
+        if (hpMaxBuff == null) hpMaxBuff = new Buff_BaseValueBuff_HPmax { hpmax = _extraHpMax };
+        if (lifeStealBuff == null) lifeStealBuff = new Buff_BaseValueBuff_LifeSteal { lifeSteal = _extraHpSteal };
+        if (sizeBuff == null) sizeBuff = new Buff_BaseValueBuff_Size { size = _extraSize };
+    }
+    protected override void PrepareForRestore() => EnsureBuffs();
     public override void BuffEffect(Chess target)
     {
+        EnsureBuffs();
         base.BuffEffect(target);
-        target.propertyController.ChangeHPMax(extraHpMax);
-        target.propertyController.ChangeLifeSteeling(extraHpSteal);
-        target.propertyController.ChangeSize(extraSize);
+        hpMaxBuff.target = target; hpMaxBuff.BuffEffect(target);
+        lifeStealBuff.target = target; lifeStealBuff.BuffEffect(target);
+        sizeBuff.target = target; sizeBuff.BuffEffect(target);
         target.propertyController.onSetDamage.AddListener(OnGetDamage);
         cold = true;
     }
-
     public override void BuffReset(Buff resetBuff)
     {
         base.BuffReset(resetBuff);
+        var other = resetBuff as Buff_Bass;
+        if (other?.hpMaxBuff != null && hpMaxBuff != null) hpMaxBuff.BuffReset(other.hpMaxBuff);
+        if (other?.lifeStealBuff != null && lifeStealBuff != null) lifeStealBuff.BuffReset(other.lifeStealBuff);
+        if (other?.sizeBuff != null && sizeBuff != null) sizeBuff.BuffReset(other.sizeBuff);
     }
     public void OnGetDamage(DamageMessege dm)
     {
@@ -83,17 +108,12 @@ public class Buff_Bass : Buff
     }
     public override void BuffOver()
     {
-        base.BuffOver();
-        target.propertyController.ChangeHPMax(-extraHpMax);
-        //target.propertyController.ChangeHp(extraHpMax);
-        target.propertyController.ChangeLifeSteeling(-extraHpSteal);
-        target.propertyController.ChangeSize(-extraSize);
         target.propertyController.onSetDamage.RemoveListener(OnGetDamage);
-        if (timer != null)
-        {
-            timer.Stop();
-            timer = null;
-        }
+        if (hpMaxBuff != null) hpMaxBuff.BuffOver();
+        if (lifeStealBuff != null) lifeStealBuff.BuffOver();
+        if (sizeBuff != null) sizeBuff.BuffOver();
+        if (timer != null) { timer.Stop(); timer = null; }
+        base.BuffOver();
     }
 }
 /// <summary>
@@ -119,66 +139,71 @@ public class Buff_BassHide : TimeBuff
 }
 
 /// <summary>
-/// 吉他的buff  就是加双爆的  
-/// 这个就是很单纯的buff了  
+/// 吉他 Buff：双爆（Crit + CritDamage）组合
 /// </summary>
 public class Buff_Guitar : Buff
 {
-    public float extraCrit;//额外暴击率
-    public float extraCritDamage;//额外暴击伤害A
+    [SerializeReference] public Buff_BaseValueBuff_Crit critBuff;
+    [SerializeReference] public Buff_BaseValueBuff_CritDamage critDamageBuff;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraCrit")] public float _extraCrit;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraCritDamage")] public float _extraCritDamage;
+    void EnsureBuffs()
+    {
+        if (critBuff == null) critBuff = new Buff_BaseValueBuff_Crit { crit = _extraCrit };
+        if (critDamageBuff == null) critDamageBuff = new Buff_BaseValueBuff_CritDamage { critDamage = _extraCritDamage };
+    }
+    protected override void PrepareForRestore() => EnsureBuffs();
     public override void BuffEffect(Chess target)
     {
+        EnsureBuffs();
         base.BuffEffect(target);
-        target.propertyController.ChangeCrit(extraCrit);
-        target.propertyController.ChangeCritDamage(extraCritDamage);
+        critBuff.target = target; critBuff.BuffEffect(target);
+        critDamageBuff.target = target; critDamageBuff.BuffEffect(target);
     }
     public override void BuffOver()
     {
+        if (critBuff != null) critBuff.BuffOver();
+        if (critDamageBuff != null) critDamageBuff.BuffOver();
         base.BuffOver();
-        target.propertyController.ChangeCrit(-extraCrit);
-        target.propertyController.ChangeCritDamage(-extraCritDamage);
     }
     public override void BuffReset(Buff resetBuff)
     {
         base.BuffReset(resetBuff);
+        var other = resetBuff as Buff_Guitar;
+        if (other?.critBuff != null && critBuff != null) critBuff.BuffReset(other.critBuff);
+        if (other?.critDamageBuff != null && critDamageBuff != null) critDamageBuff.BuffReset(other.critDamageBuff);
     }
-    
 }
 /// <summary>
-/// 键盘手的buff 给全体友军使用的。但是键盘手会获得三倍效果
-/// 所以说键盘手的技能都跟双抗有关
-/// ?壮壮应该要被设计成前排了 
+/// 键盘 Buff：护甲增益，键盘手获得三倍效果（具体效果）
 /// </summary>
 public class Buff_KeyBoard : Buff
 {
-    public float extraArmor;//额外护甲
-    //public float extraMagicDefence; 这个游戏里没有魔抗
+    [SerializeReference] public Buff_BaseValueBuff_Armor armorBuff;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraArmor")] public float _extraArmor;
+    void EnsureBuffs() { if (armorBuff == null) armorBuff = new Buff_BaseValueBuff_Armor { armor = _extraArmor }; }
+    protected override void PrepareForRestore() => EnsureBuffs();
+    float GetArmorMultiplier(Chess target) => target.propertyController.creator.plantTags.Contains("键盘") ? 3f : 1f;
     public override void BuffEffect(Chess target)
     {
+        EnsureBuffs();
         base.BuffEffect(target);
-        if (target.propertyController.creator.plantTags.Contains("键盘"))
-        {
-            target.propertyController.ChangeAR(extraArmor * 3);
-        }
-        else
-        {
-            target.propertyController.ChangeAR(extraArmor);
-        }
+        float mult = GetArmorMultiplier(target);
+        target.propertyController.ChangeAR(armorBuff.armor * mult);
     }
     public override void BuffOver()
     {
+        if (target != null && armorBuff != null)
+        {
+            float mult = GetArmorMultiplier(target);
+            target.propertyController.ChangeAR(-armorBuff.armor * mult);
+        }
         base.BuffOver();
-        if (target.propertyController.creator.plantTags.Contains("键盘"))
-        {
-            target.propertyController.ChangeAR(-extraArmor * 3);
-        }
-        else
-        {
-            target.propertyController.ChangeAR(-extraArmor);
-        }
     }
     public override void BuffReset(Buff resetBuff)
     {
         base.BuffReset(resetBuff);
+        var other = resetBuff as Buff_KeyBoard;
+        if (other?.armorBuff != null && armorBuff != null) armorBuff.BuffReset(other.armorBuff);
     }
 }// 

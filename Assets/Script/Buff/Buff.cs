@@ -2,11 +2,15 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
 /// <summary>
-/// 我感觉我这个buff系统写的也很垃圾  
+/// Buff 分为两类：
+/// 1. 基础数值 Buff (Buff_BaseValueBuff)：仅修改属性数值，如攻击力、攻速、减伤等
+/// 2. 具体效果 Buff：有额外效果，通常注册事件、特效等，可通过组合多个 Buff_BaseValueBuff 实现
+/// 例如：愤怒 Buff = TimeBuff + Buff_BaseValueBuff_AttackSpeed + Buff_BaseValueBuff_ExtraDefence(负值)
 /// </summary>
 #region 基础框架buff
 [Serializable]
@@ -15,6 +19,79 @@ public abstract class Buff
     [LabelText("Buff名")]
     public string buffName;//这个buff的名字
     [HideInInspector] public Chess target;//buff的作用对象
+    [System.NonSerialized] protected float _restoreRemainingTime = -1f;
+
+    public virtual void WriteToSaveData(BuffSaveData data)
+    {
+        if (data == null) return;
+        data.id = buffName;
+        data.buffType = GetType().Name;
+        CollectValueBuffsTo(data);
+        WriteExtraToSaveData(data);
+    }
+    public virtual void RestoreFromSaveData(BuffSaveData data)
+    {
+        if (data == null) return;
+        PrepareForRestore();
+        if (data.remainingTime >= 0) _restoreRemainingTime = data.remainingTime;
+        ApplyValueBuffsFrom(data);
+        RestoreExtraFromSaveData(data);
+    }
+    /// <summary>读档前调用，确保子 Buff 已创建（如 EnsureBuffs）</summary>
+    protected virtual void PrepareForRestore() { }
+    /// <summary>写入额外数据（层数、currentAttack、count 等），子类重写</summary>
+    public virtual void WriteExtraToSaveData(BuffSaveData data)
+    {
+        if (data == null) return;
+        int sc = GetStackCount();
+        if (sc != 1) data.SetExtra("StackCount", sc);
+    }
+    /// <summary>从 data 恢复额外数据，子类重写</summary>
+    public virtual void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        if (data == null) return;
+        float sc = (data.extraKeys != null && data.extraKeys.Contains("StackCount"))
+            ? data.GetExtraFloat("StackCount", 1) : data.stackCount;
+        SetStackCount((int)sc);
+    }
+    public virtual int GetStackCount() => 1;
+    public virtual void SetStackCount(int v) { }
+    /// <summary>收集子 Buff_BaseValueBuff 的数值到 data</summary>
+    protected void CollectValueBuffsTo(BuffSaveData data)
+    {
+        if (data == null) return;
+        var t = GetType();
+        foreach (var f in t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+        {
+            if (f.IsStatic || f.IsLiteral) continue;
+            try
+            {
+                if (f.GetValue(this) is Buff_BaseValueBuff vb)
+                    data.SetValue(vb.GetType().Name, vb.GetSaveValue());
+            }
+            catch { }
+        }
+    }
+    /// <summary>从 data 恢复子 Buff_BaseValueBuff 的数值，无 key 时保留原值</summary>
+    protected void ApplyValueBuffsFrom(BuffSaveData data)
+    {
+        if (data == null) return;
+        var t = GetType();
+        foreach (var f in t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+        {
+            if (f.IsStatic || f.IsLiteral) continue;
+            try
+            {
+                if (f.GetValue(this) is Buff_BaseValueBuff vb)
+                {
+                    float def = vb.GetSaveValue();
+                    float v = data.GetValueFloat(vb.GetType().Name, def);
+                    vb.SetSaveValue(v);
+                }
+            }
+            catch { }
+        }
+    }
 
     public virtual void BuffReset(Buff resetBuff)
     {
@@ -40,7 +117,19 @@ public class TimeBuff : Buff
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
-        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime, false);
+        float duration = _restoreRemainingTime >= 0 ? _restoreRemainingTime : continueTime;
+        _restoreRemainingTime = -1f;
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, duration, false);
+    }
+    public override void WriteToSaveData(BuffSaveData data)
+    {
+        base.WriteToSaveData(data);
+        if (data != null && timer != null) data.remainingTime = timer.LeftTime();
+    }
+    public override void RestoreFromSaveData(BuffSaveData data)
+    {
+        base.RestoreFromSaveData(data);
+        if (data != null && data.remainingTime >= 0 && timer != null) timer.ResetTime(data.remainingTime);
     }
     public override void BuffReset(Buff resetBuff)
     {
@@ -72,35 +161,39 @@ public class MultyBuff : Buff
 #endregion
 #region 元素属性buff
 /// <summary>
-/// 减速Buff
+/// 冰冻 Buff：TimeBuff + 减速（AcceleRate）+ 冷气特效 + 变色
 /// </summary>
 public class ColdBuff : TimeBuff
 {
-    [LabelText("减速效率")]
-    public float slowRate = -0.5f;
+    [LabelText("冷气特效")]
     public GameObject coldBuff;
-    public ColdBuff()
+    [SerializeReference] public Buff_BaseValueBuff_AcceleRate acceleRateBuff;
+    [UnityEngine.Serialization.FormerlySerializedAs("slowRate")] public float _slowRate = -0.5f;
+    public ColdBuff() { buffName = "冰冻"; }
+    void EnsureBuffs()
     {
-        buffName = "冰冻";
+        if (acceleRateBuff == null) acceleRateBuff = new Buff_BaseValueBuff_AcceleRate { rate = _slowRate };
     }
+    protected override void PrepareForRestore() => EnsureBuffs();
     public override void BuffEffect(Chess target)
     {
+        EnsureBuffs();
         base.BuffEffect(target);
-
-        if (this.coldBuff != null)
-        {
-            GameObject cold = ObjectPool.instance.Create(coldBuff);
-            cold.transform.position = target.transform.position;
-        }
-        target.propertyController.ChangeAcceleRate(slowRate);
+        acceleRateBuff.target = target; acceleRateBuff.BuffEffect(target);
+        if (coldBuff != null) { var cold = ObjectPool.instance.Create(coldBuff); cold.transform.position = target.transform.position; }
         target.animatorController.ChangeColor(Color.blue);
-        
     }
     public override void BuffOver()
     {
-        base.BuffOver();
-        target.propertyController.ChangeAcceleRate(-slowRate);
+        if (acceleRateBuff != null) acceleRateBuff.BuffOver();
         target.animatorController.ChangeColor(Color.white);
+        base.BuffOver();
+    }
+    public override void BuffReset(Buff resetBuff)
+    {
+        base.BuffReset(resetBuff);
+        var other = resetBuff as ColdBuff;
+        if (other?.acceleRateBuff != null && acceleRateBuff != null) acceleRateBuff.BuffReset(other.acceleRateBuff);
     }
 }
 public class FireBuff : Buff
@@ -230,37 +323,42 @@ public class Buff_Charm : Buff
 
 
 /// <summary>
-/// 愤怒Buff
+/// 愤怒 Buff：TimeBuff + 攻速增益 + 减防（额外承伤）+ 特效
 /// </summary>
-public class AngryBuff:Buff
+public class AngryBuff : TimeBuff
 {
     [LabelText("生气特效")]
     public GameObject angryEffect;
-    [LabelText("额外攻速")]
-    public float extraAttackSpeed=0.5f;
-    [LabelText("额外承伤")]
-    public float extraTake=1f;
+    [SerializeReference] public Buff_BaseValueBuff_AttackSpeed attackSpeedBuff;
+    [SerializeReference] public Buff_BaseValueBuff_ExtraDefence extraDefenceBuff;
     GameObject effect;
+    void EnsureBuffs()
+    {
+        if (attackSpeedBuff == null) { attackSpeedBuff = new Buff_BaseValueBuff_AttackSpeed { speed = 0.5f }; }
+        if (extraDefenceBuff == null) { extraDefenceBuff = new Buff_BaseValueBuff_ExtraDefence { extraDefence = -1f }; }
+    }
+    protected override void PrepareForRestore() => EnsureBuffs();
     public override void BuffEffect(Chess target)
     {
+        EnsureBuffs();
         base.BuffEffect(target);
-        target.propertyController.ChangeExtraDefence(-extraTake);
-        target.propertyController.ChangeAcceleRate(extraAttackSpeed);
-        effect = ObjectPool.instance.Create(angryEffect);
-        effect.transform.SetParent(target.transform);
-        effect.transform.localPosition = Vector3.zero;
+        attackSpeedBuff.target = target; attackSpeedBuff.BuffEffect(target);
+        extraDefenceBuff.target = target; extraDefenceBuff.BuffEffect(target);
+        if (angryEffect != null) { effect = ObjectPool.instance.Create(angryEffect); effect.transform.SetParent(target.transform); effect.transform.localPosition = Vector3.zero; }
     }
     public override void BuffOver()
     {
+        if (extraDefenceBuff != null) extraDefenceBuff.BuffOver();
+        if (attackSpeedBuff != null) attackSpeedBuff.BuffOver();
+        if (effect != null) { ObjectPool.instance.Recycle(effect); effect = null; }
         base.BuffOver();
-        target.propertyController.ChangeExtraDefence(extraTake);
-        target.propertyController.ChangeAcceleRate(-extraAttackSpeed);
-        ObjectPool.instance.Recycle(effect);
     }
     public override void BuffReset(Buff resetBuff)
     {
         base.BuffReset(resetBuff);
-        
+        var other = resetBuff as AngryBuff;
+        if (other?.attackSpeedBuff != null && attackSpeedBuff != null) attackSpeedBuff.BuffReset(other.attackSpeedBuff);
+        if (other?.extraDefenceBuff != null && extraDefenceBuff != null) extraDefenceBuff.BuffReset(other.extraDefenceBuff);
     }
 }
 
@@ -296,13 +394,24 @@ public class ResumeBuff : Buff
     protected Timer timer;
     public float healPercent = 0.05f;
     public float healRate = 1;
+    public override void WriteToSaveData(BuffSaveData data)
+    {
+        base.WriteToSaveData(data);
+        if (data != null && timer != null) data.remainingTime = timer.LeftTime();
+    }
+    public override void RestoreFromSaveData(BuffSaveData data)
+    {
+        base.RestoreFromSaveData(data);
+        if (data != null && data.remainingTime >= 0) _restoreRemainingTime = data.remainingTime;
+    }
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
         float value = 0.5f + target.propertyController.GetHpPerCent();
         target.animatorController.ChangeColor(new Color(1, 1, 1, value));
-        timer = GameManage.instance.timerManage.AddTimer(Heal, healRate, true);
-         
+        float delay = _restoreRemainingTime >= 0 ? _restoreRemainingTime : healRate;
+        _restoreRemainingTime = -1f;
+        timer = GameManage.instance.timerManage.AddTimer(Heal, delay, true);
     }
     public override void BuffOver()
     {
@@ -325,69 +434,77 @@ public class ResumeBuff : Buff
 #endregion
 #region 场地Buff
 /// <summary>
-/// 持续10s 上课buff
+/// 上课 Buff：TimeBuff + 减伤 + 减移速 + 与下课互斥
 /// </summary>
 public class Buff_ClassBegin : TimeBuff
 {
-    [LabelText("额外减伤")]
-    public float extradefence=0.3f;
-    [LabelText("减少移速")]
-    public float extraSpeed=0.25f;
+    [SerializeReference] public Buff_BaseValueBuff_ExtraDefence extraDefenceBuff;
+    [SerializeReference] public Buff_BaseValueBuff_AcceleRate acceleRateBuff;
+    [UnityEngine.Serialization.FormerlySerializedAs("extradefence")] public float _extraDefence = 0.3f;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraSpeed")] public float _extraSpeed = 0.25f;
+    void EnsureBuffs()
+    {
+        if (extraDefenceBuff == null) extraDefenceBuff = new Buff_BaseValueBuff_ExtraDefence { extraDefence = _extraDefence };
+        if (acceleRateBuff == null) acceleRateBuff = new Buff_BaseValueBuff_AcceleRate { rate = -_extraSpeed };
+    }
+    protected override void PrepareForRestore() => EnsureBuffs();
     public override void BuffEffect(Chess target)
     {
+        EnsureBuffs();
         base.BuffEffect(target);
-        target.propertyController.ChangeExtraDefence(extraSpeed);
-        target.propertyController.ChangeAcceleRate(-extraSpeed);
-        Buff buff = null;
-        target.buffController.buffDic.TryGetValue("下课",out buff);
-        if(buff != null)
-        {
-            buff.BuffOver();
-        }
-         
+        extraDefenceBuff.target = target; extraDefenceBuff.BuffEffect(target);
+        acceleRateBuff.target = target; acceleRateBuff.BuffEffect(target);
+        if (target.buffController.buffDic.TryGetValue("下课", out var buff)) buff.BuffOver();
+    }
+    public override void BuffOver()
+    {
+        if (extraDefenceBuff != null) extraDefenceBuff.BuffOver();
+        if (acceleRateBuff != null) acceleRateBuff.BuffOver();
+        base.BuffOver();
     }
     public override void BuffReset(Buff resetBuff)
     {
         base.BuffReset(resetBuff);
-    }
-    public override void BuffOver()
-    {
-        base.BuffOver();
-        target.propertyController.ChangeExtraDefence(-extraSpeed);
-        target.propertyController.ChangeAcceleRate(extraSpeed);
+        var other = resetBuff as Buff_ClassBegin;
+        if (other?.extraDefenceBuff != null && extraDefenceBuff != null) extraDefenceBuff.BuffReset(other.extraDefenceBuff);
+        if (other?.acceleRateBuff != null && acceleRateBuff != null) acceleRateBuff.BuffReset(other.acceleRateBuff);
     }
 }
 /// <summary>
-/// 下课buff 持续50s
+/// 下课 Buff：TimeBuff + 加攻 + 加移速 + 与上课互斥
 /// </summary>
 public class Buff_ClassOver : TimeBuff
 {
-    [LabelText("额外攻击")]
-    public float extraAttack=0.3f;
-    [LabelText("额外移速")]
-    public float extraSpeed=0.25f;
+    [SerializeReference] public Buff_BaseValueBuff_Attack attackBuff;
+    [SerializeReference] public Buff_BaseValueBuff_AcceleRate acceleRateBuff;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraAttack")] public float _extraAttack = 0.3f;
+    [UnityEngine.Serialization.FormerlySerializedAs("extraSpeed")] public float _extraSpeed = 0.25f;
+    void EnsureBuffs()
+    {
+        if (attackBuff == null) attackBuff = new Buff_BaseValueBuff_Attack { extraAttack = _extraAttack };
+        if (acceleRateBuff == null) acceleRateBuff = new Buff_BaseValueBuff_AcceleRate { rate = _extraSpeed };
+    }
+    protected override void PrepareForRestore() => EnsureBuffs();
     public override void BuffEffect(Chess target)
     {
+        EnsureBuffs();
         base.BuffEffect(target);
-        target.propertyController.ChangeAttack(extraAttack);
-        target.propertyController.ChangeAcceleRate(extraSpeed);
-        Buff buff = null;
-        target.buffController.buffDic.TryGetValue("上课", out buff);
-        if (buff != null)
-        {
-            buff.BuffOver();
-        }
-         
+        attackBuff.target = target; attackBuff.BuffEffect(target);
+        acceleRateBuff.target = target; acceleRateBuff.BuffEffect(target);
+        if (target.buffController.buffDic.TryGetValue("上课", out var buff)) buff.BuffOver();
     }
     public override void BuffOver()
     {
+        if (attackBuff != null) attackBuff.BuffOver();
+        if (acceleRateBuff != null) acceleRateBuff.BuffOver();
         base.BuffOver();
     }
     public override void BuffReset(Buff resetBuff)
     {
         base.BuffReset(resetBuff);
-        target.propertyController.ChangeAttack(-extraAttack);
-        target.propertyController.ChangeAcceleRate(-extraSpeed);
+        var other = resetBuff as Buff_ClassOver;
+        if (other?.attackBuff != null && attackBuff != null) attackBuff.BuffReset(other.attackBuff);
+        if (other?.acceleRateBuff != null && acceleRateBuff != null) acceleRateBuff.BuffReset(other.acceleRateBuff);
     }
 }
 

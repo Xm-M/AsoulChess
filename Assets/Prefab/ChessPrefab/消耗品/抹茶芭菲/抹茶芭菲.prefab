@@ -109,6 +109,9 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 0
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 9174867554305239025}
   WhenEnterGame:
     m_PersistentCalls:
@@ -154,8 +157,17 @@ MonoBehaviour:
         buffName: "\u51B0\u51B7"
         target: {fileID: 0}
         continueTime: 15
-        slowRate: -0.5
         coldBuff: {fileID: 7196381099807767998, guid: d4c0260bead243647a0d53dc079b158e, type: 3}
+        acceleRateBuff:
+          id: 7
+        _slowRate: -0.5
+    00000007:
+      type: {class: Buff_BaseValueBuff_AcceleRate, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u52A0\u901F\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        rate: -0.5
 --- !u!61 &3123549381816296601
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -184,7 +196,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &6739352681358655622
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -197,10 +209,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &9174867554305239025
 MonoBehaviour:
   m_ObjectHideFlags: 0

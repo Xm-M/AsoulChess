@@ -213,10 +213,27 @@ public class Buff_Band_GBC : Buff
 {
     TogenashiTogeari gbc;
     int stress;
+    [LabelText("描边颜色")] public Color outlineColor;
+    [LabelText("描边大小")] public float outlineSize = 1;
+    public override void WriteExtraToSaveData(BuffSaveData data)
+    {
+        base.WriteExtraToSaveData(data);
+        if (data == null) return;
+        data.SetExtra("OutlineColor", outlineColor);
+        data.SetExtra("OutlineSize", outlineSize);
+    }
+    public override void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        base.RestoreExtraFromSaveData(data);
+        if (data == null) return;
+        outlineColor = data.GetExtraColor("OutlineColor", outlineColor);
+        outlineSize = data.GetExtraFloat("OutlineSize", outlineSize);
+    }
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
         gbc = GameManage.instance.fetterManage.GetFetter("无刺有刺") as TogenashiTogeari;
+        if (gbc != null) { outlineColor = gbc.outlineColor; outlineSize = gbc.outlineSize; }
         stress = 0;
         target.skillController.context.OnValueChange.AddListener(OnStressChange);
     }
@@ -283,34 +300,59 @@ public class Mygo : Fetter
     }
 }
 /// <summary>
-/// 所以说多出来的那点数值其实是mygo buff给的
+/// Mygo Buff：增伤 + 减伤 + 事件（4人时描边）
 /// </summary>
 public class Buff_Mygo : Buff
 {
-    [LabelText("额外增伤")]
-    public float extraDamage = 0.2f;
-    [LabelText("额外减伤")]
-    public float extraDefence = 0.2f;
-    [LabelText("描边颜色")]
-    public Color outlineColor;
-    [LabelText("描边大小")]
-    public float outlineSize=1;
+    [SerializeReference] public Buff_BaseValueBuff_ExtraDamage extraDamageBuff;
+    [SerializeReference] public Buff_BaseValueBuff_ExtraDefence extraDefenceBuff;
+    [LabelText("描边颜色")] public Color outlineColor;
+    [LabelText("描边大小")] public float outlineSize = 1;
+    void EnsureBuffs()
+    {
+        if (extraDamageBuff == null) extraDamageBuff = new Buff_BaseValueBuff_ExtraDamage { extraDamage = 0.2f };
+        if (extraDefenceBuff == null) extraDefenceBuff = new Buff_BaseValueBuff_ExtraDefence { extraDefence = 0.2f };
+    }
+
+    protected override void PrepareForRestore() => EnsureBuffs();
+    public override void WriteExtraToSaveData(BuffSaveData data)
+    {
+        base.WriteExtraToSaveData(data);
+        if (data == null) return;
+        data.SetExtra("OutlineColor", outlineColor);
+        data.SetExtra("OutlineSize", outlineSize);
+    }
+    public override void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        base.RestoreExtraFromSaveData(data);
+        if (data == null) return;
+        outlineColor = data.GetExtraColor("OutlineColor", outlineColor);
+        outlineSize = data.GetExtraFloat("OutlineSize", outlineSize);
+    }
     public override void BuffEffect(Chess target)
     {
+        EnsureBuffs();
         base.BuffEffect(target);
-        Debug.Log("添加Mygo Buff");
-        target.propertyController.ChangeExtraDamage(extraDamage);
-        target.propertyController.ChangeExtraDefence(extraDefence);
+        extraDamageBuff.target = target; extraDamageBuff.BuffEffect(target);
+        extraDefenceBuff.target = target; extraDefenceBuff.BuffEffect(target);
         target.skillController.context.AddEvent(OnMygoChange);
         OnMygoChange();
     }
     public override void BuffOver()
     {
-        base.BuffOver();
-        target.propertyController.ChangeExtraDamage(-extraDamage);
-        target.propertyController.ChangeExtraDefence(-extraDefence);
+        if (extraDamageBuff != null) extraDamageBuff.BuffOver();
+        if (extraDefenceBuff != null) extraDefenceBuff.BuffOver();
         target.skillController.context.RemoveEvent(OnMygoChange);
+        base.BuffOver();
     }
+    public override void BuffReset(Buff resetBuff)
+    {
+        base.BuffReset(resetBuff);
+        var other = resetBuff as Buff_Mygo;
+        if (other?.extraDamageBuff != null && extraDamageBuff != null) extraDamageBuff.BuffReset(other.extraDamageBuff);
+        if (other?.extraDefenceBuff != null && extraDefenceBuff != null) extraDefenceBuff.BuffReset(other.extraDefenceBuff);
+    }
+
     public void OnMygoChange()
     {
         int mygo = 0;

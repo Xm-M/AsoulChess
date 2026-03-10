@@ -32,20 +32,37 @@ public class LevelManage: MonoBehaviour
     /// <param name="levelData"></param>
     public void ChangeLevel(LevelData levelData)
     {
+        StopAllCoroutines();
         currentLevel = levelData;
         LeaveState();
+        // 进入关卡前检查是否有存档，若有则设置读档上下文（在 LeaveState 之后设置，避免被 Clear 掉）
+        if (SaveSystem.HasSaveForLevel(levelData))
+        {
+            SaveLoadContext.IsLoadFromSave = true;
+            SaveLoadContext.CurrentSaveData = SaveSystem.LoadSaveData(levelData);
+        }
+        else
+        {
+            SaveLoadContext.IsLoadFromSave = false;
+            SaveLoadContext.CurrentSaveData = null;
+        }
         GameManage.instance.sceneManage.LoadScene(currentLevel.sceneName);
     }
     public void RestartLevel()
     {
+        SaveSystem.DeleteSave(currentLevel);
         GameManage.instance.sceneManage.LoadScene(currentLevel.sceneName, null, () => {  LeaveState(); });
     }
     public void ReturnMenu()
     {
-        //GameOver();
-        //LeaveState();
+        // 仅在游戏已开始时退出才触发存档
+        if (IfGameStart)
+        {
+            SaveSystem.SaveCurrentLevel();
+        }
         GameManage.instance.sceneManage.LoadScene("开始",()=>
         UIManage.GetView<StartUI>().Show(), () => { LeaveState(); });
+        StopAllCoroutines();
     }
     public void PrepareLevel()
     {
@@ -80,6 +97,7 @@ public class LevelManage: MonoBehaviour
     {
         Debug.Log("LeaveLevel");
         IfGameStart = false;
+        SaveLoadContext.Clear();
         if(currentController != null)
             currentController.OverPlugin ();
         EventController.Instance.TriggerEvent(EventName.WhenLeaveLevel.ToString());

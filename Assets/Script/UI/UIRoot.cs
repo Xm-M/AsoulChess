@@ -11,12 +11,12 @@ public class UIRoot : MonoBehaviour
         
         foreach (Transform view in prefabs)
         {
-            if (!m_views.ContainsKey(view.name))
+            if (!m_views.ContainsKey(view.name) || m_views[view.name] == null)
             {
                 Debug.Log(view.name);
                 Transform prefab = Instantiate(view, transform);
                 prefab.name = prefab.name.Replace("(Clone)", "");//去除实例化物体的(Clone)后缀，和预制体名字统一
-                m_views.Add(prefab.name, prefab.GetComponent<View>());//存入字典
+                m_views[view.name] = prefab.GetComponent<View>();//存入字典，若已存在但已销毁则更新引用
             }
         }
     }

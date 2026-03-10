@@ -36,6 +36,67 @@ public class LevelController : MonoBehaviour
     protected List<Chess> zombies;
     //插件也是放在LevelData里面的
 
+    /// <summary>
+    /// 供存档系统获取当前波次
+    /// </summary>
+    public virtual int GetCurrentWave() => currentWave;
+    /// <summary>
+    /// 供存档系统获取波次计时
+    /// </summary>
+    public virtual float GetWaveTime() => t;
+    /// <summary>
+    /// 供存档系统获取波次最小时间
+    /// </summary>
+    public virtual float GetMintime() => mintime;
+    /// <summary>
+    /// 供存档系统获取波次最大时间
+    /// </summary>
+    public virtual float GetMaxtime() => maxtime;
+
+    /// <summary>
+    /// 读档时恢复关卡进度
+    /// </summary>
+    public virtual void RestoreLevelProgress(LevelSaveData data)
+    {
+        if (data == null) return;
+        currentWave = data.currentWave;
+        t = data.t;
+        mintime = data.mintime;
+        maxtime = data.maxtime;
+        TimerManage.SetGameTimeForLoad(data.gameTime);
+    }
+
+    /// <summary>
+    /// 读档时恢复场上玩家植物
+    /// </summary>
+    public virtual void RestorePlayerPlants(List<ChessSaveData> plants)
+    {
+        if (plants == null || MapManage.instance == null) return;
+        foreach (var p in plants)
+        {
+            var creator = GetCreatorByChessName(p.creatorId);
+            if (creator == null) continue;
+            if (!MapManage.instance.IfInMapRange(p.tileX, p.tileY)) continue;
+            var tile = MapManage.instance.tiles[p.tileX, p.tileY];
+            var chess = ChessTeamManage.Instance.CreateChess(creator, tile, "Player", forRestore: true);
+            if (chess.CompareTag("Player"))
+                tile.PlantChess(chess);
+            chess.propertyController.ChangeHPMax(p.hpMax - chess.propertyController.GetMaxHp());
+            chess.propertyController.ChangeHp(p.hp);
+        }
+    }
+
+    private static PropertyCreator GetCreatorByChessName(string chessName)
+    {
+        var playerChess = Resources.LoadAll<PropertyCreator>("ChessData/Player");
+        if (playerChess == null) return null;
+        foreach (var c in playerChess)
+        {
+            if (c != null && c.chessName == chessName)
+                return c;
+        }
+        return null;
+    }
 
     protected virtual  void OnEnable()
     {
@@ -121,6 +182,11 @@ public class LevelController : MonoBehaviour
         {
             Debug.LogError("没有关卡数据");
         }
+        bool isLoadFromSave = SaveLoadContext.IsLoadFromSave && SaveLoadContext.CurrentSaveData != null;
+        if (isLoadFromSave)
+        {
+            RestoreLevelProgress(SaveLoadContext.CurrentSaveData.levelData);
+        }
         for(int i = 0; i < zombies.Count; i++)
         {
             zombies[i].Death();
@@ -132,9 +198,23 @@ public class LevelController : MonoBehaviour
                 levelData.GameStartPlugin[i].StadgeEffect(this);
             }
         }
+        if (isLoadFromSave)
+        {
+            RestorePlayerPlants(SaveLoadContext.CurrentSaveData.playerPlants);
+        }
         LevelManage.instance.GameStart();
         UIManage.Show<TextPanel>();
         UIManage.GetView<TextPanel>().GameStart();
+        if (isLoadFromSave && currentWave >= 0)
+        {
+            var progressBar = UIManage.GetView<ProgressBar>();
+            if (progressBar != null)
+            {
+                UIManage.Show<ProgressBar>();
+                progressBar.SetFlag(levelData.MaxWave / 10);
+                progressBar.MoveBar(currentWave + 1, levelData.MaxWave);
+            }
+        }
     }
 
     /// <summary>

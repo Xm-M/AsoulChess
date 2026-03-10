@@ -11,7 +11,7 @@ public class Buff_Vocal : Buff
     public GameObject extraBullet;
     //这里用添加可能施加的随机buff 
     //public List<Buff> buffs;
-    int count;
+    protected int count;
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
@@ -55,15 +55,14 @@ public class Buff_Bass : Buff
     public float coldDowm=30;
     [SerializeReference]
     public Buff_BassHide buff;
-    Timer timer;
-    bool cold;
+    protected Timer timer;
+    protected bool cold;
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
         target.propertyController.ChangeHPMax(extraHpMax);
-        //target.propertyController.ChangeHp(extraHpMax);
         target.propertyController.ChangeLifeSteeling(extraHpSteal);
-        target .propertyController.ChangeSize(extraSize);
+        target.propertyController.ChangeSize(extraSize);
         target.propertyController.onSetDamage.AddListener(OnGetDamage);
         cold = true;
     }

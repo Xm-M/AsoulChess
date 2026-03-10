@@ -1,10 +1,38 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+#if UNITY_EDITOR
+using Sirenix.OdinInspector;
+#endif
 
 [Serializable]
 public class BuffController
 {
+#if UNITY_EDITOR
+    [Serializable]
+    public class BuffStateDisplay
+    {
+        public string buffName;
+    }
+
+    [ShowInInspector, ReadOnly]
+    [ShowIf("@UnityEngine.Application.isEditor && UnityEngine.Application.isPlaying")]
+    private List<BuffStateDisplay> BuffStates => GetBuffStatesForEditor();
+
+    private List<BuffStateDisplay> GetBuffStatesForEditor()
+    {
+        var list = new List<BuffStateDisplay>();
+        if (buffDic == null) return list;
+        foreach (var kv in buffDic)
+        {
+            list.Add(new BuffStateDisplay
+            {
+                buffName = kv.Key
+            });
+        }
+        return list;
+    }
+#endif
     public Dictionary<string, Buff> buffDic;
     public Chess chess;
     [SerializeReference]
@@ -49,7 +77,6 @@ public class BuffController
     /// <param name="buff"></param>
     public void AddBuff(Buff buff)
     {
-
         if (buffDic.ContainsKey(buff.buffName))
         {
             buffDic[buff.buffName].BuffReset(buff);
@@ -84,6 +111,4 @@ public class BuffController
             Debug.Log("没有这个buff");
         }
     }
-
-
 }

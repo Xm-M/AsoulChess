@@ -15,7 +15,7 @@ public abstract class Buff
     [LabelText("Buff名")]
     public string buffName;//这个buff的名字
     [HideInInspector] public Chess target;//buff的作用对象
-     
+
     public virtual void BuffReset(Buff resetBuff)
     {
     }
@@ -36,11 +36,11 @@ public abstract class Buff
 public class TimeBuff : Buff
 {
     public float continueTime;
-    private Timer timer;
+    protected Timer timer;
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
-        timer = GameManage.instance.timerManage.AddTimer(BuffOver,continueTime,false);
+        timer = GameManage.instance.timerManage.AddTimer(BuffOver, continueTime, false);
     }
     public override void BuffReset(Buff resetBuff)
     {
@@ -293,7 +293,7 @@ public class DisarmBuff : Buff
 /// </summary>
 public class ResumeBuff : Buff
 {
-    Timer timer;
+    protected Timer timer;
     public float healPercent = 0.05f;
     public float healRate = 1;
     public override void BuffEffect(Chess target)
@@ -302,6 +302,7 @@ public class ResumeBuff : Buff
         float value = 0.5f + target.propertyController.GetHpPerCent();
         target.animatorController.ChangeColor(new Color(1, 1, 1, value));
         timer = GameManage.instance.timerManage.AddTimer(Heal, healRate, true);
+         
     }
     public override void BuffOver()
     {

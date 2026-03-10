@@ -44,6 +44,23 @@ public class LevelData : ScriptableObject
     public LevelData nextLevel;
     [SerializeReference]
     public ILevelOutcome outcome;
+
+    [LabelText("读档时 Timeline 跳转时间"), FoldoutGroup("存档")]
+    [Tooltip("读档时 Director 将跳转到此时间点（秒），跳过 EnterMap/GamePrepare 动画")]
+    public float loadSkipToTime = 10f;
+
+    /// <summary>
+    /// 遍历所有插件（EnterMap + PrePare + GameStart）
+    /// </summary>
+    public IEnumerable<ILevelPlugin> GetAllPlugins()
+    {
+        if (EnterMapPlugin != null)
+            foreach (var p in EnterMapPlugin) yield return p;
+        if (PreParePlugin != null)
+            foreach (var p in PreParePlugin) yield return p;
+        if (GameStartPlugin != null)
+            foreach (var p in GameStartPlugin) yield return p;
+    }
   
 }
 /// <summary>

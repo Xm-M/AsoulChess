@@ -84,7 +84,19 @@ public class GameManage : MonoBehaviour
     }
     public void QuitGame()
     {
+        if (LevelManage.instance != null && LevelManage.instance.IfGameStart)
+        {
+            SaveSystem.SaveCurrentLevel();
+        }
         Application.Quit();
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (LevelManage.instance != null && LevelManage.instance.IfGameStart)
+        {
+            SaveSystem.SaveCurrentLevel();
+        }
     }
 }
 public enum GameMode

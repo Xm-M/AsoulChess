@@ -8,12 +8,12 @@ using UnityEngine;
 public class DizzyBuff : Buff
 {
     public float dizzyTime;
-    Timer timer;
+    protected Timer timer;
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
         target.stateController.ChangeState(StateName.DizzyState);
-        this.timer= GameManage.instance.timerManage.AddTimer(BuffOver, dizzyTime);
+        this.timer = GameManage.instance.timerManage.AddTimer(BuffOver, dizzyTime);
     }
     public override void BuffOver()
     {

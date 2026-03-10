@@ -17,11 +17,10 @@ public class MapManage : MonoBehaviour
     [SerializeReference]
     public IInitMapManage initMapManage;
     public AudioPlayer BGMPlayer;
-    private void Awake()
+    protected virtual void Awake()
     {
         if (instance == null||instance!=this)
             instance = this;
-        
     }
     protected virtual void Start()
     {

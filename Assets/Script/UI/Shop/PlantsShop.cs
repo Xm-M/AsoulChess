@@ -39,6 +39,11 @@ public class PlantsShop : View
     }
     public override void Show()
     {
+        if (SaveLoadContext.IsLoadFromSave && SaveLoadContext.CurrentSaveData?.plantsShopData != null)
+        {
+            ShowForLoad(SaveLoadContext.CurrentSaveData.plantsShopData);
+            return;
+        }
         base.Show();
         currentSelectIcons.Clear();
         currentShopIcons.Clear();
@@ -134,6 +139,53 @@ public class PlantsShop : View
         data.DM = new DamageMessege();
         data.DM.damage = 900;
         PrePlantImage.instance.TryToPlant(() => shopAudio.PlaySub(0, "cancel"), (Chess) => shopAudio.PlaySub(0, "dig"), data, HandItemType.Hammer);
+    }
+
+    /// <summary>
+    /// 读档时调用：跳过选卡，直接恢复已选植物并播放 gameStart 动画
+    /// </summary>
+    public void ShowForLoad(PlantsShopSaveData data)
+    {
+        if (data == null) return;
+        gameObject.SetActive(true);
+        currentSelectIcons.Clear();
+        currentShopIcons.Clear();
+        allSelectIcons.Clear();
+        for (int i = shopIconParent.childCount - 1; i >= 0; i--)
+            Destroy(shopIconParent.GetChild(i).gameObject);
+        SunLightPanel.instance.SetSunLight(data.sunLight);
+        if (data.selectedCreatorIds != null && data.selectedCreatorIds.Count > 0)
+        {
+            foreach (var creatorId in data.selectedCreatorIds)
+            {
+                var creator = GetCreatorByChessName(creatorId);
+                if (creator == null) continue;
+                GameObject shopIconObj = null;
+                if (creator.PlantCardPre == null)
+                    shopIconObj = Instantiate(shopIconPre, shopIconParent);
+                else
+                    shopIconObj = Instantiate(creator.PlantCardPre, shopIconParent);
+                var shopIcon = shopIconObj.GetComponent<ShopIcon>();
+                shopIcon.InitShopIcon(creator);
+                AddShopIcon(shopIcon);
+            }
+        }
+        var mapPvz = MapManage.instance as MapManage_PVZ;
+        if (mapPvz != null) mapPvz.WhenGameStart();
+        for (int i = 0; i < shopIconParent.childCount; i++)
+            shopIconParent.GetChild(i).GetComponent<ShopIcon>().SetClearColor();
+        anim.Play("gameStart");
+    }
+
+    private PropertyCreator GetCreatorByChessName(string chessName)
+    {
+        if (GameManage.instance?.allChess == null) return null;
+        foreach (var c in GameManage.instance.allChess)
+        {
+            if (c != null && c.chessName == chessName)
+                return c;
+        }
+        return null;
     }
 
     /// <summary>

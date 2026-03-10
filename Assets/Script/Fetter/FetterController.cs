@@ -38,10 +38,10 @@ public class FetterController
         Debug.Log("检查羁绊人数中");
         UIManage.Show<FetterPanel>();
         //统计各羁绊的人数
-        for (int i = 0; i < UIManage.GetView<PlantsShop>().currentSelectIcons.Count; i++)
+        for (int i = 0; i < UIManage.GetView<PlantsShop>().currentShopIcons.Count; i++)
         {
             List<string> tags =
-            UIManage.GetView<PlantsShop>().currentSelectIcons[i].select.plantTags;
+            UIManage.GetView<PlantsShop>().currentShopIcons[i].good.plantTags;
             foreach(var tag in tags)
             {
                 if (fetterNumDic.ContainsKey(tag)) fetterNumDic[tag]++;

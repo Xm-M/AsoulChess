@@ -6,6 +6,14 @@ using UnityEngine;
 public class TimerManage:IManager
 {
     public static float GameTime { get; private set; }
+
+    /// <summary>
+    /// 读档时恢复游戏时间，需在插件创建 Timer 之前调用
+    /// </summary>
+    public static void SetGameTimeForLoad(float gameTime)
+    {
+        GameTime = gameTime;
+    }
     [Range(0f, 2f)]
     public float timeSpeed;
     List<Timer> timerList ;
@@ -108,6 +116,15 @@ public class Timer
     public float LeftTime()
     {
         return  finishTime- TimerManage.GameTime;
+    }
+
+    /// <summary>
+    /// 供存档系统采集：剩余时间、是否循环
+    /// </summary>
+    public void GetSaveState(out float remainingTime, out bool isLoop)
+    {
+        remainingTime = LeftTime();
+        isLoop = ifLoop;
     }
     public void ResetTime()
     {

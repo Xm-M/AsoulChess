@@ -28,7 +28,7 @@ public class ChessManage : IManager
     {
          
     }
-    public virtual Chess CreateChess(PropertyCreator creator,Tile tile)
+    public virtual Chess CreateChess(PropertyCreator creator,Tile tile, bool forRestore = false)
     {
         Chess chess = GameManage.instance.chessFactory.ChessCreate(creator.GetPre(),creator.chessName);
         chesses.Add(chess);
@@ -36,8 +36,9 @@ public class ChessManage : IManager
         chess.tag=playerTag;
         chess.gameObject.layer=LayerMask.NameToLayer(playerTag);
         chess.gameObject.SetActive(true);
-        chess.WhenChessEnterWar();
-        EventController.Instance.TriggerEvent<Chess>(EventName.WhenPlantChess.ToString(),chess);
+        chess.WhenChessEnterWar(!forRestore);
+        if (!forRestore)
+            EventController.Instance.TriggerEvent<Chess>(EventName.WhenPlantChess.ToString(),chess);
         return chess;
     }
     public void AddChess(Chess chess)
@@ -65,9 +66,9 @@ public class ChessManage : IManager
 [Serializable]
 public class EnemyManage:ChessManage
 {
-    public override Chess CreateChess(PropertyCreator creator, Tile tile)
+    public override Chess CreateChess(PropertyCreator creator, Tile tile, bool forRestore = false)
     {
-        Chess c= base.CreateChess(creator, tile);
+        Chess c= base.CreateChess(creator, tile, forRestore);
         c.transform.right = Vector2.left;
         //Debug.Log("Create Enemy" + c.name);
         return c;
@@ -136,15 +137,15 @@ public class ChessTeamManage
             return player.chesses;
         }
     }
-    public Chess CreateChess(PropertyCreator creator, Tile tile,string tag  )
+    public Chess CreateChess(PropertyCreator creator, Tile tile,string tag, bool forRestore = false)
     {
         if (tag==enemy.playerTag)
         {
-            return enemy.CreateChess(creator, tile);
+            return enemy.CreateChess(creator, tile,forRestore);
         }
         else
         {
-            return player.CreateChess(creator, tile);
+            return player.CreateChess(creator, tile, forRestore);
         }
     }
     public void ChangeTeam(Chess chess)

@@ -13,6 +13,15 @@ public interface ILevelPlugin
 }
 
 /// <summary>
+/// 需要参与存档的插件实现此接口，SaveSystem 会统一调用 CaptureTo 采集状态
+/// 读档时插件在 StadgeEffect 中自行检查 SaveLoadContext 并恢复
+/// </summary>
+public interface ISaveableLevelPlugin : ILevelPlugin
+{
+    void CaptureTo(GameSaveData saveData);
+}
+
+/// <summary>
 /// 剧情插件 等待剧情通过再继续
 /// </summary>
 public class EnterWarPlugin_Plot : ILevelPlugin
@@ -55,24 +64,93 @@ public class EnterWarPlugin_Plot : ILevelPlugin
 /// <summary>
 /// 制作小推车
 /// </summary>
-public class EnterWarPlugin_CarCreate : ILevelPlugin
+public class EnterWarPlugin_CarCreate : ISaveableLevelPlugin
 {
     public PropertyCreator car;
     List<Chess> carses;
     public void StadgeEffect(LevelController levelController)
     {
-        carses=new List<Chess>();
-        for (int i = 0; i < (MapManage_PVZ.instance as MapManage_PVZ).roomTile.Count; i++)
+        var mapPvz = MapManage.instance as MapManage_PVZ;
+        if (mapPvz == null) return;
+
+        if (SaveLoadContext.IsLoadFromSave && SaveLoadContext.CurrentSaveData?.carsSaveData != null)
         {
-            Chess cars = ChessTeamManage.Instance.CreateChess(car,
-                 (MapManage_PVZ.instance as MapManage_PVZ).roomTile[i], "Player");
+            RestoreCars(SaveLoadContext.CurrentSaveData.carsSaveData);
+            return;
+        }
+
+        carses = new List<Chess>();
+        for (int i = 0; i < mapPvz.roomTile.Count; i++)
+        {
+            Chess cars = ChessTeamManage.Instance.CreateChess(car, mapPvz.roomTile[i], "Player");
             cars.gameObject.layer = 11;
             ChessTeamManage.Instance.GetTeam("Player").Remove(cars);
             carses.Add(cars);
-            //Debug.Log(cars.gameObject.layer);
-            //Debug.Log(LayerMask.LayerToName(cars.gameObject.layer)); 
         }
-        //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), DestroyCars);
+    }
+
+    public void CaptureTo(GameSaveData saveData)
+    {
+        if (saveData != null)
+            saveData.carsSaveData = CaptureCarsState();
+    }
+
+    public System.Collections.Generic.List<CarSaveData> CaptureCarsState()
+    {
+        var list = new System.Collections.Generic.List<CarSaveData>();
+        if (carses == null || car == null) return list;
+        var mapPvz = MapManage.instance as MapManage_PVZ;
+        if (mapPvz?.roomTile == null) return list;
+
+        foreach (var c in carses)
+        {
+            if (c == null || c.IfDeath) continue;
+            var tile = c.moveController?.standTile;
+            if (tile == null) continue;
+            int idx = mapPvz.roomTile.IndexOf(tile);
+            if (idx < 0) continue;
+            list.Add(new CarSaveData
+            {
+                roomTileIndex = idx,
+                hp = c.propertyController.GetHp(),
+                hpMax = c.propertyController.GetMaxHp(),
+                creatorId = car.chessName
+            });
+        }
+        return list;
+    }
+
+    private void RestoreCars(System.Collections.Generic.List<CarSaveData> data)
+    {
+        var mapPvz = MapManage.instance as MapManage_PVZ;
+        if (mapPvz == null || data == null) return;
+
+        carses = new List<Chess>();
+        var creator = GetCreatorByChessName(data.Count > 0 ? data[0].creatorId : car?.chessName);
+        if (creator == null) creator = car;
+        if (creator == null) return;
+
+        foreach (var d in data)
+        {
+            if (d.roomTileIndex < 0 || d.roomTileIndex >= mapPvz.roomTile.Count) continue;
+            var tile = mapPvz.roomTile[d.roomTileIndex];
+            var chess = ChessTeamManage.Instance.CreateChess(creator, tile, "Player");
+            chess.gameObject.layer = 11;
+            ChessTeamManage.Instance.GetTeam("Player").Remove(chess);
+            chess.propertyController.ChangeHPMax(d.hpMax - chess.propertyController.GetMaxHp());
+            chess.propertyController.ChangeHp(d.hp);
+            carses.Add(chess);
+        }
+    }
+
+    private static PropertyCreator GetCreatorByChessName(string chessName)
+    {
+        if (string.IsNullOrEmpty(chessName) || GameManage.instance?.allChess == null) return null;
+        foreach (var c in GameManage.instance.allChess)
+        {
+            if (c != null && c.chessName == chessName) return c;
+        }
+        return null;
     }
     public void DestroyCars()
     {
@@ -128,16 +206,38 @@ public class PreParePlugin_Conveyor : ILevelPlugin
 }
 
 //还要做一个白天生成阳光的插件
-public class GameStartPlugin_CreateSunlight : ILevelPlugin
+public class GameStartPlugin_CreateSunlight : ISaveableLevelPlugin
 {
     public int sunlight = 25;
     Timer timer;
     int n = 0;
+
+    public void CaptureTo(GameSaveData saveData)
+    {
+        if (saveData == null || timer == null) return;
+        timer.GetSaveState(out float remaining, out bool isLoop);
+        var e = saveData.GetOrCreateTimerEntry("GameStartPlugin_CreateSunlight");
+        e.remainingTime = remaining;
+        e.isLoop = isLoop;
+        e.extraInt = n;
+    }
+
     public void StadgeEffect(LevelController levelController)
     {
-        float delay = CaculateDelayTime();
-        timer = GameManage.instance.timerManage.AddTimer(CreateSunlight,delay, true);
-        //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(),WhenLeave);
+        float delay;
+        if (SaveLoadContext.IsLoadFromSave && SaveLoadContext.CurrentSaveData != null)
+        {
+            var e = SaveLoadContext.CurrentSaveData.GetTimerEntry("GameStartPlugin_CreateSunlight");
+            if (e != null)
+            {
+                n = e.extraInt;
+                delay = e.remainingTime;
+                timer = GameManage.instance.timerManage.AddTimer(CreateSunlight, delay, true);
+                return;
+            }
+        }
+        delay = CaculateDelayTime();
+        timer = GameManage.instance.timerManage.AddTimer(CreateSunlight, delay, true);
     }
     public void CreateSunlight()
     {
@@ -175,7 +275,7 @@ public class GameStartPlugin_FastCreateZombie : ILevelPlugin
     public float fastEnterTime = 4f;
     public void StadgeEffect(LevelController levelController)
     {
-        //throw new System.NotImplementedException();
+        if (SaveLoadContext.IsLoadFromSave) return;
         Debug.Log("加速进场");
         levelController.mintime = fastEnterTime;
     }
@@ -191,7 +291,7 @@ public class GameStartPlugin_FastCreateZombie : ILevelPlugin
 /// 现在的问题是这个随机生成僵尸的任务要不要放在这里；还有一个问题是那个Tile要怎么放呢？
 /// 用GameObject.Find() 也不是不行
 /// </summary>
-public class GameStartPlugin_PlaySchoolAudio : ILevelPlugin
+public class GameStartPlugin_PlaySchoolAudio : ISaveableLevelPlugin
 {
     [LabelText("上课铃")]
     public float interval_classBegin=10;//上课铃声间隔
@@ -212,6 +312,17 @@ public class GameStartPlugin_PlaySchoolAudio : ILevelPlugin
     bool classBegin;
     Buff currentBuff;
     DoorTile[] doorTiles;
+
+    public void CaptureTo(GameSaveData saveData)
+    {
+        if (saveData == null || timer == null) return;
+        timer.GetSaveState(out float remaining, out bool isLoop);
+        var e = saveData.GetOrCreateTimerEntry("GameStartPlugin_PlaySchoolAudio");
+        e.remainingTime = remaining;
+        e.isLoop = isLoop;
+        e.extraInt = classBegin ? 1 : 0;
+    }
+
     public void StadgeEffect(LevelController levelController)
     {
         classBegin = false;
@@ -222,6 +333,31 @@ public class GameStartPlugin_PlaySchoolAudio : ILevelPlugin
         foreach(DoorTile doorTile in doorTiles)
         {
             doorTile.zombieList = zombieList;
+        }
+        float delay;
+        if (SaveLoadContext.IsLoadFromSave && SaveLoadContext.CurrentSaveData != null)
+        {
+            var e = SaveLoadContext.CurrentSaveData.GetTimerEntry("GameStartPlugin_PlaySchoolAudio");
+            if (e != null)
+            {
+                classBegin = e.extraInt != 0;
+                //currentBuff = classBegin ? beginBuff : overBuff;
+                if (classBegin) currentBuff = beginBuff;
+                else currentBuff = overBuff;
+                if (!classBegin)
+                {
+                    foreach (var door in doorTiles)
+                        door.OpenDoor();
+                }
+                foreach (var zombie in ChessTeamManage.Instance.GetTeam("Enemy"))
+                {
+                    if (zombie != null && zombie.propertyController?.creator?.plantTags?.Contains("学生") == true)
+                        zombie.buffController.AddBuff(currentBuff);
+                }
+                delay = e.remainingTime;
+                timer = GameManage.instance.timerManage.AddTimer(CreateAudio, delay, true);
+                return;
+            }
         }
         timer = GameManage.instance.timerManage.AddTimer(CreateAudio,interval_classBegin,true);
     }
@@ -286,6 +422,7 @@ public class GameStartPlugin_Fetter : ILevelPlugin
     public void StadgeEffect(LevelController levelController)
     {
         //throw new System.NotImplementedException();
+        Debug.Log("羁绊系统调用");
         GameManage.instance.fetterManage.CheckFetter();
         UIManage.Show<FetterPanel>();
        

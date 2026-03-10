@@ -298,9 +298,11 @@ public class Buff_Mygo : Buff
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
+        Debug.Log("添加Mygo Buff");
         target.propertyController.ChangeExtraDamage(extraDamage);
         target.propertyController.ChangeExtraDefence(extraDefence);
         target.skillController.context.AddEvent(OnMygoChange);
+        OnMygoChange();
     }
     public override void BuffOver()
     {

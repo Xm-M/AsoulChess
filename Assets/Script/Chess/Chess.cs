@@ -61,7 +61,8 @@ public class Chess : MonoBehaviour
     /// <summary>
     /// 所有棋子进入场景时就会调用一次
     /// </summary>
-    public void WhenChessEnterWar(){
+    /// <param name="triggerEvents">读档恢复时为 false，不触发 WhenPlantChess/WhenChessEnterWar</param>
+    public void WhenChessEnterWar(bool triggerEvents = true){
         IfDeath = false;
         propertyController.WhenControllerEnterWar();
         equipWeapon.WhenControllerEnterWar();
@@ -70,8 +71,11 @@ public class Chess : MonoBehaviour
         moveController.WhenControllerEnterWar();
         buffController.WhenControllerEnterWar();
         animatorController.WhenControllerEnterWar();
-        WhenEnterGame?.Invoke(this);//主要是可以用来播放声音什么的
-        EventController.Instance.TriggerEvent<Chess>(EventName.WhenChessEnterWar.ToString(), this);
+        if (triggerEvents)
+        {
+            WhenEnterGame?.Invoke(this);
+            EventController.Instance.TriggerEvent<Chess>(EventName.WhenChessEnterWar.ToString(), this);
+        }
     }
     public void Update()
     {

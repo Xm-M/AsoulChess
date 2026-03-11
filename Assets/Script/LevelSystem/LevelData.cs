@@ -68,7 +68,7 @@ public class LevelData : ScriptableObject
 /// </summary>
 public interface ILevelOutcome
 {
-    public void HandleOutcome(bool win);
+    void HandleOutcome(bool win, Vector3 lastZombiePos);
 }
 
 //[Flags]

@@ -325,15 +325,7 @@ public class LevelController_HammerZombie : LevelController
                 }
                 if (liveZombie.Count == 0)
                 {
-                    if (outcome == null)
-                    {
-                        Item_Reward reward = UIManage.GetView<ItemPanel>().Create<Item_Reward>();
-                        reward.SetRewardPos(level.stones[0].transform.position);
-                    }
-                    else
-                    {
-                        outcome.HandleOutcome(true);
-                    }
+                    SpawnVictoryReward(level.stones[0].transform.position);
                     current = 0;
                     return true;
                 }return false;

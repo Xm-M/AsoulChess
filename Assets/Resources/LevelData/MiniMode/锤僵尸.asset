@@ -25,7 +25,7 @@ MonoBehaviour:
   - id: 2
   - id: 3
   - id: 4
-  MaxWave: 10
+  MaxWave: 1
   n: 10
   t: 1
   zombieList:
@@ -36,6 +36,7 @@ MonoBehaviour:
   nextLevel: {fileID: 0}
   outcome:
     id: 5
+  loadSkipToTime: 10
   references:
     version: 1
     00000000:
@@ -54,6 +55,7 @@ MonoBehaviour:
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:
         audioName: "\u8BA4\u771F\u8BB0\u4EC7\u4E2D"
+        deleyPlayTime: 0
     00000003:
       type: {class: GameStartPlugin_QXHammer, ns: , asm: Assembly-CSharp}
       data:

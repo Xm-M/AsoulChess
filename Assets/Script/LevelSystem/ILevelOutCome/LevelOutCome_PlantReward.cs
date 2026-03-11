@@ -5,12 +5,12 @@ using UnityEngine;
 public class LevelOutCome_PlantReward : ILevelOutcome
 {
     public PropertyCreator rewardPlant;
-    public void HandleOutcome(bool win)
+    public void HandleOutcome(bool win, Vector3 lastZombiePos)
     {
         if (win)
         {
             Item_PlantReward reward = UIManage.GetView<ItemPanel>().Create<Item_PlantReward>();
-            reward.SetRewardPos(Vector2.zero,rewardPlant);
+            reward.SetRewardPos(lastZombiePos, rewardPlant);
         }
     }
 }

@@ -116,11 +116,18 @@ public class Chess : MonoBehaviour
     /// <param name="target"></param>
     public void Flap(Transform target)
     {
-        if ((FacingRight && target .position.x < transform.position.x) || (!FacingRight && target .position.x > transform.position.x))
+        if ((FacingRight && target.position.x < transform.position.x) || (!FacingRight && target.position.x > transform.position.x))
         {
-            transform.Rotate(0, 180, 0);
-            FacingRight = !FacingRight;
+            ForceFlip();
         }
+    }
+    /// <summary>
+    /// 强制 180 度转向，用于恐惧等无需判断目标的场景
+    /// </summary>
+    public void ForceFlip()
+    {
+        transform.Rotate(0, 180, 0);
+        FacingRight = !FacingRight;
     }
     /// <summary>
     /// 这个函数应该是用在估计动画触发效果的时候

@@ -231,60 +231,64 @@ public class LightBuff : Buff
 #endregion 
 #region 控制buff
 /// <summary>
-/// 现在重点是恐惧的回头走两步要怎么实现...
+/// 恐惧 Buff：转向并向后移动直到 buff 结束
 /// </summary>
 public class Buff_Fear : TimeBuff {
 
     [LabelText("恐惧特效")]
     public GameObject FearEffect;
     [LabelText("缓速效率")]
-    public float moveRate=0.5f;
+    public float moveRate = 0.5f;
+    [SerializeReference]
+    public Buff_BaseValueBuff_AcceleRate speedDownBuff;
     GameObject effect;
-    StateName current;
-    Tile stand;
+    StateName preState;
+
+    void EnsureSpeedBuff()
+    {
+        if (speedDownBuff == null)
+        {
+            speedDownBuff = new Buff_BaseValueBuff_AcceleRate { rate = moveRate - 1f };
+        }
+    }
+
     public override void BuffEffect(Chess target)
     {
-        //continueTime = target.propertyController.GetDizznessTime();
         base.BuffEffect(target);
-        current = target.stateController.currentState.state.stateName;
-        
+        preState = target.stateController.currentState.state.stateName;
+
         effect = ObjectPool.instance.Create(FearEffect);
         effect.transform.SetParent(target.transform);
         effect.transform.localPosition = Vector3.zero;
-        //target.stateController.ChangeState(StateName.DizzyState);
-        target.propertyController.ChangeDizznessTime(continueTime);
-        //timer = GameManage.instance.timerManage.AddTimer(BuffOver, , false);
-        //stand = target.moveController.nextTile;
-        //if (target.moveController.standTile != null&&target.propertyController.GetMoveSpeed()!=0) {
-        //    float speed = target.propertyController.GetMoveSpeed()*moveRate;
-        //    target.moveController.MoveToTarget(target.moveController.standTile,speed
-        //         );
-        //    target.animatorController.PlayMove();
-        //    target.transform.right=-target.transform.right;
-        //}
-        //else
-        //{
-        //    target.animatorController.PlayIdle();
-        //}
+
         target.moveController.Turn();
+        if (target.moveController.tileMethod != null && target.moveController.standTile != null && target.propertyController.GetMoveSpeed() > 0)
+        {
+            if (moveRate < 1f)
+            {
+                EnsureSpeedBuff();
+                speedDownBuff.target = target;
+                speedDownBuff.BuffEffect(target);
+            }
+            target.stateController.ChangeState(StateName.MoveState);
+        }
     }
+
     public override void BuffReset(Buff resetBuff)
     {
         base.BuffReset(resetBuff);
-        target.propertyController.ChangeDizznessTime(continueTime);
+        if (resetBuff is Buff_Fear f) moveRate = f.moveRate;
     }
+
     public override void BuffOver()
     {
-        base.BuffOver();
-        //effect.transform.SetParent(null);
+        if (moveRate < 1f && speedDownBuff != null)
+            speedDownBuff?.BuffOver();
         ObjectPool.instance.Recycle(effect);
-        //target.stateController.ChangeState(current);
-        //if (target.moveController.standTile != null && target.propertyController.GetMoveSpeed() !=0) {
-        //    target.moveController.StopMove();
-        //    target.transform.right = -target.transform.right;
-        //    target.moveController.nextTile = stand; 
-        //}
+        target.moveController.StopMove();
         target.moveController.Turn();
+        target.stateController.ChangeState(preState);
+        base.BuffOver();
     }
 }
 

@@ -547,46 +547,46 @@ public class WaveData
         return chess;
     }
 
+    /// <summary>
+    /// 胜利时生成奖励，outcome 为空时使用默认奖杯
+    /// </summary>
+    protected virtual void SpawnVictoryReward(Vector3 lastZombiePos)
+    {
+        (outcome ?? new LevelOutCome_Trophy()).HandleOutcome(true, lastZombiePos);
+    }
+
     public virtual bool CheckZombieHp()
     {
         if(!createOver)return false;
         if(liveZombie.Count==0)return true;
         float hpcurrent = 0;
-        Chess last = liveZombie[0];
+        Vector3 lastZombiePos = Vector3.zero;
         for(int i = liveZombie.Count-1; i >= 0; i--)
         {
             if (!liveZombie[i].IfDeath)
                 hpcurrent += liveZombie[i].propertyController.GetHp();
             else
             {
+                if (liveZombie.Count == 1)
+                    lastZombiePos = liveZombie[i].transform.position;
                 liveZombie.RemoveAt(i);
             }
         }
-        if (liveZombie.Count==0&&wave==LevelManage.instance.currentLevel.MaxWave)
+        if (liveZombie.Count == 0 && wave == LevelManage.instance.currentLevel.MaxWave)
         {
-            //if (nextLevelData != null)
-            //    Debug.Log(nextLevelData.levelName); 
-            //也就是说我是在这里搞对吧
-            
-            if (outcome == null)
-            {
-                Item_Reward reward = UIManage.GetView<ItemPanel>().Create<Item_Reward>();
-                reward.SetRewardPos(last.transform.position);
-            }
-            else
-            {
-                outcome.HandleOutcome(true);
-            }
-            //win = true;
+            SpawnVictoryReward(lastZombiePos);
             return true;
         }
+
+        // 最后一波不通过血量百分比提前进入下一波，必须等所有僵尸死亡(IfDeath)后才生成奖励
+        if (wave == LevelManage.instance.currentLevel.MaxWave)
+            return false;
 
         if (hpcurrent / hpmax < enterPecent)
         {
             return true;
-        
         }
-        else return false;
+        return false;
     }
     /// <summary>当前波僵尸生命值总和，用于判断是否全场已死（hp<=0 时虽未触发 Death 但僵尸已全死）</summary>
     public virtual float GetCurrentZombieHpSum()

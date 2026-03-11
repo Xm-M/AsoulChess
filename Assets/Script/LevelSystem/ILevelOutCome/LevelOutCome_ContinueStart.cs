@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelOutCome_ContinueStart : ILevelOutcome
 {
-    public void HandleOutcome(bool win)
+    public void HandleOutcome(bool win, Vector3 lastZombiePos)
     {
         //throw new System.NotImplementedException();
         if (win)

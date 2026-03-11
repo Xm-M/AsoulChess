@@ -10,6 +10,8 @@ public class ParsePanel : View
 {
     public GameObject menuPanel;
     public GameObject pauseButton;
+    public GameObject continuLevelPanel;
+    public GameObject confirmPanel;
     public Slider BGM,AudioEffect;
     public AudioPlayer au;
     bool pause;
@@ -65,6 +67,25 @@ public class ParsePanel : View
             pauseButton.gameObject.SetActive(false);
         }
     }
+    public void ShowContinuePanel()
+    {
+        pause = true;
+        continuLevelPanel.SetActive(true);
+        GameManage.instance.timerManage.ChangeTimeSpeed(0);
+        EventController.Instance.TriggerEvent(EventName.PauseGame.ToString());
+        pauseButton.gameObject.SetActive(false);
+
+    }
+    public void LoadGameContinue()
+    {
+        pause = false;
+        continuLevelPanel.SetActive(false);
+        GameManage.instance.timerManage.ChangeTimeSpeed(1);
+        EventController.Instance.TriggerEvent(EventName.ResumeGame.ToString());
+        pauseButton.gameObject.SetActive(true);
+        //confirmPanel.SetActive(false);
+        //continuLevelPanel.SetActive(false);
+    }
     /// <summary>
     /// 可能有按钮控制
     /// </summary>
@@ -77,6 +98,8 @@ public class ParsePanel : View
             GameManage.instance.timerManage.ChangeTimeSpeed(1);
             EventController.Instance.TriggerEvent(EventName.ResumeGame.ToString());
             pauseButton.gameObject.SetActive(true);
+            confirmPanel.SetActive(false);
+            //continuLevelPanel.SetActive(false);
         }
     }
     /// <summary>

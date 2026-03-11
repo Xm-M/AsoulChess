@@ -271,6 +271,10 @@ public class LevelController : MonoBehaviour
             if (t >= mintime)
                 DoEnterNextWave();
         }
+        if (isLoadFromSave)
+        {
+            UIManage.GetView<ParsePanel>().ShowContinuePanel();
+        }
     }
     protected virtual void DoEnterNextWave()
     {

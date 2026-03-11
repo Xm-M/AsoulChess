@@ -106,4 +106,10 @@ public class AudioPlayer : MonoBehaviour
     {
         audioSource.loop = loop;
     }
+    /// <summary>设置播放进度（秒），循环时自动取模</summary>
+    public void Seek(float time)
+    {
+        if (audioSource.clip == null) return;
+        audioSource.time = time % audioSource.clip.length;
+    }
 }

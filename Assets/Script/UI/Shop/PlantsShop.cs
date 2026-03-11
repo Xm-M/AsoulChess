@@ -174,7 +174,7 @@ public class PlantsShop : View
         if (mapPvz != null) mapPvz.WhenGameStart();
         for (int i = 0; i < shopIconParent.childCount; i++)
             shopIconParent.GetChild(i).GetComponent<ShopIcon>().SetClearColor();
-        anim.Play("gameStart");
+        anim.Play("end");
     }
 
     private PropertyCreator GetCreatorByChessName(string chessName)

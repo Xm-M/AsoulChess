@@ -117,7 +117,8 @@ public class LevelController_HammerZombie : LevelController
             }
             else if (currentWave != -1 && (waveDatas[currentWave].CheckZombieHp() && t> maxtime && currentWave < levelData.MaxWave))
             {
-                if (waveDatas[currentWave].GetCurrentZombieHpSum() <= 0)
+                // 最后一波通关时 SpawnVictoryReward 已删档，不再保存
+                if (waveDatas[currentWave].GetCurrentZombieHpSum() <= 0 && currentWave < levelData.MaxWave - 1)
                     SaveSystem.SaveCurrentLevel();
                 t = 0;
                 DoEnterNextWave();

@@ -77,6 +77,7 @@ public class BuffController
     /// <param name="buff"></param>
     public void AddBuff(Buff buff)
     {
+        if (buff == null) return;
         if (buffDic.ContainsKey(buff.buffName))
         {
             buffDic[buff.buffName].BuffReset(buff);
@@ -93,6 +94,7 @@ public class BuffController
     }
     public void TryOverBuff(Buff buff)
     {
+        if(buff == null) return;
         if (buffDic.ContainsKey(buff.buffName))
         {
             buffDic[buff.buffName].BuffOver();

@@ -15,7 +15,7 @@ public class GameSaveData
     public int saveVersion = 1;
 
     /// <summary>
-    /// 关卡唯一标识（使用 LevelData.sceneName）
+    /// 关卡唯一标识（使用 LevelData.levelName，支持同场景多关卡）
     /// </summary>
     public string levelId;
 

@@ -225,6 +225,7 @@ public class PropertyController:Controller
     {
         return Data.speed * Mathf.Max(0, Data.acceleRated);
     }
+     
     public float GetAttack()
     {
         return Mathf.Max(Data.attack,0);

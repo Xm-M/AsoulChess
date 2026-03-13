@@ -35,8 +35,10 @@ public class ChessManage : IManager
         tile.ChessEnter(chess);
         chess.tag=playerTag;
         chess.gameObject.layer=LayerMask.NameToLayer(playerTag);
+         
         chess.gameObject.SetActive(true);
         chess.WhenChessEnterWar(!forRestore);
+         
         if (!forRestore)
             EventController.Instance.TriggerEvent<Chess>(EventName.WhenPlantChess.ToString(),chess);
         return chess;

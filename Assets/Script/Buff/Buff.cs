@@ -219,7 +219,7 @@ public class LightBuff : Buff
     {
         base.BuffEffect(target);
         if(Effect_Smoke.Instance!=null)
-        Effect_Smoke.Instance.HideSmoke(target.transform.position, range, hideTime);
+            Effect_Smoke.Instance.HideSmoke(target.transform.position, range, hideTime);
         BuffOver();
     }
     public LightBuff()

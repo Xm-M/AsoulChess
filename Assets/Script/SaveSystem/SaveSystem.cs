@@ -28,13 +28,26 @@ public static class SaveSystem
     }
 
     /// <summary>
+    /// 以关卡名为单位生成存档路径（多个 LevelData 可对应同一场景）
+    /// </summary>
+    private static string GetLevelSaveId(LevelData levelData)
+    {
+        if (levelData == null || string.IsNullOrEmpty(levelData.levelName)) return null;
+        string id = levelData.levelName;
+        foreach (char c in Path.GetInvalidFileNameChars())
+            id = id.Replace(c, '_');
+        return id;
+    }
+
+    /// <summary>
     /// 检查指定关卡是否有存档
     /// </summary>
     public static bool HasSaveForLevel(LevelData levelData)
     {
         if (levelData == null) return false;
-        string path = GetSavePath(levelData.sceneName);
-        return File.Exists(path);
+        string id = GetLevelSaveId(levelData);
+        if (string.IsNullOrEmpty(id)) return false;
+        return File.Exists(GetSavePath(id));
     }
 
     /// <summary>
@@ -61,8 +74,15 @@ public static class SaveSystem
             return;
         }
 
+        string levelId = GetLevelSaveId(LevelManage.instance.currentLevel);
+        if (string.IsNullOrEmpty(levelId))
+        {
+            Debug.LogWarning("[SaveSystem] 关卡名为空，无法保存");
+            return;
+        }
+
         string json = JsonUtility.ToJson(data, true);
-        string path = GetSavePath(data.levelId);
+        string path = GetSavePath(levelId);
         try
         {
             File.WriteAllText(path, json);
@@ -82,7 +102,9 @@ public static class SaveSystem
         LastLoadFailed = false;
         LastLoadError = null;
         if (levelData == null) return null;
-        string path = GetSavePath(levelData.sceneName);
+        string id = GetLevelSaveId(levelData);
+        if (string.IsNullOrEmpty(id)) return null;
+        string path = GetSavePath(id);
         if (!File.Exists(path))
             return null;
 
@@ -95,6 +117,14 @@ public static class SaveSystem
                 LastLoadFailed = true;
                 LastLoadError = "存档解析结果为空";
                 DeleteCorruptedSave(path);
+                return null;
+            }
+            // 读档时校验关卡名，避免同场景不同关卡的存档混用
+            if (data.levelId != levelData.levelName)
+            {
+                LastLoadFailed = true;
+                LastLoadError = $"存档关卡不匹配: 存档为 [{data.levelId}]，当前 [{levelData.levelName}]";
+                Debug.LogWarning($"[SaveSystem] {LastLoadError}");
                 return null;
             }
             if (data.saveVersion < 1 || data.saveVersion > CurrentSaveVersion)
@@ -136,7 +166,9 @@ public static class SaveSystem
     public static void DeleteSave(LevelData levelData)
     {
         if (levelData == null) return;
-        string path = GetSavePath(levelData.sceneName);
+        string id = GetLevelSaveId(levelData);
+        if (string.IsNullOrEmpty(id)) return;
+        string path = GetSavePath(id);
         if (File.Exists(path))
         {
             File.Delete(path);
@@ -158,7 +190,7 @@ public static class SaveSystem
         var data = new GameSaveData
         {
             saveVersion = CurrentSaveVersion,
-            levelId = level.sceneName,
+            levelId = level.levelName,
             saveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             levelData = CaptureLevelProgress(controller),
             playerPlants = playerPlants,

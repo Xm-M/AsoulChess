@@ -86,7 +86,7 @@ public abstract class RewardItemBase : UIItem
         UIManage.GetView<PlantsShop>().Hide();
 
         MoveToCenter();
-        // 播放 win 动画（含变白效果），Win() 由动画事件在动画结束时调用
         GetComponent<Animator>().Play("win");
+        SceneManage.instance.Win(); // 播放 loadScene 的 winscene 动画
     }
 }

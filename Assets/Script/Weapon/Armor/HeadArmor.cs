@@ -26,6 +26,7 @@ public class HeadArmor :ArmorBase
     public override void GetDamage(DamageMessege dm)
     {
         //Debug.Log(dm.damage);
+       
         if (armorCurrent >= dm.damage)
         {
             //Debug.Log("防具抵消");
@@ -33,7 +34,14 @@ public class HeadArmor :ArmorBase
             dm.damage *= (1 - user.propertyController.GetExtraDefence() );
             UIManage.GetView<DamagePanel>().ShowDamageMes(dm);
             armorCurrent -= dm.damage;
-            dm.damage = 0;
+            if ((dm.damageElementType & ElementType.Explode) == 0)
+            {
+                dm.damage = 0;
+            }
+            else if (dm.damage>user.propertyController.GetHp())
+            {
+                BrokenArmor();
+            }
 
             currentRender.material.SetFloat("_FlashAmount", Time.time);
             //if ((dm.damageElementType & ElementType.CloseAttack) == 0)

@@ -36,6 +36,7 @@ public class ParsePanel : View
         gameObject.SetActive(false);
         //Debug.Log("隐藏");
         CloseMenuPanel();
+        LoadGameContinue();
         //GameManage.instance.timerManage.ChangeTimeSpeed(1);
     }
     private void Update()

@@ -150,13 +150,13 @@ public class BloodBuff : Buff
             speed = UnityEngine.Random.Range(1, 1.5f);
             leftHp = target.propertyController.GetHp();
         }
-        float delay = _restoreRemainingTime >= 0 ? _restoreRemainingTime : 0.1f;
+        float delay = _restoreRemainingTime >= 0 ? _restoreRemainingTime : 0.03f;
         _restoreRemainingTime = -1f;
         timer = GameManage.instance.timerManage.AddTimer(BloodDamage, delay, true);
     }
     public void BloodDamage()
     {
-        dm.damage =leftHp * 0.1f/speed;
+        dm.damage =leftHp * 0.03f/speed;
         //Debug.Log("造成" + dm.damage);
         if (!target.IfDeath)
             target.propertyController.GetDamage(dm);

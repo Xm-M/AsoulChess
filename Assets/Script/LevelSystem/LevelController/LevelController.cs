@@ -273,6 +273,7 @@ public class LevelController : MonoBehaviour
         }
         if (isLoadFromSave)
         {
+            SceneManage.instance.LoadOver();
             UIManage.GetView<ParsePanel>().ShowContinuePanel();
         }
     }
@@ -319,7 +320,8 @@ public class LevelController : MonoBehaviour
             }
             else if (currentWave!=-1&&((waveDatas[currentWave].CheckZombieHp() && t > mintime) || (t > maxtime)))
             {
-                if (waveDatas[currentWave].GetCurrentZombieHpSum() <= 0)
+                // 仅在过渡到下一波时保存，最后一波通关时 SpawnVictoryReward 已删档，不再保存
+                if (waveDatas[currentWave].GetCurrentZombieHpSum() <= 0 && currentWave < levelData.MaxWave - 1)
                     SaveSystem.SaveCurrentLevel();
                 t = 0;
                 DoEnterNextWave();
@@ -346,6 +348,7 @@ public class LevelController : MonoBehaviour
         }
         else
         {
+            UIManage.Show<TextPanel>();
             UIManage.GetView<TextPanel>().GameOver();
         }
         UIManage.Close<ProgressBar>();
@@ -548,10 +551,11 @@ public class WaveData
     }
 
     /// <summary>
-    /// 胜利时生成奖励，outcome 为空时使用默认奖杯
+    /// 胜利时生成奖励，outcome 为空时使用默认奖杯。通关后删除本关卡存档。
     /// </summary>
     protected virtual void SpawnVictoryReward(Vector3 lastZombiePos)
     {
+        SaveSystem.DeleteSave(LevelManage.instance.currentLevel);
         (outcome ?? new LevelOutCome_Trophy()).HandleOutcome(true, lastZombiePos);
     }
 

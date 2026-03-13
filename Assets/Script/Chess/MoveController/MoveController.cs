@@ -48,8 +48,8 @@ public class MoveController:Controller
     }
     public virtual void WhenMoving()
     {
-        tileMethod.WhenMoving(chess);
         if (ifMove) return;
+        tileMethod.WhenMoving(chess);
         if (nextTile != null && Vector2.Distance(chess.transform.position, nextTile.transform.position) > 0.01)
         {
             //chess.transform.position = Vector2.MoveTowards(chess.transform.position, nextTile.transform.position,
@@ -175,6 +175,7 @@ public class MoveController:Controller
     {
         tileMethod.EndMoving(chess);
     }
-
+     
+    public void ContinuMove() => ifMove = true;
    
 }

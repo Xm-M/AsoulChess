@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using UnityEngine;
 
 public class SkillEffect_SummonBlackHole : ISkillEffect
@@ -23,7 +24,8 @@ public class SkillEffect_SummonBlackHole : ISkillEffect
         }
         black.transform.position = tile.transform.position;
         black.GetComponent<BlackHole>().Init(tile, config.baseDamage[0]);
-         
+        if (Effect_Smoke.Instance != null)
+            Effect_Smoke.Instance.HideSmoke(tile.transform.position, config.baseDamage[1], config.baseDamage[0]);
 
     }
 

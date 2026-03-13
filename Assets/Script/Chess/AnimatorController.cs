@@ -5,6 +5,19 @@ using UnityEngine;
 public class AnimatorController : MonoBehaviour,Controller
 {
     public Animator animator;
+
+    /// <summary>
+    /// 判断 Animator 是否包含指定参数，避免 GetInteger 等调用不存在的参数时产生警告
+    /// </summary>
+    public static bool HasParameter(Animator anim, string paramName)
+    {
+        if (anim == null) return false;
+        for (int i = 0; i < anim.parameterCount; i++)
+        {
+            if (anim.GetParameter(i).name == paramName) return true;
+        }
+        return false;
+    }
     public SpriteRenderer sprite;
     protected Chess chess;
     float mapMinX=-10;

@@ -14,12 +14,14 @@ public class BallonArmor : ArmorBase
     /// </summary>
     public override void BrokenArmor()
     {
-        user.animatorController.animator.SetBool("fly", false);
-        user.SetCol(true);
+        user.animatorController.animator.SetInteger("fly", 0);
+        //user.SetCol(true);
+        Debug.Log("气球 爆炸");
+        user.ResumeSelectable();
         ballonCol.enabled = false;
         
     }
-
+    
     public override void GetDamage(DamageMessege dm)
     {
         if ((dm.damageElementType & ElementType.Explode) != 0)
@@ -27,12 +29,14 @@ public class BallonArmor : ArmorBase
             ballonCol.enabled = false;
         }
     }
-
+  
     public override void InitArmor()
     {
+        
         user.WhenEnterGame.AddListener(ResetArmor);
         ballonCol.enabled = true;
-        //user.
+        user.UnSelectable();
+        //Debug.Log("无法选中");
         //user.DeathEvent.AddListener
     }
     /// <summary>
@@ -40,10 +44,13 @@ public class BallonArmor : ArmorBase
     /// </summary>
     public override void ResetArmor(Chess chess)
     {
-        chess.animatorController.animator.SetBool("fly", true);
-        chess.SetCol(false);
+        user.animatorController.animator.SetInteger("fly", 1);
+        this.tag = user.tag;
+        //chess.SetCol(false);
+        chess.UnSelectable();
         ballonCol.enabled = true;
         chess.propertyController.onGetDamage.AddListener(GetDamage);
+        Debug.Log("重置气球");
     }
     /// <summary>
     /// 这个layer只跟Bullet相关 
@@ -56,6 +63,7 @@ public class BallonArmor : ArmorBase
         if ((bullet.Dm.damageElementType & ElementType.Puncture)!=0)
         {
             BrokenArmor();
+            bullet.RecycleBullet();
         }
     }
 }

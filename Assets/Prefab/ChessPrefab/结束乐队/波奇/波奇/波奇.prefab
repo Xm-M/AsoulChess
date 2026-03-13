@@ -148,7 +148,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &1733701647873831405
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -161,10 +161,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8726618807515788469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,6 +349,10 @@ MonoBehaviour:
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
+    skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
@@ -367,11 +373,29 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 2
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 8726618807515788469}
   WhenEnterGame:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1844684744678047835}
+        m_TargetAssemblyTypeName: AudioPlayer, Assembly-CSharp
+        m_MethodName: RandomPlay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRemove:
     m_PersistentCalls:
       m_Calls: []
   references:

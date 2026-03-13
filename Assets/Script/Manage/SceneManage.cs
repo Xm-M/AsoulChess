@@ -24,6 +24,10 @@ public class SceneManage : MonoBehaviour
         else Destroy(gameObject);
         currentScene = "开始";
     }
+    public void LoadOver()
+    {
+        GetComponent<Animator>().Play("LoadOver");
+    }
     public void LoadScene(LevelData roomType, UnityAction LoadOver = null, UnityAction beforeLoad = null)
     {
         EventController.Instance.TriggerEvent(EventName.WhenSceneLoad.ToString());
@@ -69,8 +73,8 @@ public class SceneManage : MonoBehaviour
             }
             if (loadValue != sliderValue)
             {
-                // 插值运算（进度条向当前加载进度趋近）
-                sliderValue = Mathf.Lerp(sliderValue, loadValue, Time.deltaTime * speed);
+                // 使用 unscaledDeltaTime，避免暂停时(timeScale=0)加载进度卡住
+                sliderValue = Mathf.Lerp(sliderValue, loadValue, Time.unscaledDeltaTime * speed);
                 // 避免插值运算一直进行
                 if (Mathf.Abs(sliderValue - loadValue) < 0.01f)
                 {

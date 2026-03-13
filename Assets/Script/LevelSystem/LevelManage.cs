@@ -50,6 +50,7 @@ public class LevelManage: MonoBehaviour
     }
     public void RestartLevel()
     {
+        StopAllCoroutines();
         SaveSystem.DeleteSave(currentLevel);
         GameManage.instance.sceneManage.LoadScene(currentLevel.sceneName, null, () => {  LeaveState(); });
     }

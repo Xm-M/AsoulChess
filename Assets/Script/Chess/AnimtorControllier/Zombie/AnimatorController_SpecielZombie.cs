@@ -39,60 +39,48 @@ public class AnimatorController_SpecielZombie : AnimatorController
     public override void OnGetDamage(DamageMessege dm)
     {
         //base.OnGetDamage(dm);
-        if ((dm.damageElementType & ElementType.Explode) != 0)
+        if ((dm.damageElementType & ElementType.Explode) != 0&& chess.propertyController.GetHpPerCent() <= 0)
         {
-            if (chess.propertyController.GetHpPerCent() <= 0)
-            {
-                //Debug.Log("death_fire");
-                sprite.gameObject.SetActive(true);
-                arm.gameObject.SetActive(false);
-                head.gameObject.SetActive(false);
-                deathfire = true;
-            }
+            //Debug.Log("death_fire");
+            sprite.gameObject.SetActive(true);
+            arm.gameObject.SetActive(false);
+            head.gameObject.SetActive(false);
+            deathfire = true;
         }
         else
         {
+            base.OnGetDamage(dm);
             if ((dm.damageElementType & ElementType.Bullet) != 0)
             {
                 player?.RandomPlay();
             }
-            if (chess.propertyController.GetHpPerCent() > 0.6)
+            if (chess.propertyController.GetHpPerCent() <= 0.6f)
             {
-                base.OnGetDamage(dm);
-            }
-            else
-            {
-                if (chess.propertyController.GetHpPerCent() <= 0.6f)
+                if (arm.gameObject.activeSelf)
                 {
-                    if (arm.gameObject.activeSelf)
-                    {
-                        //sprite.gameObject.SetActive();
-                        arm.gameObject.SetActive(false);
-                        ObjectPool.instance.Create(leftarm).transform.position = transform.position;
-                    }
-                    //生成一个手臂特效
-                    if (chess.propertyController.GetHpPerCent() > 0.1f)
-                        arm.material.SetFloat("_FlashAmount", Time.time);
+                    //sprite.gameObject.SetActive();
+                    arm.gameObject.SetActive(false);
+                    ObjectPool.instance.Create(leftarm).transform.position = transform.position;
                 }
-                if (chess.propertyController.GetHpPerCent() <= 0.25f)
+                 
+            }
+            if (chess.propertyController.GetHpPerCent() <= 0.25f)
+            {
+                if (head.gameObject.activeSelf)
                 {
-                    if (head.gameObject.activeSelf)
-                    {
-                        arm.gameObject.SetActive(false);
-                        head.gameObject.SetActive(false);
-                        //这里要添加一个持续掉血buff
-                        chess.buffController.AddBuff(bloodBuff);
-                        GameObject lhead = ObjectPool.instance.Create(leftHead);
-                        lhead.transform.position = transform.position;
-                        //lhead.transform.SetParent(transform);
-                        //lhead.transform.localPosition = Vector3.zero;
-                        //这里生成一个掉头特效
-                    }
-
+                    arm.gameObject.SetActive(false);
+                    head.gameObject.SetActive(false);
+                    //这里要添加一个持续掉血buff
+                    chess.buffController.AddBuff(bloodBuff);
+                    GameObject lhead = ObjectPool.instance.Create(leftHead);
+                    lhead.transform.position = transform.position;
+                    //lhead.transform.SetParent(transform);
+                    //lhead.transform.localPosition = Vector3.zero;
+                    //这里生成一个掉头特效
                 }
 
             }
-       
+
         }
 
         

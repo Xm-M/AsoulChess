@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1-1
   m_EditorClassIdentifier: 
   ifClearStadge: 0
-  sceneName: "\u524D\u9662"
+  sceneName: Ring
   levelName: 1-1
   levelSprit: {fileID: 0}
   levelMode: 0
@@ -26,7 +26,8 @@ MonoBehaviour:
   - id: 3
   - id: 4
   - id: 5
-  MaxWave: 5
+  - id: 6
+  MaxWave: 10
   n: 1
   t: 1
   zombieList:
@@ -37,7 +38,7 @@ MonoBehaviour:
   createZombieType: 0
   nextLevel: {fileID: 11400000, guid: c225673d9c4fa4a4cb6e17749e241d03, type: 2}
   outcome:
-    id: 6
+    id: 7
   loadSkipToTime: 30
   references:
     version: 1
@@ -66,6 +67,11 @@ MonoBehaviour:
     00000005:
       type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
     00000006:
+      type: {class: GameStartPlugin_Smoke, ns: , asm: Assembly-CSharp}
+      data:
+        smoke: {fileID: 2249338947425205373, guid: 98971166b4b9fab41a1025fb5a557318, type: 3}
+        smokeDis: 20
+    00000007:
       type: {class: LevelOutCome_PlantReward, ns: , asm: Assembly-CSharp}
       data:
         rewardPlant: {fileID: 11400000, guid: 93e4d5ea07618ee42babdd49a4e6ebc5, type: 2}

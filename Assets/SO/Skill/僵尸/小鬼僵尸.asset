@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a1882a3461ff274b93ded71106cb3ff, type: 3}
+  m_Name: "\u5C0F\u9B3C\u50F5\u5C38"
+  m_EditorClassIdentifier: 
+  skillType: 0
+  skillDurationMode: 0
+  skillName: "\u9738\u51CC\u8005\u8DF3\u8DC3"
+  maxTargetNum: 100
+  minTargetNum: 0
+  auto: 1
+  baseDamage:
+  - 2.5
+  - 12.5
+  - 11.25
+  - 5
+  baseCd: 50000
+  startCd: 50000

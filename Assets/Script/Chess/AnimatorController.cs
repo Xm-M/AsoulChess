@@ -50,7 +50,7 @@ public class AnimatorController : MonoBehaviour,Controller
         AnimatorStateInfo animStateInfo = chess.animatorController.animator.GetCurrentAnimatorStateInfo(0);
         if (animStateInfo.normalizedTime >=1f && !animator.IsInTransition(0))
         {
-            //Debug.Log("�������Ž���");
+ 
             return true;
         }
         return false;

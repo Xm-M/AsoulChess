@@ -64,15 +64,7 @@ public class PropertyController:Controller
             //Debug.Log("倍率" + (1 - (Data.AR / (Data.AR + 100))));
             mes.damage *= (1 - (Data.AR / (Data.AR + 100)));
         }
-        if ((mes.damageElementType&ElementType.Grind)!=0&&mes.damageFrom!=null)
-        {
-            if (mes.damageFrom.propertyController.GetSize()>GetSize())
-            {
-                Debug.Log(chess.name + "压死");
-                chess.Death();
-                return;
-            }
-        }
+        
         //Debug.Log("当前伤害" + mes.damage);
         mes.damage *= (1 - Data.extraDefence);
         float n = UnityEngine.Random.Range(0, 1f);
@@ -86,10 +78,16 @@ public class PropertyController:Controller
         {
             Data.Hp -= mes.damage;
             UIManage.GetView<DamagePanel>().ShowDamageMes(mes);
-            //Debug.Log(creator.name + "受到了" + mes.damage);
-            //chess.animator.SetFloat();
             onGetDamage?.Invoke(mes);
             chess.animatorController.OnGetDamage(mes);
+            if ((mes.damageElementType & ElementType.Grind) != 0 && mes.damageFrom != null)
+            {
+                if (mes.damageFrom.propertyController.GetSize() > GetSize())
+                {
+                    UIManage.GetView<DamagePanel>().ShowText(mes, "GRIND!", Color.white);
+                    chess.Death();
+                }
+            }
         }
         
         //chess.sprite?.material.SetFloat("_FlashAmount", Time.time);
@@ -114,8 +112,6 @@ public class PropertyController:Controller
                 {
                     mes.ifCrit = false; 
                 }
-                //mes.damage =  n< GetCrit() ? mes.damage * GetCritDamage() : mes.damage;
-
                 //增伤
                 mes.damage *= (1 + GetExtraDamage());
                 //if(GetExtraDamage() > 0)Debug.Log(mes.damage+" 增伤了");

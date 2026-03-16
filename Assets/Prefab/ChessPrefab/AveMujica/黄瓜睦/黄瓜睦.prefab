@@ -93,6 +93,7 @@ MonoBehaviour:
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
@@ -113,6 +114,9 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 3
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 8076291525023295071}
   WhenEnterGame:
     m_PersistentCalls:
@@ -162,10 +166,7 @@ MonoBehaviour:
       data:
         bullet: {fileID: 2098010854589325911, guid: 15fa26a0c0a8b0747aba983ef11ef87d, type: 3}
     00000006:
-      type: {class: Passive_ZZZLight, ns: , asm: Assembly-CSharp}
-      data:
-        buff:
-          id: 11
+      type: {class: ISkillEffect_CreateSmoke, ns: , asm: Assembly-CSharp}
     00000007:
       type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
       data:
@@ -208,13 +209,6 @@ MonoBehaviour:
       data:
         currentTime: 0
         maxTime: 30
-    0000000B:
-      type: {class: Buff_ZZZLight_CreateSword, ns: , asm: Assembly-CSharp}
-      data:
-        buffName: "\u5251\u6765"
-        target: {fileID: 0}
-        buffNum: 0
-        swordPrefab: {fileID: 1250741319016384224, guid: 677c130fbebb7904a985b5b27a9e54fa, type: 3}
 --- !u!61 &8243562531970831682
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -243,7 +237,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &6296076889716557823
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -256,10 +250,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8076291525023295071
 MonoBehaviour:
   m_ObjectHideFlags: 0

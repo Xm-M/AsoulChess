@@ -1,3 +1,4 @@
+using Language.Lua;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,5 +24,10 @@ public class ChessEffect_CreateEffect : ChessEffect
             GameObject eff = ObjectPool.instance.Create(effect);
             eff.transform.position = chess.transform.position;
         }
+    }
+    public void CreateEffect()
+    {
+        GameObject eff = ObjectPool.instance.Create(effect);
+        eff.transform.position =  transform.position;
     }
 }

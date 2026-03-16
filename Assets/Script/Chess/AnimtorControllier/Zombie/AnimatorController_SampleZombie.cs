@@ -34,16 +34,13 @@ public class AnimatorController_SampleZombie : AnimatorController
     public override void OnGetDamage(DamageMessege dm)
     {
         //base.OnGetDamage(dm);
-        if ((dm.damageElementType & ElementType.Explode)!=0)
+        if ((dm.damageElementType & ElementType.Explode)!=0&& chess.propertyController.GetHpPerCent() <= 0)
         {
-            if (chess.propertyController.GetHpPerCent() <= 0)
-            {
-                //Debug.Log("death_fire");
-                sprite.gameObject.SetActive(false);
-                arm.gameObject.SetActive(false);
-                body.gameObject.SetActive(true);
-                deathfire = true;
-            }
+            //Debug.Log("death_fire");
+            sprite.gameObject.SetActive(false);
+            arm.gameObject.SetActive(false);
+            body.gameObject.SetActive(true);
+            deathfire = true;
         }
         else
         {

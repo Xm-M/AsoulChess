@@ -5,15 +5,19 @@ using UnityEngine;
 public class GameStartPlugin_Smoke : ILevelPlugin
 {
     public GameObject smoke;
-    public float smokeDis = 5;
+    [Tooltip("隐藏 0~n 列的雾气，n 可配置。如 4 表示前 5 列（0~4）无雾")]
+    public int hideColumns = 4;
+    [Tooltip("隐藏持续时间，足够长则整局不显示")]
+    public float hideTime = 99999f;
     GameObject sm;
+
     public void StadgeEffect(LevelController levelController)
     {
-        //throw new System.NotImplementedException();
-        sm=ObjectPool.instance.Create(smoke);
+        sm = ObjectPool.instance.Create(smoke);
         sm.transform.position = Vector2.zero;
-        sm.GetComponent<Effect_Smoke>().InitSmokes(smokeDis);
-        //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(),OnGameOver);
+        var effect = sm.GetComponent<Effect_Smoke>();
+        effect.InitSmokes();
+        effect.HideSmokeInColumns(hideColumns, hideTime);
     }
     public void OnGameOver()
     {

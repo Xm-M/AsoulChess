@@ -458,7 +458,7 @@ public class WaveData
         else
         {
             maxZombieValue = (data.t + 1) * 5;
-            Debug.Log("大波僵尸"+maxZombieValue);
+            
         }
         maxZombieValue *= 25;
         Debug.Log("本波僵尸价值为" + maxZombieValue);
@@ -487,6 +487,24 @@ public class WaveData
             enterPecent = 0;
         }
         else enterPecent = UnityEngine.Random.Range(0.5f,0.65f);
+        if (wave % 10 == 0)
+        {
+            var enemyChess = Resources.LoadAll<PropertyCreator>("ChessData/Enemy");
+            //zombieList.Add();
+            foreach (var z in enemyChess)
+            {
+                if (z.chessName == "旗帜僵尸")
+                {
+                    Debug.Log("添加了旗帜僵尸");
+                    ZombieInWaveData zombieInWaveData = new ZombieInWaveData();
+                    zombieList.Add(zombieInWaveData);
+                    zombieInWaveData.zombieCreate = z;
+                    zombieInWaveData.zombieNum = 1;
+                    zombieList.Add(zombieInWaveData);
+
+                }
+            }
+        }
         Debug.Log(string.Format("第{0}波僵尸已经生成完毕,共生成{1}只僵尸", wave,num));
     }
 

@@ -18,14 +18,33 @@ public abstract class RewardItemBase : UIItem
     protected bool click;
 
     /// <summary>
-    /// 设置奖励在世界坐标的位置，开始曲线飞行动画
+    /// 设置奖励在世界坐标的位置，开始曲线飞行动画。若落点在屏幕外则调整到可视 tile
     /// </summary>
     public virtual void SetRewardPos(Vector3 pos)
     {
+        pos = ClampRewardPosToVisible(pos);
         float speed = moveSpeed;
         Vector2 center = MapManage_PVZ.instance.tiles[MapManage_PVZ.instance.mapSize.x / 2, MapManage.instance.mapSize.y / 2].transform.position;
         if (pos.x > center.x) speed *= -1;
         StartCoroutine(CurveMove(pos, totalTime, 0, height, speed, timeSpeed));
+    }
+
+    /// <summary>
+    /// 若落点在屏幕/相机外则调整到地图内可视 tile 位置
+    /// </summary>
+    protected static Vector3 ClampRewardPosToVisible(Vector3 pos)
+    {
+        if (Camera.main == null) return pos;
+        Vector3 viewport = Camera.main.WorldToViewportPoint(pos);
+        float margin = 0.1f;
+        if (viewport.z > 0 && viewport.x >= margin && viewport.x <= 1f - margin && viewport.y >= margin && viewport.y <= 1f - margin)
+            return pos;
+
+        var map = MapManage_PVZ.instance;
+        if (map == null || map.tiles == null) return pos;
+        var size = MapManage.instance.mapSize;
+        var centerTile = map.tiles[size.x / 2, size.y / 2];
+        return centerTile.transform.position;
     }
 
     protected IEnumerator CurveMove(Vector3 startPos, float totalTime, float x0, float height, float moveSpeed, float timeSpeed)

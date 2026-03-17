@@ -175,7 +175,7 @@ public class Chess : MonoBehaviour
     {
         if (IfSelectable)
         {
-            Debug.Log("可以选中");
+            //Debug.Log("可以选中");
             IfSelectable = false;
             
         }

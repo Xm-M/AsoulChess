@@ -127,6 +127,7 @@ public class LoadSaveDataPanel : View
     {
         ApplyPlayerChess(data);
         ApplyLevelClearState(data);
+        UIManage.GetView<StartUI>()?.RefreshShopButtonVisibility();
     }
 
     void ApplyPlayerChess(PlayerSaveData data)

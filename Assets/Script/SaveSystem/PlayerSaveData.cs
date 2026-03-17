@@ -21,6 +21,9 @@ public class PlayerSaveData
     /// <summary>金币（全局货币）</summary>
     public int coins;
 
+    /// <summary>商店是否已解锁（车钥匙点击后为 true）</summary>
+    public bool shopUnlocked;
+
     /// <summary>扩展数据，方便后续新增字段</summary>
     public List<PlayerSaveExtraEntry> extras;
 

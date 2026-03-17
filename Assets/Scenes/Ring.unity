@@ -5508,7 +5508,7 @@ GameObject:
   - component: {fileID: 1202776519}
   - component: {fileID: 1202776522}
   - component: {fileID: 1202776520}
-  - component: {fileID: 1202776523}
+  - component: {fileID: 1202776521}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -5563,6 +5563,27 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!95 &1202776521
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202776518}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!20 &1202776522
 Camera:
   m_ObjectHideFlags: 0
@@ -5606,27 +5627,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!95 &1202776523
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1202776518}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!43 &1218230398
 Mesh:
   m_ObjectHideFlags: 0
@@ -6446,15 +6446,19 @@ PlayableDirector:
   m_GameObject: {fileID: 1401791532}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 79d1fb3e0cdecf5469bb267a017a8bad, type: 2}
+  m_PlayableAsset: {fileID: 11400000, guid: ac7906c009975574a9440a911230ec8a, type: 2}
   m_InitialState: 1
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
   - key: {fileID: -6358124025965269919, guid: 79d1fb3e0cdecf5469bb267a017a8bad, type: 2}
-    value: {fileID: 1202776523}
+    value: {fileID: 0}
   - key: {fileID: 1466962939221359253, guid: 79d1fb3e0cdecf5469bb267a017a8bad, type: 2}
+    value: {fileID: 1401791536}
+  - key: {fileID: -6358124025965269919, guid: ac7906c009975574a9440a911230ec8a, type: 2}
+    value: {fileID: 1202776521}
+  - key: {fileID: 1466962939221359253, guid: ac7906c009975574a9440a911230ec8a, type: 2}
     value: {fileID: 1401791536}
   m_ExposedReferences:
     m_References: []

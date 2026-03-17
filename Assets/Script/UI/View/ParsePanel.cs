@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
 /// <summary>
 /// 运行中的暂停页面
 /// 有两种暂停,一种是space 一种是esc
@@ -12,8 +14,12 @@ public class ParsePanel : View
     public GameObject pauseButton;
     public GameObject continuLevelPanel;
     public GameObject confirmPanel;
+    [Header("金币显示：捡起银币时显示，5秒后隐藏")]
+    public GameObject coinDisplayObject;
+    public TMP_Text coinText;
     public Slider BGM,AudioEffect;
     public AudioPlayer au;
+    Coroutine coinDisplayHideCoroutine;
     bool pause;
     public override void Init()
     {
@@ -34,7 +40,13 @@ public class ParsePanel : View
     {
         base.Hide();
         gameObject.SetActive(false);
-        //Debug.Log("隐藏");
+        if (coinDisplayHideCoroutine != null)
+        {
+            StopCoroutine(coinDisplayHideCoroutine);
+            coinDisplayHideCoroutine = null;
+        }
+        if (coinDisplayObject != null)
+            coinDisplayObject.SetActive(false);
         CloseMenuPanel();
         LoadGameContinue();
         //GameManage.instance.timerManage.ChangeTimeSpeed(1);
@@ -118,6 +130,25 @@ public class ParsePanel : View
     {
         Hide();
         LevelManage.instance.ReturnMenu();
+    }
+
+    /// <summary>捡起银币时调用：显示金币数，5秒后隐藏</summary>
+    public void ShowCoinDisplay(int totalCoins)
+    {
+        if (coinDisplayObject == null || coinText == null) return;
+        if (coinDisplayHideCoroutine != null)
+            StopCoroutine(coinDisplayHideCoroutine);
+        coinDisplayObject.SetActive(true);
+        coinText.text = totalCoins.ToString();
+        coinDisplayHideCoroutine = StartCoroutine(HideCoinDisplayAfter(5f));
+    }
+
+    IEnumerator HideCoinDisplayAfter(float seconds)
+    {
+        yield return new WaitForSecondsRealtime(seconds);
+        if (coinDisplayObject != null)
+            coinDisplayObject.SetActive(false);
+        coinDisplayHideCoroutine = null;
     }
 
     public void ChangeSoundEffectValue(float value)

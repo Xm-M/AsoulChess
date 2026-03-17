@@ -495,13 +495,11 @@ public class WaveData
             {
                 if (z.chessName == "旗帜僵尸")
                 {
-                    Debug.Log("添加了旗帜僵尸");
                     ZombieInWaveData zombieInWaveData = new ZombieInWaveData();
-                    zombieList.Add(zombieInWaveData);
                     zombieInWaveData.zombieCreate = z;
                     zombieInWaveData.zombieNum = 1;
                     zombieList.Add(zombieInWaveData);
-
+                    break;
                 }
             }
         }

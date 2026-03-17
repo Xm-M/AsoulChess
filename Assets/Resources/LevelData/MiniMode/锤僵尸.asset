@@ -33,7 +33,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4ec3fcd038a6e77468e07b9e150df5ed, type: 2}
   - {fileID: 11400000, guid: b892c3b8e14c95843aa2f08b4da05de7, type: 2}
   createZombieType: 0
-  nextLevel: {fileID: 0}
+  nextLevel: {fileID: 11400000, guid: 321b3a8b5dba18448be059d7be3c995d, type: 2}
   outcome:
     id: 5
   loadSkipToTime: 10
@@ -71,16 +71,20 @@ MonoBehaviour:
             damageElementType: 1
             ifCrit: 0
             takeBuff:
-              id: 5
+              id: 6
         hammer:
-          id: 6
+          id: 7
     00000004:
       type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
       data:
         fastEnterTime: 4
     00000005:
-      type: {class: , ns: , asm: }
+      type: {class: LevelOutCome_CarKey, ns: , asm: Assembly-CSharp}
+      data:
+        nextLevel: {fileID: 0}
     00000006:
+      type: {class: , ns: , asm: }
+    00000007:
       type: {class: HammerPanel_QX, ns: , asm: Assembly-CSharp}
       data:
         damage: 900

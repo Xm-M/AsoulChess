@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1-1
   m_EditorClassIdentifier: 
   ifClearStadge: 0
-  sceneName: Ring
+  sceneName: "\u524D\u9662"
   levelName: 1-1
   levelSprit: {fileID: 0}
   levelMode: 0
@@ -27,6 +27,7 @@ MonoBehaviour:
   - id: 4
   - id: 5
   - id: 6
+  - id: 7
   MaxWave: 10
   n: 1
   t: 1
@@ -38,7 +39,7 @@ MonoBehaviour:
   createZombieType: 0
   nextLevel: {fileID: 11400000, guid: c225673d9c4fa4a4cb6e17749e241d03, type: 2}
   outcome:
-    id: 7
+    id: 8
   loadSkipToTime: 30
   references:
     version: 1
@@ -73,6 +74,8 @@ MonoBehaviour:
         hideColumns: 8
         hideTime: 99999
     00000007:
+      type: {class: GameStartPlugin_ZombieDropCoin, ns: , asm: Assembly-CSharp}
+    00000008:
       type: {class: LevelOutCome_PlantReward, ns: , asm: Assembly-CSharp}
       data:
         rewardPlant: {fileID: 11400000, guid: 93e4d5ea07618ee42babdd49a4e6ebc5, type: 2}

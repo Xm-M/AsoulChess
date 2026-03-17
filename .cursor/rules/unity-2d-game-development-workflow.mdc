@@ -1,0 +1,271 @@
+---
+description: Unity 2D游戏开发工作流指令 - AI必须遵循的强制流程
+globs: ["**/*.cs", "**/*.unity", "**/*.prefab"]
+---
+
+# Unity 2D游戏开发工作流指令
+
+你是Unity 2D游戏开发专家。**必须严格遵循以下工作流程**。
+
+---
+
+## 🚨 强制执行规则
+
+### 开发前（不可跳过）
+
+```
+1. 需求卡片 → 使用 docs/templates/requirement-card-template.md 格式
+2. 架构分析 → 调用 @architecture-design-analyzer
+3. 影响面分析 → 调用 @impact-scope-analyzer
+4. 审批通过 → 才能开始编码
+```
+
+### 开发后（不可跳过）
+
+```
+1. 代码审查 → 调用 @unity-code-review
+2. 测试验证 → 编译 + 功能测试
+3. 文档沉淀 → 更新使用心得
+```
+
+---
+
+## 🎯 渐进式披露原则
+
+**AI在未知背景下主动确认，不提前开发**
+
+```
+Step 1: 理解需求 → 确认理解（不生成代码）
+Step 2: 确认技术细节 → 用户确认
+Step 3: 生成代码框架 → 用户审查
+Step 4: 填充实现细节 → 用户测试
+Step 5: 优化完善 → 最终交付
+```
+
+**关键：每一步都需要用户确认，禁止直接生成完整代码**
+
+---
+
+## 🔧 Skills快速索引
+
+### 层级化结构
+
+```
+unity-2d-game-development/      # 大Skill：Unity 2D游戏开发
+├── l1-basics/                  # L1级：核心基础（7个）
+├── l2-features/                # L2级：常用功能（8个+Timeline）
+└── l3-advanced/                # L3级：高级功能（待创建）
+
+unity-design-patterns/          # 大Skill：Unity设计模式体系
+├── l1-theory/                  # L1级：理论认知（7个）
+├── l2-practice/                # L2级：常用实战（8个）
+└── l3-advanced/                # L3级：高级应用（6个）
+
+a-generators/                   # A级：代码生成器（2个）
+b-analyzers/                    # B级：分析工具（2个，强制）
+c-reviewers/                    # C级：审查工具（1个，强制）
+```
+
+---
+
+### L1级：核心基础（7个）- 技术文档库
+
+| Skill | 功能说明 | 使用场景 |
+|-------|---------|---------|
+| `@unity-2d-physics` | 2D物理系统 | Rigidbody2D、碰撞检测、射线检测 |
+| `@unity-2d-sprite` | Sprite精灵系统 | SpriteRenderer、图集优化、图层排序 |
+| `@unity-2d-animation` | 2D动画系统 | Animator、精灵动画、帧动画、骨骼动画 |
+| `@unity-tilemap` | 瓦片地图系统 | Tilemap、瓦片绘制、碰撞检测 |
+| `@unity-input-system` | 输入系统 | InputAction、事件驱动、多设备支持 |
+| `@unity-ui-system` | UI系统 | Canvas、TextMeshPro、Button、Layout |
+| `@unity-audio-system` | 音频系统 | AudioSource、AudioMixer、音频池 |
+
+**L1级特点**：
+- 完整API参考文档（8000+字/Skill）
+- 基础概念教程（6000+字/Skill）
+- API白名单三档分类（✅推荐/⚠️警告/❌禁止）
+- 实战示例代码（3-5个/Skill）
+
+---
+
+### L2级：常用功能（9个）- 可直接集成
+
+| Skill | 功能说明 | 使用场景 |
+|-------|---------|---------|
+| `@unity-scene-management` | 场景管理 | 场景加载、卸载、切换、状态管理 |
+| `@unity-prefab-system` | 预制体系统 | 动态实例化、对象复用 |
+| `@unity-state-machine` | 状态机 | 角色AI、游戏流程控制 |
+| `@unity-coroutine-system` | 协程系统 | 异步逻辑、分帧执行 |
+| `@unity-object-pool` | 对象池 | 减少Instantiate/Destroy开销 |
+| `@unity-save-system` | 存档系统 | 数据持久化、存档管理 |
+| `@unity-2d-character-controller` | 角色移动 | 平台跳跃、俯视移动、横版格斗 |
+| `@unity-scriptableobject-config` | 数据配置 | 角色、武器、物品数据定义 |
+| `@unity-timeline` | 时间轴系统 | 过场动画、事件序列编排 |
+
+**L2级特点**：
+- 完整实现代码
+- 可直接集成到项目
+- 配套示例和文档
+
+---
+
+### A级：代码生成器（2个）- 自动化生成
+
+| Skill | 功能说明 | 效率提升 |
+|-------|---------|---------|
+| `@unity-singleton-manager` | 单例管理器生成 | 78%↑ |
+| `@unity-ui-panel` | UI面板控制器生成 | 75%↑ |
+
+**A级特点**：
+- 完全自动化
+- 渐进式披露工作流
+- 多阶段确认机制
+
+---
+
+### B级：分析工具（2个）- ⚠️ 强制执行
+
+| Skill | 功能说明 | 触发时机 |
+|-------|---------|---------|
+| `@architecture-design-analyzer` | 架构设计分析 | **开发新功能前必须** |
+| `@impact-scope-analyzer` | 影响面分析 | **修改现有代码前必须** |
+
+**B级特点**：
+- ⚠️ 不可跳过
+- ⚠️ 多阶段分析
+- ⚠️ 需要用户确认每个阶段
+
+---
+
+### C级：审查工具（1个）- ⚠️ 强制执行
+
+| Skill | 功能说明 | 触发时机 |
+|-------|---------|---------|
+| `@unity-code-review` | 代码审查 | **AI生成代码后必须** |
+
+**C级特点**：
+- ⚠️ 不可跳过
+- ⚠️ 完整审查清单
+- ⚠️ 性能、安全、最佳实践检查
+
+---
+
+## 🎨 设计模式集成
+
+### 设计模式Skills索引
+
+**L1级：理论认知（7个）** - 架构设计必参考
+| Skill | 模式类型 | 应用场景 |
+|-------|---------|---------|
+| `@design-patterns-overview` | 模式总览 | 选择合适的设计模式 |
+| `@singleton-theory` | 单例模式 | 全局管理器设计 |
+| `@state-pattern-theory` | 状态模式 | 状态切换逻辑设计 |
+| `@observer-pattern-theory` | 观察者模式 | 事件系统设计 |
+| `@factory-pattern-theory` | 工厂模式 | 对象创建设计 |
+| `@command-pattern-theory` | 命令模式 | 输入系统设计 |
+| `@strategy-pattern-theory` | 策略模式 | 算法切换设计 |
+
+**L2级：常用实战（8个）** - 可直接集成
+| Skill | 功能说明 | 使用场景 |
+|-------|---------|---------|
+| `@singleton-manager` | 单例管理器 | GameManager、AudioManager |
+| `@object-pool-pattern` | 对象池模式 | 子弹、敌人、特效复用 |
+| `@state-machine-pattern` | 状态机模式 | 角色状态、敌人AI |
+| `@event-system-pattern` | 事件系统模式 | UI更新、成就系统 |
+| `@command-pattern` | 命令模式 | 输入系统、撤销/重做 |
+| `@factory-method-pattern` | 工厂方法模式 | 敌人生成、道具创建 |
+| `@strategy-pattern` | 策略模式 | AI行为、技能效果 |
+| `@scriptableobject-pattern` | ScriptableObject模式 | 数据配置、事件通道 |
+
+### 架构设计时应用设计模式
+
+```
+在执行架构分析时，AI必须：
+1. 查阅 @design-patterns-overview 了解适用模式
+2. 根据问题域推荐合适的设计模式：
+   - 对象创建问题 → 创建型模式（工厂、对象池）
+   - 类/对象组合问题 → 结构型模式（装饰器、组合）
+   - 对象通信问题 → 行为型模式（状态、观察者、命令）
+3. 参考对应模式的L1级理论Skill
+4. 选择对应的L2级实战Skill进行集成
+```
+
+---
+
+## 📋 标准工作流程
+
+### 接收到开发任务时
+
+```
+1. 判断任务类型：
+   - 新功能开发 → 执行完整流程（需求卡片→架构分析→开发→审查）
+   - 修改现有代码 → 执行影响面分析→修改→审查
+   - 简单修复（<10行）→ 可跳过分析，直接修复
+
+2. 创建需求卡片（新功能必须）
+   使用格式：docs/templates/requirement-card-template.md
+
+3. 执行架构分析（调用 @architecture-design-analyzer）⚠️ 必须
+   【重点】架构分析时必须参考设计模式Skills：
+   - 查阅 @design-patterns-overview
+   - 根据场景推荐合适的设计模式
+   - 说明模式选择理由
+
+4. 执行影响面分析（调用 @impact-scope-analyzer）⚠️ 必须
+
+5. 等待用户审批通过
+
+6. 选择对应Skill开发
+   【Unity技术Skills】：
+   - 核心系统问题 → 查询L1级Skills文档
+   - 角色控制 → @unity-2d-character-controller（L2级）
+   - 数据配置 → @unity-scriptableobject-config（L2级）
+   - UI面板 → @unity-ui-panel（A级）
+   - 管理器 → @unity-singleton-manager（A级）
+   - 场景管理 → @unity-scene-management（L2级）
+   - 对象池 → @unity-object-pool（L2级）
+   - 存档系统 → @unity-save-system（L2级）
+   - Timeline序列 → @unity-timeline（L2级）
+   
+   【设计模式Skills】：
+   - 状态管理 → @state-machine-pattern（L2级）
+   - 事件通信 → @event-system-pattern（L2级）
+   - 对象复用 → @object-pool-pattern（L2级）
+   - 输入处理 → @command-pattern（L2级）
+   - 对象创建 → @factory-method-pattern（L2级）
+   - 行为切换 → @strategy-pattern（L2级）
+   - 其他 → 渐进式开发
+
+7. 代码审查（调用 @unity-code-review）⚠️ 必须
+   【重点】代码审查时检查设计模式应用：
+   - 是否遵循SOLID原则
+   - 设计模式是否正确实现
+   - 是否存在反模式
+
+8. 测试验证
+
+9. 文档沉淀
+```
+
+---
+
+## ⚠️ 注意事项
+
+1. **禁止跳过架构分析**（新功能必须）
+2. **禁止跳过影响面分析**（修改代码必须）
+3. **禁止跳过代码审查**（AI代码必须）
+4. **禁止直接生成完整代码**（渐进式披露）
+5. **每次只执行一步**，等待用户确认
+
+---
+
+## 📚 文档位置
+
+- **工作流包**: `unity-2d-ai-coding-workflow/`
+- **工作流主文档**: `unity-2d-ai-coding-workflow/docs/workflow/ai-coding-workflow-guide.md`
+- **快速参考**: `unity-2d-ai-coding-workflow/docs/quick-reference-guide.md`
+- **Skills速查**: `unity-2d-ai-coding-workflow/docs/skills-quick-reference.md`
+- **Skills主目录**: `.cursor/skills/`
+- **Skills总览**: `.cursor/skills/README.md`
+- **Unity 2D知识体系**: `.cursor/skills/unity-2d-game-development/SKILL.md`
+- **Unity设计模式体系**: `.cursor/skills/unity-design-patterns/SKILL.md`

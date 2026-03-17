@@ -28,6 +28,8 @@ public class GameManage : MonoBehaviour
     public static GameManage instance;
     public List<PropertyCreator> allChess;
     public List<GameObject> PlayerChess;
+    /// <summary>读档后玩家拥有的植物 creator 列表，为 null 时 PlantsShop 使用 allChess</summary>
+    public List<PropertyCreator> playerOwnedCreators;
     public UnityEvent WhenGameOver,WhenGameStart;
     //public bool ifGameStart{get;private set;}
     private void Awake()

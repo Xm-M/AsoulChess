@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AnimatorController_SpecielZombie : AnimatorController
 {
-    public SpriteRenderer arm, head;
+    public SpriteRenderer arm, head,box;
     public bool deathfire;
     public GameObject leftarm, leftHead;
     [LabelText("受伤播放器")]
@@ -13,7 +13,7 @@ public class AnimatorController_SpecielZombie : AnimatorController
     //[LabelText("火焰受伤播放器")]
     //public AudioPlayer player2;
     [SerializeReference]
-    public BloodBuff bloodBuff;//持续掉血buff
+    public BloodBuff bloodBuff;//持续掉血buffkok
     public float randomSpeed = 0.2f;//移速偏差值
     public override void WhenControllerEnterWar()
     {
@@ -102,6 +102,8 @@ public class AnimatorController_SpecielZombie : AnimatorController
         base.ChangeColor(color);
         arm.color = color;
         head.color = color;
+        if(box !=null)
+        box.color = color;
     }
     
 }

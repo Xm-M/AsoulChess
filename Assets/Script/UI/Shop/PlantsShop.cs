@@ -48,13 +48,19 @@ public class PlantsShop : View
         currentSelectIcons.Clear();
         currentShopIcons.Clear();
         allSelectIcons.Clear();
-        for (int i = 0; i < GameManage.instance.allChess.Count; i++)
+        var creatorsToShow = GameManage.instance.playerOwnedCreators != null && GameManage.instance.playerOwnedCreators.Count > 0
+            ? GameManage.instance.playerOwnedCreators
+            : GameManage.instance.allChess;
+        if (creatorsToShow == null) return;
+        for (int i = 0; i < creatorsToShow.Count; i++)
         {
+            var creator = creatorsToShow[i];
+            if (creator == null) continue;
             ShopSelectIcon selectIcon = null;
-            if(GameManage.instance.allChess[i].PlantEntrepotCardPre==null)
-                selectIcon= Instantiate(shopSelectIconPre, selectIconParent).GetComponent<ShopSelectIcon>();
-            else selectIcon = Instantiate(GameManage.instance.allChess[i].PlantEntrepotCardPre, selectIconParent).GetComponent<ShopSelectIcon>();
-            selectIcon.InitSelectIcon(GameManage.instance.allChess[i]);
+            if (creator.PlantEntrepotCardPre == null)
+                selectIcon = Instantiate(shopSelectIconPre, selectIconParent).GetComponent<ShopSelectIcon>();
+            else selectIcon = Instantiate(creator.PlantEntrepotCardPre, selectIconParent).GetComponent<ShopSelectIcon>();
+            selectIcon.InitSelectIcon(creator);
             allSelectIcons.Add(selectIcon);
         }
     }

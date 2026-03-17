@@ -40,10 +40,11 @@ public static class SaveSystem
     }
 
     /// <summary>
-    /// 检查指定关卡是否有存档
+    /// 检查指定关卡是否有存档。Test 模式下返回 false。
     /// </summary>
     public static bool HasSaveForLevel(LevelData levelData)
     {
+        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test) return false;
         if (levelData == null) return false;
         string id = GetLevelSaveId(levelData);
         if (string.IsNullOrEmpty(id)) return false;
@@ -51,10 +52,16 @@ public static class SaveSystem
     }
 
     /// <summary>
-    /// 保存当前关卡（需在 LeaveState 之前调用，此时游戏状态仍完整）
+    /// 保存当前关卡（需在 LeaveState 之前调用，此时游戏状态仍完整）。
+    /// Test 模式下不保存。
     /// </summary>
     public static void SaveCurrentLevel()
     {
+        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test)
+        {
+            Debug.Log("[SaveSystem] Test 模式，跳过存档");
+            return;
+        }
         if (LevelManage.instance == null || LevelManage.instance.currentLevel == null)
         {
             Debug.LogWarning("[SaveSystem] 无法保存：LevelManage 或 currentLevel 为空");
@@ -95,12 +102,18 @@ public static class SaveSystem
     }
 
     /// <summary>
-    /// 加载指定关卡的存档。失败时删除损坏的存档文件，并设置 LastLoadFailed / LastLoadError
+    /// 加载指定关卡的存档。失败时删除损坏的存档文件，并设置 LastLoadFailed / LastLoadError。
+    /// Test 模式下不读档，返回 null。
     /// </summary>
     public static GameSaveData LoadSaveData(LevelData levelData)
     {
         LastLoadFailed = false;
         LastLoadError = null;
+        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test)
+        {
+            Debug.Log("[SaveSystem] Test 模式，跳过读档");
+            return null;
+        }
         if (levelData == null) return null;
         string id = GetLevelSaveId(levelData);
         if (string.IsNullOrEmpty(id)) return null;
@@ -161,10 +174,11 @@ public static class SaveSystem
     }
 
     /// <summary>
-    /// 删除指定关卡的存档（如重新开始时可选）
+    /// 删除指定关卡的存档（如重新开始时可选）。Test 模式下不执行。
     /// </summary>
     public static void DeleteSave(LevelData levelData)
     {
+        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test) return;
         if (levelData == null) return;
         string id = GetLevelSaveId(levelData);
         if (string.IsNullOrEmpty(id)) return;

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
+using Sirenix.OdinInspector;
 
 /// <summary>
 /// GameManage就更像是一个用来保存各种Manage数据的地方了
@@ -52,6 +53,7 @@ public class GameManage : MonoBehaviour
     }
     private void Start()
     {
+        if (mode == GameMode.Test && allChess != null) playerOwnedCreators = new List<PropertyCreator>(allChess);
         timerManage.InitManage();
         chessFactory.InitManage();
         fetterManage.InitController();
@@ -83,6 +85,24 @@ public class GameManage : MonoBehaviour
         {
             SunLightPanel.instance.ChangeSunLight(10000);
         }
+        if (mode == GameMode.Test && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+        {
+            if (Input.GetKeyUp(KeyCode.Alpha1)) SetDifficulty(0);
+            else if (Input.GetKeyUp(KeyCode.Alpha2)) SetDifficulty(1);
+            else if (Input.GetKeyUp(KeyCode.Alpha3)) SetDifficulty(2);
+            else if (Input.GetKeyUp(KeyCode.Alpha4)) SetDifficulty(3);
+        }
+    }
+
+    /// <summary>Test 模式下设置难度：0=简单 1=普通 2=困难 3=噩梦。Inspector 中可用 Odin 按钮调用，或 Ctrl+1/2/3/4</summary>
+    [Button("Set Difficulty (0-3)", ButtonSizes.Medium)]
+    public void SetDifficulty(int difficulty)
+    {
+        if (mode != GameMode.Test) return;
+        int d = Mathf.Clamp(difficulty, 0, 3);
+        DifficultyManager.TestModeDifficulty = d;
+        string[] names = { "简单", "普通", "困难", "噩梦" };
+        Debug.Log($"[Test] 难度已设为: {names[d]} ({d})");
     }
     public void QuitGame()
     {

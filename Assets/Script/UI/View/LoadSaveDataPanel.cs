@@ -1,123 +1,200 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// 读档选择面板。Show 时读取所有存档并按名字排列，点击可读档。
+/// 读档面板。有存档时显示继续/新游戏；无存档时显示名字输入并创建。
 /// Test 模式下不执行相关逻辑。
 /// </summary>
 public class LoadSaveDataPanel : View
 {
-    [Header("存档列表")]
-    public Transform listParent;
-    public GameObject saveItemPrefab;
+    [Header("用户名显示（有存档时）")]
+    public TMP_Text usernameText;
 
-    [Header("无存档提示")]
-    public GameObject noSavePrompt;
-    public Button createNewButton;
+    [Header("继续游戏")]
+    public Button continueButton;
 
-    [Header("新建存档默认名")]
-    public string defaultNewUsername = "新玩家";
+    [Header("新游戏")]
+    public Button newGameButton;
 
-    List<GameObject> itemInstances = new List<GameObject>();
+    [Header("无存档时：名字输入")]
+    public TMP_InputField nameInputField;
+
+    [Header("无存档时：创建存档按钮")]
+    public Button createSaveButton;
+
+    [Header("新游戏时：取消按钮（返回继续/新游戏选择），可与新游戏共用同一按钮")]
+    public Button cancelNewGameButton;
+
+    [Header("新游戏/取消共用同一按钮时的文案")]
+    public string newGameButtonText = "重新开始";
+    public string cancelButtonText = "取消";
+
+    [Header("无存档时隐藏继续按钮")]
+    public bool hideContinueWhenNoSave = true;
+
+    bool isNewGameInputMode;
 
     public override void Init()
     {
-        if (createNewButton != null)
-            createNewButton.onClick.AddListener(OnCreateNewSave);
+        if (continueButton != null)
+            continueButton.onClick.AddListener(OnContinue);
+        if (newGameButton != null)
+        {
+            if (newGameButton == cancelNewGameButton)
+                newGameButton.onClick.AddListener(OnNewGameOrCancel);
+            else
+                newGameButton.onClick.AddListener(OnNewGame);
+        }
+        if (createSaveButton != null)
+            createSaveButton.onClick.AddListener(OnCreateSave);
+        if (cancelNewGameButton != null && cancelNewGameButton != newGameButton)
+            cancelNewGameButton.onClick.AddListener(OnCancelNewGame);
     }
 
     public override void Show()
     {
+        if (IsTestMode())
+        {
+            Hide();
+            return;
+        }
         base.Show();
-        RefreshList();
+        isNewGameInputMode = false;
+        RefreshUI();
     }
 
-    void RefreshList()
+    void RefreshUI()
     {
         if (IsTestMode())
         {
-            if (noSavePrompt != null) noSavePrompt.SetActive(true);
-            if (listParent != null) ClearList();
+            SetAllInactive();
             return;
         }
 
-        var usernames = PlayerSaveSystem.GetAllSaveUsernames();
-        usernames.Sort();
+        bool hasSave = PlayerSaveSystem.HasSave();
+        bool showInputMode = !hasSave || isNewGameInputMode;
 
-        ClearList();
-
-        if (usernames.Count == 0)
+        if (usernameText != null)
+            usernameText.gameObject.SetActive(hasSave && !isNewGameInputMode);
+        if (continueButton != null)
+            continueButton.gameObject.SetActive(hasSave && !isNewGameInputMode && (hideContinueWhenNoSave == false || hasSave));
+        bool sameButton = newGameButton != null && newGameButton == cancelNewGameButton;
+        if (newGameButton != null)
         {
-            if (noSavePrompt != null) noSavePrompt.SetActive(true);
-            if (listParent != null) listParent.gameObject.SetActive(false);
+            bool showNewGame = hasSave && !isNewGameInputMode;
+            bool showCancel = hasSave && isNewGameInputMode;
+            newGameButton.gameObject.SetActive(sameButton ? (showNewGame || showCancel) : showNewGame);
+            if (sameButton && newGameButton.gameObject.activeSelf)
+                SetButtonText(newGameButton, isNewGameInputMode ? cancelButtonText : newGameButtonText);
+        }
+        if (cancelNewGameButton != null && !sameButton)
+            cancelNewGameButton.gameObject.SetActive(hasSave && isNewGameInputMode);
+
+        if (nameInputField != null)
+            nameInputField.gameObject.SetActive(showInputMode);
+        if (createSaveButton != null)
+            createSaveButton.gameObject.SetActive(showInputMode);
+
+        if (hasSave && usernameText != null && !isNewGameInputMode)
+        {
+            var data = PlayerSaveContext.CurrentData ?? PlayerSaveSystem.Load();
+            usernameText.text = !string.IsNullOrEmpty(data?.username) ? data.username : "玩家";
+        }
+        if (showInputMode && nameInputField != null && isNewGameInputMode)
+        {
+            var data = PlayerSaveContext.CurrentData ?? PlayerSaveSystem.Load();
+            nameInputField.text = !string.IsNullOrEmpty(data?.username) ? data.username : "";
+        }
+    }
+
+    void SetAllInactive()
+    {
+        if (usernameText != null) usernameText.gameObject.SetActive(false);
+        if (continueButton != null) continueButton.gameObject.SetActive(false);
+        if (newGameButton != null) newGameButton.gameObject.SetActive(false);
+        if (nameInputField != null) nameInputField.gameObject.SetActive(false);
+        if (createSaveButton != null) createSaveButton.gameObject.SetActive(false);
+        if (cancelNewGameButton != null) cancelNewGameButton.gameObject.SetActive(false);
+    }
+
+    void OnNewGame()
+    {
+        if (IsTestMode()) return;
+        isNewGameInputMode = true;
+        RefreshUI();
+    }
+
+    void OnNewGameOrCancel()
+    {
+        if (isNewGameInputMode)
+        {
+            OnCancelNewGame();
+            SetButtonText(newGameButton, cancelButtonText);
         }
         else
         {
-            if (noSavePrompt != null) noSavePrompt.SetActive(false);
-            if (listParent != null)
-            {
-                listParent.gameObject.SetActive(true);
-                foreach (var name in usernames)
-                {
-                    var item = CreateSaveItem(name);
-                    if (item != null) itemInstances.Add(item);
-                }
-            }
+            OnNewGame();
+            SetButtonText(newGameButton, newGameButtonText);
         }
     }
 
-    GameObject CreateSaveItem(string username)
+    void OnCancelNewGame()
     {
-        if (saveItemPrefab == null || listParent == null) return null;
-        var go = Instantiate(saveItemPrefab, listParent);
-        var btn = go.GetComponent<Button>();
-        var text = go.GetComponentInChildren<TMP_Text>();
-        if (text != null) text.text = username;
-        if (btn != null)
-        {
-            var u = username;
-            btn.onClick.AddListener(() => OnLoadSave(u));
-        }
-        return go;
+        isNewGameInputMode = false;
+        RefreshUI();
     }
 
-    void ClearList()
+    static void CopySettingsFrom(PlayerSaveData from, PlayerSaveData to)
     {
-        foreach (var go in itemInstances)
-        {
-            if (go != null) Destroy(go);
-        }
-        itemInstances.Clear();
+        to.bgmVolume = from.bgmVolume;
+        to.sfxVolume = from.sfxVolume;
+        to.screenWidth = from.screenWidth;
+        to.screenHeight = from.screenHeight;
+        to.fullscreen = from.fullscreen;
     }
 
-    void OnLoadSave(string username)
+    static void SetButtonText(Button btn, string text)
+    {
+        var t = btn.GetComponentInChildren<TMP_Text>();
+        if (t != null) t.text = text;
+    }
+
+    void OnCreateSave()
     {
         if (IsTestMode()) return;
-        var data = PlayerSaveSystem.Load(username);
-        if (data == null) return;
 
-        PlayerSaveContext.CurrentUsername = username;
+        string name = nameInputField != null ? nameInputField.text?.Trim() : "";
+        if (string.IsNullOrEmpty(name))
+            name = PlayerSaveSystem.DefaultSaveName;
+
+        PlayerSaveData oldSettings = null;
+        if (isNewGameInputMode && PlayerSaveSystem.HasSave())
+            oldSettings = PlayerSaveSystem.Load();
+
+        if (isNewGameInputMode)
+            PlayerSaveSystem.Delete();
+        SaveSystem.DeleteAllLevelSaves();
+
+        var data = PlayerSaveSystem.CreateNew();
+        data.username = name;
+        if (oldSettings != null)
+            CopySettingsFrom(oldSettings, data);
+        PlayerSaveSystem.Save(data);
         PlayerSaveContext.CurrentData = data;
-
+        isNewGameInputMode = false;
         ApplyLoadedSave(data);
         Hide();
     }
 
-    void OnCreateNewSave()
+    void OnContinue()
     {
         if (IsTestMode()) return;
-        string name = defaultNewUsername;
-        int n = 1;
-        while (PlayerSaveSystem.HasSave(name))
-        {
-            name = defaultNewUsername + n;
-            n++;
-        }
-        var data = PlayerSaveSystem.CreateNew(name);
-        PlayerSaveSystem.Save(data);
-        PlayerSaveContext.CurrentUsername = name;
+        if (!PlayerSaveSystem.HasSave()) return;
+
+        var data = PlayerSaveSystem.Load();
+        if (data == null) return;
+
         PlayerSaveContext.CurrentData = data;
         ApplyLoadedSave(data);
         Hide();
@@ -127,6 +204,8 @@ public class LoadSaveDataPanel : View
     {
         ApplyPlayerChess(data);
         ApplyLevelClearState(data);
+        PlayerSaveContext.ApplySettingsToGame();
+        UIManage.GetView<StartUI>()?.RefreshSaveButtonText();
         UIManage.GetView<StartUI>()?.RefreshShopButtonVisibility();
     }
 
@@ -135,7 +214,7 @@ public class LoadSaveDataPanel : View
         if (GameManage.instance == null || data?.ownedCreatorIds == null) return;
 
         GameManage.instance.PlayerChess.Clear();
-        GameManage.instance.playerOwnedCreators = new List<PropertyCreator>();
+        GameManage.instance.playerOwnedCreators = new System.Collections.Generic.List<PropertyCreator>();
         foreach (var creatorId in data.ownedCreatorIds)
         {
             var creator = GetCreatorByChessName(creatorId);

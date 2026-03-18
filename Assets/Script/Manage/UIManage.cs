@@ -22,7 +22,22 @@ public class UIManage
             view.Value.Init();
             view.Value.Hide();
         }
-         Show<StartUI>();
+        if (PlayerSaveSystem.HasSave())
+        {
+            PlayerSaveContext.LoadCurrent();
+            PlayerSaveContext.ApplySettingsToGame();
+        }
+        else
+        {
+            PlayerSaveContext.CurrentData = null;
+        }
+        Show<StartUI>();
+        bool isTestMode = GameManage.instance != null && GameManage.instance.mode == GameMode.Test;
+        if (!isTestMode && !PlayerSaveSystem.HasSave())
+        {
+            var panel = GetView<LoadSaveDataPanel>();
+            if (panel != null) panel.Show();
+        }
     }
     /// <summary>
     /// 获取当前UI视图

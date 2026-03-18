@@ -174,6 +174,29 @@ public static class SaveSystem
     }
 
     /// <summary>
+    /// 删除所有关卡存档（创建新玩家存档时调用，保持玩家存档与关卡存档一致）。
+    /// Test 模式下不执行。
+    /// </summary>
+    public static void DeleteAllLevelSaves()
+    {
+        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test) return;
+        string folder = Path.Combine(Application.persistentDataPath, SaveFolder);
+        if (!Directory.Exists(folder)) return;
+        try
+        {
+            foreach (string path in Directory.GetFiles(folder, "*" + SaveExtension))
+            {
+                File.Delete(path);
+                Debug.Log($"[SaveSystem] 已删除关卡存档: {path}");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"[SaveSystem] 删除关卡存档失败: {e.Message}");
+        }
+    }
+
+    /// <summary>
     /// 删除指定关卡的存档（如重新开始时可选）。Test 模式下不执行。
     /// </summary>
     public static void DeleteSave(LevelData levelData)

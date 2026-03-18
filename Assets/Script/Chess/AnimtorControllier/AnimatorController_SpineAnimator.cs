@@ -4,9 +4,8 @@ using UnityEngine;
 using Spine;
 using Spine.Unity;
 using System;
-using Sirenix.Utilities.Editor.Expressions;
-using System.Numerics;
-
+ 
+ 
 public class AnimatorController_SpineAnimator : AnimatorController
 {
     [Serializable]

@@ -99,8 +99,7 @@ public class Item_Coin : UIItem, IPointerEnterHandler
         var data = PlayerSaveContext.CurrentData;
         if (data == null && GameManage.instance != null && GameManage.instance.mode == GameMode.Test)
         {
-            PlayerSaveContext.CurrentUsername = "test";
-            PlayerSaveContext.CurrentData = PlayerSaveSystem.CreateNew("test");
+            PlayerSaveContext.CurrentData = PlayerSaveSystem.CreateNew();
             data = PlayerSaveContext.CurrentData;
         }
         if (data != null)

@@ -93,4 +93,5 @@ public enum GameMode
 {
     Test,
     Game,
+    Phone,
 }

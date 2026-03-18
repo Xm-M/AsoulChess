@@ -21,6 +21,8 @@ public class PlantsShop : View
     
     public int maxCount=10;
     public Animator anim;
+    /// <summary>Show 前设置则使用此列表作为仓库卡池，Show 后自动清空</summary>
+    public static List<PropertyCreator> OverrideCreators;
     public AudioPlayer shopAudio;
     [FoldoutGroup("初始位置")]
     public Vector2 startPos1,startPos2;
@@ -48,9 +50,12 @@ public class PlantsShop : View
         currentSelectIcons.Clear();
         currentShopIcons.Clear();
         allSelectIcons.Clear();
-        var creatorsToShow = GameManage.instance.playerOwnedCreators != null && GameManage.instance.playerOwnedCreators.Count > 0
-            ? GameManage.instance.playerOwnedCreators
-            : GameManage.instance.allChess;
+        var creatorsToShow = OverrideCreators != null && OverrideCreators.Count > 0
+            ? OverrideCreators
+            : (GameManage.instance.playerOwnedCreators != null && GameManage.instance.playerOwnedCreators.Count > 0
+                ? GameManage.instance.playerOwnedCreators
+                : GameManage.instance.allChess);
+        OverrideCreators = null;
         if (creatorsToShow == null) return;
         for (int i = 0; i < creatorsToShow.Count; i++)
         {

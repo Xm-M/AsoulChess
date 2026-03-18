@@ -25,6 +25,8 @@ public class UIManage
         if (PlayerSaveSystem.HasSave())
         {
             PlayerSaveContext.LoadCurrent();
+            PlayerSaveContext.ApplyPlayerChessToGame();
+            PlayerSaveContext.ApplyLevelClearStateToGame();
             PlayerSaveContext.ApplySettingsToGame();
         }
         else

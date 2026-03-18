@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 基于用户名的玩家存档数据结构
+/// 单一玩家存档数据结构
 /// </summary>
 [Serializable]
 public class PlayerSaveData

@@ -25,6 +25,9 @@ public class Item_CarKey : RewardItemBase
             data.shopUnlocked = true;
             PlayerSaveContext.SaveCurrent();
         }
+        var level = LevelManage.instance?.currentLevel;
+        if (level != null && !string.IsNullOrEmpty(level.levelName))
+            PlayerSaveSystem.MarkLevelCompleted(level.levelName);
         CoinShopContext.SetReturnToNextLevel(nextLevel);
         UIManage.Show<CoinShopPanel>();
         UIManage.Close<ItemPanel>();

@@ -202,50 +202,11 @@ public class LoadSaveDataPanel : View
 
     void ApplyLoadedSave(PlayerSaveData data)
     {
-        ApplyPlayerChess(data);
-        ApplyLevelClearState(data);
+        PlayerSaveContext.ApplyPlayerChessToGame();
+        PlayerSaveContext.ApplyLevelClearStateToGame();
         PlayerSaveContext.ApplySettingsToGame();
         UIManage.GetView<StartUI>()?.RefreshSaveButtonText();
         UIManage.GetView<StartUI>()?.RefreshShopButtonVisibility();
-    }
-
-    void ApplyPlayerChess(PlayerSaveData data)
-    {
-        if (GameManage.instance == null || data?.ownedCreatorIds == null) return;
-
-        GameManage.instance.PlayerChess.Clear();
-        GameManage.instance.playerOwnedCreators = new System.Collections.Generic.List<PropertyCreator>();
-        foreach (var creatorId in data.ownedCreatorIds)
-        {
-            var creator = GetCreatorByChessName(creatorId);
-            if (creator == null) continue;
-            GameManage.instance.playerOwnedCreators.Add(creator);
-            var prefab = creator.PlantEntrepotCardPre ?? creator.PlantCardPre;
-            if (prefab != null)
-                GameManage.instance.PlayerChess.Add(prefab);
-        }
-    }
-
-    void ApplyLevelClearState(PlayerSaveData data)
-    {
-        if (data?.completedLevelIds == null) return;
-
-        var allLevels = Resources.LoadAll<LevelData>("LevelData");
-        foreach (var level in allLevels)
-        {
-            if (level != null && data.completedLevelIds.Contains(level.levelName))
-                level.ifClearStadge = true;
-        }
-    }
-
-    static PropertyCreator GetCreatorByChessName(string chessName)
-    {
-        if (string.IsNullOrEmpty(chessName) || GameManage.instance?.allChess == null) return null;
-        foreach (var c in GameManage.instance.allChess)
-        {
-            if (c != null && c.chessName == chessName) return c;
-        }
-        return null;
     }
 
     static bool IsTestMode()

@@ -86,7 +86,7 @@ public static class PlayerSaveSystem
             saveVersion = CurrentSaveVersion,
             saveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             completedLevelIds = new List<string>(),
-            ownedCreatorIds = new List<string>(),
+            ownedCreatorIds = new List<string> { "广井菊里" },
             coins = 0,
             shopUnlocked = false,
             bgmVolume = 1f,
@@ -115,10 +115,12 @@ public static class PlayerSaveSystem
         if (SkipSaveLoad) return;
         if (string.IsNullOrEmpty(levelName)) return;
 
-        var data = Load() ?? CreateNew();
+        var data = PlayerSaveContext.CurrentData ?? Load() ?? CreateNew();
         if (!data.completedLevelIds.Contains(levelName))
         {
             data.completedLevelIds.Add(levelName);
+            Debug.Log("保存关卡通关" + levelName);
+            PlayerSaveContext.CurrentData = data;
             Save(data);
         }
     }
@@ -213,7 +215,6 @@ public static class PlayerSaveContext
         if (data == null) return;
         AudioManage.ChangeBGMValue(Mathf.Clamp01(data.bgmVolume));
         AudioManage.ChangeSoundEffect(Mathf.Clamp01(data.sfxVolume));
-        // 分辨率：screenWidth/screenHeight 非 0 时应用，后续实现
         if (data.screenWidth > 0 && data.screenHeight > 0)
         {
             Screen.SetResolution(data.screenWidth, data.screenHeight, data.fullscreen);
@@ -222,5 +223,43 @@ public static class PlayerSaveContext
         {
             Screen.fullScreen = data.fullscreen;
         }
+    }
+
+    /// <summary>将 ownedCreatorIds 应用到 GameManage.playerOwnedCreators，供 PlantsShop 选卡使用</summary>
+    public static void ApplyPlayerChessToGame()
+    {
+        var data = CurrentData;
+        if (GameManage.instance == null || data?.ownedCreatorIds == null) return;
+
+        GameManage.instance.playerOwnedCreators = new List<PropertyCreator>();
+        foreach (var creatorId in data.ownedCreatorIds)
+        {
+            var creator = GetCreatorByChessName(creatorId);
+            if (creator == null) continue;
+            GameManage.instance.playerOwnedCreators.Add(creator);
+        }
+    }
+
+    /// <summary>将 completedLevelIds 应用到 LevelData.ifClearStadge，读档后调用</summary>
+    public static void ApplyLevelClearStateToGame()
+    {
+        var data = CurrentData;
+        if (data?.completedLevelIds == null) return;
+        var allLevels = UnityEngine.Resources.LoadAll<LevelData>("LevelData");
+        foreach (var level in allLevels)
+        {
+            if (level != null && data.completedLevelIds.Contains(level.levelName))
+                level.ifClearStadge = true;
+        }
+    }
+
+    static PropertyCreator GetCreatorByChessName(string chessName)
+    {
+        if (string.IsNullOrEmpty(chessName) || GameManage.instance?.allChess == null) return null;
+        foreach (var c in GameManage.instance.allChess)
+        {
+            if (c != null && c.chessName == chessName) return c;
+        }
+        return null;
     }
 }

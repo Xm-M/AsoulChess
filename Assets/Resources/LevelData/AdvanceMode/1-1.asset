@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
   m_Name: 1-1
   m_EditorClassIdentifier: 
-  ifClearStadge: 0
+  ifClearStadge: 1
   sceneName: "\u524D\u9662"
   levelName: 1-1
   levelSprit: {fileID: 0}
@@ -28,7 +28,7 @@ MonoBehaviour:
   - id: 5
   - id: 6
   - id: 7
-  MaxWave: 10
+  MaxWave: 2
   n: 1
   t: 1
   zombieList:
@@ -55,7 +55,7 @@ MonoBehaviour:
     00000002:
       type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
       data:
-        baseSunLight: 50
+        baseSunLight: 100
     00000003:
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:

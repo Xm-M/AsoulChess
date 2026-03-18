@@ -10,6 +10,9 @@ public class Item_Reward : RewardItemBase
     /// </summary>
     public void Win()
     {
+        var level = LevelManage.instance?.currentLevel;
+        if (level != null && !string.IsNullOrEmpty(level.levelName))
+            PlayerSaveSystem.MarkLevelCompleted(level.levelName);
         LevelManage.instance.GameOver(true);
     }
 

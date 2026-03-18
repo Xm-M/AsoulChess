@@ -13,6 +13,8 @@ public class GameStartPlugin_QXHammer : ILevelPlugin
     {
         timer?.Stop();
         hammer?.CancleUse();
+        if (PrePlantImage.instance != null)
+            PrePlantImage.instance.ForceHide();
     }
 
     public void StadgeEffect(LevelController levelController)

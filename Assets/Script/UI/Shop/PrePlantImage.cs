@@ -23,6 +23,16 @@ public class PrePlantImage : MonoBehaviour
         handDIc.Add(HandItemType.Shovel,new ShovelPanel());
         handDIc.Add(HandItemType.Hammer, new HammerPanel());
         gameObject.SetActive(false);
+        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), OnLeaveLevel);
+    }
+    private void OnDestroy()
+    {
+        EventController.Instance?.RemoveListener(EventName.WhenLeaveLevel.ToString(), OnLeaveLevel);
+    }
+    void OnLeaveLevel()
+    {
+        if (currentHand != null)
+            ForceHide();
     }
     private void OnDisable()
     {
@@ -69,6 +79,15 @@ public class PrePlantImage : MonoBehaviour
     {
         image.color = new Color(1, 1, 1, 0.5f);
         child.gameObject.SetActive(false);
+    }
+
+    /// <summary>强制隐藏并清理（如离开锤僵尸关卡时），避免半透明方块残留</summary>
+    public void ForceHide()
+    {
+        StopAllCoroutines();
+        currentHand = null;
+        OverPlayAnim();
+        gameObject.SetActive(false);
     }
 
     private void Update()

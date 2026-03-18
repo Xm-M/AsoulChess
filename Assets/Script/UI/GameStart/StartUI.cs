@@ -17,6 +17,8 @@ public class StartUI : View
     public Button saveButton;
     [Header("设置按钮：打开设置面板")]
     public Button settingsButton;
+    [Header("退出按钮：退出游戏")]
+    public Button exitButton;
 
     /// <summary>
     /// Init的时候读取Resource里的所有关卡信息
@@ -28,6 +30,8 @@ public class StartUI : View
             saveButton.onClick.AddListener(OnSaveButtonClick);
         if (settingsButton != null)
             settingsButton.onClick.AddListener(OnSettingsButtonClick);
+        if (exitButton != null)
+            exitButton.onClick.AddListener(OnExitButtonClick);
         RefreshShopButtonVisibility();
         var miniGame = Resources.LoadAll<LevelData>("LevelData/MiniMode");
         foreach(var data in miniGame)
@@ -44,6 +48,15 @@ public class StartUI : View
         RefreshShopButtonVisibility();
         if (saveButton != null)
             saveButton.interactable = GameManage.instance == null || GameManage.instance.mode != GameMode.Test;
+        if (exitButton != null)
+            exitButton.interactable = GameManage.instance == null || GameManage.instance.mode != GameMode.Test;
+    }
+
+    void OnExitButtonClick()
+    {
+        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test)
+            return;
+        Quit();
     }
 
     void OnSaveButtonClick()

@@ -92,7 +92,7 @@ public static class PlayerSaveSystem
             bgmVolume = 1f,
             sfxVolume = 1f,
             fullscreen = true,
-            difficultyLevel = 0,
+            difficultyLevel = 1,
             extras = new List<PlayerSaveExtraEntry>()
         };
     }
@@ -177,6 +177,8 @@ public static class PlayerSaveSystem
             if (data.sfxVolume <= 0) data.sfxVolume = 1f;
             if (!data.fullscreen && data.screenWidth == 0) data.fullscreen = true;
         }
+        if (data.difficultyLevel < 0 || data.difficultyLevel > 3)
+            data.difficultyLevel = 1;
         data.saveVersion = CurrentSaveVersion;
     }
 }

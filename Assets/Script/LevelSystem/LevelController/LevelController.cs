@@ -461,6 +461,7 @@ public class WaveData
             
         }
         maxZombieValue *= 25;
+        maxZombieValue = Mathf.RoundToInt(maxZombieValue * DifficultyManager.GetZombieMultiplier());
         Debug.Log("本波僵尸价值为" + maxZombieValue);
         int num = 0;
         while (maxZombieValue > 0)

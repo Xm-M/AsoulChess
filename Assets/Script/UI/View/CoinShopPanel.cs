@@ -133,17 +133,19 @@ public class CoinShopPanel : View
             return;
         }
 
-        if (!IsTestMode())
+        if (!IsTestMode() && data != null)
         {
             data.coins -= item.price;
             string key = "shop_buy_" + item.GetItemId();
             int bought = PlayerSaveSystem.GetExtra(data, key, 0);
             PlayerSaveSystem.SetExtra(data, key, bought + 1);
+            item.purchaseEffect.OnPurchase(data);
             PlayerSaveContext.SaveCurrent();
         }
-
-        if (data != null)
+        else if (data != null)
+        {
             item.purchaseEffect.OnPurchase(data);
+        }
 
         UpdatePlayerOwnedCreators();
         RefreshCoinDisplay();

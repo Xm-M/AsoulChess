@@ -12,14 +12,17 @@ public class UI_LevelDataMesCard : MonoBehaviour
     public void InitCard(LevelData levelData)
     {
         this.LevelData = levelData;
-        if(levelData != null)
+        if (levelData != null)
         {
             if (levelData.levelSprit != null)
-            {
-                levelImage.sprite=levelData.levelSprit;
-            }
-            levelName.text=levelData.levelName;
-
+                levelImage.sprite = levelData.levelSprit;
+            levelName.text = levelData.levelName;
+        }
+        var btn = GetComponent<Button>();
+        if (btn != null)
+        {
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(LoadLevel);
         }
     }
     public void LoadLevel()

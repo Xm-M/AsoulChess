@@ -207,6 +207,7 @@ public class LoadSaveDataPanel : View
         PlayerSaveContext.ApplySettingsToGame();
         UIManage.GetView<StartUI>()?.RefreshSaveButtonText();
         UIManage.GetView<StartUI>()?.RefreshShopButtonVisibility();
+        UIManage.GetView<StartUI>()?.RefreshDifficultyDropdown();
     }
 
     static bool IsTestMode()

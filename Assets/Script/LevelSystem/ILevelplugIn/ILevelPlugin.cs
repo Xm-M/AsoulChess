@@ -80,12 +80,35 @@ public class EnterWarPlugin_CarCreate : ISaveableLevelPlugin
         }
 
         carses = new List<Chess>();
-        for (int i = 0; i < mapPvz.roomTile.Count; i++)
+        int carCount = DifficultyManager.GetCarCount();
+        if (carCount >= 0)
         {
-            Chess cars = ChessTeamManage.Instance.CreateChess(car, mapPvz.roomTile[i], "Player");
-            cars.gameObject.layer = 11;
-            ChessTeamManage.Instance.GetTeam("Player").Remove(cars);
-            carses.Add(cars);
+            var indices = new List<int>();
+            for (int i = 0; i < mapPvz.roomTile.Count; i++) indices.Add(i);
+            for (int k = indices.Count - 1; k > 0; k--)
+            {
+                int j = Random.Range(0, k + 1);
+                (indices[k], indices[j]) = (indices[j], indices[k]);
+            }
+            int take = Mathf.Min(carCount, indices.Count);
+            for (int i = 0; i < take; i++)
+            {
+                var tile = mapPvz.roomTile[indices[i]];
+                Chess cars = ChessTeamManage.Instance.CreateChess(car, tile, "Player");
+                cars.gameObject.layer = 11;
+                ChessTeamManage.Instance.GetTeam("Player").Remove(cars);
+                carses.Add(cars);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < mapPvz.roomTile.Count; i++)
+            {
+                Chess cars = ChessTeamManage.Instance.CreateChess(car, mapPvz.roomTile[i], "Player");
+                cars.gameObject.layer = 11;
+                ChessTeamManage.Instance.GetTeam("Player").Remove(cars);
+                carses.Add(cars);
+            }
         }
     }
 

@@ -88,6 +88,12 @@ public class GameManage : MonoBehaviour
     {
         Application.Quit();
     }
+
+    void OnApplicationQuit()
+    {
+        PlayerSaveContext.SaveCurrent();
+        SaveSystem.SaveCurrentLevel();
+    }
 }
 public enum GameMode
 {

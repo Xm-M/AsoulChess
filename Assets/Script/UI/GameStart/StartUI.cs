@@ -19,6 +19,9 @@ public class StartUI : View
     public Button settingsButton;
     [Header("退出按钮：退出游戏")]
     public Button exitButton;
+    [Header("难度选择（首页选择，进入关卡前生效）")]
+    public TMP_Dropdown difficultyDropdown;
+    static readonly string[] DifficultyLabels = { "简单", "普通", "困难", "噩梦" };
 
     /// <summary>
     /// Init的时候读取Resource里的所有关卡信息
@@ -32,6 +35,7 @@ public class StartUI : View
             settingsButton.onClick.AddListener(OnSettingsButtonClick);
         if (exitButton != null)
             exitButton.onClick.AddListener(OnExitButtonClick);
+        InitDifficultyDropdown();
         RefreshShopButtonVisibility();
         var miniGame = Resources.LoadAll<LevelData>("LevelData/MiniMode");
         foreach(var data in miniGame)
@@ -46,6 +50,7 @@ public class StartUI : View
         base.Show();
         RefreshSaveButtonText();
         RefreshShopButtonVisibility();
+        SyncDifficultyDropdownFromSave();
         if (saveButton != null)
             saveButton.interactable = GameManage.instance == null || GameManage.instance.mode != GameMode.Test;
         if (exitButton != null)
@@ -72,6 +77,38 @@ public class StartUI : View
         if (panel != null) panel.ShowAsMainMenuSettings();
     }
 
+    void InitDifficultyDropdown()
+    {
+        if (difficultyDropdown == null) return;
+        difficultyDropdown.ClearOptions();
+        difficultyDropdown.AddOptions(new List<string>(DifficultyLabels));
+        difficultyDropdown.onValueChanged.AddListener(OnDifficultyChanged);
+    }
+
+    void SyncDifficultyDropdownFromSave()
+    {
+        if (difficultyDropdown == null) return;
+        var data = PlayerSaveContext.CurrentData;
+        int lv = Mathf.Clamp(data?.difficultyLevel ?? 1, 0, 3);
+        difficultyDropdown.SetValueWithoutNotify(lv);
+        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test)
+            difficultyDropdown.interactable = false;
+        else
+            difficultyDropdown.interactable = data != null;
+    }
+
+    void OnDifficultyChanged(int index)
+    {
+        if (index < 0 || index > 3) return;
+        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test) return;
+        var data = PlayerSaveContext.CurrentData;
+        if (data != null)
+        {
+            data.difficultyLevel = index;
+            PlayerSaveContext.SaveCurrent();
+        }
+    }
+
     /// <summary>刷新存档按钮显示的用户名</summary>
     public void RefreshSaveButtonText()
     {
@@ -79,6 +116,12 @@ public class StartUI : View
         var text = saveButton.GetComponentInChildren<TMP_Text>();
         if (text != null)
             text.text = PlayerSaveContext.CurrentData?.username ?? "创建存档";
+    }
+
+    /// <summary>供 LoadSaveDataPanel 等读档后调用，刷新难度显示</summary>
+    public void RefreshDifficultyDropdown()
+    {
+        SyncDifficultyDropdownFromSave();
     }
 
     /// <summary>供 LoadSaveDataPanel 等读档后调用，刷新商店按钮显示状态</summary>

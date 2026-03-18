@@ -35,7 +35,7 @@ public class PlayerSaveData
     public int screenHeight;
     /// <summary>是否全屏</summary>
     public bool fullscreen = true;
-    /// <summary>难度 0=简单 1=普通 2=困难，后续可扩展</summary>
+    /// <summary>难度 0=简单 1=普通 2=困难 3=噩梦</summary>
     public int difficultyLevel;
 
     /// <summary>扩展数据，方便后续新增字段</summary>

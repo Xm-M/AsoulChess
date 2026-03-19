@@ -129,19 +129,20 @@ public class ShopIcon : MonoBehaviour
     /// 这个肯定是绑定在Button的OnClick函数上的啊 还要想吗
     /// </summary>
     public void BuyPlant(){
-        if (!LevelManage.instance.IfGameStart)
+        var shop = UIManage.GetView<PlantsShop>();
+        if (!LevelManage.instance.IfGameStart&&!shop.SelectOver)
         {
             selectIcon.UnselectCard();
-            UIManage.GetView<PlantsShop>().shopAudio.PlayAudio("tap");
-            UIManage.GetView<PlantsShop>().RemoveSelection(selectIcon);
-            UIManage.GetView<PlantsShop>().RemoveShopIcon(this);
+            shop.shopAudio.PlayAudio("tap");
+            shop.RemoveSelection(selectIcon);
+            shop.RemoveShopIcon(this);
             Destroy(gameObject);
         }
         else
         {
             if (ifCanbuy && UIManage.GetView<PlantsShop>().IfCanBuyCard(good))
             {
-                UIManage.GetView<PlantsShop>().SelectPlant(this);
+                shop.SelectPlant(this);
                 Audio?.PlayAudio("Plant");
             }
             else 

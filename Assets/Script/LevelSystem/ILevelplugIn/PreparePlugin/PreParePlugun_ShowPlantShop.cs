@@ -7,7 +7,6 @@ using UnityEngine;
 public class PreParePlugun_ShowPlantShop : ISaveableLevelPlugin
 {
     public int baseSunLight = 50;
-    /// <summary>???????????????????????????10??????????????????????10??????????????????????</summary>
     public List<PropertyCreator> cards;
 
     public void CaptureTo(GameSaveData saveData)
@@ -46,11 +45,13 @@ public class PreParePlugun_ShowPlantShop : ISaveableLevelPlugin
                     : GameManage.instance?.allChess);
             if (shop != null && creators != null && creators.Count > 0 && creators.Count < shop.maxCount)
             {
+                
                 foreach (var icon in shop.allSelectIcons)
                 {
                     if (icon != null) shop.AddSelection(icon);
                 }
                 shop.GameStart();
+                shop.GetComponent<Animator>().Play("end");
             }
         }
     }

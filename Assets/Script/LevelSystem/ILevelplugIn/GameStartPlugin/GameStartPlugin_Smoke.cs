@@ -13,6 +13,7 @@ public class GameStartPlugin_Smoke : ILevelPlugin
 
     public void StadgeEffect(LevelController levelController)
     {
+        if (smoke == null) return;
         sm = ObjectPool.instance.Create(smoke);
         sm.transform.position = Vector2.zero;
         var effect = sm.GetComponent<Effect_Smoke>();
@@ -21,7 +22,11 @@ public class GameStartPlugin_Smoke : ILevelPlugin
     }
     public void OnGameOver()
     {
-        ObjectPool.instance.Recycle(sm);
+        if (sm != null)
+        {
+            ObjectPool.instance.Recycle(sm);
+            sm = null;
+        }
         //EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), OnGameOver);
     }
     public void OverPlugin(LevelController levelController)

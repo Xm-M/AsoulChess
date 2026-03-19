@@ -17,6 +17,7 @@ public class MapManage : MonoBehaviour
     [SerializeReference]
     public IInitMapManage initMapManage;
     public AudioPlayer BGMPlayer;
+    public SpriteRenderer backGround;
     protected virtual void Awake()
     {
         if (instance == null||instance!=this)

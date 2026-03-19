@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ifClearStadge: 0
   sceneName: "\u524D\u9662"
-  levelName: 1-2
+  levelName: 1-3
   levelSprit: {fileID: 0}
   levelMode: 0
   EnterMapPlugin:
@@ -31,8 +31,9 @@ MonoBehaviour:
   t: 1
   zombieList:
   - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+  - {fileID: 11400000, guid: 895c68db05cf2d7489a61f83bd3b78ed, type: 2}
   createZombieType: 0
-  nextLevel: {fileID: 0}
+  nextLevel: {fileID: 11400000, guid: 652a2cbc491d7674fbfc30ab81c794f6, type: 2}
   outcome:
     id: 6
   loadSkipToTime: 10
@@ -51,6 +52,7 @@ MonoBehaviour:
       type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
       data:
         baseSunLight: 50
+        cards: []
     00000003:
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:

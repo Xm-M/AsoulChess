@@ -34,6 +34,11 @@ public class ObjectPool : MonoBehaviour
     }
     public GameObject Create(GameObject a)
     {
+        if (a == null)
+        {
+            Debug.LogWarning("[ObjectPool] Create called with null prefab");
+            return null;
+        }
         GameObject creat;
         if (objectPool.ContainsKey(a.name))
         {

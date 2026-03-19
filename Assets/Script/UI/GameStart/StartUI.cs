@@ -164,7 +164,29 @@ public class StartUI : View
     }
     public void GameStart()
     {
-        LoadScene(startLevelData);
+        var level = GetNextUncompletedLevel(startLevelData);
+        if (level != null) LoadScene(level);
+    }
+
+    /// <summary>从 start 沿 nextLevel 遍历，返回第一个未通关的关卡；全通关则返回最后一关</summary>
+    static LevelData GetNextUncompletedLevel(LevelData start)
+    {
+        if (start == null) return null;
+        var cur = start;
+        LevelData last = start;
+        while (cur != null)
+        {
+            if (!IsLevelCompleted(cur.levelName))
+                return cur;
+            last = cur;
+            cur = cur.nextLevel;
+        }
+        return last;
+    }
+
+    static bool IsLevelCompleted(string levelName)
+    {
+        return PlayerSaveContext.CurrentData?.completedLevelIds?.Contains(levelName) ?? false;
     }
     public void LoadScene(LevelData roomType)
     {

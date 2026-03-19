@@ -18,7 +18,7 @@ public class PlantsShop : View
     public List<ShopSelectIcon> currentSelectIcons;//
     public List<ShopIcon> currentShopIcons;//这个就是你进入游戏后有的牌了
     public List<ShopSelectIcon> allSelectIcons;//这个是你拥有的棋子 就是下面那个版的
-    
+    public GameObject Shovel;//铲子 
     public int maxCount=10;
     public Animator anim;
     /// <summary>Show 前设置则使用此列表作为仓库卡池，Show 后自动清空</summary>
@@ -28,6 +28,7 @@ public class PlantsShop : View
     public Vector2 startPos1,startPos2;
     [FoldoutGroup("初始位置")]
     public RectTransform p1,p2;
+    public bool SelectOver { get; private set; }
     ShopIcon currentPlant;
     string Planttag = "Player";
     public override void Init()
@@ -38,6 +39,7 @@ public class PlantsShop : View
         currentShopIcons=new List<ShopIcon>();
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(),
             Hide);
+        SelectOver = false;
     }
     public override void Show()
     {
@@ -68,6 +70,7 @@ public class PlantsShop : View
             selectIcon.InitSelectIcon(creator);
             allSelectIcons.Add(selectIcon);
         }
+        
     }
     public override void Hide()
     {
@@ -89,6 +92,7 @@ public class PlantsShop : View
         currentShopIcons.Clear();
         p1.anchoredPosition = startPos1;
         p2.anchoredPosition = startPos2;
+        SelectOver = false;
         base.Hide();
     }
     public void SelectPlant(ShopIcon icon)
@@ -186,6 +190,7 @@ public class PlantsShop : View
         for (int i = 0; i < shopIconParent.childCount; i++)
             shopIconParent.GetChild(i).GetComponent<ShopIcon>().SetClearColor();
         anim.Play("end");
+        SelectOver = true;
     }
 
     private PropertyCreator GetCreatorByChessName(string chessName)
@@ -209,7 +214,7 @@ public class PlantsShop : View
             shopIconParent.GetChild(i).GetComponent<ShopIcon>().SetClearColor();
         }
         anim.Play("gameStart");
-        
+        SelectOver = true;
     }
     public void Pause()
     {

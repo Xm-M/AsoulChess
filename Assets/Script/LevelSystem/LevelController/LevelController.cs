@@ -525,15 +525,15 @@ public class WaveData
             EventController.Instance.TriggerEvent(EventName.WaveZombieComming.ToString());
             UIManage.GetView<TextPanel>().ZombieWave();
             yield return new WaitForSeconds(6);
-            if (wave == LevelManage.instance.currentLevel.MaxWave)
-            {
-                EventController.Instance.TriggerEvent(EventName.LastWaveZombie.ToString());
-                UIManage.GetView<TextPanel>().LastWave();
-            }
         }
         else
         {
             yield return new WaitForSeconds(2);
+        }
+        if (wave == LevelManage.instance.currentLevel.MaxWave)
+        {
+            EventController.Instance.TriggerEvent(EventName.LastWaveZombie.ToString());
+            UIManage.GetView<TextPanel>().LastWave();
         }
         for(int i = 0; i < zombieList.Count; i++)
         {

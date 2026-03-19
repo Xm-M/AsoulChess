@@ -13,56 +13,60 @@ MonoBehaviour:
   m_Name: 1-2
   m_EditorClassIdentifier: 
   ifClearStadge: 0
-  sceneName: Ring
+  sceneName: "\u524D\u9662"
   levelName: 1-2
   levelSprit: {fileID: 0}
   levelMode: 0
   EnterMapPlugin:
   - id: 0
   - id: 1
-  PreParePlugin:
   - id: 2
-  GameStartPlugin:
+  PreParePlugin:
   - id: 3
+  GameStartPlugin:
   - id: 4
   - id: 5
+  - id: 6
   MaxWave: 10
   n: 1
   t: 1
   zombieList:
   - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
   createZombieType: 0
-  nextLevel: {fileID: 0}
+  nextLevel: {fileID: 11400000, guid: a8054cbeaca9ba245b4f85395dd669bc, type: 2}
   outcome:
-    id: 6
+    id: 7
   loadSkipToTime: 10
   references:
     version: 1
     00000000:
+      type: {class: EnterMapPlugin_HideShovel, ns: , asm: Assembly-CSharp}
+    00000001:
       type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
       data:
         car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
-    00000001:
+    00000002:
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:
         audioName: "\u9009\u724C"
         deleyPlayTime: 0
-    00000002:
+    00000003:
       type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
       data:
         baseSunLight: 50
-    00000003:
+        cards: []
+    00000004:
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:
         audioName: "\u767D\u5929"
         deleyPlayTime: 3
-    00000004:
+    00000005:
       type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
       data:
         sunlight: 25
-    00000005:
-      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
     00000006:
+      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
+    00000007:
       type: {class: LevelOutCome_PlantReward, ns: , asm: Assembly-CSharp}
       data:
         rewardPlant: {fileID: 11400000, guid: 35ba3114aaca8f14d9818640ae354065, type: 2}

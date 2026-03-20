@@ -25,7 +25,7 @@ public class DamagePanel : View
     public void ShowDamageMes(DamageMessege dm)
     {
         //Debug.Log("damhe"); 
-        if (!showDamage||dm.damage<1) return;
+        if (!showDamage||dm.damage<1.5f) return;
         //Debug.Log("չʾ");
         GameObject text= ObjectPool.instance.Create(damageText);
         text.transform.SetParent(transform);

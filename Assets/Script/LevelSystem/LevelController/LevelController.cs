@@ -296,6 +296,15 @@ public class LevelController : MonoBehaviour
         }
     }
 
+    /// <summary>大波前的波（9、19、29...）必须全灭才能进下一波，不能靠 maxtime 强制进入</summary>
+    bool WaveCanAdvance()
+    {
+        var wd = waveDatas[currentWave];
+        bool hpOk = wd.CheckZombieHp();
+        if (wd.Wave % 10 == 9) return hpOk && t > mintime; // 大波前：必须全灭且时间到
+        return (hpOk && t > mintime) || (t > maxtime);
+    }
+
     /// <summary>
     /// 接下来的生成僵尸才是最tm难的地方;
     /// 首先就是波次与生成僵尸的问题
@@ -318,7 +327,7 @@ public class LevelController : MonoBehaviour
                 UIManage.Show<ProgressBar>();//进度条(其实也可以在第一只僵尸出来的时候刷)
                 UIManage.GetView<ProgressBar>().SetFlag(levelData.MaxWave / 10);
             }
-            else if (currentWave!=-1&&((waveDatas[currentWave].CheckZombieHp() && t > mintime) || (t > maxtime)))
+            else if (currentWave!=-1&& WaveCanAdvance())
             {
                 // 仅在过渡到下一波时保存，最后一波通关时 SpawnVictoryReward 已删档，不再保存
                 if (waveDatas[currentWave].GetCurrentZombieHpSum() <= 0 && currentWave < levelData.MaxWave - 1)
@@ -385,9 +394,14 @@ public class WaveData
      public List<ZombieInWaveData> zombieList;
     [ShowInInspector]
     protected List<Chess> liveZombie;
+    /// <summary>本波生成的僵尸，用于检测本波剩余血量，不随死亡移除</summary>
+    
+    protected List<Chess> waveZombies;
+    [ShowInInspector]
     protected float enterPecent;
     protected float hpmax;
     protected int wave;
+    public int Wave => wave;
     protected bool createOver;
     [FoldoutGroup("zombieData"),ShowInInspector]
     protected int maxZombieValue = 0;
@@ -457,8 +471,8 @@ public class WaveData
         }   
         else
         {
-            maxZombieValue = (data.t + 1) * 5;
-            
+            int flagWaveIndex = wave / 10; // 第1个大波*1，第2个*2，第3个*3
+            maxZombieValue = (data.t + 1) * 5 * Mathf.Max(1, flagWaveIndex);
         }
         maxZombieValue *= 25;
         maxZombieValue = Mathf.RoundToInt(maxZombieValue * DifficultyManager.GetZombieMultiplier());
@@ -467,19 +481,37 @@ public class WaveData
         while (maxZombieValue > 0)
         {
             float fate = UnityEngine.Random.Range(0, 1f);
-            //Debug.Log(fateList.Count);
-            //Debug.Log(fate);
+            int pickedIndex = -1;
             for (int i = 0; i < fateList.Count; i++)
             {
                 if (fate < fateList[i])
                 {
-                    zombieList[i].zombieNum += 1;
-                    maxZombieValue -= zombieList[i].zombieCreate.baseProperty.price;
-                    //Debug.Log(maxZombieValue);
-                    hpmax += zombieList[i].zombieCreate.baseProperty.HpMax;
+                    pickedIndex = i;
                     break;
                 }
             }
+            if (pickedIndex < 0) break;
+            int price = zombieList[pickedIndex].zombieCreate.baseProperty.price;
+            if (price > maxZombieValue)
+            {
+                // 随机到的僵尸超价，选最便宜且能买得起的（普通僵尸存在时总能刚好用完）
+                int cheapestPrice = int.MaxValue;
+                pickedIndex = -1;
+                for (int i = 0; i < zombieList.Count; i++)
+                {
+                    int p = zombieList[i].zombieCreate.baseProperty.price;
+                    if (p <= maxZombieValue && p < cheapestPrice)
+                    {
+                        cheapestPrice = p;
+                        pickedIndex = i;
+                    }
+                }
+            }
+            if (pickedIndex < 0 || zombieList[pickedIndex].zombieCreate.baseProperty.price > maxZombieValue)
+                break;
+            zombieList[pickedIndex].zombieNum += 1;
+            maxZombieValue -= zombieList[pickedIndex].zombieCreate.baseProperty.price;
+            hpmax += zombieList[pickedIndex].zombieCreate.baseProperty.HpMax;
             num++;
             if (num > 500) break;
         }
@@ -519,6 +551,7 @@ public class WaveData
     IEnumerator Create()
     {
         liveZombie = new List<Chess>();
+        waveZombies = new List<Chess>();
         //激活状态 2s后生成僵尸
         if (wave % 10 == 0)
         {
@@ -540,7 +573,9 @@ public class WaveData
             for(int j = 0; j < zombieList[i].zombieNum; j++)
             {
                 //Debug.Log(zombieList[i].zombieCreate.chessName);
-                liveZombie.Add(CreateChess(zombieList[i].zombieCreate));
+                var chess = CreateChess(zombieList[i].zombieCreate);
+                liveZombie.Add(chess);
+                waveZombies.Add(chess);
             }
             yield return null;
         }
@@ -578,46 +613,45 @@ public class WaveData
 
     public virtual bool CheckZombieHp()
     {
-        if(!createOver)return false;
-        if(liveZombie.Count==0)return true;
+        if (!createOver || waveZombies == null) return false;
         float hpcurrent = 0;
         Vector3 lastZombiePos = Vector3.zero;
-        for(int i = liveZombie.Count-1; i >= 0; i--)
+        int aliveCount = 0;
+        foreach (var z in waveZombies)
         {
-            if (!liveZombie[i].IfDeath)
-                hpcurrent += liveZombie[i].propertyController.GetHp();
-            else
+            if (!z.IfDeath)
             {
-                if (liveZombie.Count == 1)
-                    lastZombiePos = liveZombie[i].transform.position;
-                liveZombie.RemoveAt(i);
+                hpcurrent += z.propertyController.GetHp();
+                aliveCount++;
             }
+            else
+                lastZombiePos = z.transform.position;
         }
-        if (liveZombie.Count == 0 && wave == LevelManage.instance.currentLevel.MaxWave)
+        if (aliveCount == 0)
         {
-            SpawnVictoryReward(lastZombiePos);
-            return true;
+            if (wave == LevelManage.instance.currentLevel.MaxWave)
+            {
+                SpawnVictoryReward(lastZombiePos);
+                return true;
+            }
+            return true; // 本波全灭
         }
-
         // 最后一波不通过血量百分比提前进入下一波，必须等所有僵尸死亡(IfDeath)后才生成奖励
         if (wave == LevelManage.instance.currentLevel.MaxWave)
             return false;
-
         if (hpcurrent / hpmax < enterPecent)
-        {
             return true;
-        }
         return false;
     }
-    /// <summary>当前波僵尸生命值总和，用于判断是否全场已死（hp<=0 时虽未触发 Death 但僵尸已全死）</summary>
+    /// <summary>本波僵尸生命值总和，用于判断是否全场已死（hp<=0 时虽未触发 Death 但僵尸已全死）</summary>
     public virtual float GetCurrentZombieHpSum()
     {
-        if (!createOver || liveZombie == null) return float.MaxValue;
+        if (!createOver || waveZombies == null) return float.MaxValue;
         float sum = 0;
-        for (int i = 0; i < liveZombie.Count; i++)
+        foreach (var z in waveZombies)
         {
-            if (!liveZombie[i].IfDeath)
-                sum += liveZombie[i].propertyController.GetHp();
+            if (!z.IfDeath)
+                sum += z.propertyController.GetHp();
         }
         return sum;
     }

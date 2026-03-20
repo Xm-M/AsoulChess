@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
 /// 对话面板：显示头像、名字、文本，点击推进，支持 eventOnEnter/Exit 和 waitForEvent。
+/// 文本逐字显示，点击可立即显示完整文本，再次点击进入下一条。
 /// </summary>
 public class DialoguePanel : View
 {
@@ -13,6 +15,9 @@ public class DialoguePanel : View
     public TMP_Text speakerNameText;
     public TMP_Text dialogueText;
     public Button clickArea;
+    [Header("逐字显示")]
+    [Tooltip("每秒显示字符数，0 则一次性显示")]
+    public float charsPerSecond = 40f;
 
     DialogueData currentData;
     int index;
@@ -22,6 +27,9 @@ public class DialoguePanel : View
     Action onComplete;
     UnityEngine.Events.UnityAction onWaitEvent;
     UnityEngine.Events.UnityAction onResumeEvent;
+    Coroutine typewriterCoroutine;
+    bool isTypewriterComplete;
+    string currentFullText;
 
     public override void Init()
     {
@@ -73,8 +81,26 @@ public class DialoguePanel : View
             if (avatarImage != null) avatarImage.gameObject.SetActive(false);
             if (speakerNameText != null) speakerNameText.text = "";
         }
+        currentFullText = entry.text ?? "";
         if (dialogueText != null)
-            dialogueText.text = entry.text ?? "";
+        {
+            if (charsPerSecond <= 0 || string.IsNullOrEmpty(currentFullText))
+            {
+                dialogueText.text = currentFullText;
+                isTypewriterComplete = true;
+            }
+            else
+            {
+                dialogueText.text = "";
+                isTypewriterComplete = false;
+                if (typewriterCoroutine != null) StopCoroutine(typewriterCoroutine);
+                typewriterCoroutine = StartCoroutine(TypewriterEffect());
+            }
+        }
+        else
+        {
+            isTypewriterComplete = true;
+        }
 
         if (!string.IsNullOrEmpty(entry.eventOnEnter))
             EventController.Instance.TriggerEvent(entry.eventOnEnter);
@@ -86,6 +112,31 @@ public class DialoguePanel : View
             onWaitEvent = OnWaitEventReceived;
             EventController.Instance.AddListener(waitingEvent, onWaitEvent);
         }
+    }
+
+    IEnumerator TypewriterEffect()
+    {
+        float delay = 1f / charsPerSecond;
+        for (int i = 0; i < currentFullText.Length; i++)
+        {
+            dialogueText.text = currentFullText.Substring(0, i + 1);
+            yield return new WaitForSecondsRealtime(delay);
+        }
+        dialogueText.text = currentFullText;
+        isTypewriterComplete = true;
+        typewriterCoroutine = null;
+    }
+
+    void SkipTypewriter()
+    {
+        if (typewriterCoroutine != null)
+        {
+            StopCoroutine(typewriterCoroutine);
+            typewriterCoroutine = null;
+        }
+        if (dialogueText != null && !string.IsNullOrEmpty(currentFullText))
+            dialogueText.text = currentFullText;
+        isTypewriterComplete = true;
     }
 
     void OnWaitEventReceived()
@@ -136,7 +187,14 @@ public class DialoguePanel : View
     void OnClick()
     {
         if (currentData == null) return;
-        if (waiting) return;
+
+        // 若正在逐字显示，点击则立即显示完整文本（含 waiting 时也可跳过）
+        if (!isTypewriterComplete)
+        {
+            SkipTypewriter();
+            return;
+        }
+        if (waiting) return; // waiting 时不能进入下一条
 
         var entry = currentData.entries[index];
         if (!string.IsNullOrEmpty(entry.eventOnExit))
@@ -167,6 +225,11 @@ public class DialoguePanel : View
 
     void Cleanup()
     {
+        if (typewriterCoroutine != null)
+        {
+            StopCoroutine(typewriterCoroutine);
+            typewriterCoroutine = null;
+        }
         UnlistenWaitEvent();
         UnlistenResumeEvent();
         currentData = null;

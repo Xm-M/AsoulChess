@@ -21,12 +21,14 @@ MonoBehaviour:
   - id: 0
   - id: 1
   - id: 2
-  PreParePlugin:
   - id: 3
-  GameStartPlugin:
+  PreParePlugin:
   - id: 4
+  GameStartPlugin:
   - id: 5
   - id: 6
+  - id: 7
+  - id: 8
   MaxWave: 10
   n: 1
   t: 1
@@ -35,38 +37,55 @@ MonoBehaviour:
   createZombieType: 0
   nextLevel: {fileID: 11400000, guid: a8054cbeaca9ba245b4f85395dd669bc, type: 2}
   outcome:
-    id: 7
+    id: 9
   loadSkipToTime: 10
   references:
     version: 1
     00000000:
-      type: {class: EnterMapPlugin_HideShovel, ns: , asm: Assembly-CSharp}
+      type: {class: EnterWarPlugin_TutorialRows, ns: , asm: Assembly-CSharp}
+      data:
+        maxRowCount: 3
+        sprite: {fileID: 21300000, guid: c0648742848ccc548addbd8605a3e22c, type: 3}
     00000001:
+      type: {class: EnterMapPlugin_HideShovel, ns: , asm: Assembly-CSharp}
+    00000002:
       type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
       data:
         car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
-    00000002:
+    00000003:
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:
         audioName: "\u9009\u724C"
         deleyPlayTime: 0
-    00000003:
+    00000004:
       type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
       data:
         baseSunLight: 50
         cards: []
-    00000004:
+    00000005:
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:
         audioName: "\u767D\u5929"
         deleyPlayTime: 3
-    00000005:
+    00000006:
       type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
       data:
         sunlight: 25
-    00000006:
-      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
     00000007:
+      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
+    00000008:
+      type: {class: EnterMapPlugin_Dialogue, ns: , asm: Assembly-CSharp}
+      data:
+        dialogue: {fileID: 11400000, guid: ffedfff3fe010a14d99b4dff916c7744, type: 2}
+        resumeTimelineOnComplete: 0
+        dialogueEvents:
+        - id: 10
+        - id: 11
+    00000009:
       type: {class: LevelOutCome_PlantReward, ns: , asm: Assembly-CSharp}
       data:
         rewardPlant: {fileID: 11400000, guid: 35ba3114aaca8f14d9818640ae354065, type: 2}
+    0000000A:
+      type: {class: DialogueEvent_PauseGame, ns: , asm: Assembly-CSharp}
+    0000000B:
+      type: {class: DialogueEvent_ContinueGame, ns: , asm: Assembly-CSharp}

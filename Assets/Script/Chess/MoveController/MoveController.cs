@@ -184,6 +184,7 @@ public class MoveController:Controller
 
     public IEnumerator Jump(Chess chess, Transform transform, Vector2 startPos, Vector2 endPos, float maxHeight, float moveSpeed)
     {
+        chess.UnSelectable();
         ifMove = true;
         // 初始化位置
         transform.position = startPos;
@@ -222,8 +223,11 @@ public class MoveController:Controller
         }
         // 结束时强制落到终点，避免浮点误差
         transform.position = endPos;
-        chess.animatorController.animator.Play("land");
+        if(!chess.IfDeath)
+            chess.animatorController.animator.Play("land");
+        else chess.animatorController.animator.Play("death");
         ifMove = false;
+        chess.ResumeSelectable();
     }
 
 }

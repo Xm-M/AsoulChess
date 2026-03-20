@@ -16,7 +16,7 @@ public class Passive_GitaHero : ISkillEffect
         if (c == null) return;
         PropertyCreator creator = c.propertyController.creator;
         if (creator.chessName.Contains("虹夏")|| creator.chessName.Contains("凉")
-            || creator.chessName.Contains("喜多")|| creator.chessName.Contains("波奇"))
+            || creator.chessName.Contains("喜多")|| creator.chessName.Contains("后藤一里"))
         {
             user.skillController.context.Set<Chess>("成员",c);
         }

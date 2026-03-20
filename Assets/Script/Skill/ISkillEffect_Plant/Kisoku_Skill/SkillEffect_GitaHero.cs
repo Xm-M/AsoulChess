@@ -47,7 +47,8 @@ public class SkillEffect_GitaHero : ISkillEffect
                 dm.damageType = DamageType.Real;
                 effect = effects[2];
             }
-            else if (creator.chessName.Contains("波奇"))
+            else
+            //if (creator.chessName.Contains("后藤一里"))
             {
                 damage = config.baseDamage[3] * user.propertyController.GetAttack();
                 dm.damageElementType = ElementType.AOE | ElementType.CloseAttack;

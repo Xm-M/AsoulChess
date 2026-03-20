@@ -12,6 +12,8 @@ public class ParsePanel : View
 {
     public GameObject menuPanel;
     public GameObject pauseButton;
+    [Header("加速开关（可选，Toggle 勾选=2x，未勾选=1x）")]
+    public Toggle speedToggle;
     public GameObject continuLevelPanel;
     public GameObject confirmPanel;
     [Header("主菜单模式需隐藏：重新开始、主菜单按钮的父物体（或分别指定）")]
@@ -58,6 +60,8 @@ public class ParsePanel : View
         InitResolutionDropdown();
         if (fullscreenToggle != null)
             fullscreenToggle.onValueChanged.AddListener(OnFullscreenChanged);
+        if (speedToggle != null)
+            speedToggle.onValueChanged.AddListener(OnSpeedToggleChanged);
     }
 
     void InitResolutionDropdown()
@@ -78,6 +82,8 @@ public class ParsePanel : View
         if (restartButton != null) restartButton.SetActive(true);
         if (returnMenuButton != null) returnMenuButton.SetActive(true);
         if (pauseButton != null) pauseButton.SetActive(true);
+        if (speedToggle != null) speedToggle.gameObject.SetActive(true);
+        RefreshSpeedToggleState();
         RefreshPcOnlySettingsVisibility();
         SyncResolutionDropdownFromSave();
         SyncFullscreenToggleFromSave();
@@ -96,6 +102,7 @@ public class ParsePanel : View
         if (restartButton != null) restartButton.SetActive(false);
         if (returnMenuButton != null) returnMenuButton.SetActive(false);
         if (pauseButton != null) pauseButton.SetActive(false);
+        if (speedToggle != null) speedToggle.gameObject.SetActive(false);
         RefreshPcOnlySettingsVisibility();
         SyncResolutionDropdownFromSave();
         SyncFullscreenToggleFromSave();
@@ -167,6 +174,7 @@ public class ParsePanel : View
                 EventController.Instance.TriggerEvent(EventName.PauseGame.ToString());
             }
             if (pauseButton != null) pauseButton.gameObject.SetActive(false);
+            if (speedToggle != null) speedToggle.gameObject.SetActive(false);
         }
     }
     public void ShowContinuePanel()
@@ -176,7 +184,7 @@ public class ParsePanel : View
         GameManage.instance.timerManage.ChangeTimeSpeed(0);
         EventController.Instance.TriggerEvent(EventName.PauseGame.ToString());
         pauseButton.gameObject.SetActive(false);
-
+        if (speedToggle != null) speedToggle.gameObject.SetActive(false);
     }
     public void LoadGameContinue()
     {
@@ -184,10 +192,13 @@ public class ParsePanel : View
         if (continuLevelPanel != null) continuLevelPanel.SetActive(false);
         if (!isFromMainMenu && GameManage.instance != null && GameManage.instance.timerManage != null)
         {
-            GameManage.instance.timerManage.ChangeTimeSpeed(1);
+            float resumeSpeed = GameManage.instance.timerManage.GetResumeSpeed();
+            GameManage.instance.timerManage.ChangeTimeSpeed(resumeSpeed);
             EventController.Instance.TriggerEvent(EventName.ResumeGame.ToString());
         }
         if (pauseButton != null) pauseButton.gameObject.SetActive(true);
+        if (speedToggle != null) speedToggle.gameObject.SetActive(true);
+        RefreshSpeedToggleState();
     }
     /// <summary>
     /// 可能有按钮控制
@@ -200,15 +211,38 @@ public class ParsePanel : View
             menuPanel.SetActive(false);
             if (!isFromMainMenu && GameManage.instance != null && GameManage.instance.timerManage != null)
             {
-                GameManage.instance.timerManage.ChangeTimeSpeed(1);
+                float resumeSpeed = GameManage.instance.timerManage.GetResumeSpeed();
+                GameManage.instance.timerManage.ChangeTimeSpeed(resumeSpeed);
                 EventController.Instance.TriggerEvent(EventName.ResumeGame.ToString());
             }
             if (pauseButton != null) pauseButton.gameObject.SetActive(true);
+            if (speedToggle != null) speedToggle.gameObject.SetActive(true);
+            RefreshSpeedToggleState();
             if (confirmPanel != null) confirmPanel.SetActive(false);
             if (isFromMainMenu)
                 Hide();
         }
     }
+    /// <summary>加速 Toggle 变化：勾选=2x，未勾选=1x。仅在游戏运行且未暂停时生效。</summary>
+    void OnSpeedToggleChanged(bool isOn)
+    {
+        if (GameManage.instance?.timerManage == null) return;
+        if (LevelManage.instance == null || !LevelManage.instance.IfGameStart  )
+        {
+            RefreshSpeedToggleState(); // 选卡/暂停时点击无效，还原 Toggle 状态
+            return;
+        }
+        GameManage.instance.timerManage.ChangeTimeSpeed(isOn ? 2f : 1f);
+    }
+
+    /// <summary>根据当前倍速同步 Toggle 状态（恢复时调用，避免触发 onValueChanged）</summary>
+    void RefreshSpeedToggleState()
+    {
+        if (speedToggle == null || GameManage.instance?.timerManage == null) return;
+        float s = GameManage.instance.timerManage.GetResumeSpeed();
+        speedToggle.SetIsOnWithoutNotify(s > 1f);
+    }
+
     /// <summary>
     /// 重新开始本关卡
     /// </summary>

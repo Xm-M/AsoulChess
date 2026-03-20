@@ -5,7 +5,7 @@ public class Effect_Smoke : MonoBehaviour
 {
     public static Effect_Smoke Instance;
     public GameObject smokeTile;
-    //public List<Sprite> randomSmoke;
+    public List<Sprite> randomSmoke;
     //public Animator  animator;
     public int n;
     List<LittleSmoke> smokes;
@@ -28,7 +28,9 @@ public class Effect_Smoke : MonoBehaviour
         foreach (var tile in MapManage.instance.tiles)
         {
             GameObject smoke = ObjectPool.instance.Create(smokeTile);
-            smoke.GetComponent<Animator>().SetInteger("n", Random.Range(0, n));
+            int r = Random.Range(0, n);
+            smoke.GetComponent<SpriteRenderer>().sprite = randomSmoke[r];
+            smoke.GetComponent<Animator>().SetInteger("n",r );
             LittleSmoke LS = new LittleSmoke();
             LS.smoke = smoke;
             LS.mapPos = tile.mapPos;
@@ -111,7 +113,8 @@ public class Effect_Smoke : MonoBehaviour
             if (!hide)
             {
                 hide = true;
-                smoke.SetActive(false);
+                //smoke.SetActive(false);
+                smoke.GetComponent<Animator>().Play("hide");
                 hideTimer = GameManage.instance.timerManage.AddTimer(Show, hideTime, false);
             }
             else

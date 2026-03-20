@@ -16,6 +16,11 @@ public class TimerManage:IManager
     }
     [Range(0f, 2f)]
     public float timeSpeed;
+    /// <summary>加速档位：1x → 2x → 3x → 1x 循环</summary>
+    static readonly float[] SpeedPresets = { 1f, 2f, 3f };
+    int currentSpeedIndex;
+    /// <summary>暂停前使用的倍速，恢复时还原</summary>
+    float lastNonZeroSpeed = 1f;
     List<Timer> timerList ;
     Queue<Timer> availableQueue ;
     public Timer AddTimer(Action onFinished,float delayTime,bool isLoop = false)
@@ -75,14 +80,35 @@ public class TimerManage:IManager
     }
     public void ChangeTimeSpeed(float scale)
     {
-        timeSpeed = scale;   
+        timeSpeed = scale;
         Time.timeScale = scale;
+        if (scale > 0) lastNonZeroSpeed = scale;
     }
+
+    /// <summary>循环切换加速档位（1x→2x→3x→1x），仅在游戏运行且未暂停时生效。供加速按钮调用。</summary>
+    public void CycleSpeed()
+    {
+        if (LevelManage.instance == null || !LevelManage.instance.IfGameStart )
+            return;
+        currentSpeedIndex = (currentSpeedIndex + 1) % SpeedPresets.Length;
+        float s = SpeedPresets[currentSpeedIndex];
+        lastNonZeroSpeed = s;
+        ChangeTimeSpeed(s);
+    }
+
+    /// <summary>恢复时使用的倍速（暂停前选择的档位）</summary>
+    public float GetResumeSpeed() => lastNonZeroSpeed;
+
+    /// <summary>当前档位索引，供 UI 显示 1x/2x/3x</summary>
+    public int GetCurrentSpeedIndex() => currentSpeedIndex;
     public void ClearTime()
     {
         Debug.Log("清理计时器");
         timerList.Clear();
         availableQueue.Clear();
+        currentSpeedIndex = 0;
+        lastNonZeroSpeed = 1f;
+        ChangeTimeSpeed(1f);
     }
 }
 public class Timer

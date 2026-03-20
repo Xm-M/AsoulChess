@@ -1039,7 +1039,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb789ecc5a94cc4478daa4aa011e99b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 1
+  mode: 0
   sceneManage: {fileID: 745931670}
   fetterManage:
     id: 0
@@ -1079,7 +1079,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cfac8ba4c0629a44da5aaf72c9d4d903, type: 2}
   - {fileID: 11400000, guid: a794883d9c1e93748a927ea5971bc477, type: 2}
   - {fileID: 11400000, guid: 7ca129a1c2891ba42b9d2464d33100bf, type: 2}
-  PlayerChess: []
   playerOwnedCreators:
   - {fileID: 11400000, guid: 0b45a281d6f9c4e4bac6cf69f1cc233e, type: 2}
   WhenGameOver:
@@ -1088,6 +1087,7 @@ MonoBehaviour:
   WhenGameStart:
     m_PersistentCalls:
       m_Calls: []
+  TestLevel: {fileID: 11400000, guid: bada65c530c60b743b1fb62814c1aff4, type: 2}
   references:
     version: 1
     00000000:

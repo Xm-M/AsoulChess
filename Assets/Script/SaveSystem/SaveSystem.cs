@@ -9,6 +9,9 @@ using UnityEngine;
 /// </summary>
 public static class SaveSystem
 {
+    /// <summary>关卡存档加载开关，默认关闭。修好存档逻辑后设为 true 启用。</summary>
+    public static bool EnableLevelSaveLoad { get; set; } = false;
+
     private const string SaveFolder = "LevelSaves";
     private const string SaveExtension = ".json";
     /// <summary>当前存档格式版本，结构变更时递增</summary>
@@ -44,6 +47,7 @@ public static class SaveSystem
     /// </summary>
     public static bool HasSaveForLevel(LevelData levelData)
     {
+        if (!EnableLevelSaveLoad) return false;
         if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test) return false;
         if (levelData == null) return false;
         string id = GetLevelSaveId(levelData);
@@ -57,6 +61,7 @@ public static class SaveSystem
     /// </summary>
     public static void SaveCurrentLevel()
     {
+        if (!EnableLevelSaveLoad) return;
         if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test)
         {
             Debug.Log("[SaveSystem] Test 模式，跳过存档");

@@ -29,7 +29,6 @@ MonoBehaviour:
   - id: 6
   - id: 7
   - id: 8
-  - id: 9
   MaxWave: 3
   n: 1
   t: 1
@@ -38,7 +37,7 @@ MonoBehaviour:
   createZombieType: 0
   nextLevel: {fileID: 11400000, guid: c225673d9c4fa4a4cb6e17749e241d03, type: 2}
   outcome:
-    id: 10
+    id: 9
   loadSkipToTime: 30
   references:
     version: 1
@@ -64,13 +63,13 @@ MonoBehaviour:
         dialogue: {fileID: 11400000, guid: 9b05a0fda6d579d46af48ebf0f64b2fc, type: 2}
         resumeTimelineOnComplete: 0
         dialogueEvents:
+        - id: 10
         - id: 11
         - id: 12
         - id: 13
         - id: 14
         - id: 15
         - id: 16
-        - id: 17
     00000005:
       type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
       data:
@@ -88,34 +87,28 @@ MonoBehaviour:
     00000008:
       type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
     00000009:
-      type: {class: GameStartPlugin_Smoke, ns: , asm: Assembly-CSharp}
-      data:
-        smoke: {fileID: 2249338947425205373, guid: 98971166b4b9fab41a1025fb5a557318, type: 3}
-        hideColumns: 4
-        hideTime: 99999
-    0000000A:
       type: {class: LevelOutCome_PlantReward, ns: , asm: Assembly-CSharp}
       data:
         rewardPlant: {fileID: 11400000, guid: 93e4d5ea07618ee42babdd49a4e6ebc5, type: 2}
-    0000000B:
+    0000000A:
       type: {class: DialogueEvent_GameEventTrigger, ns: , asm: Assembly-CSharp}
       data:
         EventName: 9
         triggerName: "\u7EE7\u7EED\u5BF9\u8BDD"
-    0000000C:
+    0000000B:
       type: {class: DialogueEvent_PauseDir, ns: , asm: Assembly-CSharp}
-    0000000D:
+    0000000C:
       type: {class: DialogueEvent_ContinueDir, ns: , asm: Assembly-CSharp}
-    0000000E:
+    0000000D:
       type: {class: DialogueEvent_PauseGame, ns: , asm: Assembly-CSharp}
-    0000000F:
+    0000000E:
       type: {class: DialogueEvent_ContinueGame, ns: , asm: Assembly-CSharp}
-    00000010:
+    0000000F:
       type: {class: DialogueEvent_GameEventTrigger, ns: , asm: Assembly-CSharp}
       data:
         EventName: 7
         triggerName: "\u6E38\u620F\u5F00\u59CB"
-    00000011:
+    00000010:
       type: {class: DialogueEvent_ChessEventTrigger, ns: , asm: Assembly-CSharp}
       data:
         EventName: 35

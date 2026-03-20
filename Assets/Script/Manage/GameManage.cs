@@ -28,10 +28,10 @@ public class GameManage : MonoBehaviour
     public Camera mainCamera;
     public static GameManage instance;
     public List<PropertyCreator> allChess;
-    public List<GameObject> PlayerChess;
     /// <summary>读档后玩家拥有的植物 creator 列表，为 null 时 PlantsShop 使用 allChess</summary>
     public List<PropertyCreator> playerOwnedCreators;
     public UnityEvent WhenGameOver,WhenGameStart;
+    public LevelData TestLevel;
     //public bool ifGameStart{get;private set;}
     private void Awake()
     {
@@ -59,6 +59,7 @@ public class GameManage : MonoBehaviour
         fetterManage.InitController();
         cameraManage.InitManage();
         UIManage=new UIManage();
+        if (mode == GameMode.Test) UIManage.GetView<StartUI>().startLevelData=TestLevel;
     }
     
     private void Update()

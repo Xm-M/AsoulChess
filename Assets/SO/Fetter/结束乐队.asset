@@ -21,12 +21,20 @@ MonoBehaviour:
       data:
         fetterName: "\u7ED3\u675F\u4E50\u961F"
         fetterIcon: {fileID: 21300004, guid: 28a14b6acb252df4787e935cd4c43a6e, type: 3}
-        bandMemberNum: 4
+        detectMode: 1
+        config:
+          tag: "\u7ED3\u675F\u4E50\u961F"
+          requiredMemberIds:
+          - "\u6CE2\u5947"
+          - "\u8679\u590F"
+          - "\u559C\u591A"
+          - "\u51C9"
+          tierThresholds: 02000000
         num: 0
+        tier: 0
         cards:
         - {fileID: 11400000, guid: 8b8184b4e0605ba47873fedd25071c52, type: 2}
         - {fileID: 11400000, guid: 169551215e28e1d4ca80bcb87624d57f, type: 2}
         - {fileID: 11400000, guid: adf7accf1c376fe42b748ac54086ee1b, type: 2}
         - {fileID: 11400000, guid: 949bd2bd1dad82947b4b0e9fcfd38517, type: 2}
-        interval: 15
         fallSpeed: 60

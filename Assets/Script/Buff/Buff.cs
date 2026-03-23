@@ -170,6 +170,12 @@ public class ColdBuff : TimeBuff
     [SerializeReference] public Buff_BaseValueBuff_AcceleRate acceleRateBuff;
     [UnityEngine.Serialization.FormerlySerializedAs("slowRate")] public float _slowRate = -0.5f;
     public ColdBuff() { buffName = "冰冻"; }
+    public override Buff Clone()
+    {
+        var c = (ColdBuff)base.Clone();
+        c.acceleRateBuff = acceleRateBuff != null ? (Buff_BaseValueBuff_AcceleRate)acceleRateBuff.Clone() : null;
+        return c;
+    }
     void EnsureBuffs()
     {
         if (acceleRateBuff == null) acceleRateBuff = new Buff_BaseValueBuff_AcceleRate { rate = _slowRate };
@@ -336,6 +342,13 @@ public class AngryBuff : TimeBuff
     [SerializeReference] public Buff_BaseValueBuff_AttackSpeed attackSpeedBuff;
     [SerializeReference] public Buff_BaseValueBuff_ExtraDefence extraDefenceBuff;
     GameObject effect;
+    public override Buff Clone()
+    {
+        var c = (AngryBuff)base.Clone();
+        c.attackSpeedBuff = attackSpeedBuff != null ? (Buff_BaseValueBuff_AttackSpeed)attackSpeedBuff.Clone() : null;
+        c.extraDefenceBuff = extraDefenceBuff != null ? (Buff_BaseValueBuff_ExtraDefence)extraDefenceBuff.Clone() : null;
+        return c;
+    }
     void EnsureBuffs()
     {
         if (attackSpeedBuff == null) { attackSpeedBuff = new Buff_BaseValueBuff_AttackSpeed { speed = 0.5f }; }
@@ -446,6 +459,13 @@ public class Buff_ClassBegin : TimeBuff
     [SerializeReference] public Buff_BaseValueBuff_AcceleRate acceleRateBuff;
     [UnityEngine.Serialization.FormerlySerializedAs("extradefence")] public float _extraDefence = 0.3f;
     [UnityEngine.Serialization.FormerlySerializedAs("extraSpeed")] public float _extraSpeed = 0.25f;
+    public override Buff Clone()
+    {
+        var c = (Buff_ClassBegin)base.Clone();
+        c.extraDefenceBuff = extraDefenceBuff != null ? (Buff_BaseValueBuff_ExtraDefence)extraDefenceBuff.Clone() : null;
+        c.acceleRateBuff = acceleRateBuff != null ? (Buff_BaseValueBuff_AcceleRate)acceleRateBuff.Clone() : null;
+        return c;
+    }
     void EnsureBuffs()
     {
         if (extraDefenceBuff == null) extraDefenceBuff = new Buff_BaseValueBuff_ExtraDefence { extraDefence = _extraDefence };
@@ -483,6 +503,13 @@ public class Buff_ClassOver : TimeBuff
     [SerializeReference] public Buff_BaseValueBuff_AcceleRate acceleRateBuff;
     [UnityEngine.Serialization.FormerlySerializedAs("extraAttack")] public float _extraAttack = 0.3f;
     [UnityEngine.Serialization.FormerlySerializedAs("extraSpeed")] public float _extraSpeed = 0.25f;
+    public override Buff Clone()
+    {
+        var c = (Buff_ClassOver)base.Clone();
+        c.attackBuff = attackBuff != null ? (Buff_BaseValueBuff_Attack)attackBuff.Clone() : null;
+        c.acceleRateBuff = acceleRateBuff != null ? (Buff_BaseValueBuff_AcceleRate)acceleRateBuff.Clone() : null;
+        return c;
+    }
     void EnsureBuffs()
     {
         if (attackBuff == null) attackBuff = new Buff_BaseValueBuff_Attack { extraAttack = _extraAttack };

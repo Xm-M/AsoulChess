@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chessName: "\u957F\u5D0E\u7D20\u4E16"
   chessDescription: 
+  chessShortDescription: 
   chessEffect: 
   baseProperty:
     attack: 30
@@ -43,12 +44,15 @@ MonoBehaviour:
   plantTags:
   - Mygo
   - "\u8D1D\u65AF"
+  fetterMemberId: "\u957F\u5D0E\u7D20\u4E16"
   chessTileType: 1
   plantType: 1
   plantFunction:
     id: 0
   plantIfCanBuyCard:
     id: 1
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
   references:
     version: 1
     00000000:

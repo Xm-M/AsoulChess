@@ -21,8 +21,13 @@ MonoBehaviour:
       data:
         fetterName: "\u4E3B\u5531"
         fetterIcon: {fileID: 21300000, guid: d52f55372e3bc1341a2d48b30e8cfea5, type: 3}
-        bandMemberNum: 0
-        num: 0
+        detectMode: 0
+        config:
+          tag: "\u4E3B\u5531"
+          requiredMemberIds: []
+          tierThresholds: 02000000030000000400000005000000
+        num: 4
+        tier: 2
         vocalBuff:
           id: 1
     00000001:
@@ -30,6 +35,5 @@ MonoBehaviour:
       data:
         buffName: "\u4E3B\u5531"
         target: {fileID: 0}
-        buffNum: 0
-        maxCount: 5
-        extraBullet: {fileID: 2098010854589325911, guid: ff9d21301bc540649a5a50ce3a75106a, type: 3}
+        extraBulletChance: 0.7
+        extraBullet: {fileID: 3683929278927816457, guid: a37a2982fc9db354e9ecf1e6aa9f3ddc, type: 3}

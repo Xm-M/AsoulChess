@@ -17,4 +17,35 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: , ns: , asm: }
+      type: {class: Drummer, ns: , asm: Assembly-CSharp}
+      data:
+        fetterName: "\u9F13\u624B"
+        fetterIcon: {fileID: 21300000, guid: d52f55372e3bc1341a2d48b30e8cfea5, type: 3}
+        detectMode: 0
+        config:
+          tag: "\u9F13\u624B"
+          requiredMemberIds: []
+          tierThresholds: 02000000030000000400000005000000
+        drummerAuraBuff:
+          id: 1
+    00000001:
+      type: {class: Buff_DrummerAura, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u9F13\u624B\u5149\u73AF"
+        target: {fileID: 0}
+        extraDamage: 0.5
+        drummerDamageBuff:
+          id: 2
+    00000002:
+      type: {class: Buff_DrummerDamage, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u9F13\u624B\u589E\u76CA"
+        target: {fileID: 0}
+        extraDamageBuff:
+          id: 3
+    00000003:
+      type: {class: Buff_BaseValueBuff_ExtraDamage, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u989D\u5916\u4F24\u5BB3"
+        target: {fileID: 0}
+        extraDamage: 0

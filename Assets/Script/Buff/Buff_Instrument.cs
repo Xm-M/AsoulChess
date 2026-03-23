@@ -5,86 +5,122 @@ using UnityEngine;
 /// 和乐队相关的buff 都被放在这个文件里了
 /// </summary>
  
+/// <summary>
+/// 主唱 Buff：每次攻击有 extraBulletChance 概率额外发射一发子弹。
+/// 概率由羁绊人数决定：2人20%、3人45%、4人70%、5人100%
+/// </summary>
 public class Buff_Vocal : Buff
 {
-    public int maxCount;
+    [Tooltip("每次攻击触发额外子弹的概率 0~1")]
+    public float extraBulletChance;
     public GameObject extraBullet;
-    //这里用添加可能施加的随机buff 
-    //public List<Buff> buffs;
-    protected int count;
+
     public override void WriteExtraToSaveData(BuffSaveData data)
     {
         base.WriteExtraToSaveData(data);
         if (data == null) return;
-        data.SetExtra("Count", count);
+        data.SetExtra("ExtraBulletChance", extraBulletChance);
     }
     public override void RestoreExtraFromSaveData(BuffSaveData data)
     {
         base.RestoreExtraFromSaveData(data);
         if (data == null) return;
-        count = data.GetExtraInt("Count", 0);
+        extraBulletChance = data.GetExtraFloat("ExtraBulletChance", extraBulletChance);
     }
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
-        target.equipWeapon.OnAttack.AddListener(WhenTakeDamage);
+        target.equipWeapon.OnAttack.AddListener(OnAttack);
     }
 
-    public void WhenTakeDamage(Chess chess)
+    void OnAttack(Chess chess)
     {
-        count++;
-        if(count == maxCount)
+        if (Random.value < extraBulletChance && extraBullet != null)
         {
-            count = 0;
-            Bullet b=ObjectPool.instance.Create(extraBullet).GetComponent<Bullet>();
+            Bullet b = ObjectPool.instance.Create(extraBullet).GetComponent<Bullet>();
             b.InitBullet(chess, chess.equipWeapon.weaponPos.position, null, chess.transform.right);
-            ////这里要给takebuff 添加随机buff
-            //b.Dm.takeBuff=
-            ////如果有多种颜色的话 就用这个吧
-            //b.GetComponent<Animator>().SetInteger("type",0);
         }
     }
 
     public override void BuffOver()
     {
         base.BuffOver();
-        target.equipWeapon.OnAttack.RemoveListener(WhenTakeDamage);
+        target.equipWeapon.OnAttack.RemoveListener(OnAttack);
     }
 
     public override void BuffReset(Buff resetBuff)
     {
         base.BuffReset(resetBuff);
+        var other = resetBuff as Buff_Vocal;
+        if (other != null) extraBulletChance = other.extraBulletChance;
     }
 }
 /// <summary>
-/// 贝斯 Buff：HPmax + 生命偷取 + 体型 + 事件（半血触发隐身）
+/// 贝斯 Buff：HP（百分比+数值复合）+ 生命偷取 + 体型 + 半血隐身
+/// 满层：+50%最大生命+600血，+50%偷取，体型+5。由 Fetter 按人数设置 tierScale/size。
 /// </summary>
 public class Buff_Bass : Buff
 {
-    [SerializeReference] public Buff_BaseValueBuff_HPmax hpMaxBuff;
+    [Tooltip("档位比例 0.2~1，由羁绊人数决定")]
+    public float tierScale = 1f;
+    [Tooltip("满层时百分比生命，0.5=50%")]
+    public float baseHpPercent = 0.5f;
+    [Tooltip("满层时固定生命")]
+    public float baseHpFlat = 600f;
+    [Tooltip("满层时生命偷取，0.5=50%")]
+    public float maxLifeSteal = 0.5f;
+    [Tooltip("体型增量，2~5人对应2~5")]
+    public int sizeAdd = 5;
     [SerializeReference] public Buff_BaseValueBuff_LifeSteal lifeStealBuff;
     [SerializeReference] public Buff_BaseValueBuff_Size sizeBuff;
     [SerializeReference] public Buff_BassHide buff;
     public float coldDowm = 30;
-    [UnityEngine.Serialization.FormerlySerializedAs("extraHpMax")] public float _extraHpMax;
-    [UnityEngine.Serialization.FormerlySerializedAs("extraHpSteal")] public float _extraHpSteal;
-    [UnityEngine.Serialization.FormerlySerializedAs("extraSize")] public int _extraSize;
+    public override Buff Clone()
+    {
+        var c = (Buff_Bass)base.Clone();
+        c.lifeStealBuff = lifeStealBuff != null ? (Buff_BaseValueBuff_LifeSteal)lifeStealBuff.Clone() : null;
+        c.sizeBuff = sizeBuff != null ? (Buff_BaseValueBuff_Size)sizeBuff.Clone() : null;
+        c.buff = buff != null ? (Buff_BassHide)buff.Clone() : null;
+        return c;
+    }
     protected Timer timer;
     protected bool cold;
+    float hpAddStored;
     void EnsureBuffs()
     {
-        if (hpMaxBuff == null) hpMaxBuff = new Buff_BaseValueBuff_HPmax { hpmax = _extraHpMax };
-        if (lifeStealBuff == null) lifeStealBuff = new Buff_BaseValueBuff_LifeSteal { lifeSteal = _extraHpSteal };
-        if (sizeBuff == null) sizeBuff = new Buff_BaseValueBuff_Size { size = _extraSize };
+        if (lifeStealBuff == null) lifeStealBuff = new Buff_BaseValueBuff_LifeSteal();
+        if (sizeBuff == null) sizeBuff = new Buff_BaseValueBuff_Size();
     }
     protected override void PrepareForRestore() => EnsureBuffs();
+    public override void WriteExtraToSaveData(BuffSaveData data)
+    {
+        base.WriteExtraToSaveData(data);
+        if (data == null) return;
+        data.SetExtra("TierScale", tierScale);
+        data.SetExtra("SizeAdd", sizeAdd);
+        data.SetExtra("HpAddStored", hpAddStored);
+    }
+    public override void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        base.RestoreExtraFromSaveData(data);
+        if (data == null) return;
+        tierScale = data.GetExtraFloat("TierScale", tierScale);
+        sizeAdd = data.GetExtraInt("SizeAdd", sizeAdd);
+        hpAddStored = data.GetExtraFloat("HpAddStored", hpAddStored);
+    }
     public override void BuffEffect(Chess target)
     {
         EnsureBuffs();
         base.BuffEffect(target);
-        hpMaxBuff.target = target; hpMaxBuff.BuffEffect(target);
-        lifeStealBuff.target = target; lifeStealBuff.BuffEffect(target);
-        sizeBuff.target = target; sizeBuff.BuffEffect(target);
+        float baseHp = target.propertyController.GetMaxHp();
+        hpAddStored = baseHp * baseHpPercent * tierScale + baseHpFlat * tierScale;
+        target.propertyController.ChangeHPMax(hpAddStored);
+        lifeStealBuff.lifeSteal = maxLifeSteal * tierScale;
+        lifeStealBuff.target = target;
+        lifeStealBuff.BuffEffect(target);
+        sizeBuff.size = sizeAdd;
+        sizeBuff.target = target;
+        sizeBuff.BuffEffect(target);
         target.propertyController.onSetDamage.AddListener(OnGetDamage);
         cold = true;
     }
@@ -92,9 +128,13 @@ public class Buff_Bass : Buff
     {
         base.BuffReset(resetBuff);
         var other = resetBuff as Buff_Bass;
-        if (other?.hpMaxBuff != null && hpMaxBuff != null) hpMaxBuff.BuffReset(other.hpMaxBuff);
-        if (other?.lifeStealBuff != null && lifeStealBuff != null) lifeStealBuff.BuffReset(other.lifeStealBuff);
-        if (other?.sizeBuff != null && sizeBuff != null) sizeBuff.BuffReset(other.sizeBuff);
+        if (other != null)
+        {
+            tierScale = other.tierScale;
+            sizeAdd = other.sizeAdd;
+            if (lifeStealBuff != null && other.lifeStealBuff != null) lifeStealBuff.BuffReset(other.lifeStealBuff);
+            if (sizeBuff != null && other.sizeBuff != null) sizeBuff.BuffReset(other.sizeBuff);
+        }
     }
     public void OnGetDamage(DamageMessege dm)
     {
@@ -109,7 +149,7 @@ public class Buff_Bass : Buff
     public override void BuffOver()
     {
         target.propertyController.onSetDamage.RemoveListener(OnGetDamage);
-        if (hpMaxBuff != null) hpMaxBuff.BuffOver();
+        target.propertyController.ChangeHPMax(-hpAddStored);
         if (lifeStealBuff != null) lifeStealBuff.BuffOver();
         if (sizeBuff != null) sizeBuff.BuffOver();
         if (timer != null) { timer.Stop(); timer = null; }
@@ -146,6 +186,13 @@ public class Buff_Guitar : Buff
     [SerializeReference] public Buff_BaseValueBuff_Crit critBuff;
     [SerializeReference] public Buff_BaseValueBuff_CritDamage critDamageBuff;
     [UnityEngine.Serialization.FormerlySerializedAs("extraCrit")] public float _extraCrit;
+    public override Buff Clone()
+    {
+        var c = (Buff_Guitar)base.Clone();
+        c.critBuff = critBuff != null ? (Buff_BaseValueBuff_Crit)critBuff.Clone() : null;
+        c.critDamageBuff = critDamageBuff != null ? (Buff_BaseValueBuff_CritDamage)critDamageBuff.Clone() : null;
+        return c;
+    }
     [UnityEngine.Serialization.FormerlySerializedAs("extraCritDamage")] public float _extraCritDamage;
     void EnsureBuffs()
     {
@@ -175,12 +222,136 @@ public class Buff_Guitar : Buff
     }
 }
 /// <summary>
+/// 鼓手增益 Buff：外壳，内装 Buff_BaseValueBuff_ExtraDamage。BuffReset 不叠加，多鼓手时取先到者。
+/// </summary>
+public class Buff_DrummerDamage : Buff
+{
+    [SerializeReference] public Buff_BaseValueBuff_ExtraDamage extraDamageBuff;
+    public override Buff Clone()
+    {
+        var c = (Buff_DrummerDamage)base.Clone();
+        c.extraDamageBuff = extraDamageBuff != null ? (Buff_BaseValueBuff_ExtraDamage)extraDamageBuff.Clone() : null;
+        return c;
+    }
+    void EnsureBuff()
+    {
+        if (extraDamageBuff == null) extraDamageBuff = new Buff_BaseValueBuff_ExtraDamage();
+    }
+    protected override void PrepareForRestore() => EnsureBuff();
+    public override void BuffEffect(Chess target)
+    {
+        EnsureBuff();
+        base.BuffEffect(target);
+        extraDamageBuff.target = target;
+        extraDamageBuff.BuffEffect(target);
+    }
+    public override void BuffOver()
+    {
+        if (extraDamageBuff != null && target != null)
+            target.propertyController.ChangeExtraDamage(-extraDamageBuff.extraDamage);
+        base.BuffOver();
+    }
+    public override void BuffReset(Buff resetBuff)
+    {
+        // 不叠加，保持现有数值
+    }
+}
+
+/// <summary>
+/// 鼓手光环 Buff：挂在鼓手身上，周期性给周围8格+自己施加 Buff_DrummerDamage。满层50%增伤。
+/// </summary>
+public class Buff_DrummerAura : Buff
+{
+    public float extraDamage; // 由羁绊设置，满层0.5
+    [SerializeReference] public Buff_DrummerDamage drummerDamageBuff;
+    public float checkInterval = 0.5f;
+    Timer timer;
+    HashSet<Chess> buffedUnits = new HashSet<Chess>();
+    void EnsureBuff()
+    {
+        if (drummerDamageBuff == null) drummerDamageBuff = new Buff_DrummerDamage();
+    }
+    protected override void PrepareForRestore() => EnsureBuff();
+    public override void BuffEffect(Chess target)
+    {
+        EnsureBuff();
+        base.BuffEffect(target);
+        drummerDamageBuff.extraDamageBuff.extraDamage = extraDamage;
+        drummerDamageBuff.buffName = "鼓手增益";
+        ApplyAura();
+        timer = GameManage.instance.timerManage.AddTimer(ApplyAura, checkInterval, true);
+    }
+    void ApplyAura()
+    {
+        if (target == null || target.IfDeath) return;
+        var standTile = target.moveController?.standTile;
+        if (standTile == null || MapManage.instance == null) return;
+        var toBuff = new List<Chess>();
+        toBuff.Add(target); // 自己也能吃到
+        var neighbors = MapManage.instance.GetEightNeighborTiles(standTile);
+        foreach (var t in neighbors)
+        {
+            if (t.stander != null && t.stander.CompareTag("Player") && !t.stander.IfDeath)
+                toBuff.Add(t.stander);
+        }
+        var toRemove = new List<Chess>();
+        foreach (var c in buffedUnits)
+        {
+            if (!toBuff.Contains(c) && c != null && !c.IfDeath)
+            {
+                c.buffController.TryOverBuff(drummerDamageBuff);
+                toRemove.Add(c);
+            }
+        }
+        foreach (var c in toRemove) buffedUnits.Remove(c);
+        foreach (var c in toBuff)
+        {
+            if (c == null || c.IfDeath) continue;
+            drummerDamageBuff.extraDamageBuff.extraDamage = extraDamage;
+            c.buffController.AddBuff(drummerDamageBuff);
+            buffedUnits.Add(c);
+        }
+    }
+    public override void BuffOver()
+    {
+        timer?.Stop();
+        timer = null;
+        foreach (var c in buffedUnits)
+        {
+            if (c != null && !c.IfDeath)
+                c.buffController.TryOverBuff(drummerDamageBuff);
+        }
+        buffedUnits.Clear();
+        base.BuffOver();
+    }
+
+    public override void WriteExtraToSaveData(BuffSaveData data)
+    {
+        base.WriteExtraToSaveData(data);
+        if (data == null) return;
+        data.SetExtra("ExtraDamage", extraDamage);
+    }
+    public override void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        base.RestoreExtraFromSaveData(data);
+        if (data == null) return;
+        extraDamage = data.GetExtraFloat("ExtraDamage", extraDamage);
+    }
+}
+
+/// <summary>
 /// 键盘 Buff：护甲增益，键盘手获得三倍效果（具体效果）
 /// </summary>
 public class Buff_KeyBoard : Buff
 {
     [SerializeReference] public Buff_BaseValueBuff_Armor armorBuff;
     [UnityEngine.Serialization.FormerlySerializedAs("extraArmor")] public float _extraArmor;
+    public override Buff Clone()
+    {
+        var c = (Buff_KeyBoard)base.Clone();
+        c.armorBuff = armorBuff != null ? (Buff_BaseValueBuff_Armor)armorBuff.Clone() : null;
+        return c;
+    }
     void EnsureBuffs() { if (armorBuff == null) armorBuff = new Buff_BaseValueBuff_Armor { armor = _extraArmor }; }
     protected override void PrepareForRestore() => EnsureBuffs();
     float GetArmorMultiplier(Chess target) => target.propertyController.creator.plantTags.Contains("键盘") ? 3f : 1f;

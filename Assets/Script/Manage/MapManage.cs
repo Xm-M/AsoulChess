@@ -72,7 +72,17 @@ public class MapManage : MonoBehaviour
                 list.Add(tiles[newPos.x, newPos.y]);
             }
         }
-        
+        return list;
+    }
+    /// <summary>周围八格（含对角）</summary>
+    public List<Tile> GetEightNeighborTiles(Tile center)
+    {
+        var list = new List<Tile>();
+        var p = center.mapPos;
+        for (int dx = -1; dx <= 1; dx++)
+            for (int dy = -1; dy <= 1; dy++)
+                if ((dx != 0 || dy != 0) && IfInMapRange(p.x + dx, p.y + dy))
+                    list.Add(tiles[p.x + dx, p.y + dy]);
         return list;
     }
 }

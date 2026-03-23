@@ -10,7 +10,7 @@ public class FetterIcon : MonoBehaviour
 {
     public Image fetterImage;
     public TMP_Text fetterName;
-    public Text fetterCount;
+    public TMP_Text fetterCount;
     //public Text fetterCount;
     public void ShowFetterIcon(Fetter fetter)
     {

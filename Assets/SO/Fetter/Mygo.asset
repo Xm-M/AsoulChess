@@ -21,8 +21,18 @@ MonoBehaviour:
       data:
         fetterName: Mygo
         fetterIcon: {fileID: 21300000, guid: e533196f9f83128438787fed6b7edcc3, type: 3}
-        bandMemberNum: 5
+        detectMode: 1
+        config:
+          tag: 
+          requiredMemberIds:
+          - "\u9AD8\u677E\u706F"
+          - "\u957F\u5D0E\u7D20\u4E16"
+          - "\u5343\u65E9\u7231\u97F3"
+          - "\u8981\u4E50\u5948"
+          - "\u690E\u540D\u7ACB\u5E0C"
+          tierThresholds: 02000000
         num: 5
+        tier: 0
         buff:
           id: 1
     00000001:

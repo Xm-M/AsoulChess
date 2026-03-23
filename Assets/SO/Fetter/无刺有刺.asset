@@ -21,8 +21,18 @@ MonoBehaviour:
       data:
         fetterName: "\u65E0\u523A\u6709\u523A"
         fetterIcon: {fileID: 0}
-        bandMemberNum: 5
+        detectMode: 1
+        config:
+          tag: 
+          requiredMemberIds:
+          - "\u4E95\u82B9\u4EC1\u83DC"
+          - "\u5B89\u548C\u6634"
+          - "\u6CB3\u6E90\u6728\u6843\u9999"
+          - "\u6D77\u8001\u51A2\u667A"
+          - "\u5362\u5E15"
+          tierThresholds: 02000000
         num: 0
+        tier: 0
         DM:
           damageFrom: {fileID: 0}
           damageTo: {fileID: 0}
@@ -49,3 +59,5 @@ MonoBehaviour:
       data:
         buffName: GBC
         target: {fileID: 0}
+        outlineColor: {r: 0, g: 0, b: 0, a: 0}
+        outlineSize: 1

@@ -21,8 +21,13 @@ MonoBehaviour:
       data:
         fetterName: "\u5409\u4ED6"
         fetterIcon: {fileID: 21300000, guid: 1b274262cb5433349ae0d641129f5484, type: 3}
-        bandMemberNum: 0
+        detectMode: 0
+        config:
+          tag: "\u5409\u4ED6"
+          requiredMemberIds: []
+          tierThresholds: 02000000030000000400000005000000
         num: 2
+        tier: 0
         guitarBuff:
           id: 1
     00000001:

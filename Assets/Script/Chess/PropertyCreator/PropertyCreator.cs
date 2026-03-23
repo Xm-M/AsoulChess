@@ -30,6 +30,9 @@ public class PropertyCreator : ScriptableObject
     public Sprite chessSprite;
     [LabelText("羁绊标签")]
     public List<string> plantTags;
+    [LabelText("羁绊成员ID")]
+    [Tooltip("Member 模式用：此卡在羁绊中算作哪个成员。空则用 chessName。如吉他英雄填「波奇」与波奇算同一人")]
+    public string fetterMemberId;
     [LabelText("棋子可种植位置")]
     public TileType chessTileType;
     [LabelText("棋子定位类型")]

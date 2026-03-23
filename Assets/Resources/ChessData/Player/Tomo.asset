@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chessName: Tomo
   chessDescription: 
+  chessShortDescription: 
   chessEffect: 
   baseProperty:
     attack: 20
@@ -43,12 +44,15 @@ MonoBehaviour:
   plantTags:
   - "\u65E0\u523A\u6709\u523A"
   - "\u952E\u76D8\u624B"
+  fetterMemberId: "\u6D77\u8001\u51A2\u667A"
   chessTileType: 1
   plantType: 1
   plantFunction:
     id: 0
   plantIfCanBuyCard:
     id: 1
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
   references:
     version: 1
     00000000:

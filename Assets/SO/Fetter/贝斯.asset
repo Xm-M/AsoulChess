@@ -21,8 +21,13 @@ MonoBehaviour:
       data:
         fetterName: "\u8D1D\u65AF"
         fetterIcon: {fileID: 21300054, guid: f0b6bcc7c8970e44cb571276154d8fe0, type: 3}
-        bandMemberNum: 0
+        detectMode: 0
+        config:
+          tag: "\u8D1D\u65AF"
+          requiredMemberIds: []
+          tierThresholds: 02000000030000000400000005000000
         num: 0
+        tier: 0
         bassBuff:
           id: 1
     00000001:
@@ -30,13 +35,33 @@ MonoBehaviour:
       data:
         buffName: "\u8D1D\u65AFbuff"
         target: {fileID: 0}
-        extraHpMax: 500
-        extraHpSteal: 0.1
-        extraSize: 0
-        coldDowm: 30
-        buff:
+        tierScale: 1
+        baseHpPercent: 0.5
+        baseHpFlat: 600
+        maxLifeSteal: 0.5
+        sizeAdd: 5
+        lifeStealBuff:
           id: 2
+        sizeBuff:
+          id: 3
+        buff:
+          id: 4
+        coldDowm: 30
     00000002:
+      type: {class: Buff_BaseValueBuff_LifeSteal, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u751F\u547D\u5077\u53D6"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        lifeSteal: 0
+    00000003:
+      type: {class: Buff_BaseValueBuff_Size, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u4F53\u578B\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        size: 0
+    00000004:
       type: {class: Buff_BassHide, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u8D1D\u65AF\u9690\u8EAB"

@@ -1,53 +1,65 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+
+/// <summary>Tag 模式按 plantTags 计数；Member 模式按唯一成员在场数</summary>
+public enum FetterDetectMode { Tag, Member }
+
+/// <summary>羁绊检测配置</summary>
+[Serializable]
+public class FetterConfig
+{
+    [Tooltip("Tag 模式：统计 plantTags 包含此 tag 的卡牌数")]
+    public string tag;
+    [Tooltip("Member 模式：需在场的唯一成员 id 列表；同一成员多卡只算 1（如波奇与吉他英雄）")]
+    public List<string> requiredMemberIds = new List<string>();
+    [Tooltip("档位阈值。Tag 模式如 [2,3,4] 表示 2/3/4 人不同档；Member 模式一般为 [N] 表示 N 人全在场")]
+    public List<int> tierThresholds = new List<int> { 2 };
+}
+
 /// <summary>
 /// 把所有的Fetter都放在这把 反正也没有
 /// </summary>
 public class Fetter
 {
-    //public Chess self;
     public string fetterName;
     public Sprite fetterIcon;
-    public int bandMemberNum;
-    [HideInInspector]public int num;
-    /// <summary>
-    /// 这个是进入游戏就会调用一次的函数
-    /// </summary>
-    /// <param name="num"></param>
-    public virtual void FetterEffect(int num)
-    {
+    [Header("羁绊检测配置")]
+    public FetterDetectMode detectMode;
+    public FetterConfig config = new FetterConfig();
+    [HideInInspector] public int num;
+    [HideInInspector] public int tier;
 
+    public virtual void FetterEffect(int count, int tier)
+    {
     }
-    /// <summary>
-    /// 这个是结束的时候会调用的函数
-    /// </summary>
     public virtual void ResetFetter()
     {
-
     }
-    public virtual bool FetterLight(int num)
+    /// <summary>由 FetterController 根据 config 计算 count/tier 后调用，子类一般不需要重写</summary>
+    public virtual bool FetterLight(int count, int tier)
     {
-        return (num >= bandMemberNum);
+        return tier >= 0;
     }
 }
 /// <summary>
 /// 结束乐队 
 /// 凑齐结束乐队所有成员时:结束乐队卡牌的冷却减少50%；所有结束乐队成员在种植后 会生成一个对应缩小卡牌
+/// 配置：detectMode=Member, requiredMemberIds=[虹夏,凉,波奇,喜多], tierThresholds=[4]
 /// </summary>
-public class KessokuBand:Fetter
+public class KessokuBand : Fetter
 {
     [LabelText("卡牌列表")]
     public List<PropertyCreator> cards;
-    [LabelText("间隔时间")]
-    public float interval=15f;
+ 
     [LabelText("下落速度")]
-    public float fallSpeed=2f;
+    public float fallSpeed = 2f;
     Timer timer;
-    public override void FetterEffect(int num)
+    public override void FetterEffect(int count, int tier)
     {
-        base.FetterEffect(num);
+        base.FetterEffect(count, tier);
         EventController.Instance.AddListener<Chess>(EventName.WhenPlantChess.ToString(), OnPlantChess);
         foreach(var icon in UIManage.GetView<PlantsShop>().currentShopIcons)
         {
@@ -97,7 +109,7 @@ public class KessokuBand:Fetter
 
 
 /// <summary>
-/// 无刺有刺 
+/// 无刺有刺。配置：detectMode=Tag, tag=无刺有刺, tierThresholds=[1]
 /// </summary>
 public class TogenashiTogeari : Fetter
 {
@@ -130,9 +142,9 @@ public class TogenashiTogeari : Fetter
     Timer rainStopTimer;
     Timer rainDamageLoop;
 
-    public override void FetterEffect(int num)
+    public override void FetterEffect(int count, int tier)
     {
-        base.FetterEffect(num);
+        base.FetterEffect(count, tier);
         EventController.Instance.AddListener<Chess>(EventName.WhenPlantChess.ToString(), AddBuff);
         rainLoop = GameManage.instance.timerManage.AddTimer(Rain, coldDown, true);
         stressChangeValue = 0;
@@ -262,23 +274,22 @@ public class Buff_Band_GBC : Buff
 /// <summary>
 /// Mygo羁绊：效果：所有Mygo成员的冷却时间减半
 /// 周围有四个队友的Mygo成员获得20%增伤和20%免伤害
+/// 配置：detectMode=Member, requiredMemberIds=[灯,立希,乐奈,爽世,爱音] 等5人
 /// </summary>
 public class Mygo : Fetter
 {
     [LabelText("Mygobuff")]
     [SerializeReference]
     public Buff_Mygo buff;
-    public override void FetterEffect(int num)
+    public override void FetterEffect(int count, int tier)
     {
-        base.FetterEffect(num);
+        base.FetterEffect(count, tier);
         EventController.Instance.AddListener<Chess>(EventName.WhenPlantChess.ToString(), AddBuff);
-        PlantsShop shop = UIManage.GetView<PlantsShop>();
-        for (int i = 0; i < shop.shopIconParent.childCount;i++)
+        var shop = UIManage.GetView<PlantsShop>();
+        for (int i = 0; i < shop.currentShopIcons.Count; i++)
         {
-            ShopIcon icon=shop.shopIconParent.GetChild(i).GetComponent<ShopIcon>();
-            Debug.Log(icon.name);
-            Debug.Log(icon.good);
-            if (icon.good.plantTags.Contains("Mygo"))
+            var icon = shop.currentShopIcons[i];
+            if (icon.good.plantTags != null && icon.good.plantTags.Contains("Mygo"))
             {
                 icon.coldDown /= 2;
             }
@@ -308,6 +319,13 @@ public class Buff_Mygo : Buff
     [SerializeReference] public Buff_BaseValueBuff_ExtraDefence extraDefenceBuff;
     [LabelText("描边颜色")] public Color outlineColor;
     [LabelText("描边大小")] public float outlineSize = 1;
+    public override Buff Clone()
+    {
+        var c = (Buff_Mygo)base.Clone();
+        c.extraDamageBuff = extraDamageBuff != null ? (Buff_BaseValueBuff_ExtraDamage)extraDamageBuff.Clone() : null;
+        c.extraDefenceBuff = extraDefenceBuff != null ? (Buff_BaseValueBuff_ExtraDefence)extraDefenceBuff.Clone() : null;
+        return c;
+    }
     void EnsureBuffs()
     {
         if (extraDamageBuff == null) extraDamageBuff = new Buff_BaseValueBuff_ExtraDamage { extraDamage = 0.2f };
@@ -367,10 +385,11 @@ public class Buff_Mygo : Buff
         }
     }
 }
-public class AveMujica : Fetter {
-    public override void FetterEffect(int num)
+public class AveMujica : Fetter
+{
+    public override void FetterEffect(int count, int tier)
     {
-        base.FetterEffect(num);
+        base.FetterEffect(count, tier);
     }
     public override void ResetFetter()
     {

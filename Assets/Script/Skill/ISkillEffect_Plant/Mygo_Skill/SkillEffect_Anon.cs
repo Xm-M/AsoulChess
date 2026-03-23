@@ -34,7 +34,7 @@ public class SkillEffect_AnonHide : ISkillEffect
     public GameObject healEffect;
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
-        Collider2D[] cols = CheckObjectPoolManage.GetColArray(100);
+        Collider2D[] cols = CheckObjectPoolManage.GetColArray(1000);
         int n = Physics2D.OverlapCircleNonAlloc(user.transform.position, radius, cols, LayerMask.GetMask(user.tag));
         for (int i = 0; i < n; i++)
         {
@@ -50,5 +50,6 @@ public class SkillEffect_AnonHide : ISkillEffect
                 lignt.InitSunLight(friend.moveController.standTile, 15, friend.moveController.standTile.transform.position + Vector3.up);
             }
         }
+        CheckObjectPoolManage.ReleaseColArray(1000, cols);
     }
 }

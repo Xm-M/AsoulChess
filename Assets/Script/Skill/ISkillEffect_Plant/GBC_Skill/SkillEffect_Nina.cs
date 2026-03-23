@@ -28,7 +28,7 @@ public class SkillEffect_Nina : ISkillEffect
     }
     public void OnSkillOver(Chess user)
     {
-        Collider2D[] cols = CheckObjectPoolManage.GetColArray(100);
+        Collider2D[] cols = CheckObjectPoolManage.GetColArray(1000);
         int n = Physics2D.OverlapCircleNonAlloc(user.transform.position, radiu, cols, ChessTeamManage.Instance.GetEnemyLayer(user.gameObject));
         for (int i = 0; i < n; i++)
         {
@@ -37,7 +37,7 @@ public class SkillEffect_Nina : ISkillEffect
             //所以到底要不要造成伤害 
             enemy.buffController.AddBuff(dizznessBuff);
         }
-        CheckObjectPoolManage.ReleaseColArray(100, cols);
+        CheckObjectPoolManage.ReleaseColArray(1000, cols);
         user.buffController.TryOverBuff(dodgeBuff);
         user.skillController.onSkillOver.RemoveListener(OnSkillOver);
     }
@@ -57,7 +57,7 @@ public class SkillEffect_NinaTaunt : ISkillEffect
 
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
-        RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(100);
+        RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(1000);
         int n = Physics2D.RaycastNonAlloc(user.transform.position, user.transform.right, hits, tauntRange, ChessTeamManage.Instance.GetEnemyLayer(user.gameObject));
         for(int i = 0; i < n; i++)
         {
@@ -65,7 +65,7 @@ public class SkillEffect_NinaTaunt : ISkillEffect
             chess.buffController.AddBuff(angryBuff);
             
         }
-        CheckObjectPoolManage.ReleaseArray(100, hits);
+        CheckObjectPoolManage.ReleaseArray(1000, hits);
     }
 }
 

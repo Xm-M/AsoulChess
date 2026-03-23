@@ -48,14 +48,15 @@ public class StraightLaser : IFindTarget
         targets.Clear();
         if (user.propertyController.GetAttackRange() <= 0) return;
         LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
-        RaycastHit2D[] hits= CheckObjectPoolManage.GetHitArray(100*(int)user.propertyController.GetAttackRange());
+        int size = 1000 * (int)user.propertyController.GetAttackRange();
+        RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(size);
         int num = Physics2D.RaycastNonAlloc(user.transform.position, user.transform.right,
-            hits,user.propertyController.GetAttackRange(), enemyLayer);
-        for(int i = 0; i < num; i++) 
+            hits, user.propertyController.GetAttackRange(), enemyLayer);
+        for (int i = 0; i < num; i++)
         {
             targets.Add(hits[i].collider.GetComponent<Chess>());
         }
-        CheckObjectPoolManage.ReleaseArray(100, hits);
+        CheckObjectPoolManage.ReleaseArray(size, hits);
     }
 }
 
@@ -72,7 +73,8 @@ public class StraightFindLastTarget : IFindTarget
         if (attackRange <= 0) return;
 
         LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
-        RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(100 * (int)attackRange);
+        int size = 1000 * (int)attackRange;
+        RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(size);
 
         int num = Physics2D.RaycastNonAlloc(user.transform.position, user.transform.right,
             hits, attackRange, enemyLayer);
@@ -88,7 +90,7 @@ public class StraightFindLastTarget : IFindTarget
             targets.Add(hits[i].collider.GetComponent<Chess>());
         }
 
-        CheckObjectPoolManage.ReleaseArray(100, hits);
+        CheckObjectPoolManage.ReleaseArray(size, hits);
     }
 }
 public class MultiFindTarget : IFindTarget

@@ -14,7 +14,7 @@ public class StraightFindTarget_Zombie_SideKick : IFindTarget
         LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
 
         if (target == null || target.IfDeath) {
-            RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(100);
+            RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(1000);
 
             int num = Physics2D.RaycastNonAlloc(user.transform.position, user.transform.right,
                 hits, checkRange, GameManage.instance.chessTeamManage.GetEnemyLayer(user.gameObject));
@@ -29,7 +29,7 @@ public class StraightFindTarget_Zombie_SideKick : IFindTarget
                     break;
                 }
             }
-            CheckObjectPoolManage.ReleaseArray(100, hits);
+            CheckObjectPoolManage.ReleaseArray(1000, hits);
             RaycastHit2D hit = Physics2D.Raycast(user.transform.position, user.transform.right,
                 user.propertyController.GetAttackRange(), enemyLayer);
 

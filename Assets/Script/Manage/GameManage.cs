@@ -17,7 +17,7 @@ public class GameManage : MonoBehaviour
     public UIManage UIManage;
     public TimerManage timerManage;
     public AudioManage audioManage;
-    public CheckObjectPoolManage checObjectPoolManage;
+    public CheckObjectPoolManage checkObjectPoolManage;
     //public BuffManage buffManage;
     public ChessFactory chessFactory;//这个要在最后的时候销毁
     public ChessTeamManage chessTeamManage;
@@ -44,17 +44,19 @@ public class GameManage : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         audioManage = new AudioManage();
         timerManage = new TimerManage();
-        checObjectPoolManage = new CheckObjectPoolManage();
+        checkObjectPoolManage = new CheckObjectPoolManage();
         chessFactory = new ChessFactory();
         chessTeamManage = new ChessTeamManage();
         cameraManage = new GameCameraManage();
         cameraManage.SetCamera(mainCamera);
+         
 
     }
     private void Start()
     {
         if (mode == GameMode.Test && allChess != null) playerOwnedCreators = new List<PropertyCreator>(allChess);
         timerManage.InitManage();
+        checkObjectPoolManage.InitManage();
         chessFactory.InitManage();
         fetterManage.InitController();
         cameraManage.InitManage();

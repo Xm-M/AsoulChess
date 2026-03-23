@@ -7,7 +7,7 @@ public class IFindAll_Circle : IFindTarget
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
-        Collider2D[] hits = CheckObjectPoolManage.GetColArray(100);
+        Collider2D[] hits = CheckObjectPoolManage.GetColArray(1000);
         int enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         int friendLayer = 1 << user.gameObject.layer; // 将 Layer Index 转换成 LayerMask
         int combinedLayerMask = enemyLayer | friendLayer; // 同时检测敌我
@@ -17,7 +17,7 @@ public class IFindAll_Circle : IFindTarget
             Chess chess = hits[i].GetComponent<Chess>();
             targets.Add(chess);   
         }
-        CheckObjectPoolManage.ReleaseColArray(100, hits);
+        CheckObjectPoolManage.ReleaseColArray(1000, hits);
     }
 }
 
@@ -26,7 +26,7 @@ public class StraightLaser_AllChess : IFindTarget
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
-        RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(100);
+        RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(1000);
         int enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         int friendLayer = 1 << user.gameObject.layer; // 将 Layer Index 转换成 LayerMask
 
@@ -47,6 +47,6 @@ public class StraightLaser_AllChess : IFindTarget
                 targets.Add(chess);
             }
         }
-        CheckObjectPoolManage.ReleaseArray(100, hits);
+        CheckObjectPoolManage.ReleaseArray(1000, hits);
     }
 }

@@ -27,6 +27,7 @@ public class FindFriend_CircleRange_HealAll : IFindTarget
 {
     public void FindTarget(Chess user, List<Chess> targets)
     {
+        targets.Clear();
         foreach (var friend in GameManage.instance.chessTeamManage.GetTeam(user.tag))
         {
             if (Vector2.Distance(friend.transform.position, user.transform.position) < user.propertyController.GetAttackRange())

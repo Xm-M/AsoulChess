@@ -71,15 +71,15 @@ public class SkillEffect_GitaHero : ISkillEffect
     public void SearchTarget(Chess user,List<Chess> targets)
     {
         targets.Clear();
-        Collider2D[] cols = CheckObjectPoolManage.GetColArray((int)(1000 * checkRange * checkRange));
+        int size = (int)(1000 * checkRange * checkRange);
+        Collider2D[] cols = CheckObjectPoolManage.GetColArray(size);
         LayerMask layer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         int i = Physics2D.OverlapCircleNonAlloc(user.transform.position + dx, checkRange, cols, layer);
-        //Debug.Log("找到了" + i);
         for (int j = 0; j < i; j++)
         {
             Chess enemy = cols[j].GetComponent<Chess>();
             targets.Add(enemy);
         }
-        CheckObjectPoolManage.ReleaseColArray(1000, cols);
+        CheckObjectPoolManage.ReleaseColArray(size, cols);
     }
 }

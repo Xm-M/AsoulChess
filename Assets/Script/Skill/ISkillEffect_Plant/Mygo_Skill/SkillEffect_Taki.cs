@@ -19,13 +19,13 @@ public class SkillEffect_TakiFear : ISkillEffect
 
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
-        RaycastHit2D[] rays = CheckObjectPoolManage.GetHitArray(100);
+        RaycastHit2D[] rays = CheckObjectPoolManage.GetHitArray(1000);
         Debug.Log("椎名立希使用了哈气！");
         GameObject b = ObjectPool.instance.Create(fearBullet);
         Bullet zidan = b.GetComponent<Bullet>();
         zidan.InitBullet(user, user.equipWeapon.weaponPos.position, user, user.transform.right);
         //zidan.Dm.takeBuff = fear.Clone();
         zidan.rate = config.baseDamage[0];
-        CheckObjectPoolManage.ReleaseArray(100, rays);
+        CheckObjectPoolManage.ReleaseArray(1000, rays);
     }
 }

@@ -9,20 +9,21 @@ public class ITriangleSearch : IFindTarget
     
     public void FindTarget(Chess user, List<Chess> targets)
     {
-        Collider2D[] cols = CheckObjectPoolManage.GetColArray(100);
+        targets.Clear();
+        Collider2D[] cols = CheckObjectPoolManage.GetColArray(1000);
         Vector2 box = new Vector2(user.propertyController.GetAttackRange(), boxH);
-        int num= Physics2D.OverlapBoxNonAlloc(user.transform.position + user.transform.right * box.x / 2, box, 0,
-           cols);
+        int num = Physics2D.OverlapBoxNonAlloc(user.transform.position + user.transform.right * box.x / 2, box, 0, cols);
         Vector2 pos1 = user.transform.position;
-        Vector2 pos2= (Vector2)user.transform.position+new Vector2(box.x,box.y/2);
-        Vector2 pos3= (Vector2)user.transform.position + new Vector2(box.x, -box.y / 2);
-        for (int i=0; i<num; i++)
+        Vector2 pos2 = (Vector2)user.transform.position + new Vector2(box.x, box.y / 2);
+        Vector2 pos3 = (Vector2)user.transform.position + new Vector2(box.x, -box.y / 2);
+        for (int i = 0; i < num; i++)
         {
-            if (IfInTriangle(pos1,pos2,pos3, cols[i].transform.position))
+            if (IfInTriangle(pos1, pos2, pos3, cols[i].transform.position))
             {
                 targets.Add(cols[i].GetComponent<Chess>());
             }
         }
+        CheckObjectPoolManage.ReleaseColArray(1000, cols);
     }
     public static bool IfInTriangle(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 target)
     {

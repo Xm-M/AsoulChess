@@ -16,7 +16,6 @@ public class IAllSearch_Rana : IFindTarget
     Chess current;
     public void FindTarget(Chess user, List<Chess> targets)
     {
-        //throw new System.NotImplementedException();
         targets.Clear();
         foreach (var chess in ChessTeamManage.Instance.GetEnemyTeam(user.tag))
         {

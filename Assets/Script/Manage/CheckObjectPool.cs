@@ -37,27 +37,42 @@ public class CheckObjectPool<T>
         // 可以考虑添加一些错误处理，如果数组大小不正确
     }
 }
-public class CheckObjectPoolManage {
-    public static Dictionary<int,CheckObjectPool<RaycastHit2D>> raycastPoolDic;
+public class CheckObjectPoolManage
+{
+    public static Dictionary<int, CheckObjectPool<RaycastHit2D>> raycastPoolDic;
     public static Dictionary<int, CheckObjectPool<Collider2D>> colPoolDic;
+
+    /// <summary>常用 size 预分配更多，减少前期 new 分配</summary>
+    static int GetInitialCapacity(int size)
+    {
+        if (size == 1000) return 3;      // 最常用
+        if (size >= 500 && size <= 5000) return 2;
+        return 1;
+    }
+
     public CheckObjectPoolManage()
     {
         raycastPoolDic = new Dictionary<int, CheckObjectPool<RaycastHit2D>>();
         colPoolDic = new Dictionary<int, CheckObjectPool<Collider2D>>();
     }
+
+    public void InitManage()
+    {
+        EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), WhenStadgeClear);
+    }
     public static RaycastHit2D[] GetHitArray(int size)
     {
         if (!raycastPoolDic.ContainsKey(size))
         {
-            raycastPoolDic.Add(size, new CheckObjectPool<RaycastHit2D>(size, 1));
+            raycastPoolDic.Add(size, new CheckObjectPool<RaycastHit2D>(size, GetInitialCapacity(size)));
         }
-        return raycastPoolDic[size].Get();         
+        return raycastPoolDic[size].Get();
     }
     public static Collider2D[] GetColArray(int size)
     {
         if (!colPoolDic.ContainsKey(size))
         {
-            colPoolDic.Add(size, new CheckObjectPool<Collider2D>(size, 1));
+            colPoolDic.Add(size, new CheckObjectPool<Collider2D>(size, GetInitialCapacity(size)));
         }
         return colPoolDic[size].Get();
     }

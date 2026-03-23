@@ -23,7 +23,7 @@ public class Passive_Zombie_BullyMan : ISkillEffect
         if (target == null || target.IfDeath)
         {
             //findTarget.FindTarget(user,targets);
-            RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(100 );
+            RaycastHit2D[] hits = CheckObjectPoolManage.GetHitArray(1000);
 
             int num = Physics2D.RaycastNonAlloc(user.transform.position, user.transform.right,
                 hits, checkRange, GameManage.instance.chessTeamManage.GetEnemyLayer(user.gameObject));
@@ -37,7 +37,7 @@ public class Passive_Zombie_BullyMan : ISkillEffect
                 //Debug.Log("霸凌目标" + target.name);
             }
 
-            CheckObjectPoolManage.ReleaseArray(100, hits);
+            CheckObjectPoolManage.ReleaseArray(1000, hits);
            
         }
     }

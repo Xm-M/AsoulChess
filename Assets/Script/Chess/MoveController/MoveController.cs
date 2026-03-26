@@ -60,8 +60,9 @@ public class MoveController:Controller
             float speed = chess.propertyController.GetMoveSpeed();
 
             float newX = Mathf.MoveTowards(pos.x, target.x, speed * Time.deltaTime);
+            
             float newY = Mathf.MoveTowards(pos.y, target.y, speed * 2f * Time.deltaTime);
-
+            if(chess.CompareTag("Player")) newY = Mathf.MoveTowards(pos.y, target.y, speed  * Time.deltaTime);
             chess.transform.position = new Vector3(newX, newY, pos.z);
             //我当时写这一句的目的是 哪个wineTile可以准确的放到下一格 或者说脚下的那一格对吧 不然没什么用这个的道理啊
             if (Vector2.Distance(chess.transform.position, nextTile.transform.position) < 1.25)

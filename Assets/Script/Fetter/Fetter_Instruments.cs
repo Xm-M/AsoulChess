@@ -125,24 +125,29 @@ public class Drummer : Fetter
 }
 
 /// <summary>
-/// 键盘手。配置：detectMode=Tag, tag=键盘, tierThresholds=[2]
+/// 键盘手。配置：detectMode=Tag, tag=键盘, tierThresholds=[2,3,4,5]
+/// 周围8格+自身护甲。周围0.5倍，自身2倍。满层100护甲。
 /// </summary>
 public class KeyBoard : Fetter
 {
-    [SerializeReference]
-    public Buff_KeyBoard keyBoardBuff;
-    public float coldDown;
-    Timer timer;
+    [SerializeReference] public Buff_KeyBoardAura keyBoardAuraBuff;
+    static readonly float[] TierScale = { 0.2f, 0.45f, 0.7f, 1f };
     public override void FetterEffect(int count, int tier)
     {
         base.FetterEffect(count, tier);
+        if (keyBoardAuraBuff == null) keyBoardAuraBuff = new Buff_KeyBoardAura();
+        if (keyBoardAuraBuff.keyBoardArmorBuff == null) keyBoardAuraBuff.keyBoardArmorBuff = new Buff_KeyBoardArmor();
+        if (keyBoardAuraBuff.keyBoardArmorBuff.armorBuff == null)
+            keyBoardAuraBuff.keyBoardArmorBuff.armorBuff = new Buff_BaseValueBuff_Armor();
+        int idx = Mathf.Clamp(count - 2, 0, TierScale.Length - 1);
+        keyBoardAuraBuff.baseArmor = TierScale[idx] * 100f;
         EventController.Instance.AddListener<Chess>(EventName.WhenChessEnterWar.ToString(), AddBuff);
     }
     public void AddBuff(Chess chess)
     {
-        if (chess.CompareTag("Player"))
+        if (chess.CompareTag("Player") && chess.propertyController.creator.plantTags != null && chess.propertyController.creator.plantTags.Contains("键盘"))
         {
-            chess.buffController.AddBuff(keyBoardBuff);
+            chess.buffController.AddBuff(keyBoardAuraBuff);
         }
     }
     public override void ResetFetter()

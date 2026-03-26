@@ -157,9 +157,9 @@ MonoBehaviour:
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 0
-    activeSkill:
       id: 1
+    activeSkill:
+      id: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -226,24 +226,31 @@ MonoBehaviour:
     00000000:
       type: {class: , ns: , asm: }
     00000001:
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
+      data:
+        effect:
+          id: 3
+    00000002:
       type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
       data:
         config: {fileID: 11400000, guid: 53518ad05c8a7ab4abb8862864751974, type: 2}
         readyChecker:
           id: 0
         effect:
-          id: 2
-        skillFinish:
-          id: 3
-        runtime:
           id: 4
-    00000002:
+        skillFinish:
+          id: 5
+        runtime:
+          id: 6
+    00000003:
+      type: {class: PassiveSkill_AkiyamaMioOverflow, ns: , asm: Assembly-CSharp}
+    00000004:
       type: {class: SkillEffect_CreateSunLight, ns: , asm: Assembly-CSharp}
       data:
         sunLightPos: {fileID: 8190265288536604016}
-    00000003:
+    00000005:
       type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
-    00000004:
+    00000006:
       type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
       data:
         currentTime: 0
@@ -308,6 +315,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1107494461093155509}
   sprite: {fileID: 4012317014468067214}
+  attackStateNameAlt: 
 --- !u!114 &3776742170004930065
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -74,6 +74,9 @@ public class PropertyController:Controller
             UIManage.GetView<DamagePanel>().ShowMiss(mes);
         }
 
+        if (mes.damage > 0 && mes.damageType != DamageType.Real && mes.damageType != DamageType.Heal && mes.damageType != DamageType.Miss)
+            Buff_HoukagoTeaTime.TryApplyShareAfterMitigation(chess, mes);
+
         if (mes.damage > 0)
         {
             Data.Hp -= mes.damage;
@@ -311,6 +314,12 @@ public class PropertyController:Controller
     {
         return Data.Hp / Data.HpMax;
     }
+
+    /// <summary>回复增益倍率，与 <see cref="Heal"/> 内乘算一致。</summary>
+    public float GetHealRate() => Data.healRate;
+
+    /// <summary>生命偷取（0~1 等），用于秋山澪等按 (1+偷取) 换算的公式。</summary>
+    public float GetLifeStealing() => Data.lifeStealing;
 }
 //属性类，每个单位都有自己的属性 
 [Serializable]

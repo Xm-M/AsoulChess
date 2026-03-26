@@ -11,7 +11,9 @@ public class SkillState : State
     {
         base.Enter(chess);
         chess.skillController.skillEffectFiredThisCast = false;
-        chess.animatorController.PlaySkill();    
+        chess.animatorController.PlaySkill();
+        if (chess.skillController.activeSkill is ISkillFireUseSkillOnEnter fireOnEnter)
+            fireOnEnter.FireUseSkillOnEnter(chess);
     }
     public override void Execute(Chess chess)
     {

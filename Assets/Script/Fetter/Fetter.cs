@@ -142,6 +142,26 @@ public class TogenashiTogeari : Fetter
     Timer rainStopTimer;
     Timer rainDamageLoop;
 
+    /// <summary>刺雨是否正在下</summary>
+    public bool IsRaining => rainStopTimer != null;
+
+    /// <summary>主唱Nina主动：清空所有无刺有刺成员的压力（OnStressChange 会自动把减少量累加到 stressChangeValue），然后触发刺雨。刺雨正在下时无法调用。</summary>
+    public void TriggerRainFromMainSingerNina()
+    {
+        if (rainStopTimer != null) return;
+        foreach (var chess in GameManage.instance.chessTeamManage.GetTeam("Player"))
+        {
+            if (chess != null && chess.propertyController?.creator?.plantTags?.Contains("无刺有刺") == true && chess.CompareTag("Player"))
+            {
+                int s = 0;
+                chess.skillController.context.TryGet<int>("stress", out s);
+                if (s > 0)
+                    chess.skillController.context.Set<int>("stress", 0);
+            }
+        }
+        Rain();
+    }
+
     public override void FetterEffect(int count, int tier)
     {
         base.FetterEffect(count, tier);
@@ -253,8 +273,11 @@ public class Buff_Band_GBC : Buff
     {
         int current = 0;
         target.skillController.context.TryGet<int>("stress", out current);
-        int change = Mathf.Abs(current - stress);
-        gbc.stressChangeValue += change;
+        if (current < stress)  // 仅当压力减少时累加
+        {
+            int decrease = stress - current;
+            gbc.stressChangeValue += decrease;
+        }
         stress = current;
     }
     public override void BuffOver()

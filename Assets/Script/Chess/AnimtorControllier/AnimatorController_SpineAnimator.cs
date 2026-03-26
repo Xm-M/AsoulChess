@@ -82,9 +82,37 @@ public class AnimatorController_SpineAnimator : AnimatorController
     {
         PlaySpineAnim(StateName.IdleState);
     }
+    [Tooltip("Spine：attackAnimationVariant>0 时，用该动画名作为 AttackState 的首段（需与 datas 里 AttackState 同轨道/事件配置一致）。")]
+    public string attackSpineAnimationNameAlt = "";
+
     public override void PlayAttack()
     {
-        PlaySpineAnim(StateName.AttackState);
+        if (attackAnimationVariant > 0 && !string.IsNullOrEmpty(attackSpineAnimationNameAlt))
+            PlaySpineAnimAttackStateOverrideFirstClip(attackSpineAnimationNameAlt);
+        else
+            PlaySpineAnim(StateName.AttackState);
+    }
+
+    /// <summary>与 PlaySpineAnim(AttackState) 相同，仅首段动画名替换为 <paramref name="firstClipName"/>。</summary>
+    protected virtual void PlaySpineAnimAttackStateOverrideFirstClip(string firstClipName)
+    {
+        complete = false;
+        currentStateName = StateName.AttackState;
+        var stateName = StateName.AttackState;
+        if (spineAudioDic.TryGetValue(stateName, out var l))
+        {
+            foreach (var item in l) item.player.RandomPlay();
+        }
+        if (!spineAnimDic.TryGetValue(stateName, out var list) || list.Count == 0)
+            return;
+        sa.AnimationState.ClearTrack(list[0].track);
+        var first = list[0];
+        sa.AnimationState.SetAnimation(first.track, firstClipName, first.loop);
+        for (int i = 1; i < list.Count; i++)
+        {
+            var anim = list[i];
+            sa.AnimationState.AddAnimation(anim.track, anim.animationName, anim.loop, anim.delay);
+        }
     }
     public override void PlaySkill()
     {

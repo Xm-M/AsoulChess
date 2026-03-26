@@ -67,9 +67,32 @@ public class AnimatorController : MonoBehaviour,Controller
     {
         animator.Play("run");
     }
+    /// <summary>攻击动画变体，由技能/被动在切换武器等时机调用（如 0=普攻，1=发呆治疗攻击）。</summary>
+    protected int attackAnimationVariant;
+
+    [Tooltip("Mecanim：variant>0 时播放该 Animator 状态名（如 attack_heal）；留空则仍播 \"attack\"，仅写入 attackVariant 整型参数（用于 BlendTree）。")]
+    public string attackStateNameAlt = "";
+
+    public virtual void SetAttackAnimationVariant(int variant)
+    {
+        attackAnimationVariant = variant;
+    }
+
+    public virtual int GetAttackAnimationVariant() => attackAnimationVariant;
+
     public virtual void PlayAttack()
     {
-        animator.Play("attack");
+        if (animator == null) return;
+        if (attackAnimationVariant > 0 && !string.IsNullOrEmpty(attackStateNameAlt))
+        {
+            animator.Play(attackStateNameAlt);
+        }
+        else
+        {
+            if (HasParameter(animator, "attackVariant"))
+                animator.SetInteger("attackVariant", attackAnimationVariant);
+            animator.Play("attack");
+        }
     }
     public virtual void PlayDeath()
     {

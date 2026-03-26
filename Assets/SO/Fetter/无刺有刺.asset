@@ -23,7 +23,7 @@ MonoBehaviour:
         fetterIcon: {fileID: 0}
         detectMode: 1
         config:
-          tag: 
+          tag: "\u65E0\u523A\u6709\u523A"
           requiredMemberIds:
           - "\u4E95\u82B9\u4EC1\u83DC"
           - "\u5B89\u548C\u6634"
@@ -31,14 +31,14 @@ MonoBehaviour:
           - "\u6D77\u8001\u51A2\u667A"
           - "\u5362\u5E15"
           tierThresholds: 02000000
-        num: 0
+        num: 5
         tier: 0
         DM:
           damageFrom: {fileID: 0}
           damageTo: {fileID: 0}
-          damage: 3048
+          damage: 0
           damageType: 2
-          damageElementType: 0
+          damageElementType: 12
           ifCrit: 0
           takeBuff:
             id: 1
@@ -49,9 +49,9 @@ MonoBehaviour:
         rate: 1
         darkPecent: 0.5
         rainPre: {fileID: 4196391829057553230, guid: 734d69a9a5797574dacecff2e93d480b, type: 3}
-        outlineColor: {r: 0.735849, g: 0.025453812, b: 0.05221822, a: 1}
+        outlineColor: {r: 0.8207547, g: 0.14453536, b: 0.17311056, a: 1}
         outlineSize: 1
-        stressChangeValue: 626
+        stressChangeValue: 45
     00000001:
       type: {class: , ns: , asm: }
     00000002:

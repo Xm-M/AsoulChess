@@ -10,6 +10,8 @@ public class Weapon_Sample : Weapon
     public IFindTarget  findTarget;
     [SerializeReference]
     public IAttackFunction attackFunction;
+    /// <summary>仅运行时缓存目标，勿序列化；否则 Odin 在绘制 SerializeReference 嵌套武器时会与 List&lt;Chess&gt; 序列化冲突。</summary>
+    [System.NonSerialized]
     public List<Chess> enemys;
     public float interval;
     public int FindEnemy(Chess user)

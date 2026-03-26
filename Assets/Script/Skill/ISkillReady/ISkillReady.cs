@@ -73,3 +73,15 @@ public class SkillReady_MouseDown : ISkillReady
          
     }
 }
+/// <summary>无刺有刺羁绊已触发且刺雨未在下的情况可用。用于主唱Nina主动技能。</summary>
+public class SkillReady_RainNotActive : ISkillReady
+{
+    const string FetterName = "无刺有刺";
+    public bool IfSkillReady(Chess user, SkillConfig config, List<Chess> targets)
+    {
+        if (!GameManage.instance.fetterManage.ContainFetter(FetterName)) return false;
+        var fetter = GameManage.instance.fetterManage.GetFetter(FetterName) as TogenashiTogeari;
+        return fetter != null && !fetter.IsRaining;
+    }
+    public void InitSkillReady(Chess user, SkillConfig config, List<Chess> targets) { }
+}

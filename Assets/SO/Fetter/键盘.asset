@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a3eea657dcad7a47b8f4f8555794f77, type: 3}
+  m_Name: "\u952E\u76D8"
+  m_EditorClassIdentifier: 
+  fetter:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: KeyBoard, ns: , asm: Assembly-CSharp}
+      data:
+        fetterName: "\u952E\u76D8"
+        fetterIcon: {fileID: 0}
+        detectMode: 0
+        config:
+          tag: "\u952E\u76D8"
+          requiredMemberIds: []
+          tierThresholds: 02000000030000000400000005000000
+        num: 0
+        tier: 0
+        keyBoardAuraBuff:
+          id: 1
+    00000001:
+      type: {class: Buff_KeyBoardAura, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u952E\u76D8"
+        target: {fileID: 0}
+        baseArmor: 0
+        keyBoardArmorBuff:
+          id: 2
+        checkInterval: 0.5
+    00000002:
+      type: {class: Buff_KeyBoardArmor, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u952E\u76D8\u62A4\u7532"
+        target: {fileID: 0}
+        armorBuff:
+          id: 3
+    00000003:
+      type: {class: Buff_BaseValueBuff_Armor, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u62A4\u7532\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        armor: 0

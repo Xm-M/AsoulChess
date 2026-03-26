@@ -122,7 +122,10 @@ public class SkillContext
 
     static bool ShouldSkipKey(string key)
     {
-        return key == "霸凌目标" || key == "stand" || key == "sword";
+        // 秋山澪：溢出治疗缓冲为战斗内临时量，不写入 SkillContext 存档
+        return key == "霸凌目标" || key == "stand" || key == "sword"
+            || key == "akiOverflowHealBuffer"
+            || key == RitsuSkillContextKeys.RecordedDamageSnap;
     }
 
     public SkillContextSaveData WriteToSaveData()

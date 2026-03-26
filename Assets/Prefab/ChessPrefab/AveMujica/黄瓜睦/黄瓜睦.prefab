@@ -172,36 +172,7 @@ MonoBehaviour:
       data:
         clickBox: {fileID: 7895530665067381902}
     00000008:
-      type: {class: SkillEffect_ZZZLight, ns: , asm: Assembly-CSharp}
-      data:
-        headOffset: {x: 0, y: 0}
-        riseHeight: 0
-        riseDuration: 1
-        gatherDuration: 1
-        angularSpeedDeg: 10
-        minRadius: 2.5
-        minRadiusLong: 2.5
-        orbitDuration: 3
-        scatterDuration: 3
-        dropDuration: 0.4
-        swordsPerRing: 6
-        baseRingRadius: 1
-        groundY: -6.25
-        innerRadiusX: 8
-        innerRadiusY: 2
-        midRadiusX: 16
-        midRadiusY: 4
-        outerRadiusX: 24
-        outerRadiusY: 6
-        waveAmp:
-        - 0.2
-        - 0.35
-        - 0.5
-        waveFreq:
-        - 2
-        - 2.5
-        - 3
-        activeSwords: []
+      type: {class: SkillEffect_TriggerRain, ns: , asm: Assembly-CSharp}
     00000009:
       type: {class: DurationFinish, ns: , asm: Assembly-CSharp}
     0000000A:

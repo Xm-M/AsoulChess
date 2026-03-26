@@ -227,6 +227,9 @@ public class Buff_Guitar : Buff
 public class Buff_DrummerDamage : Buff
 {
     [SerializeReference] public Buff_BaseValueBuff_ExtraDamage extraDamageBuff;
+    [Tooltip("获得鼓手增益时生成的光环特效")]
+    public GameObject auraEffect;
+    GameObject _spawnedAura;
     public override Buff Clone()
     {
         var c = (Buff_DrummerDamage)base.Clone();
@@ -244,9 +247,20 @@ public class Buff_DrummerDamage : Buff
         base.BuffEffect(target);
         extraDamageBuff.target = target;
         extraDamageBuff.BuffEffect(target);
+        if (auraEffect != null)
+        {
+            _spawnedAura = ObjectPool.instance.Create(auraEffect);
+            _spawnedAura.transform.SetParent(target.transform);
+            _spawnedAura.transform.localPosition = Vector3.zero;
+        }
     }
     public override void BuffOver()
     {
+        if (_spawnedAura != null)
+        {
+            ObjectPool.instance.Recycle(_spawnedAura);
+            _spawnedAura = null;
+        }
         if (extraDamageBuff != null && target != null)
             target.propertyController.ChangeExtraDamage(-extraDamageBuff.extraDamage);
         base.BuffOver();
@@ -264,6 +278,8 @@ public class Buff_DrummerAura : Buff
 {
     public float extraDamage; // 由羁绊设置，满层0.5
     [SerializeReference] public Buff_DrummerDamage drummerDamageBuff;
+    [Tooltip("获得鼓手增益时生成的光环特效")]
+    public GameObject auraEffect;
     public float checkInterval = 0.5f;
     Timer timer;
     HashSet<Chess> buffedUnits = new HashSet<Chess>();
@@ -278,6 +294,7 @@ public class Buff_DrummerAura : Buff
         base.BuffEffect(target);
         drummerDamageBuff.extraDamageBuff.extraDamage = extraDamage;
         drummerDamageBuff.buffName = "鼓手增益";
+        drummerDamageBuff.auraEffect = auraEffect;
         ApplyAura();
         timer = GameManage.instance.timerManage.AddTimer(ApplyAura, checkInterval, true);
     }
@@ -340,41 +357,124 @@ public class Buff_DrummerAura : Buff
 }
 
 /// <summary>
-/// 键盘 Buff：护甲增益，键盘手获得三倍效果（具体效果）
+/// 键盘增益 Buff：外壳，内装 Buff_BaseValueBuff_Armor。BuffReset 不叠加。
 /// </summary>
-public class Buff_KeyBoard : Buff
+public class Buff_KeyBoardArmor : Buff
 {
     [SerializeReference] public Buff_BaseValueBuff_Armor armorBuff;
-    [UnityEngine.Serialization.FormerlySerializedAs("extraArmor")] public float _extraArmor;
+    [Tooltip("获得键盘增益时生成的光环特效")]
+    public GameObject auraEffect;
+    GameObject _spawnedAura;
     public override Buff Clone()
     {
-        var c = (Buff_KeyBoard)base.Clone();
+        var c = (Buff_KeyBoardArmor)base.Clone();
         c.armorBuff = armorBuff != null ? (Buff_BaseValueBuff_Armor)armorBuff.Clone() : null;
         return c;
     }
-    void EnsureBuffs() { if (armorBuff == null) armorBuff = new Buff_BaseValueBuff_Armor { armor = _extraArmor }; }
-    protected override void PrepareForRestore() => EnsureBuffs();
-    float GetArmorMultiplier(Chess target) => target.propertyController.creator.plantTags.Contains("键盘") ? 3f : 1f;
+    void EnsureBuff() { if (armorBuff == null) armorBuff = new Buff_BaseValueBuff_Armor(); }
+    protected override void PrepareForRestore() => EnsureBuff();
     public override void BuffEffect(Chess target)
     {
-        EnsureBuffs();
+        EnsureBuff();
         base.BuffEffect(target);
-        float mult = GetArmorMultiplier(target);
-        target.propertyController.ChangeAR(armorBuff.armor * mult);
+        armorBuff.target = target;
+        armorBuff.BuffEffect(target);
+        if (auraEffect != null)
+        {
+            _spawnedAura = ObjectPool.instance.Create(auraEffect);
+            _spawnedAura.transform.SetParent(target.transform);
+            _spawnedAura.transform.localPosition = Vector3.zero;
+        }
     }
     public override void BuffOver()
     {
-        if (target != null && armorBuff != null)
+        if (_spawnedAura != null)
         {
-            float mult = GetArmorMultiplier(target);
-            target.propertyController.ChangeAR(-armorBuff.armor * mult);
+            ObjectPool.instance.Recycle(_spawnedAura);
+            _spawnedAura = null;
         }
+        if (armorBuff != null && target != null)
+            target.propertyController.ChangeAR(-armorBuff.armor);
         base.BuffOver();
     }
-    public override void BuffReset(Buff resetBuff)
+    public override void BuffReset(Buff resetBuff) { /* 不叠加 */ }
+}
+
+/// <summary>
+/// 键盘光环 Buff：挂在键盘身上，周围8格+自身获得护甲。周围0.5倍，键盘自身2倍。满层100护甲。
+/// </summary>
+public class Buff_KeyBoardAura : Buff
+{
+    public float baseArmor; // 由羁绊设置，满层100
+    [SerializeReference] public Buff_KeyBoardArmor keyBoardArmorBuff;
+    [Tooltip("获得键盘增益时生成的光环特效")]
+    public GameObject auraEffect;
+    public float checkInterval = 0.5f;
+    Timer timer;
+    HashSet<Chess> buffedUnits = new HashSet<Chess>();
+    void EnsureBuff() { if (keyBoardArmorBuff == null) keyBoardArmorBuff = new Buff_KeyBoardArmor(); }
+    protected override void PrepareForRestore() => EnsureBuff();
+    public override void BuffEffect(Chess target)
     {
-        base.BuffReset(resetBuff);
-        var other = resetBuff as Buff_KeyBoard;
-        if (other?.armorBuff != null && armorBuff != null) armorBuff.BuffReset(other.armorBuff);
+        EnsureBuff();
+        base.BuffEffect(target);
+        keyBoardArmorBuff.buffName = "键盘增益";
+        keyBoardArmorBuff.auraEffect = auraEffect;
+        ApplyAura();
+        timer = GameManage.instance.timerManage.AddTimer(ApplyAura, checkInterval, true);
+    }
+    void ApplyAura()
+    {
+        if (target == null || target.IfDeath) return;
+        var standTile = target.moveController?.standTile;
+        if (standTile == null || MapManage.instance == null) return;
+        var toBuff = new List<Chess>();
+        toBuff.Add(target);
+        var neighbors = MapManage.instance.GetEightNeighborTiles(standTile);
+        foreach (var t in neighbors)
+        {
+            if (t.stander != null && t.stander.CompareTag("Player") && !t.stander.IfDeath)
+                toBuff.Add(t.stander);
+        }
+        var toRemove = new List<Chess>();
+        foreach (var c in buffedUnits)
+        {
+            if (!toBuff.Contains(c) && c != null && !c.IfDeath)
+            {
+                c.buffController.TryOverBuff(keyBoardArmorBuff);
+                toRemove.Add(c);
+            }
+        }
+        foreach (var c in toRemove) buffedUnits.Remove(c);
+        foreach (var c in toBuff)
+        {
+            if (c == null || c.IfDeath) continue;
+            float mult = (c == target) ? 2f : 0.5f; // 自身2倍，周围0.5倍
+            keyBoardArmorBuff.armorBuff.armor = baseArmor * mult;
+            c.buffController.AddBuff(keyBoardArmorBuff);
+            buffedUnits.Add(c);
+        }
+    }
+    public override void BuffOver()
+    {
+        timer?.Stop();
+        timer = null;
+        foreach (var c in buffedUnits)
+        {
+            if (c != null && !c.IfDeath)
+                c.buffController.TryOverBuff(keyBoardArmorBuff);
+        }
+        buffedUnits.Clear();
+        base.BuffOver();
+    }
+    public override void WriteExtraToSaveData(BuffSaveData data)
+    {
+        base.WriteExtraToSaveData(data);
+        if (data != null) data.SetExtra("BaseArmor", baseArmor);
+    }
+    public override void RestoreExtraFromSaveData(BuffSaveData data)
+    {
+        base.RestoreExtraFromSaveData(data);
+        if (data != null) baseArmor = data.GetExtraFloat("BaseArmor", baseArmor);
     }
 }// 

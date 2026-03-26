@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a3eea657dcad7a47b8f4f8555794f77, type: 3}
+  m_Name: "\u653E\u5B66\u540E\u8336\u4F1A"
+  m_EditorClassIdentifier: 
+  fetter:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: HoukagoTeaTime, ns: , asm: Assembly-CSharp}
+      data:
+        fetterName: "\u653E\u5B66\u540E\u8336\u4F1A"
+        fetterIcon: {fileID: 0}
+        detectMode: 1
+        config:
+          tag: 
+          requiredMemberIds:
+          - "\u5E73\u6CFD\u552F"
+          - "\u79CB\u5C71\u6FAA"
+          - "\u5F8B"
+          - "\u4E2D\u91CE\u6893"
+          - "\u7434\u5439\u7D2C"
+          tierThresholds: 02000000
+        num: 0
+        tier: 0
+        buffTemplate:
+          id: 1
+    00000001:
+      type: {class: Buff_HoukagoTeaTime, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u653E\u5B66\u540E\u8336\u4F1A"
+        target: {fileID: 0}
+        extraHealRate: 0.15

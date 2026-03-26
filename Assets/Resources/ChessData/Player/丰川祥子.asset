@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: "\u4E30\u5DDD\u7965\u5B50"
   m_EditorClassIdentifier: 
   chessName: "\u4E30\u5DDD\u7965\u5B50"
+  chessDescription: 
+  chessShortDescription: 
+  chessEffect: 
   baseProperty:
     attack: 0
     attackRate: 0
     crit: 0
     critDamage: 1.3
+    dodgeRate: 0
     extraDamge: 0
     AR: 0
     extraDefence: 0
@@ -27,6 +31,8 @@ MonoBehaviour:
     healRate: 1
     speed: 1
     acceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
     attackRange: 1
     price: 75
     rarity: 4000
@@ -37,13 +43,16 @@ MonoBehaviour:
   chessSprite: {fileID: 21300000, guid: 5fe39294f69dadb43888fabec9d61853, type: 3}
   plantTags:
   - AveMujica
-  - "\u952E\u76D8\u624B"
+  - "\u952E\u76D8"
+  fetterMemberId: 
   chessTileType: 1
   plantType: 1
   plantFunction:
     id: 0
   plantIfCanBuyCard:
     id: 1
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
   references:
     version: 1
     00000000:

@@ -122,6 +122,12 @@ public class FindTileMethod_Snake : FindTileMethod
     public override void WhenMoving(Chess c)
     {
         base.WhenMoving(c);
+        Chess chess = c;
+
+        // 仅 Player：僵尸等非玩家 Y 移速倍率与 X 不同，delta.x 易在目标附近来回变号，会误触发每帧翻面导致徘徊
+        Vector3 pos = chess.transform.position;
+        Vector3 target = c.moveController.nextTile.transform.position;
+        chess.UpdateFacingFromHorizontalMove((Vector2)(target - pos));
         PollKeyboardToQueue();
         ApplyQueuedDirection();
         UpdateSnakeTailFollow();
@@ -400,8 +406,14 @@ public class FindTileMethod_Snake : FindTileMethod
 
         ComputeTierWorldEndDistancesFromPath(out float silverEndWorld, out float goldEndWorld);
 
+        // Shader 一般为：t < sn 银，sn ≤ t < gn 金，t ≥ gn 钻。金=0 时 goldEnd==silverEnd → sn==gn，中间无金带，
+        // 若仍用「t > gn」当钻，则 t > sn 整段都会变成钻；且拐角细分会让 Line 总长 > 格心折线，sn/gn 被低估，尾部也会误成钻。
         float sn = Mathf.Clamp01(silverEndWorld / lineWorldLength);
         float gn = Mathf.Clamp01(goldEndWorld / lineWorldLength);
+        if (_segmentCountDiamond == 0)
+            gn = 1f;
+        if (_segmentCountGold == 0 && _segmentCountDiamond == 0)
+            sn = 1f;
 
         if (!string.IsNullOrEmpty(shaderTierSilverGoldNormalizedProperty))
         {

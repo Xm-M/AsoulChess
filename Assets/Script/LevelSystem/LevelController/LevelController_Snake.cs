@@ -59,6 +59,17 @@ public class LevelController_Snake : LevelController
     [FoldoutGroup("蛇关卡"), LabelText("生成用队伍标签")]
     public string foodTeamTag = "Player";
 
+    [FoldoutGroup("蛇关卡/难度"), LabelText("波次增加蛇移速")]
+    [Tooltip("每进入新一波在 BeginFoodWave 时给蛇头叠一层 Buff_BaseValueBuff_AcceleRate（与 ChangeAcceleRate 一致，影响 GetMoveSpeed）")]
+    public bool snakeSpeedScaleByWave = true;
+
+    [FoldoutGroup("蛇关卡/难度"), LabelText("每波移速倍率增量")]
+    [Tooltip("第 n 波总加成 = (n-1)×本值；acceleRated 基础为 1，故 0.05 表示从第 2 波起每波约 +5% 移速")]
+    [Min(0f)]
+    public float snakeAcceleRatePerWave = 0.04f;
+
+    const string SnakeWaveMoveSpeedBuffName = "蛇关波次移速";
+
     [ShowInInspector, ReadOnly]
     [ShowIf("@UnityEngine.Application.isPlaying")]
     readonly List<Chess> _activeFood = new List<Chess>();
@@ -344,6 +355,26 @@ public class LevelController_Snake : LevelController
             SpawnWaveFoodFromBudget();
         else
             TrySpawnFoodBurstTowardMin();
+
+        ApplySnakeWaveMoveSpeedBuff(wave1Based);
+    }
+
+    /// <summary>
+    /// 按波次提高蛇头移速：对 <see cref="Buff_BaseValueBuff_AcceleRate"/> 使用固定 buffName，重复进入波次时 <see cref="BuffController.AddBuff"/> 会 BuffReset 升档。
+    /// </summary>
+    void ApplySnakeWaveMoveSpeedBuff(int wave1Based)
+    {
+        if (!snakeSpeedScaleByWave || snakeAcceleRatePerWave <= 0f || wave1Based < 1) return;
+
+        SnakeGridController drv = snakeDriver != null ? snakeDriver : FindObjectOfType<SnakeGridController>();
+        if (drv == null || drv.head == null || drv.head.IfDeath || drv.head.buffController == null) return;
+
+        float rate = (wave1Based - 1) * snakeAcceleRatePerWave;
+        if (rate <= 0f) return;
+
+        var buff = new Buff_BaseValueBuff_AcceleRate { rate = rate };
+        buff.buffName = SnakeWaveMoveSpeedBuffName;
+        drv.head.buffController.AddBuff(buff);
     }
 
     /// <summary>与 WaveData.InitWave 相同思路：在剩余预算内反复随机类型并生成，直到预算用尽或放不下。</summary>

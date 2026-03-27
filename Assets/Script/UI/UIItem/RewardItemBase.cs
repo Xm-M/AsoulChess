@@ -32,7 +32,7 @@ public abstract class RewardItemBase : UIItem
     /// <summary>
     /// 若落点在屏幕/相机外则调整到地图内可视 tile 位置
     /// </summary>
-    protected static Vector3 ClampRewardPosToVisible(Vector3 pos)
+    public static Vector3 ClampRewardPosToVisible(Vector3 pos)
     {
         if (Camera.main == null) return pos;
         Vector3 viewport = Camera.main.WorldToViewportPoint(pos);

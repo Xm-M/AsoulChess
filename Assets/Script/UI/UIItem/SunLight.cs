@@ -13,11 +13,22 @@ public class SunLight : UIItem, IPointerEnterHandler
     public float fallSpeed;//掉落速度
     public float disapearTime;//消失时间
     public float jumpHeight = 80f;
+
+    [Header("奖励式弹出（与 Item_Reward / RewardItemBase.SetRewardPos 同曲线）")]
+    [Tooltip("与 RewardItemBase.totalTime 一致")]
+    public float rewardPopTotalTime = 1f;
+    [Tooltip("与 RewardItemBase.height 一致")]
+    public float rewardPopHeight = 1.25f;
+    [Tooltip("与 RewardItemBase.moveSpeed 一致")]
+    public float rewardPopMoveSpeed = 1f;
+    [Tooltip("与 RewardItemBase.timeSpeed 一致")]
+    public float rewardPopTimeSpeed = 2f;
+
     //public AudioSource au;//为什么你也有音效 
     bool ifPick;//是否被捡起来
     Vector2 target;
     Vector2 recyclePos;
-    //float t;
+    Timer timer;
     public void InitSunLight(Tile target)
     {
         Vector3 screenPos = Camera.main.WorldToScreenPoint(target.transform.position);
@@ -25,12 +36,15 @@ public class SunLight : UIItem, IPointerEnterHandler
         transform.position= screenPos;
         recyclePos = SunLightPanel.instance.sunLightText.transform.position;
         ifPick = false;
+        timer = GameManage.instance.timerManage.AddTimer(PickSunlight, 3);
         //t = 0;
     }
     public void InitSunLight(Tile target,int num)
     {
         InitSunLight(target);
+     
         SunLightNum = num;//这里其实还有一个根据num大小改变阳光大小的函数
+
     }
     public void InitSunLight(Tile target,int num,Vector3 startPos)
     {
@@ -42,6 +56,7 @@ public class SunLight : UIItem, IPointerEnterHandler
         recyclePos = SunLightPanel.instance.sunLightText.transform.position;
         ifPick = false;
         //t = 0;
+        timer = GameManage.instance.timerManage.AddTimer(PickSunlight, 3);
         StartCoroutine(Move(screenstartPos,screenPos));
     }
     public void InitSunLight(int num, Vector3 startPos, float totalTime, float x0, float height,float moveSpeed,float timeSpeed)
@@ -50,6 +65,31 @@ public class SunLight : UIItem, IPointerEnterHandler
         ifPick = false;
         SunLightNum = num;
         StartCoroutine(CurveMove(startPos,totalTime,x0,height,moveSpeed,timeSpeed));
+        timer = GameManage.instance.timerManage.AddTimer(PickSunlight, 3);
+    }
+
+    /// <summary>
+    /// 与 <see cref="RewardItemBase.SetRewardPos"/> 相同的曲线弹出，再停留待拾取（不暂停游戏、无自动回收计时器）。
+    /// </summary>
+    public void InitSunLightDropPop(Tile targetTile, int num, Vector3 worldStartPos)
+    {
+        if (targetTile == null || SunLightPanel.instance == null || Camera.main == null) return;
+        SunLightNum = num;
+        recyclePos = SunLightPanel.instance.sunLightText.transform.position;
+        ifPick = false;
+        target = targetTile.transform.position;
+
+        worldStartPos = RewardItemBase.ClampRewardPosToVisible(worldStartPos);
+        float speed = rewardPopMoveSpeed;
+        var mapPvz = MapManage_PVZ.instance;
+        if (mapPvz != null && mapPvz.tiles != null && MapManage.instance != null)
+        {
+            var size = MapManage.instance.mapSize;
+            Vector2 center = mapPvz.tiles[size.x / 2, size.y / 2].transform.position;
+            if (worldStartPos.x > center.x) speed *= -1f;
+        }
+        timer = GameManage.instance.timerManage.AddTimer(PickSunlight, 3);
+        StartCoroutine(CurveMove(worldStartPos, rewardPopTotalTime, 0f, rewardPopHeight, speed, rewardPopTimeSpeed));
     }
 
     IEnumerator CurveMove(Vector3 startPos,float totalTime, float x0, float height, float moveSpeed,float timeSpeed)
@@ -103,6 +143,11 @@ public class SunLight : UIItem, IPointerEnterHandler
             SunLightPanel.instance.ChangeSunLight(SunLightNum);
             StartCoroutine(Recycles());
             ifPick = true;
+            if (timer != null)
+            {
+                timer.Stop();
+                timer = null;
+            }
         }
     }
 
@@ -113,9 +158,28 @@ public class SunLight : UIItem, IPointerEnterHandler
             SunLightPanel.instance.ChangeSunLight(SunLightNum);
             StartCoroutine(Recycles());
             ifPick = true;
+            if (timer != null)
+            {
+                timer.Stop();
+                timer = null;
+            }
         }
     }
-
+    public void PickSunlight()
+    {
+        if (!ifPick)
+        {
+            
+            SunLightPanel.instance.ChangeSunLight(SunLightNum);
+            StartCoroutine(Recycles());
+            ifPick = true;
+            if (timer != null)
+            {
+                timer.Stop();
+                timer = null;
+            }
+        }
+    }
     public override void Recycle()
     {
         //Debug.Log("回收阳光");

@@ -18,9 +18,10 @@ MonoBehaviour:
   levelSprit: {fileID: 0}
   levelMode: 1
   EnterMapPlugin: []
-  PreParePlugin: []
-  GameStartPlugin:
+  PreParePlugin:
   - id: 0
+  GameStartPlugin:
+  - id: 1
   MaxWave: 20
   n: 1
   t: 1
@@ -29,13 +30,20 @@ MonoBehaviour:
   createZombieType: 0
   nextLevel: {fileID: 0}
   outcome:
-    id: 1
+    id: 2
   loadSkipToTime: 10
   references:
     version: 1
     00000000:
+      type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 0
+        cards:
+        - {fileID: 11400000, guid: f95bed26485a04e4590f8dcf849dca80, type: 2}
+        - {fileID: 11400000, guid: e88df929d6525324a929ab594262c6e9, type: 2}
+    00000001:
       type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
       data:
         fastEnterTime: 4
-    00000001:
+    00000002:
       type: {class: , ns: , asm: }

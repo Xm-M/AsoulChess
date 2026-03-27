@@ -137,11 +137,25 @@ public class SnakeGridController : MonoBehaviour
 
         if (!listed) return false;
 
+        int sunDrop = 0;
+        var foodCreator = food.propertyController?.creator;
+        if (foodCreator != null && foodCreator.baseProperty != null)
+            sunDrop = foodCreator.baseProperty.price;
+        Vector3 sunStartWorld = food.transform.position;
+        Tile sunTargetTile = head?.moveController?.standTile ?? food.moveController?.standTile;
+
         snakeLevel.NotifyFoodEaten(food);
         if (!food.IfDeath) food.Death();
 
         var snakeTile = head?.moveController?.tileMethod as FindTileMethod_Snake;
         snakeTile?.NotifyFoodEatenGrow();
+
+        if (sunDrop > 0 && sunTargetTile != null && SunLightPanel.instance != null)
+        {
+            var itemPanel = UIManage.GetView<ItemPanel>();
+            if (itemPanel != null && itemPanel.Create<SunLight>() is SunLight sun)
+                sun.InitSunLightDropPop(sunTargetTile, sunDrop, sunStartWorld);
+        }
 
         return true;
     }

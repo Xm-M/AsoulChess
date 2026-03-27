@@ -129,6 +129,20 @@ public class Chess : MonoBehaviour
         transform.Rotate(0, 180, 0);
         FacingRight = !FacingRight;
     }
+
+    /// <summary>
+    /// 移动时按「当前位置 → 目标」的水平分量决定左右朝向；纯上下移动（水平差过小）不翻面。
+    /// </summary>
+    /// <param name="deltaToTarget">目标位置 − 当前位置（世界或本地同一空间即可）</param>
+    public void UpdateFacingFromHorizontalMove(Vector2 deltaToTarget, float horizontalEpsilon = 0.02f)
+    {
+        if (Mathf.Abs(deltaToTarget.x) <= horizontalEpsilon)
+            return;
+        bool wantRight = deltaToTarget.x > 0f;
+        if (wantRight == FacingRight)
+            return;
+        ForceFlip();
+    }
     /// <summary>
     /// 这个函数应该是用在估计动画触发效果的时候
     /// </summary>

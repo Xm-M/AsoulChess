@@ -225,6 +225,8 @@ MonoBehaviour:
         bodySizeShaderProperty: _BodySize
         bodyTilingAlongPerWorldUnit: 1
         bodySizeY: 1
+        shaderTierSilverGoldNormalizedProperty: _TierSilverGold
+        shaderTierGoldDiamondNormalizedProperty: _TierGoldDiamond
         snakeTrail: {fileID: 4707983701198489712}
         snakeTailFollowSpeed: 14
         snakeTailRotationOffsetDegrees: 0
@@ -316,7 +318,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2264093975875029322}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.071, y: 0.181, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5197555002958711083}
@@ -362,7 +364,7 @@ SpriteRenderer:
   m_SortingLayerID: -1149915625
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 15a5c37845b2c5f4d885545c027253c0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5edf60c0d1ec78244abf2c699cc3277f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

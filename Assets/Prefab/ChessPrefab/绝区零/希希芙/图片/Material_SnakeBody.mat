@@ -19,6 +19,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _DiamondTex:
+        m_Texture: {fileID: 2800000, guid: 5d0effb3e3faeb0488725ea3e246861b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GoldTex:
+        m_Texture: {fileID: 2800000, guid: 1e95a15285352aa428fca4c82d3fd274, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 525b7820b156e0c498caa119c261e585, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -35,6 +43,11 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats: []
-    m_Colors: []
+    m_Floats:
+    - _TierGoldDiamond: 1
+    - _TierSilverGold: 1
+    m_Colors:
+    - _BodySize: {r: 1, g: 1, b: 0, a: 0}
+    - _DiamondTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _GoldTiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

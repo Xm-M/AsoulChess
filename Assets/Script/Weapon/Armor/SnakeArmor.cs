@@ -59,6 +59,29 @@ public class SnakeArmor : ArmorBase
             snakeDriver = FindObjectOfType<SnakeGridController>();
 
         if (snakeDriver != null && snakeDriver.TryEatFood(other, user))
+        {
             _nextEatTime = Time.time + eatCooldown;
+            return;
+        }
+
+        if (other.CompareTag(user.tag))
+            return;
+
+        if (user.propertyController == null || other.propertyController == null)
+            return;
+
+        int userSize = user.propertyController.GetSize();
+        int targetSize = other.propertyController.GetSize();
+
+        if (targetSize < userSize)
+        {
+            if (!other.IfDeath)
+                other.Death();
+            _nextEatTime = Time.time + eatCooldown;
+            return;
+        }
+
+        LevelController_Snake level = snakeDriver != null ? snakeDriver.snakeLevel : FindObjectOfType<LevelController_Snake>();
+        level?.NotifySnakeDefeat();
     }
 }

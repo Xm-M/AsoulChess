@@ -4,7 +4,8 @@ using UnityEngine;
 
 /// <summary>
 /// 贪吃蛇关卡：用 <see cref="LevelData.MaxWave"/> / n / t / <see cref="LevelData.createZombieType"/> 驱动波次预算公式；
-/// 食物池来自 <see cref="LevelData.zombieList"/> 或 <see cref="foodCreatorsOverride"/>。
+/// 食物池来自 <see cref="foodCreatorsOverride"/>（优先）或 <see cref="LevelData.zombieList"/>；
+/// 出怪若使用 <see cref="snakeWaveZombieCreatorsOverride"/> 可与食物分离。
 /// <para>
 /// <b>按波节奏（<see cref="paceFoodByWave"/>=true，默认）</b>：每波开始时按本波「总价预算」像僵尸波一样一次性生成食物；
 /// 本波内不再补货；进下一波条件对齐僵尸关：<see cref="WaveCanAdvance"/> 思路（清空且过 mintime，或 t&gt;maxtime 等）。
@@ -12,6 +13,10 @@ using UnityEngine;
 /// <para>
 /// <b>旧版多食物补给（paceFoodByWave=false）</b>：<see cref="minFoodOnField"/>～<see cref="maxFoodOnField"/> + 定时补货；
 /// <see cref="useWaveValueBudgetCap"/> 为 true 时用本波总价卡住补充。
+/// </para>
+/// <para>
+/// <b>僵尸（可选）</b>：<see cref="spawnZombiesWithFoodWave"/> 为真时，每波 <see cref="BeginFoodWave"/> 与食物同步，
+/// 动态 <see cref="WaveData.InitWave"/> + <see cref="WaveData.EnterWave"/>；僵尸列表用 <see cref="snakeWaveZombieCreatorsOverride"/>（优先），否则与 <see cref="LevelData.zombieList"/> 相同（常与食物共用，需分离时请填覆盖）。
 /// </para>
 /// </summary>
 public class LevelController_Snake : LevelController
@@ -68,11 +73,48 @@ public class LevelController_Snake : LevelController
     [Min(0f)]
     public float snakeAcceleRatePerWave = 0.04f;
 
+    [FoldoutGroup("蛇关卡/难度"), LabelText("受挫眩晕时长(秒)")]
+    [Tooltip("原立即 GameOver(false) 的场合改为对蛇头施加 DizznessBuff 眩晕，时长为此值")]
+    [Min(0.05f)]
+    public float snakeDefeatStunDuration = 2f;
+
     const string SnakeWaveMoveSpeedBuffName = "蛇关波次移速";
+    const string SnakeDefeatStunBuffName = "蛇关受挫眩晕";
+
+    [FoldoutGroup("蛇关卡/墓碑"), LabelText("墓碑 PropertyCreator")]
+    [Tooltip("非空且间隔>0 时，按波次在空地上生成（规则对齐 Hammer：随机 x≥最小列、排除蛇身/食物/已有墓碑）")]
+    public PropertyCreator tombstoneCreator;
+
+    [FoldoutGroup("蛇关卡/墓碑"), LabelText("每隔几波生成一次")]
+    [Tooltip("0=不生成；第 w 波满足 w % 本值==0 时在 BeginFoodWave 生成（如 3 表示第 3、6、9…波）")]
+    [Min(0)]
+    public int tombstoneEveryNWaves = 3;
+
+    [FoldoutGroup("蛇关卡/墓碑"), LabelText("每次生成数量")]
+    [Min(0)]
+    public int tombstonesPerSpawn = 2;
+
+    [FoldoutGroup("蛇关卡/墓碑"), LabelText("墓碑队伍 tag")]
+    public string tombstoneTeamTag = "Enemy";
+
+    [FoldoutGroup("蛇关卡/墓碑"), LabelText("最小列 x")]
+    [Tooltip("与 Hammer 关一致：随机格从该列起，默认 2（避开最左列）")]
+    [Min(0)]
+    public int tombstoneMinGridX = 2;
+
+    [FoldoutGroup("蛇关卡/僵尸"), LabelText("与食物同波出怪")]
+    [Tooltip("开：每波 BeginFoodWave 时现算一波僵尸（与 WaveData.InitWave 总价、随机选种一致），不预先为 MaxWave 逐波 InitWave")]
+    public bool spawnZombiesWithFoodWave = true;
+
+    [FoldoutGroup("蛇关卡/僵尸"), LabelText("出怪僵尸列表（优先于 LevelData）")]
+    [Tooltip("非空：仅用于 WaveData.InitWave 出怪，与食物池分离。食物请用「食物池覆盖」或 LevelData.zombieList；若食物与僵尸共用同一列表会混淆，应在此填真实僵尸列表。")]
+    public List<PropertyCreator> snakeWaveZombieCreatorsOverride;
 
     [ShowInInspector, ReadOnly]
     [ShowIf("@UnityEngine.Application.isPlaying")]
     readonly List<Chess> _activeFood = new List<Chess>();
+
+    readonly List<Chess> _tombstones = new List<Chess>();
 
     Timer _foodTimer;
 
@@ -156,12 +198,7 @@ public class LevelController_Snake : LevelController
             return;
         }
 
-        for (int i = 0; i < levelData.MaxWave; i++)
-        {
-            var waveData = new WaveData();
-            waveData.InitWave(i + 1, levelData);
-            waveDatas.Add(waveData);
-        }
+        // 不在此预跑全部波的 InitWave；僵尸在每波 BeginFoodWave 时动态 new WaveData + InitWave + EnterWave（与普通关总价/随机逻辑一致）
 
         t = 0;
         currentWave = -1;
@@ -298,8 +335,7 @@ public class LevelController_Snake : LevelController
                         return;
                     }
 
-                    if (waveDatas != null && currentWave < waveDatas.Count &&
-                        waveDatas[currentWave].GetCurrentZombieHpSum() <= 0 && currentWave < levelData.MaxWave - 1)
+                    if (currentWave < levelData.MaxWave - 1)
                         SaveSystem.SaveCurrentLevel();
 
                     t = -2f;
@@ -357,6 +393,135 @@ public class LevelController_Snake : LevelController
             TrySpawnFoodBurstTowardMin();
 
         ApplySnakeWaveMoveSpeedBuff(wave1Based);
+        TrySpawnTombstonesForWave(wave1Based);
+        SpawnZombiesForFoodWave(wave1Based);
+    }
+
+    /// <summary>
+    /// 与 <see cref="WaveData.InitWave"/> / <see cref="WaveData.EnterWave"/> 相同逻辑：本波总价、稀有度随机、生成位置（preTiles）与普通关卡一致。
+    /// 使用运行时复制的 <see cref="LevelData"/>，其中 <see cref="LevelData.zombieList"/> 来自 <see cref="snakeWaveZombieCreatorsOverride"/>（优先），避免与「食物」共用同一列表。
+    /// </summary>
+    void SpawnZombiesForFoodWave(int wave1Based)
+    {
+        if (!spawnZombiesWithFoodWave || levelData == null || wave1Based < 1) return;
+        LevelData data = BuildLevelDataForSnakeWaveSpawn();
+        var wd = new WaveData();
+        wd.InitWave(wave1Based, data);
+        if (Application.isPlaying)
+            Object.Destroy(data);
+        wd.EnterWave();
+    }
+
+    /// <summary>
+    /// 复制关卡 n/t/CreateZombieType/MaxWave，僵尸列表优先用 <see cref="snakeWaveZombieCreatorsOverride"/>。
+    /// </summary>
+    LevelData BuildLevelDataForSnakeWaveSpawn()
+    {
+        var d = ScriptableObject.CreateInstance<LevelData>();
+        d.n = levelData.n;
+        d.t = levelData.t;
+        d.MaxWave = levelData.MaxWave;
+        d.createZombieType = levelData.createZombieType;
+        d.outcome = levelData.outcome;
+        if (snakeWaveZombieCreatorsOverride != null && snakeWaveZombieCreatorsOverride.Count > 0)
+            d.zombieList = new List<PropertyCreator>(snakeWaveZombieCreatorsOverride);
+        else if (levelData.zombieList != null)
+            d.zombieList = new List<PropertyCreator>(levelData.zombieList);
+        else
+            d.zombieList = new List<PropertyCreator>();
+        return d;
+    }
+
+    /// <summary>
+    /// 参考 <see cref="LevelController_HammerZombie.CreateStone"/>：在空地上生成墓碑 Chess，排除蛇身、场上食物与已有墓碑。
+    /// </summary>
+    void TrySpawnTombstonesForWave(int wave1Based)
+    {
+        if (tombstoneCreator == null || tombstoneEveryNWaves <= 0 || tombstonesPerSpawn <= 0)
+            return;
+        if (wave1Based < 1 || wave1Based % tombstoneEveryNWaves != 0)
+            return;
+
+        var positions = GetTombstoneRandomPositions(tombstonesPerSpawn);
+        for (int i = 0; i < positions.Count; i++)
+            SpawnTombstoneAt(positions[i]);
+    }
+
+    void SpawnTombstoneAt(Vector2Int grid)
+    {
+        var map = MapManage.instance;
+        if (map == null || !map.IfInMapRange(grid.x, grid.y)) return;
+        Tile tile = map.tiles[grid.x, grid.y];
+        if (tile == null) return;
+
+        Chess c = ChessTeamManage.Instance.CreateChess(tombstoneCreator, tile, tombstoneTeamTag);
+        tile.PlantChess(c);
+        _tombstones.Add(c);
+        c.OnRemove.AddListener(OnTombstoneRemoved);
+    }
+
+    void OnTombstoneRemoved(Chess chess)
+    {
+        if (chess != null)
+            _tombstones.Remove(chess);
+    }
+
+    /// <summary>与 Hammer 的 <see cref="LevelController_HammerZombie.GetRandomPositions"/> 类似，并排除蛇身/食物/墓碑。</summary>
+    List<Vector2Int> GetTombstoneRandomPositions(int n)
+    {
+        var map = MapManage.instance;
+        if (map == null || map.tiles == null || n <= 0)
+            return new List<Vector2Int>();
+
+        var snakeCells = new HashSet<Vector2Int>();
+        SnakeGridController drv = snakeDriver != null ? snakeDriver : FindObjectOfType<SnakeGridController>();
+        drv?.CopySnakeOccupiedCellsTo(snakeCells);
+
+        var blocked = new HashSet<Vector2Int>();
+        for (int i = 0; i < _activeFood.Count; i++)
+        {
+            Chess f = _activeFood[i];
+            if (f == null || f.IfDeath) continue;
+            Tile st = f.moveController?.standTile;
+            if (st != null)
+                blocked.Add(st.mapPos);
+        }
+
+        for (int i = 0; i < _tombstones.Count; i++)
+        {
+            Chess tb = _tombstones[i];
+            if (tb == null || tb.IfDeath) continue;
+            Tile st = tb.moveController?.standTile;
+            if (st != null)
+                blocked.Add(st.mapPos);
+        }
+
+        int xMin = Mathf.Clamp(tombstoneMinGridX, 0, Mathf.Max(0, map.mapSize.x - 1));
+        // 不刷最右一列 x=mapSize-1；y 仍用满高度 0..mapSize.y-1
+        int xMaxExclusive = Mathf.Max(0, map.mapSize.x - 1);
+        var all = new List<Vector2Int>();
+        for (int x = xMin; x < xMaxExclusive; x++)
+        {
+            for (int y = 0; y < map.mapSize.y; y++)
+            {
+                if (!map.IfInMapRange(x, y)) continue;
+                var cell = new Vector2Int(x, y);
+                if (snakeCells.Count > 0 && snakeCells.Contains(cell)) continue;
+                if (blocked.Contains(cell)) continue;
+                Tile tile = map.tiles[x, y];
+                if (tile == null || !IsTileFreeForFood(tile)) continue;
+                all.Add(cell);
+            }
+        }
+
+        for (int i = 0; i < all.Count; i++)
+        {
+            int j = UnityEngine.Random.Range(i, all.Count);
+            (all[i], all[j]) = (all[j], all[i]);
+        }
+
+        n = Mathf.Min(n, all.Count);
+        return all.Count == 0 ? new List<Vector2Int>() : all.GetRange(0, n);
     }
 
     /// <summary>
@@ -549,6 +714,7 @@ public class LevelController_Snake : LevelController
         tile.PlantChess(food);
         _activeFood.Add(food);
         food.OnRemove.AddListener(OnFoodRemoved);
+        EventController.Instance.TriggerEvent(EventName.SnakeFoodSpawned.ToString(), SnakeGameEventId.FoodSpawned);
         return true;
     }
 
@@ -567,7 +733,9 @@ public class LevelController_Snake : LevelController
         }
 
         int xMin = excludeLeftmostColumn ? 1 : 0;
-        for (int x = xMin; x < map.mapSize.x; x++)
+        // 不刷最右一列 x=mapSize-1；y 仍用满高度（含最上一行）0..mapSize.y-1
+        int xMaxExclusive = Mathf.Max(0, map.mapSize.x - 1);
+        for (int x = xMin; x < xMaxExclusive; x++)
         {
             for (int y = 0; y < map.mapSize.y; y++)
             {
@@ -631,10 +799,28 @@ public class LevelController_Snake : LevelController
             LevelManage.instance.GameOver(true);
     }
 
-    public void NotifySnakeDefeat()
+    /// <summary>
+    /// 原立即失败；现改为对蛇头施加 <see cref="DizznessBuff"/>（与属性眩晕时间、<see cref="DizzinessState"/> 一致）。
+    /// </summary>
+    /// <param name="snake">蛇头；可空则从 <see cref="SnakeGridController.head"/> 解析</param>
+    public void NotifySnakeDefeat(Chess snake = null)
     {
-        if (LevelManage.instance != null && LevelManage.instance.IfGameStart)
-            LevelManage.instance.GameOver(false);
+        if (LevelManage.instance == null || !LevelManage.instance.IfGameStart) return;
+
+        if (snake == null)
+        {
+            SnakeGridController drv = snakeDriver != null ? snakeDriver : FindObjectOfType<SnakeGridController>();
+            snake = drv != null ? drv.head : null;
+        }
+
+        if (snake == null || snake.IfDeath || snake.buffController == null) return;
+
+        var buff = new DizznessBuff
+        {
+            buffName = SnakeDefeatStunBuffName,
+            continueTime = Mathf.Max(0.05f, snakeDefeatStunDuration)
+        };
+        snake.buffController.AddBuff(buff);
     }
 
     public override void GameOver(bool win)
@@ -642,10 +828,24 @@ public class LevelController_Snake : LevelController
         StopFoodLoop();
         SnakeGridController drv = snakeDriver != null ? snakeDriver : FindObjectOfType<SnakeGridController>();
         drv?.ClearSnakeForLevelEnd();
+        ClearAllTombstones();
         ClearAllFood();
         _budgetPool = null;
         _budgetFateList = null;
         base.GameOver(win);
+    }
+
+    void ClearAllTombstones()
+    {
+        for (int i = 0; i < _tombstones.Count; i++)
+        {
+            Chess c = _tombstones[i];
+            if (c == null) continue;
+            c.OnRemove.RemoveListener(OnTombstoneRemoved);
+            if (!c.IfDeath) c.Death();
+        }
+
+        _tombstones.Clear();
     }
 
     void ClearAllFood()

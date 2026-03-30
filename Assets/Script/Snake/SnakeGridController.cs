@@ -32,8 +32,12 @@ public class SnakeGridController : MonoBehaviour
     /// <summary>过关/离场时清掉蛇头与已登记节，避免残留占用对象池。</summary>
     public void ClearSnakeForLevelEnd()
     {
-        if (head != null && head.moveController != null)
-            head.moveController.OnReachTile.RemoveListener(OnHeadReachTile);
+        if (head != null)
+        {
+            head.DeathEvent.RemoveListener(OnSnakeHeadDeath);
+            if (head.moveController != null)
+                head.moveController.OnReachTile.RemoveListener(OnHeadReachTile);
+        }
 
         for (int i = 0; i < _segments.Count; i++)
         {
@@ -43,6 +47,12 @@ public class SnakeGridController : MonoBehaviour
 
         _segments.Clear();
         head = null;
+    }
+
+    void OnSnakeHeadDeath(Chess dead)
+    {
+        if (LevelManage.instance == null || !LevelManage.instance.IfGameStart) return;
+        LevelManage.instance.GameOver(false);
     }
 
     void OnEnable()
@@ -87,6 +97,9 @@ public class SnakeGridController : MonoBehaviour
         }
 
         _segments.Add(head);
+
+        head.DeathEvent.RemoveListener(OnSnakeHeadDeath);
+        head.DeathEvent.AddListener(OnSnakeHeadDeath);
 
         if (head.moveController != null)
         {
@@ -144,8 +157,16 @@ public class SnakeGridController : MonoBehaviour
         Vector3 sunStartWorld = food.transform.position;
         Tile sunTargetTile = head?.moveController?.standTile ?? food.moveController?.standTile;
 
+        string eatTipText = GetCreatorDescriptionForEatFoodTip(foodCreator);
+        string foodKey = foodCreator != null && !string.IsNullOrWhiteSpace(foodCreator.chessName)
+            ? foodCreator.chessName.Trim()
+            : string.Empty;
+        string eatFoodPayload = SnakeEatFoodPayload.Build(foodKey, eatTipText);
+
         snakeLevel.NotifyFoodEaten(food);
         if (!food.IfDeath) food.Death();
+
+        EventController.Instance.TriggerEvent(EventName.SnakeEatFood.ToString(), eatFoodPayload);
 
         var snakeTile = head?.moveController?.tileMethod as FindTileMethod_Snake;
         snakeTile?.NotifyFoodEatenGrow();
@@ -163,6 +184,17 @@ public class SnakeGridController : MonoBehaviour
     bool headEaterMismatch(Chess eater)
     {
         return head != null && eater != head;
+    }
+
+    /// <summary>吃食物 UI：优先棋子描述，否则简短描述。</summary>
+    static string GetCreatorDescriptionForEatFoodTip(PropertyCreator creator)
+    {
+        if (creator == null) return string.Empty;
+        if (!string.IsNullOrWhiteSpace(creator.chessDescription))
+            return creator.chessDescription.Trim();
+        if (!string.IsNullOrWhiteSpace(creator.chessShortDescription))
+            return creator.chessShortDescription.Trim();
+        return string.Empty;
     }
 
     /// <summary>供食物生成等排除蛇身占格；无蛇或未初始化时写入空集。</summary>

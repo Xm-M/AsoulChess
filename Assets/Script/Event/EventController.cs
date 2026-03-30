@@ -44,6 +44,14 @@ public enum EventName
     WhenLeaveLevel,
     PauseGame,
     ResumeGame,
+    /// <summary>贪吃蛇：触发眩晕时统一派发（越界 / 咬自己 / 撞大体型敌）；载荷见 <see cref="SnakeGameEventId"/>。</summary>
+    SnakeHitWall,
+    /// <summary>贪吃蛇：吃掉关卡食物；载荷为 <see cref="SnakeEatFoodPayload"/>（棋子名 + 分隔符 + 描述文案），UI 图标仍由插件里 SnakeEatFood 绑定提供。</summary>
+    SnakeEatFood,
+    /// <summary>贪吃蛇：吃掉更小体型敌方；载荷为 <see cref="SnakeGameEventId.EatZombie"/>。</summary>
+    SnakeEatZombie,
+    /// <summary>贪吃蛇：场上新生成食物；载荷为 <see cref="SnakeGameEventId.FoodSpawned"/>。</summary>
+    SnakeFoodSpawned,
 }
 
 

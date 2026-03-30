@@ -90,6 +90,7 @@ MonoBehaviour:
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
@@ -110,6 +111,9 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 0
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 8902248359629371728}
   WhenEnterGame:
     m_PersistentCalls:
@@ -150,6 +154,7 @@ MonoBehaviour:
         - {fileID: 11400000, guid: 9d155699f8da1694187536396172e995, type: 2}
         - {fileID: 11400000, guid: 4ec3fcd038a6e77468e07b9e150df5ed, type: 2}
         - {fileID: 11400000, guid: b892c3b8e14c95843aa2f08b4da05de7, type: 2}
+        summonPos: {fileID: 0}
     00000005:
       type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
     00000006:
@@ -217,6 +222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 6023281946081245350}
   sprite: {fileID: 436445233864540958}
+  attackStateNameAlt: 
 --- !u!1 &7965066515647392692
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,8 +291,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayerID: -1867909695
+  m_SortingLayer: 1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 910dc07546742b241be0a084139839a8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

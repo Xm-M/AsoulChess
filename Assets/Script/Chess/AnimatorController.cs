@@ -19,6 +19,7 @@ public class AnimatorController : MonoBehaviour,Controller
         return false;
     }
     public SpriteRenderer sprite;
+    public string dizzynesss;
     protected Chess chess;
     float mapMinX=-10;
     float mapMaxX=25;
@@ -140,7 +141,9 @@ public class AnimatorController : MonoBehaviour,Controller
     }
     public virtual void PlayDizzy()
     {
-        animator.Play("idle");
+        if (string.IsNullOrEmpty(dizzynesss))
+            animator.Play("idle");
+        else animator.Play(dizzynesss);
     }
     public virtual string GetCurrentAnimName()
     {

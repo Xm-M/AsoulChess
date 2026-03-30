@@ -56,6 +56,10 @@ public class ShopIcon_Reward : ShopIcon
     /// <summary>与结算奖杯类似：给一个在地图内的世界坐标；特殊关卡可改预制体上的偏移或后续再扩展。</summary>
     static Vector3 DefaultTrophyWorldPos()
     {
+        //foreach(var zombie in GameManage.instance.chessTeamManage.GetEnemyTeam("Player"))
+        //{
+        //    zombie.Death();
+        //}
         var map = MapManage.instance;
         if (map == null || map.tiles == null) return Vector3.zero;
         var s = map.mapSize;

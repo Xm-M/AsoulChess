@@ -42,6 +42,8 @@ public class GameManage : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
+        if (mode == GameMode.Phone)
+            ApplyPhoneLandscapeOrientation();
         audioManage = new AudioManage();
         timerManage = new TimerManage();
         checkObjectPoolManage = new CheckObjectPoolManage();
@@ -95,6 +97,10 @@ public class GameManage : MonoBehaviour
             else if (Input.GetKeyUp(KeyCode.Alpha3)) SetDifficulty(2);
             else if (Input.GetKeyUp(KeyCode.Alpha4)) SetDifficulty(3);
         }
+        if (mode == GameMode.Test&&Input.GetKeyDown(KeyCode.H))
+        {
+            UIManage.GetView<TextPanel>()?.EnqueueTip("测试提示", 2f);
+        }
     }
 
     /// <summary>Test 模式下设置难度：0=简单 1=普通 2=困难 3=噩梦。Inspector 中可用 Odin 按钮调用，或 Ctrl+1/2/3/4</summary>
@@ -116,6 +122,18 @@ public class GameManage : MonoBehaviour
     {
         PlayerSaveContext.SaveCurrent();
         SaveSystem.SaveCurrentLevel();
+    }
+
+    /// <summary>
+    /// Phone 模式：默认横屏，仅允许左右横屏自动旋转，禁止竖屏。
+    /// </summary>
+    static void ApplyPhoneLandscapeOrientation()
+    {
+        Screen.autorotateToPortrait = false;
+        Screen.autorotateToPortraitUpsideDown = false;
+        Screen.autorotateToLandscapeLeft = true;
+        Screen.autorotateToLandscapeRight = true;
+        Screen.orientation = ScreenOrientation.AutoRotation;
     }
 }
 public enum GameMode

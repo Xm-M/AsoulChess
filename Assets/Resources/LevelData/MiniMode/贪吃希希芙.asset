@@ -17,33 +17,71 @@ MonoBehaviour:
   levelName: "\u8D2A\u5403\u5E0C\u5E0C\u8299"
   levelSprit: {fileID: 0}
   levelMode: 1
-  EnterMapPlugin: []
-  PreParePlugin:
+  EnterMapPlugin:
   - id: 0
-  GameStartPlugin:
+  PreParePlugin:
   - id: 1
-  MaxWave: 20
+  GameStartPlugin:
+  - id: 2
+  - id: 3
+  - id: 4
+  MaxWave: 40
   n: 1
-  t: 1
+  t: 2
   zombieList:
   - {fileID: 11400000, guid: 34aa7ce20134f6847861b34c2bd11315, type: 2}
+  - {fileID: 11400000, guid: 92da2067decf52e499298615fd3587d9, type: 2}
+  - {fileID: 11400000, guid: 723a4e0a98580bc49b8f337bd10907c6, type: 2}
+  - {fileID: 11400000, guid: 3f515115d53d5e44b9e96fe775194c55, type: 2}
+  - {fileID: 11400000, guid: ff86a3a951917c5448045d392fbfefed, type: 2}
   createZombieType: 0
   nextLevel: {fileID: 0}
   outcome:
-    id: 2
+    id: 5
   loadSkipToTime: 10
   references:
     version: 1
     00000000:
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    00000001:
       type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
       data:
         baseSunLight: 0
         cards:
-        - {fileID: 11400000, guid: f95bed26485a04e4590f8dcf849dca80, type: 2}
+        - {fileID: 11400000, guid: cfac8ba4c0629a44da5aaf72c9d4d903, type: 2}
+        - {fileID: 11400000, guid: 7ca129a1c2891ba42b9d2464d33100bf, type: 2}
+        - {fileID: 11400000, guid: 35ba3114aaca8f14d9818640ae354065, type: 2}
         - {fileID: 11400000, guid: e88df929d6525324a929ab594262c6e9, type: 2}
-    00000001:
+    00000002:
       type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
       data:
         fastEnterTime: 4
-    00000002:
+    00000003:
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u5C0F\u6E38\u620F"
+        deleyPlayTime: 2
+    00000004:
+      type: {class: GameStartPlugin_SnakeEvent, ns: , asm: Assembly-CSharp}
+      data:
+        tipBindings:
+        - eventId: SnakeStumble_OutOfBounds
+          icon: {fileID: 21300000, guid: 3e7100977360fd74a950e9ede6aeeb78, type: 3}
+          tipMessage: "\u6211\u7684\u5934\u597D\u6655\u554A"
+          displaySeconds: 4
+        - eventId: SnakeStumble_SelfBite
+          icon: {fileID: 21300000, guid: 3e7100977360fd74a950e9ede6aeeb78, type: 3}
+          tipMessage: "\u81EA\u5DF1\u7684\u5C3E\u5DF4\u4E0D\u80FD\u54AC\u5566"
+          displaySeconds: 4
+        - eventId: SnakeStumble_LargerEnemy
+          icon: {fileID: 21300000, guid: 91eb917f6cbf1c740b5bbf656f645f43, type: 3}
+          tipMessage: "\u8FD9\u4E48\u5927\u5403\u4E0D\u4E0B\u5566"
+          displaySeconds: 4
+        - eventId: SnakeEatFood
+          icon: {fileID: 21300000, guid: f54e3380e6dc5bb45affb640468f457f, type: 3}
+          tipMessage: 
+          displaySeconds: 4
+    00000005:
       type: {class: , ns: , asm: }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 /// <summary>
-/// 蛇头沿网格移动：默认向右；WASD / 方向键缓冲；禁止相对<b>当前这一段的实际移动方向</b>（<see cref="_segmentMoveDirection"/>）180° 反转，
+/// 蛇头沿网格移动：默认向右；WASD / 方向键缓冲；手机可用 <see cref="TryQueueDirection"/> 接 UI 按钮或滑动层。禁止相对<b>当前这一段的实际移动方向</b>（<see cref="_segmentMoveDirection"/>）180° 反转，
 /// 而非相对 <see cref="_facing"/>（预输入会改 _facing，但身体尚未走完当前一格时不能按「意图朝向」判反向）。
 /// <see cref="FindNextTile"/> 返回 <c>standTile.mapPos + 当前朝向</c> 上的格子；越界时返回 null，
-/// 并通知 <see cref="LevelController_Snake.NotifySnakeDefeat"/>（每局仅触发一次，避免 MoveController 每帧重试时重复调用）。
+/// 并通知 <see cref="LevelController_Snake.NotifySnakeDefeat(Chess)"/>（每局仅触发一次，避免 MoveController 每帧重试时重复调用）。
 /// </summary>
 /// <para>
 /// 蛇身可用 <see cref="LineRenderer"/>：路径为「尾→头」的格子中心点；每到达一格追加一点，
@@ -25,6 +25,10 @@ public class FindTileMethod_Snake : FindTileMethod
     [Tooltip("可选。子物体上挂 LineRenderer，材质用 Sprite/Default 等即可。")]
     [SerializeField]
     LineRenderer snakeBodyLine;
+
+    [Tooltip("可选。蛇头的子物体：LineRenderer 最后一节顶点跟随此 Transform，用于修正美术相对根节点的偏移；空则使用蛇头 Chess 根 Transform。")]
+    [SerializeField]
+    Transform lineHeadAnchor;
 
     [Tooltip("拐弯处插入细分顶点，减轻折叠/尖角感（0 则关闭）。")]
     [Min(0)]
@@ -126,7 +130,7 @@ public class FindTileMethod_Snake : FindTileMethod
 
         // 仅 Player：僵尸等非玩家 Y 移速倍率与 X 不同，delta.x 易在目标附近来回变号，会误触发每帧翻面导致徘徊
         Vector3 pos = chess.transform.position;
-        Vector3 target = c.moveController.nextTile.transform.position;
+        Vector3 target = c.moveController.nextTile? c.moveController.nextTile.transform.position :pos;
         chess.UpdateFacingFromHorizontalMove((Vector2)(target - pos));
         PollKeyboardToQueue();
         ApplyQueuedDirection();
@@ -169,21 +173,45 @@ public class FindTileMethod_Snake : FindTileMethod
     {
         _segmentCountSilver++;
         _segmentCount = _segmentCountSilver + _segmentCountGold + _segmentCountDiamond;
+        bool silverToGold = false;
         if (_segmentCountSilver > maxSegmentLengthBeforeReset)
         {
             _segmentCountSilver = 0;
             _segmentCountGold++;
             _segmentCount = _segmentCountSilver + _segmentCountGold + _segmentCountDiamond;
+            silverToGold = true;
         }
 
+        bool goldToDiamond = false;
         if (_segmentCountGold > maxSegmentLengthBeforeReset)
         {
             _segmentCountGold = 0;
             _segmentCountDiamond++;
             _segmentCount = _segmentCountSilver + _segmentCountGold + _segmentCountDiamond;
+            goldToDiamond = true;
         }
 
+        if (silverToGold || goldToDiamond)
+            ShowSnakeTierUpgradeFloatingText(silverToGold, goldToDiamond);
+
         AfterFrameSyncPath();
+    }
+
+    static readonly Color SnakeTierGoldTextColor = new Color(1f, 0.78f, 0.15f);
+    static readonly Color SnakeTierDiamondTextColor = new Color(0.28f, 0.62f, 1f);
+
+    /// <summary>银→金（金色）/ 金→钻（蓝色）进位时在蛇头飘「升级」二字。</summary>
+    void ShowSnakeTierUpgradeFloatingText(bool silverToGold, bool goldToDiamond)
+    {
+        if (_boundChess == null) return;
+        var panel = UIManage.GetView<DamagePanel>();
+        if (panel == null) return;
+
+        var dm = new DamageMessege(_boundChess, _boundChess, 0f);
+        if (silverToGold)
+            panel.ShowText(dm, "升级", SnakeTierGoldTextColor);
+        if (goldToDiamond)
+            panel.ShowText(dm, "升级", SnakeTierDiamondTextColor);
     }
 
     /// <summary>蛇头到达新格子中心（由 <see cref="SnakeGridController"/> 订阅 <see cref="MoveController.OnReachTile"/>）。</summary>
@@ -193,7 +221,7 @@ public class FindTileMethod_Snake : FindTileMethod
         Vector2Int p = stand.mapPos;
         if (CheckSelfCollision(p))
         {
-            NotifyDefeatOnce();
+            NotifyDefeatOnce(SnakeGameEventId.StumbleSelfBite);
             return;
         }
 
@@ -298,7 +326,7 @@ public class FindTileMethod_Snake : FindTileMethod
             if (count >= 2)
                 snakeBodyLine.SetPosition(count - 1, LineVertexZ0(_pathTailToHead[count - 1]));
 
-            Vector3 headEnd = _boundChess != null ? _boundChess.transform.position : _pathTailToHead[count - 1];
+            Vector3 headEnd = _boundChess != null ? GetLineHeadWorldPosition() : _pathTailToHead[count - 1];
             snakeBodyLine.SetPosition(count, LineVertexZ0(headEnd));
 
             UpdateSnakeBodyMaterialBodySize();
@@ -314,7 +342,7 @@ public class FindTileMethod_Snake : FindTileMethod
         if (count >= 2)
             snakeBodyLine.SetPosition(count - 1, LineVertexZ0(_pathTailToHead[count - 1]));
 
-        Vector3 headEndLegacy = _boundChess != null ? _boundChess.transform.position : _pathTailToHead[count - 1];
+        Vector3 headEndLegacy = _boundChess != null ? GetLineHeadWorldPosition() : _pathTailToHead[count - 1];
         snakeBodyLine.SetPosition(count, LineVertexZ0(headEndLegacy));
 
         UpdateSnakeBodyMaterialBodySize();
@@ -341,7 +369,7 @@ public class FindTileMethod_Snake : FindTileMethod
         else if (count == 1 && _boundChess != null)
         {
             Vector2 a = LineVertexZ0(_pathTailToHead[0]);
-            Vector2 b = LineVertexZ0(_boundChess.transform.position);
+            Vector2 b = LineVertexZ0(GetLineHeadWorldPosition());
             Vector2 d = b - a;
             if (d.sqrMagnitude > 1e-6f) return d.normalized;
         }
@@ -371,6 +399,15 @@ public class FindTileMethod_Snake : FindTileMethod
     }
 
     static Vector3 LineVertexZ0(Vector3 p) => new Vector3(p.x, p.y, 0f);
+
+    /// <summary>线段末端世界坐标：优先 <see cref="lineHeadAnchor"/>，否则蛇头根节点。</summary>
+    Vector3 GetLineHeadWorldPosition()
+    {
+        if (_boundChess == null) return Vector3.zero;
+        if (lineHeadAnchor != null)
+            return lineHeadAnchor.position;
+        return _boundChess.transform.position;
+    }
 
     /// <summary>按当前折线长度设置材质 <c>_BodySize</c>（Vector2），控制 Shader 里 Tiling 平铺。</summary>
     void UpdateSnakeBodyMaterialBodySize()
@@ -489,7 +526,7 @@ public class FindTileMethod_Snake : FindTileMethod
 
         int last = snakeBodyLine.positionCount - 1;
         if (last >= 0)
-            snakeBodyLine.SetPosition(last, LineVertexZ0(c.transform.position));
+            snakeBodyLine.SetPosition(last, LineVertexZ0(GetLineHeadWorldPosition()));
 
         UpdateSnakeBodyMaterialBodySize();
     }
@@ -510,13 +547,13 @@ public class FindTileMethod_Snake : FindTileMethod
         MapManage map = MapManage.instance;
         if (map == null || !map.IfInMapRange(cell.x, cell.y))
         {
-            NotifyDefeatOnce();
+            NotifyDefeatOnce(SnakeGameEventId.StumbleOutOfBounds);
             return null;
         }
 
         if (CheckSelfCollision(cell))
         {
-            NotifyDefeatOnce();
+            NotifyDefeatOnce(SnakeGameEventId.StumbleSelfBite);
             return null;
         }
 
@@ -541,16 +578,28 @@ public class FindTileMethod_Snake : FindTileMethod
         else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) d = Vector2Int.left;
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) d = Vector2Int.right;
 
-        if (!d.HasValue) return;
-        if (d.Value == -_segmentMoveDirection) return;
-        _queuedFacing = d.Value;
+        if (d.HasValue) TryQueueDirection(d.Value);
     }
 
-    void NotifyDefeatOnce()
+    /// <summary>
+    /// 与键盘预输入相同规则：写入下一格意图朝向；不可为 <see cref="Vector2Int.zero"/>，且不可与 <see cref="_segmentMoveDirection"/> 相反。
+    /// 供手机端 UI 按钮、滑动桥接 <see cref="SnakeMobileInputBridge"/> 等调用。
+    /// </summary>
+    public void TryQueueDirection(Vector2Int direction)
+    {
+        if (direction == Vector2Int.zero) return;
+        if (direction == -_segmentMoveDirection) return;
+        _queuedFacing = direction;
+    }
+
+    void NotifyDefeatOnce(string stumbleKind)
     {
         if (_defeatNotified) return;
         _defeatNotified = true;
+        if (!string.IsNullOrEmpty(stumbleKind))
+            EventController.Instance.TriggerEvent(EventName.SnakeHitWall.ToString(), stumbleKind);
+        GameManage.instance.timerManage.AddTimer(() => _defeatNotified = false, 5.5f);
         LevelController_Snake level = UnityEngine.Object.FindObjectOfType<LevelController_Snake>();
-        level?.NotifySnakeDefeat();
+        level?.NotifySnakeDefeat(_boundChess);
     }
 }

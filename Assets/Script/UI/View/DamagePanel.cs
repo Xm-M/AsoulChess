@@ -16,6 +16,7 @@ public class DamagePanel : View
     [FoldoutGroup("Heal")]
     public Color Heal;
     public GameObject damageText;
+    public GameObject chineseText;
     public GameObject healPrefab;
     public bool showDamage;
     public override void Init()
@@ -64,7 +65,7 @@ public class DamagePanel : View
     }
     public void ShowText(DamageMessege dm,string mes,Color color)
     {
-        GameObject text = ObjectPool.instance.Create(damageText);
+        GameObject text = ObjectPool.instance.Create(chineseText);
         text.transform.SetParent(transform);
         text.transform.position = Camera.main.WorldToScreenPoint(dm.damageTo.transform.position + Vector3.up * 0.75f);
         TMP_Text t = text.GetComponentInChildren<TMP_Text>();

@@ -16,6 +16,13 @@ public class SnakeArmor : ArmorBase
     [SerializeField]
     float eatCooldown = 0.08f;
 
+    [Tooltip("吃掉关卡食物后为蛇头（本体）回复的生命值；实际量会乘蛇头 Property 的回复增益 healRate")]
+    [Min(0f)]
+    [SerializeField]
+    float healBodyOnEatFood = 100f;
+
+    public AudioPlayer player;
+
     float _nextEatTime;
 
     public override void InitArmor()
@@ -60,6 +67,7 @@ public class SnakeArmor : ArmorBase
 
         if (snakeDriver != null && snakeDriver.TryEatFood(other, user))
         {
+            HealSnakeBodyOnEatFood();
             _nextEatTime = Time.time + eatCooldown;
             return;
         }
@@ -75,13 +83,26 @@ public class SnakeArmor : ArmorBase
 
         if (targetSize < userSize)
         {
+            player.RandomPlay();
             if (!other.IfDeath)
                 other.Death();
+            EventController.Instance.TriggerEvent(EventName.SnakeEatZombie.ToString(), SnakeGameEventId.EatZombie);
             _nextEatTime = Time.time + eatCooldown;
             return;
         }
 
+        EventController.Instance.TriggerEvent(EventName.SnakeHitWall.ToString(), SnakeGameEventId.StumbleLargerEnemy);
         LevelController_Snake level = snakeDriver != null ? snakeDriver.snakeLevel : FindObjectOfType<LevelController_Snake>();
-        level?.NotifySnakeDefeat();
+        level?.NotifySnakeDefeat(user);
+    }
+
+    /// <summary>成功吃掉 <see cref="SnakeGridController.TryEatFood"/> 认定的食物后，为蛇头本体回血。</summary>
+    void HealSnakeBodyOnEatFood()
+    {
+        player.RandomPlay();
+        if (healBodyOnEatFood <= 0f) return;
+        Chess body = snakeDriver != null ? snakeDriver.head : user;
+        if (body == null || body.IfDeath || body.propertyController == null) return;
+        body.propertyController.Heal(healBodyOnEatFood);
     }
 }

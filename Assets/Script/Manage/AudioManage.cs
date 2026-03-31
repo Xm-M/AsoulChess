@@ -86,6 +86,42 @@ public class AudioManage
     }
 
     /// <summary>
+    /// 占用全局唯一播放（带排队上限）：同一 clipName 下最多 <paramref name="maxHolders"/> 个持有者；
+    /// 已满则不再入队。<paramref name="registered"/> 为 true 表示已成功入队（将按序交接播放）。
+    /// </summary>
+    public static bool AcquireUniqueLimited(string clipName, AudioPlayer player, int maxHolders, out bool registered)
+    {
+        registered = false;
+        if (maxHolders < 1)
+            maxHolders = int.MaxValue;
+
+        if (!uniqueHolders.ContainsKey(clipName))
+        {
+            uniqueHolders[clipName] = new List<AudioPlayer>();
+            uniqueCount[clipName] = 0;
+        }
+
+        var list = uniqueHolders[clipName];
+        if (list.Contains(player))
+            return false;
+
+        if (list.Count >= maxHolders)
+            return false;
+
+        list.Add(player);
+        uniqueCount[clipName]++;
+
+        registered = true;
+        if (uniqueCount[clipName] == 1)
+        {
+            uniqueCurrentPlayer[clipName] = player;
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// 占用全局唯一播放：num++。若 num 从 0 变为 1 返回 true（需播放），否则返回 false（仅登记）
     /// </summary>
     public static bool AcquireUnique(string clipName, AudioPlayer player)

@@ -28,7 +28,7 @@ public class MoveController:Controller
     public void WhenControllerEnterWar()
     {
         ifMove=false;
-        OnReachTile.RemoveAllListeners();
+        //OnReachTile.RemoveAllListeners();
     }
 
     public void WhenControllerLeaveWar()

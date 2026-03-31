@@ -28,6 +28,16 @@ globs: ["**/*.cs", "**/*.unity", "**/*.prefab"]
 3. 文档沉淀 → 更新使用心得
 ```
 
+### 实现约束（MonoBehaviour 与继承）
+
+```
+1. 实现功能时尽量不新增独立 MonoBehaviour；优先复用、扩展现有框架内代码。
+2. 优先通过继承基类、实现项目内接口、组合已有组件完成需求
+   （例如 ArmorBase、ISkillEffect、Buff、关卡 ILevelPlugin、FindTileMethord、MoveController 扩展等）。
+3. 仅在挂载点或生命周期无法用上述方式表达时，再考虑新增 MonoBehaviour；
+   若新增，须在架构分析（@architecture-design-analyzer）中说明理由与已排除的替代方案。
+```
+
 ---
 
 ## 🎯 渐进式披露原则
@@ -256,6 +266,7 @@ c-reviewers/                    # C级：审查工具（1个，强制）
 3. **禁止跳过代码审查**（AI代码必须）
 4. **禁止直接生成完整代码**（渐进式披露）
 5. **每次只执行一步**，等待用户确认
+6. **优先继承与组合框架内代码**，少新增 `MonoBehaviour`（见上文「实现约束」）
 
 ---
 

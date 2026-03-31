@@ -73,19 +73,16 @@ public interface IPlantFunction
     public bool ifCanPlant(PropertyCreator creator, Tile tile);
 }
 /// <summary>
-/// MainPlantֻ��Ҫ����Ŀ��Tile�Ƿ�������ֲ�������Լ�Ŀ��Tile�Ƿ�ռ��
+/// MainPlant：无 MainPlant（stander）、且 <see cref="CompairTile"/> 地形有交集即可（由 chessTileType / tile.tileType 数据表达水陆屋顶等）。
 /// </summary>
 public class MainPlant : IPlantFunction
 {
     public bool ifCanPlant(PropertyCreator creator, Tile tile)
     {
-        //Debug.Log(tile.name); 
-        //Debug.Log(tile.stander);
-        return !tile.stander&&CompairTile(creator.chessTileType,tile);
+        return !tile.stander && CompairTile(creator.chessTileType, tile);
     }
-    public static bool CompairTile(TileType chess,Tile tile)
+    public static bool CompairTile(TileType chess, Tile tile)
     {
-        //������Ҫ����Ŀ��Ŀ����õ���
         return (chess & tile.tileType) != 0;
     }
 }
@@ -109,31 +106,26 @@ public class SupportPlant : IPlantFunction
     }
 }
 /// <summary>
-/// Pot����Ҫ�޸�һ��
+/// 地形类植物（睡莲、花盆等）：格上不能有 MainPlant；须满足 chessTileType 与当前格 tileType；
+/// 同一格至多一株 PotPlant。
 /// </summary>
 public class PotPlant : IPlantFunction
 {
     public bool ifCanPlant(PropertyCreator creator, Tile tile)
     {
-        //��������Ѿ���ֲ���ߵ��β��������޷���ֲ
-        if(tile.stander!=null|| (creator.chessTileType & tile.tileType) == 0)return false;
-        //�����ֲ�������ɵ�����ֲ���ṩ�� ���޷���ֲ(��Ҷ�ϲ��ܷ��û���) ���ﻹû���� �ǵû�����
+        if (tile.stander != null) return false;
+        if ((creator.chessTileType & tile.tileType) == 0) return false;
+        if (tile.chessesIntile == null) return true;
         for (int i = 0; i < tile.chessesIntile.Count; i++)
         {
-            if (tile.chessesIntile[i].propertyController.creator.plantType == creator.plantType &&
-                tile.chessesIntile[i].propertyController.creator.chessTileType == creator.chessTileType)
-            {
-                Debug.Log("�Ѿ���ͬ���͵Ļ�����");
+            Chess c = tile.chessesIntile[i];
+            if (c == null || c.propertyController?.creator == null) continue;
+            if (c.propertyController.creator.plantType == PlantType.PotPlant)
                 return false;
-            }
         }
         return true;
-
     }
 }
-/// <summary>
-/// ����Ʒֲ�� ֻҪĿ���������ֲ�����ʹ�� ����˵����������
-/// </summary>
 public class ConsumePlant : IPlantFunction
 {
     public bool ifCanPlant(PropertyCreator creator, Tile tile)

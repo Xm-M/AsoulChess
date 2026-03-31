@@ -1039,12 +1039,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb789ecc5a94cc4478daa4aa011e99b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 1
+  mode: 0
   sceneManage: {fileID: 745931670}
-  fetterManage:
+  weatherManage:
     id: 0
-  cameraManage:
+  fetterManage:
     id: 1
+  cameraManage:
+    id: 2
   mainCamera: {fileID: 519420031}
   allChess:
   - {fileID: 11400000, guid: 0b45a281d6f9c4e4bac6cf69f1cc233e, type: 2}
@@ -1079,6 +1081,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cfac8ba4c0629a44da5aaf72c9d4d903, type: 2}
   - {fileID: 11400000, guid: a794883d9c1e93748a927ea5971bc477, type: 2}
   - {fileID: 11400000, guid: 7ca129a1c2891ba42b9d2464d33100bf, type: 2}
+  - {fileID: 11400000, guid: 52afc280aa59eae49b3087ae60dfa727, type: 2}
+  - {fileID: 11400000, guid: 870a3c60e640a104c9722767c6c97e53, type: 2}
   playerOwnedCreators:
   - {fileID: 11400000, guid: 0b45a281d6f9c4e4bac6cf69f1cc233e, type: 2}
   WhenGameOver:
@@ -1087,10 +1091,15 @@ MonoBehaviour:
   WhenGameStart:
     m_PersistentCalls:
       m_Calls: []
-  TestLevel: {fileID: 11400000, guid: bada65c530c60b743b1fb62814c1aff4, type: 2}
+  TestLevel: {fileID: 11400000, guid: d525fc2c7fab3f54b83aa7700fe52eb9, type: 2}
   references:
     version: 1
     00000000:
+      type: {class: WeatherManage, ns: , asm: Assembly-CSharp}
+      data:
+        weatherSmokePrefab: {fileID: 2249338947425205373, guid: 98971166b4b9fab41a1025fb5a557318, type: 3}
+        weatherSnowPrefab: {fileID: 5959837897813246854, guid: 74f25587b0750b944a17c4508aadf440, type: 3}
+    00000001:
       type: {class: FetterController, ns: , asm: Assembly-CSharp}
       data:
         fetterDataList:
@@ -1103,7 +1112,7 @@ MonoBehaviour:
         - {fileID: 11400000, guid: d50c4a3927619bf4b95b705a91a7382c, type: 2}
         - {fileID: 11400000, guid: fd341481fc8dfe74cb2e6dd2d0dc192b, type: 2}
         - {fileID: 11400000, guid: 1c549edec3dc8044cabd73c584f1add1, type: 2}
-    00000001:
+    00000002:
       type: {class: GameCameraManage, ns: , asm: Assembly-CSharp}
 --- !u!4 &1335504422
 Transform:
@@ -1138,3 +1147,33 @@ MonoBehaviour:
   currentController: {fileID: 0}
   currentLevel: {fileID: 0}
   menu: {fileID: 0}
+--- !u!1 &1652054851
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1652054852}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1652054852
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652054851}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: 0.5, z: -6.528367}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

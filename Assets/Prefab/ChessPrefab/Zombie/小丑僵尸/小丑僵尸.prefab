@@ -69,7 +69,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: d43243c7d05f5bf40bd615d0e0e8c087, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -151,7 +151,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 9c8f5cdcf7375dc4d98e31bc44538e8f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -534,7 +534,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 207681250c594784e87bb42e154fbf2d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -700,7 +700,6 @@ MonoBehaviour:
           id: 4
         attackFunction:
           id: 5
-        enemys: []
         interval: 0
     00000001:
       type: {class: , ns: , asm: }
@@ -759,7 +758,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.39193898, y: 0.48000002}
+  m_Offset: {x: 0.39193898, y: 0.18126023}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.6, y: 0.33}
@@ -770,7 +769,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8881519, y: 2}
+  m_Size: {x: 0.8881519, y: 1.9879253}
   m_EdgeRadius: 0
 --- !u!95 &3120455442779294882
 Animator:
@@ -925,6 +924,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 3120455442779294882}
   sprite: {fileID: 5529474609249135265}
+  dizzynesss: 
+  attackStateNameAlt: 
   arm: {fileID: 506426409282390479}
   head: {fileID: 2109027062603333520}
   box: {fileID: 8438458334386541897}
@@ -1025,7 +1026,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: a94fafc4d62123c4fa07c17b0e41807e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

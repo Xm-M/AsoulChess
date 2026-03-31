@@ -18,6 +18,8 @@ public class GameManage : MonoBehaviour
     public TimerManage timerManage;
     public AudioManage audioManage;
     public CheckObjectPoolManage checkObjectPoolManage;
+    [SerializeReference]
+    public WeatherManage weatherManage;
     //public BuffManage buffManage;
     public ChessFactory chessFactory;//这个要在最后的时候销毁
     public ChessTeamManage chessTeamManage;
@@ -51,7 +53,8 @@ public class GameManage : MonoBehaviour
         chessTeamManage = new ChessTeamManage();
         cameraManage = new GameCameraManage();
         cameraManage.SetCamera(mainCamera);
-         
+ 
+ 
 
     }
     private void Start()
@@ -59,6 +62,7 @@ public class GameManage : MonoBehaviour
         if (mode == GameMode.Test && allChess != null) playerOwnedCreators = new List<PropertyCreator>(allChess);
         timerManage.InitManage();
         checkObjectPoolManage.InitManage();
+        weatherManage.InitManage();
         chessFactory.InitManage();
         fetterManage.InitController();
         cameraManage.InitManage();

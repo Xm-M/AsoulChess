@@ -205,6 +205,9 @@ public class ColdBuff : TimeBuff
 public class FireBuff : Buff
 {
     public float damage = 13;//固定值 而且会被均摊
+    [LabelText("融冰检测范围（Ice 层 Overlap）")]
+    public float iceMeltRange = 8f;
+
     public FireBuff()
     {
         buffName = "灼烧";
@@ -212,7 +215,8 @@ public class FireBuff : Buff
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
-        
+        if (target != null && iceMeltRange > 0f)
+            IceCell.MeltIceInRadius(target.transform.position, iceMeltRange);
     }
 }
 public class LightBuff : Buff

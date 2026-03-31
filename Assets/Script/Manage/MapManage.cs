@@ -44,7 +44,8 @@ public class MapManage : MonoBehaviour
         for (int i = 0; i < mapSize.x ; i++)
             for (int j = 0; j < mapSize.y; j++)
             {
-                tiles[i, j].GetComponent<Collider2D>().enabled = true;
+                var c = tiles[i, j] != null ? tiles[i, j].GetComponent<Collider2D>() : null;
+                if (c != null) c.enabled = true;
             }
     }
     public virtual void SleepTile()
@@ -52,7 +53,8 @@ public class MapManage : MonoBehaviour
         for (int i = 0; i < mapSize.x ; i++)
             for (int j = 0; j < mapSize.y; j++)
             {
-                tiles[i, j].GetComponent<Collider2D>().enabled = false;
+                var c = tiles[i, j] != null ? tiles[i, j].GetComponent<Collider2D>() : null;
+                if (c != null) c.enabled = false;
             }
     }
     public Tile   RandomTile()

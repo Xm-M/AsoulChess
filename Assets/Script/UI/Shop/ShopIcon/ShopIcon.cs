@@ -93,11 +93,18 @@ public class ShopIcon : MonoBehaviour
     }
     public bool IfColdDown()
     {
-        if (t <= coldDown)
+        if (GameManage.instance.mode != GameMode.Test)
         {
-            this.t += Time.deltaTime;
-            bar.SetValue(coldDown - t, coldDown);
-            return false;
+            if (t <= coldDown)
+            {
+                this.t += Time.deltaTime;
+                bar.SetValue(coldDown - t, coldDown);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
         else
         {

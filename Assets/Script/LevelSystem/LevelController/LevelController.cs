@@ -478,42 +478,74 @@ public class WaveData
         maxZombieValue = Mathf.RoundToInt(maxZombieValue * DifficultyManager.GetZombieMultiplier());
         Debug.Log("本波僵尸价值为" + maxZombieValue);
         int num = 0;
-        while (maxZombieValue > 0)
+        int targetZombieValue = maxZombieValue;
+        bool unlimited = data.createZombieType == CreateZombieType.一类无限制 ||
+                         data.createZombieType == CreateZombieType.二类无限制;
+        if (unlimited)
         {
-            float fate = UnityEngine.Random.Range(0, 1f);
-            int pickedIndex = -1;
-            for (int i = 0; i < fateList.Count; i++)
+            // 无限制：按稀有度随机抽种，累计价值直到达到或略超本波目标（不再用「剩余预算不超支」）
+            int spent = 0;
+            while (spent < targetZombieValue)
             {
-                if (fate < fateList[i])
+                float fate = UnityEngine.Random.Range(0, 1f);
+                int pickedIndex = -1;
+                for (int i = 0; i < fateList.Count; i++)
                 {
-                    pickedIndex = i;
-                    break;
-                }
-            }
-            if (pickedIndex < 0) break;
-            int price = zombieList[pickedIndex].zombieCreate.baseProperty.price;
-            if (price > maxZombieValue)
-            {
-                // 随机到的僵尸超价，选最便宜且能买得起的（普通僵尸存在时总能刚好用完）
-                int cheapestPrice = int.MaxValue;
-                pickedIndex = -1;
-                for (int i = 0; i < zombieList.Count; i++)
-                {
-                    int p = zombieList[i].zombieCreate.baseProperty.price;
-                    if (p <= maxZombieValue && p < cheapestPrice)
+                    if (fate < fateList[i])
                     {
-                        cheapestPrice = p;
                         pickedIndex = i;
+                        break;
                     }
                 }
+                if (pickedIndex < 0) break;
+                int price = zombieList[pickedIndex].zombieCreate.baseProperty.price;
+                if (price <= 0) break;
+                zombieList[pickedIndex].zombieNum += 1;
+                spent += price;
+                hpmax += zombieList[pickedIndex].zombieCreate.baseProperty.HpMax;
+                num++;
+                if (num > 500) break;
             }
-            if (pickedIndex < 0 || zombieList[pickedIndex].zombieCreate.baseProperty.price > maxZombieValue)
-                break;
-            zombieList[pickedIndex].zombieNum += 1;
-            maxZombieValue -= zombieList[pickedIndex].zombieCreate.baseProperty.price;
-            hpmax += zombieList[pickedIndex].zombieCreate.baseProperty.HpMax;
-            num++;
-            if (num > 500) break;
+        }
+        else
+        {
+            while (maxZombieValue > 0)
+            {
+                float fate = UnityEngine.Random.Range(0, 1f);
+                int pickedIndex = -1;
+                for (int i = 0; i < fateList.Count; i++)
+                {
+                    if (fate < fateList[i])
+                    {
+                        pickedIndex = i;
+                        break;
+                    }
+                }
+                if (pickedIndex < 0) break;
+                int price = zombieList[pickedIndex].zombieCreate.baseProperty.price;
+                if (price > maxZombieValue)
+                {
+                    // 随机到的僵尸超价，选最便宜且能买得起的（普通僵尸存在时总能刚好用完）
+                    int cheapestPrice = int.MaxValue;
+                    pickedIndex = -1;
+                    for (int i = 0; i < zombieList.Count; i++)
+                    {
+                        int p = zombieList[i].zombieCreate.baseProperty.price;
+                        if (p <= maxZombieValue && p < cheapestPrice)
+                        {
+                            cheapestPrice = p;
+                            pickedIndex = i;
+                        }
+                    }
+                }
+                if (pickedIndex < 0 || zombieList[pickedIndex].zombieCreate.baseProperty.price > maxZombieValue)
+                    break;
+                zombieList[pickedIndex].zombieNum += 1;
+                maxZombieValue -= zombieList[pickedIndex].zombieCreate.baseProperty.price;
+                hpmax += zombieList[pickedIndex].zombieCreate.baseProperty.HpMax;
+                num++;
+                if (num > 500) break;
+            }
         }
         if (wave % 10 == 9||wave%10==0)
         {

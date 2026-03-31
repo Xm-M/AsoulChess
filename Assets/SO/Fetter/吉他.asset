@@ -21,13 +21,14 @@ MonoBehaviour:
       data:
         fetterName: "\u5409\u4ED6"
         fetterIcon: {fileID: 21300000, guid: 1b274262cb5433349ae0d641129f5484, type: 3}
+        fetterEffectDescription: "\u5409\u4ED6\u6210\u5458\u4F1A\u83B7\u5F97\u989D\u5916\u7684\u66B4\u51FB\u548C\u7206\u4F24\u52A0\u6210"
         detectMode: 0
         config:
           tag: "\u5409\u4ED6"
           requiredMemberIds: []
           tierThresholds: 02000000030000000400000005000000
-        num: 2
-        tier: 0
+        num: 3
+        tier: 1
         guitarBuff:
           id: 1
     00000001:
@@ -47,11 +48,11 @@ MonoBehaviour:
         buffName: "\u66B4\u51FB\u589E\u76CA"
         target: {fileID: 0}
         effect: {fileID: 0}
-        crit: 0.2
+        crit: 0.67082036
     00000003:
       type: {class: Buff_BaseValueBuff_CritDamage, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u66B4\u51FB\u4F24\u5BB3\u589E\u76CA"
         target: {fileID: 0}
         effect: {fileID: 0}
-        critDamage: 0.2
+        critDamage: 0.67082036

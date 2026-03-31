@@ -6,37 +6,46 @@ using UnityEngine.Events;
 
 public class PlantsPanel : BaseHandPanel
 {
+    static Tile FindTileAtWorld(Vector2 worldPos)
+    {
+        foreach (Collider2D col in Physics2D.OverlapPointAll(worldPos))
+        {
+            Tile tile = col.GetComponentInParent<Tile>();
+            if (tile != null) return tile;
+        }
+        return null;
+    }
 
     public override IEnumerator Plants(UnityAction CancelPlant, UnityAction<Chess> Plant, PrePlantImage_Data data)
     {
         MapManage.instance.AwakeTile();
         while (true)
         {
-            //transform.position = Input.mousePosition;
             if (Input.GetMouseButtonDown(1))
             {
                 CancelPlant?.Invoke();
                 break;
             }
-            else if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
-                Vector2 rayPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(rayPos, Vector2.zero, 0, 1 << 9);
-                if (hit.collider != null)
+                Camera cam = Camera.main;
+                if (cam != null)
                 {
-                    Tile t = hit.collider.GetComponent<Tile>();
-                    if (data.creator.IfCanPlant(t))
+                    Vector2 rayPos = cam.ScreenToWorldPoint(Input.mousePosition);
+                    // 禁止在 continue 中跳过本循环末尾的 yield，否则同一帧内 GetMouseButtonDown 仍为 true 会死循环卡死/崩溃
+                    if (!IceCell.BlocksPlayerPlantAt(rayPos))
                     {
-                        if (data.creator.plantFunction is LevelUpPlant) t.stander.Death();
-                        Chess c = ChessTeamManage.Instance.CreateChess(data.creator, t, data.tag);
-                        if (data.tag == "Player")
+                        Tile t = FindTileAtWorld(rayPos);
+                        if (t != null && data.creator.IfCanPlant(t))
                         {
-                            t.PlantChess(c);
+                            if (data.creator.plantFunction is LevelUpPlant) t.stander?.Death();
+                            Chess c = ChessTeamManage.Instance.CreateChess(data.creator, t, data.tag);
+                            if (data.tag == "Player")
+                                t.PlantChess(c);
 
+                            Plant?.Invoke(c);
+                            break;
                         }
-
-                        Plant?.Invoke(c);
-                        break;
                     }
                 }
             }

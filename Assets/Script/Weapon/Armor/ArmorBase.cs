@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Armor属于什么类型呢 Armor属于防具对吧 所以我们等等也要改就是了 但是先放着
@@ -15,6 +16,7 @@ public abstract class ArmorBase : MonoBehaviour,IDamageable
 {
     public Chess user;
     public ArmorType type;
+    public UnityEvent<ArmorBase> OnArmorBroken;
     private void Awake()
     {
         InitArmor();
@@ -22,7 +24,7 @@ public abstract class ArmorBase : MonoBehaviour,IDamageable
     public abstract void InitArmor();
     public abstract void ResetArmor(Chess chess);
     public abstract void GetDamage(DamageMessege dm);
-    public abstract void BrokenArmor();
+    public virtual void BrokenArmor() { OnArmorBroken?.Invoke(this); }
  
 }
 public interface IDamageable

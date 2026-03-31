@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Sirenix.OdinInspector;
 public class AudioPlayer : MonoBehaviour
 {
@@ -33,19 +34,28 @@ public class AudioPlayer : MonoBehaviour
     [Serializable]
     public class NameAudioClip
     {
-        public string name;
+        /// <summary>不要用字段名 <c>name</c>：与 Unity 序列化 / Object.name 冲突，会导致 Inspector 事件等路径下表现异常。</summary>
+        [FormerlySerializedAs("name")]
+        public string audioKey;
         public AudioClip clip;
     }
     public List<NameAudioClip> clipList;
+
+    [Tooltip("PlayAudioUniqueLimit：同一音效名全局最多允许多少个排队（含正在播的当前持有者）；≤0 视为不限制")]
+    [SerializeField]
+    int _audioUniqueLimit = 3;
+
     string _uniquePlayingName; // 当前持有的全局唯一 key，OnDisable/StopUnique 时释放
     int _uniqueSubIndex = -1;  // 子物体播放时为 subAudio 索引，-1 表示本物体
     bool _uniqueIsLoop;        // 是否为循环音效，交接时区分
 
-    public void PlayAudio(string name)
+    /// <param name="audioKey">须与 Clip List 中条目的 <see cref="NameAudioClip.audioKey"/> 一致；参数勿命名为 name，避免与 Unity Object.name 混淆。</param>
+    public void PlayAudio(string audioKey)
     {
+        if (clipList == null) return;
         for (int i = 0; i < clipList.Count; i++)
         {
-            if (name == clipList[i].name)
+            if (clipList[i] != null && audioKey == clipList[i].audioKey)
             {
                 audioSource.clip = clipList[i].clip;
                 Play();
@@ -54,19 +64,47 @@ public class AudioPlayer : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 全局唯一播放：同一音效名同一时刻只播放一次，num 引用计数，num==0 时才真正停止
-    /// </summary>
-    public void PlayAudioUnique(string name)
+    /// <summary>运行时设置 <see cref="PlayAudioUniqueLimit"/> 的全局排队上限；≤0 表示不限制（与 int.MaxValue 行为一致）。</summary>
+    public void SetAudioUniqueLimit(int n)
     {
-        if (!HasClip(name)) return;
-        bool shouldPlay = AudioManage.AcquireUnique(name, this);
-        _uniquePlayingName = name;
+        _audioUniqueLimit = n;
+    }
+
+    /// <summary>
+    /// 与 <see cref="PlayAudioUnique"/> 相同排队交接逻辑，但同一音效名全局最多只保留 <c>_audioUniqueLimit</c> 个排队者，
+    /// 超出则本次调用直接忽略（不入队、不播放），避免短时间大量触发时排成长队一直播。
+    /// </summary>
+    public void PlayAudioUniqueLimit(string audioKey)
+    {
+        if (!HasClip(audioKey))
+        {
+            Debug.LogWarning($"[AudioPlayer] PlayAudioUniqueLimit: clipList 中无 audioKey \"{audioKey}\" 的项。请在 Inspector → Clip List 配置 audioKey 并指定 Clip。", this);
+            return;
+        }
+        bool shouldPlay = AudioManage.AcquireUniqueLimited(audioKey, this, _audioUniqueLimit, out bool registered);
+        if (!registered) return;
+        _uniquePlayingName = audioKey;
         _uniqueIsLoop = false;
         if (shouldPlay)
         {
-            PlayAudioNow(name);
-            StartCoroutine(ReleaseUniqueWhenDone(name, GetClipLength(name)));
+            PlayAudioNow(audioKey);
+            StartCoroutine(ReleaseUniqueWhenDone(audioKey, GetClipLength(audioKey)));
+        }
+    }
+
+    /// <summary>
+    /// 全局唯一播放：同一音效名同一时刻只播放一次，num 引用计数，num==0 时才真正停止
+    /// </summary>
+    public void PlayAudioUnique(string audioKey)
+    {
+        if (!HasClip(audioKey)) return;
+        bool shouldPlay = AudioManage.AcquireUnique(audioKey, this);
+        _uniquePlayingName = audioKey;
+        _uniqueIsLoop = false;
+        if (shouldPlay)
+        {
+            PlayAudioNow(audioKey);
+            StartCoroutine(ReleaseUniqueWhenDone(audioKey, GetClipLength(audioKey)));
         }
     }
 
@@ -111,15 +149,15 @@ public class AudioPlayer : MonoBehaviour
     /// <summary>
     /// 全局唯一播放（循环音效）：停止时需调用 StopUnique 释放槽位
     /// </summary>
-    public void PlayAudioUniqueLoop(string name)
+    public void PlayAudioUniqueLoop(string audioKey)
     {
-        if (!HasClip(name)) return;
-        bool shouldPlay = AudioManage.AcquireUnique(name, this);
-        _uniquePlayingName = name;
+        if (!HasClip(audioKey)) return;
+        bool shouldPlay = AudioManage.AcquireUnique(audioKey, this);
+        _uniquePlayingName = audioKey;
         _uniqueIsLoop = true;
         if (shouldPlay)
         {
-            audioSource.clip = GetClip(name);
+            audioSource.clip = GetClip(audioKey);
             SetLoop(true);
             Play();
         }
@@ -158,9 +196,9 @@ public class AudioPlayer : MonoBehaviour
     /// <summary>
     /// 直接播放（用于交接），不经过唯一逻辑
     /// </summary>
-    public void PlayAudioNow(string name)
+    public void PlayAudioNow(string audioKey)
     {
-        var clip = GetClip(name);
+        var clip = GetClip(audioKey);
         if (clip == null) return;
         audioSource.clip = clip;
         Play();
@@ -213,21 +251,30 @@ public class AudioPlayer : MonoBehaviour
         }
     }
 
-    bool HasClip(string name)
+    bool HasClip(string audioKey)
     {
-        for (int i = 0; i < clipList.Count; i++)
-            if (name == clipList[i].name) return true;
-        return false;
+        return GetClip(audioKey) != null;
     }
-    AudioClip GetClip(string name)
+
+    AudioClip GetClip(string audioKey)
     {
+        if (clipList == null || string.IsNullOrEmpty(audioKey)) return null;
         for (int i = 0; i < clipList.Count; i++)
-            if (name == clipList[i].name) return clipList[i].clip;
+        {
+            if (clipList[i] != null && audioKey == clipList[i].audioKey)
+                return clipList[i].clip;
+        }
+        for (int i = 0; i < clipList.Count; i++)
+        {
+            if (clipList[i]?.clip != null && clipList[i].clip.name == audioKey)
+                return clipList[i].clip;
+        }
         return null;
     }
-    float GetClipLength(string name)
+
+    float GetClipLength(string audioKey)
     {
-        var c = GetClip(name);
+        var c = GetClip(audioKey);
         return c != null ? c.length : 0f;
     }
 
@@ -284,11 +331,12 @@ public class AudioPlayer : MonoBehaviour
         audioSource.clip = clipList[n].clip;
         Play();
     }
-    public void ChangeAudio(string name)
+    public void ChangeAudio(string audioKey)
     {
+        if (clipList == null) return;
         for (int i = 0; i < clipList.Count; i++)
         {
-            if (name == clipList[i].name)
+            if (clipList[i] != null && audioKey == clipList[i].audioKey)
             {
                 audioSource.clip = clipList[i].clip;
                 return;

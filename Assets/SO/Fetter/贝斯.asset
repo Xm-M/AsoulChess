@@ -21,12 +21,13 @@ MonoBehaviour:
       data:
         fetterName: "\u8D1D\u65AF"
         fetterIcon: {fileID: 21300054, guid: f0b6bcc7c8970e44cb571276154d8fe0, type: 3}
+        fetterEffectDescription: "\u8D1D\u65AF\u83B7\u5F97\u989D\u5916\u751F\u547D\u503C\u548C\u751F\u547D\u5077\u53D6\uFF1B\u5728\u751F\u547D\u503C\u4F4E\u4E8E50%\u65F6\u4F1A\u8FDB\u5165\u9690\u8EAB\u72B6\u6001(30s\u51B7\u5374)"
         detectMode: 0
         config:
           tag: "\u8D1D\u65AF"
           requiredMemberIds: []
           tierThresholds: 02000000030000000400000005000000
-        num: 0
+        num: 2
         tier: 0
         bassBuff:
           id: 1
@@ -35,11 +36,11 @@ MonoBehaviour:
       data:
         buffName: "\u8D1D\u65AFbuff"
         target: {fileID: 0}
-        tierScale: 1
+        tierScale: 0.2
         baseHpPercent: 0.5
         baseHpFlat: 600
         maxLifeSteal: 0.5
-        sizeAdd: 5
+        sizeAdd: 2
         lifeStealBuff:
           id: 2
         sizeBuff:

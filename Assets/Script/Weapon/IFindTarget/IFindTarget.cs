@@ -126,3 +126,13 @@ public class MultiFindTarget : IFindTarget
     }
 }
 
+/// <summary>不锁定任何敌人（<see cref="Weapon_Sample.FindEnemy"/> 返回 0，通常不触发普攻）。</summary>
+[Serializable]
+public class FindTarget_Empty : IFindTarget
+{
+    public void FindTarget(Chess user, List<Chess> targets)
+    {
+        targets.Clear();
+    }
+}
+

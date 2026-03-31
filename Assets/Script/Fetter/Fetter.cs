@@ -26,6 +26,9 @@ public class Fetter
 {
     public string fetterName;
     public Sprite fetterIcon;
+    [Tooltip("悬停/长按提示面板显示的羁绊效果说明")]
+    [Multiline]
+    public string fetterEffectDescription = "";
     [Header("羁绊检测配置")]
     public FetterDetectMode detectMode;
     public FetterConfig config = new FetterConfig();

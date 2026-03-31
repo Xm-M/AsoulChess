@@ -26,7 +26,6 @@ MonoBehaviour:
   - id: 3
   - id: 4
   - id: 5
-  - id: 6
   MaxWave: 10
   n: 1
   t: 1
@@ -38,7 +37,7 @@ MonoBehaviour:
   createZombieType: 0
   nextLevel: {fileID: 0}
   outcome:
-    id: 7
+    id: 6
   loadSkipToTime: 10
   references:
     version: 1
@@ -62,16 +61,12 @@ MonoBehaviour:
         audioName: "\u767D\u5929"
         deleyPlayTime: 3
     00000004:
-      type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
-      data:
-        sunlight: 25
-    00000005:
       type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
-    00000006:
+    00000005:
       type: {class: GameStartPlugin_Smoke, ns: , asm: Assembly-CSharp}
       data:
         smoke: {fileID: 2249338947425205373, guid: 98971166b4b9fab41a1025fb5a557318, type: 3}
         hideColumns: 3
         hideTime: 99999
-    00000007:
+    00000006:
       type: {class: , ns: , asm: }

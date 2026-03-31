@@ -34,7 +34,9 @@ public class Chess : MonoBehaviour
     public AnimatorController animatorController;
     [FoldoutGroup(groupName:"Event",GroupID ="Event")]
     public UnityEvent<Chess> WhenEnterGame;//没有被清除的固定事件,这个是不能清除的  
+    /// <summary>仅进入 <see cref="DeathState"/> 时触发，用于亡语；直接 <see cref="Death"/> 不会走此事件。</summary>
     [HideInInspector]public UnityEvent<Chess> DeathEvent;//这个会被自动清除
+    /// <summary>棋子离场时触发（含直接 <see cref="Death"/>、铲除等）；通用离场逻辑请挂这里。</summary>
     [HideInInspector]public UnityEvent<Chess> OnRemove;//这个也会被自动清除
     //public Animator animator;
     //public SpriteRenderer sprite;

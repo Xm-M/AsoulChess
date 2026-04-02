@@ -46,13 +46,19 @@ public class Effect_Snow : MonoBehaviour
             Debug.LogError("[Effect_Snow] iceCellPrefab 未配置，无法铺冰。", this);
     }
 
-    /// <summary>优先 <see cref="WeatherManage.GetSnowOrNull"/>，否则静态 Instance / 场景查找。</summary>
+    /// <summary>
+    /// 优先 <see cref="WeatherManage.GetSnowOrNull"/>；若无且 <see cref="GameManage.weatherManage"/> 已配置雪地预制体，
+    /// 则 <see cref="WeatherManage.EnsureSnow"/> 创建并初始化（无需关卡挂 <see cref="GameStartPlugin_Snow"/>）。
+    /// 否则回退静态 Instance / 场景查找。
+    /// </summary>
     public static Effect_Snow GetInstanceOrNull()
     {
         if (GameManage.instance?.weatherManage != null)
         {
-            var s = GameManage.instance.weatherManage.GetSnowOrNull();
+            var wm = GameManage.instance.weatherManage;
+            Effect_Snow s = wm.GetSnowOrNull();
             if (s != null) return s;
+            return wm.EnsureSnow();
         }
         if (Instance != null) return Instance;
         return FindObjectOfType<Effect_Snow>(true);

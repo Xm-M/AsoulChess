@@ -73,14 +73,14 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: dd0a0ffceffa1a84ea2be40c9635e220, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3, y: 3.5625}
+  m_Size: {x: 3, y: 4.5625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -137,8 +137,9 @@ MonoBehaviour:
   subAudio: []
   baseValue: 0
   clipList:
-  - name: "\u6389\u5934"
+  - audioKey: "\u6389\u5934"
     clip: {fileID: 8300000, guid: be7cad6cfe8f0064096a89d9ab0d2140, type: 3}
+  _audioUniqueLimit: 3
 --- !u!82 &7840316238020622285
 AudioSource:
   m_ObjectHideFlags: 0

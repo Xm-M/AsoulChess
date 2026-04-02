@@ -21,6 +21,9 @@ public class PassiveSkillEffect_SledZombie : ISkillEffect
     [Min(0)]
     public int extraFootZombieCount = 3;
 
+    [Tooltip("可选。第 i 只额外僵尸在按规则选好 standTile 并 CreateChess 后，将位置重设为列表第 i 个 Transform 的 world position；未填或该项为空则仍用格子上的随机偏移")]
+    public List<Transform> footZombieWorldPositions;
+
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
         if (user == null) return;
@@ -58,7 +61,7 @@ public class PassiveSkillEffect_SledZombie : ISkillEffect
             user.ResumeSelectable();
 
             if (extraFootZombieCount > 0 && footZombieCreator != null)
-                SpawnFootZombies(user, footZombieCreator, extraFootZombieCount);
+                SpawnFootZombies(user, footZombieCreator, extraFootZombieCount, footZombieWorldPositions);
         };
 
         onReach = (c, newTile) =>
@@ -99,7 +102,7 @@ public class PassiveSkillEffect_SledZombie : ISkillEffect
         user.WhenEnterGame.AddListener(onEnter);
     }
 
-    static void SpawnFootZombies(Chess leader, PropertyCreator footCreator, int count)
+    static void SpawnFootZombies(Chess leader, PropertyCreator footCreator, int count, List<Transform> worldPositionOverrides)
     {
         if (leader == null || footCreator == null || count <= 0) return;
         var pvz = MapManage.instance as MapManage_PVZ;
@@ -133,8 +136,13 @@ public class PassiveSkillEffect_SledZombie : ISkillEffect
         {
             Tile stand = rowTiles[k % rowTiles.Count];
             Chess z = ChessTeamManage.Instance.CreateChess(footCreator, stand, "Enemy");
-            float dx = UnityEngine.Random.Range(0f, 3.75f);
-            z.transform.position = stand.transform.position + Vector3.right * dx;
+            if (worldPositionOverrides != null && k < worldPositionOverrides.Count && worldPositionOverrides[k] != null)
+                z.transform.position = worldPositionOverrides[k].position;
+            else
+            {
+                float dx = UnityEngine.Random.Range(0f, 3.75f);
+                z.transform.position = stand.transform.position + Vector3.right * dx;
+            }
         }
     }
 }

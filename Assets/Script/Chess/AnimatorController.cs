@@ -18,6 +18,30 @@ public class AnimatorController : MonoBehaviour,Controller
         }
         return false;
     }
+
+    /// <summary>与 Animator 中 1D Blend Tree 常用档位参数名一致（完整/断手/断头 三套序列帧）。</summary>
+    public const string DefaultVisualTierParam = "VisualTier";
+
+    /// <summary>与 death 状态内 Blend Tree 一致：0=普通死亡，1=火烧等变体。</summary>
+    public const string DefaultDeathVariantParam = "DeathVariant";
+
+    /// <summary>
+    /// 设置外观档位（0=完整，1=断手，2=断头）。若 Controller 未配置该 Float 参数则静默跳过，兼容旧预制体。
+    /// </summary>
+    protected virtual void SetVisualTier(float tier, string paramName = DefaultVisualTierParam)
+    {
+        if (animator != null && HasParameter(animator, paramName))
+            animator.SetFloat(paramName, tier);
+    }
+
+    /// <summary>
+    /// 设置死亡动画变体（通常 0=默认死亡，1=火烧）。若未配置参数则跳过。
+    /// </summary>
+    protected virtual void SetDeathVariant(float variant, string paramName = DefaultDeathVariantParam)
+    {
+        if (animator != null && HasParameter(animator, paramName))
+            animator.SetFloat(paramName, variant);
+    }
     public SpriteRenderer sprite;
     public string dizzynesss;
     protected Chess chess;
@@ -142,7 +166,7 @@ public class AnimatorController : MonoBehaviour,Controller
     public virtual void PlayDizzy()
     {
         if (string.IsNullOrEmpty(dizzynesss))
-            animator.Play("idle");
+            Freezy();
         else animator.Play(dizzynesss);
     }
     public virtual string GetCurrentAnimName()

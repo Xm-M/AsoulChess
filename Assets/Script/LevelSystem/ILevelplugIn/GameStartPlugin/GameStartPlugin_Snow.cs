@@ -17,9 +17,8 @@ public class GameStartPlugin_Snow : ILevelPlugin
     {
         var wm = GameManage.instance?.weatherManage;
         if (wm == null) return;
-        var effect = wm.GetOrCreateSnow();
+        var effect = wm.EnsureSnow();
         if (effect == null) return;
-        effect.InitSnow();
         effect.PlaceInitialIceAfterExcludedColumns(hideColumns, iceLifetimeSeconds, "Enemy");
     }
 

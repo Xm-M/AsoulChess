@@ -1,118 +1,131 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
 public class AnimatorController_SampleZombie : AnimatorController
 {
-    public SpriteRenderer arm, body;
     public bool deathfire;
-    public GameObject leftarm, leftHead;
+    [Tooltip("断手阶段生成一次的手臂掉落/特效预制体")]
+    public GameObject leftarm;
+    [Tooltip("断头阶段生成一次的头颅掉落/特效预制体")]
+    public GameObject leftHead;
+
+    [Tooltip("Animator Float，与 idle/run/attack 等状态内 Blend Tree 一致：0 完整 1 断手 2 断头。未配置参数则忽略。")]
+    [SerializeField]
+    string visualTierParameterName = DefaultVisualTierParam;
+
+    [Tooltip("Animator Float，与单一 death 状态内 Blend Tree 一致：0 普通死亡 1 火烧死亡。未配置参数则忽略。")]
+    [SerializeField]
+    string deathVariantParameterName = DefaultDeathVariantParam;
+
     [LabelText("受伤播放器")]
     public AudioPlayer player;
-    //[LabelText("火焰受伤播放器")]
-    //public AudioPlayer player2;
     [SerializeReference]
-    public BloodBuff bloodBuff;//持续掉血buff
-    public float randomSpeed=0.2f;//移速偏差值
+    public BloodBuff bloodBuff;
+    public float randomSpeed = 0.2f;
+
+    bool _spawnedArmStageVfx;
+    bool _spawnedHeadStageVfx;
+
     public override void WhenControllerEnterWar()
     {
         base.WhenControllerEnterWar();
-        sprite.gameObject.SetActive(true);
-        arm.gameObject.SetActive(false);
-        body.gameObject.SetActive(false);
+        if (sprite != null)
+            sprite.gameObject.SetActive(true);
         ChangeColor(Color.white);
         deathfire = false;
+        _spawnedArmStageVfx = false;
+        _spawnedHeadStageVfx = false;
         float n = UnityEngine.Random.Range(0, randomSpeed);
         chess.propertyController.ChangeAcceleRate(n);
+        SyncVisualTierToAnimator();
     }
+
     public override void PlayIdle()
     {
         base.PlayIdle();
     }
-    //override p
+
     public override void OnGetDamage(DamageMessege dm)
     {
-        //base.OnGetDamage(dm);
-        if ((dm.damageElementType & ElementType.Explode)!=0&& chess.propertyController.GetHpPerCent() <= 0)
+        if ((dm.damageElementType & ElementType.Explode) != 0 && chess.propertyController.GetHpPerCent() <= 0)
         {
-            //Debug.Log("death_fire");
-            sprite.gameObject.SetActive(false);
-            arm.gameObject.SetActive(false);
-            body.gameObject.SetActive(true);
             deathfire = true;
+            SyncVisualTierToAnimator();
         }
         else
         {
             if ((dm.damageElementType & ElementType.Bullet) != 0)
-            {
                 player?.RandomPlay();
-            }
-            if (chess.propertyController.GetHpPerCent() > 0.6)
+
+            float hp = chess.propertyController.GetHpPerCent();
+            if (hp > 0.6f)
             {
                 base.OnGetDamage(dm);
             }
             else
             {
-                if (chess.propertyController.GetHpPerCent() <= 0.6f   )
+                if (hp <= 0.6f && !_spawnedArmStageVfx)
                 {
-                    if (sprite.gameObject.activeSelf)
-                    {
-                        sprite.gameObject.SetActive(false);
-                        arm.gameObject.SetActive(true);
+                    _spawnedArmStageVfx = true;
+                    if (leftarm != null)
                         ObjectPool.instance.Create(leftarm).transform.position = transform.position;
-                    }
-                    //生成一个手臂特效
-                    if(chess.propertyController.GetHpPerCent() > 0.1f)
-                        arm.material.SetFloat("_FlashAmount", Time.time);
                 }
-                if (chess.propertyController.GetHpPerCent() <= 0.25f)
+                if (hp > 0.1f && hp <= 0.6f && sprite != null)
+                    sprite.material.SetFloat("_FlashAmount", Time.time);
+
+                if (hp <= 0.25f && !_spawnedHeadStageVfx)
                 {
-                    if (arm.gameObject.activeSelf)
+                    _spawnedHeadStageVfx = true;
+                    chess.buffController.AddBuff(bloodBuff);
+                    if (leftHead != null)
                     {
-                        arm.gameObject.SetActive(false);
-                        body.gameObject.SetActive(true);
-                        //这里要添加一个持续掉血buff
-                        chess.buffController.AddBuff(bloodBuff);
                         GameObject lhead = ObjectPool.instance.Create(leftHead);
                         lhead.transform.position = transform.position;
-                        //lhead.transform.SetParent(transform);
-                        //lhead.transform.localPosition = Vector3.zero;
-
-                        //这里生成一个掉头特效
                     }
- 
                 }
- 
             }
         }
+
+        SyncVisualTierToAnimator();
     }
+
+    /// <summary>
+    /// 与血量档一致：&gt;0.6 完整；&lt;=0.6 且 &gt;0.25 断手；&lt;=0.25 断头。外观由 Animator Blend Tree + <see cref="visualTierParameterName"/> 驱动。
+    /// </summary>
+    void SyncVisualTierToAnimator()
+    {
+        if (chess == null || chess.propertyController == null) return;
+        float hp = chess.propertyController.GetHpPerCent();
+        float tier = 0f;
+        if (hp <= 0.25f)
+            tier = 2f;
+        else if (hp <= 0.6f)
+            tier = 1f;
+        else
+            tier = 0f;
+        SetVisualTier(tier, visualTierParameterName);
+    }
+
     public override void PlayDeath()
     {
-        //base.PlayDeath();
-        if (!deathfire)
-            StartCoroutine(ReadyToDeath());
-        else animator.Play("death_fire");
-    }
-    IEnumerator ReadyToDeath()
-    {
-        yield return null;
+        if (animator == null) return;
+        SetDeathVariant(deathfire ? 1f : 0f, deathVariantParameterName);
         animator.Play("death");
     }
+
     public override void ChangeColor(Color color)
     {
         base.ChangeColor(color);
-        arm.color = color;
-        body.color = color;
     }
 }
+
 /// <summary>
 /// 僵尸的 自扣血buff
 /// </summary>
 public class BloodBuff : Buff
 {
     public DamageMessege dm;
-    //public float damage = 70;
     float speed;
     Timer timer;
     float leftHp;
@@ -153,8 +166,7 @@ public class BloodBuff : Buff
     }
     public void BloodDamage()
     {
-        dm.damage =leftHp * 0.03f/speed;
-        //Debug.Log("造成" + dm.damage);
+        dm.damage = leftHp * 0.03f / speed;
         if (!target.IfDeath)
             target.propertyController.GetDamage(dm);
     }
@@ -163,6 +175,5 @@ public class BloodBuff : Buff
         base.BuffOver();
         timer.Stop();
         timer = null;
-
     }
 }

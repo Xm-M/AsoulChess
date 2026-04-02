@@ -64,6 +64,18 @@ public class WeatherManage : IManager
 
     public Effect_Snow GetSnowOrNull() => _snow != null && _snow.gameObject != null ? _snow : null;
 
+    /// <summary>
+    /// 若本关尚未创建 <see cref="Effect_Snow"/> 则生成并 <see cref="Effect_Snow.InitSnow"/>。
+    /// 无 <see cref="GameStartPlugin_Snow"/> 时，初雪/冰车等仍可通过 <see cref="Effect_Snow.GetInstanceOrNull"/> 按需创建。
+    /// </summary>
+    public Effect_Snow EnsureSnow()
+    {
+        Effect_Snow s = GetOrCreateSnow();
+        if (s != null)
+            s.InitSnow();
+        return s;
+    }
+
     /// <summary>离开关卡时回收烟雾与雪地对象池实例。</summary>
     public void RecycleAll()
     {

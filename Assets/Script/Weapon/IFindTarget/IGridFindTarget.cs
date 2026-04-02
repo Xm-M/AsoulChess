@@ -20,6 +20,7 @@ public class IGridFindTarget : IFindTarget
     public void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
+         
         if (user == null || MapManage.instance == null) return;
 
         MapManage map = MapManage.instance;
@@ -112,9 +113,72 @@ public class IGridFindTarget : IFindTarget
         return true;
     }
 
-    /// <summary>与 <see cref="AutoInitMap"/> 一致：Tile 在格左下角，检测中心取格中心。</summary>
+    /// <summary>
+    /// 单格 OverlapBox 的世界中心。
+    /// 优先用草地 <see cref="SpriteRenderer"/> / <see cref="Collider2D"/> 的 <c>bounds.center</c>，
+    /// 与场景里格子、冰块（<see cref="Effect_Snow.PlaceOrRefreshIce"/> 用的 <see cref="Tile.transform"/> 同一块地）对齐；
+    /// 若 Tile 轴心已在格中心，再用 <c>position + tileSize*0.5</c> 会整体偏右上约半格。
+    /// 无渲染体/碰撞体时回退：<see cref="AutoInitMap"/> 左下角锚点 + 半格。
+    /// </summary>
     static Vector2 GetCellOverlapCenter(Tile tile, Vector2 tileSize)
     {
+        if (tile == null) return default;
+
+        var sr = tile.GetComponentInChildren<SpriteRenderer>(true);
+        if (sr != null)
+            return sr.bounds.center;
+
+        var col = tile.GetComponentInChildren<Collider2D>(true);
+        if (col != null)
+            return col.bounds.center;
+
         return (Vector2)tile.transform.position + new Vector2(tileSize.x * 0.5f, tileSize.y * 0.5f);
     }
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// Scene 视图画出与 <see cref="FindTarget"/> 一致的每格 <see cref="Physics2D.OverlapBoxNonAlloc"/> 范围（半宽为 <see cref="boxHalfExtents"/>）。
+    /// 由 <see cref="Chess.OnDrawGizmos"/> 调用；线框仅在 Scene 视图显示。
+    /// </summary>
+    public void DrawGizmos(Chess user)
+    {
+        if (user == null) return;
+
+        MapManage map = MapManage.instance;
+        if (map == null && !Application.isPlaying)
+            map =UnityEngine.Object.FindObjectOfType<MapManage>();
+        if (map == null) return;
+
+        if (!TryGetBaseMapPos(user, map, out Vector2Int basePos))
+            return;
+
+        int forwardX = GetForwardX(user);
+        Vector2 ts = map.tileSize;
+
+        if (relativeCells == null)
+            return;
+
+        Color prev = Gizmos.color;
+        Gizmos.color = new Color(0f, 0.85f, 1f, 0.95f);
+
+        foreach (Vector2Int rel in relativeCells)
+        {
+            int ax = basePos.x + rel.x * forwardX;
+            int ay = basePos.y + rel.y;
+            if (!IsDetectableCell(ax, ay, map.mapSize))
+                continue;
+
+            Tile tile = map.tiles[ax, ay];
+            if (tile == null)
+                continue;
+
+            Vector2 c = GetCellOverlapCenter(tile, ts);
+            Vector3 center = new Vector3(c.x, c.y, 0f);
+            Vector3 size = new Vector3(boxHalfExtents.x * 2f, boxHalfExtents.y * 2f, 0.05f);
+            Gizmos.DrawWireCube(center, size);
+        }
+
+        Gizmos.color = prev;
+    }
+#endif
 }

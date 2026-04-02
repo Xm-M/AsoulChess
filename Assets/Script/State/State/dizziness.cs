@@ -36,6 +36,7 @@ public class DizzinessState : State
     {
         base.Exit(chess);
         chess.propertyController.ResetDizznessTime();
+        chess.animatorController.ResumeSpeed();
         t = 0;
     }
     public override State Clone()

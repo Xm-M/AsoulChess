@@ -200,4 +200,17 @@ public class Chess : MonoBehaviour
     public void StopMove() => moveController.ContinuMove();
     public void ContinumMove() => moveController.StopMove();
 
+#if UNITY_EDITOR
+    /// <summary>
+    /// 转发 <see cref="IGridFindTarget.DrawGizmos"/>。用 <see cref="OnDrawGizmos"/> 而非 <see cref="OnDrawGizmosSelected"/>，
+    /// 否则运行时不选中该棋子就不会画线框；线框只在 <b>Scene</b> 视图显示，Game 视图默认看不到。
+    /// </summary>
+    void OnDrawGizmos()
+    {
+        if (equipWeapon == null) return;
+        if (equipWeapon.weapon is Weapon_Sample ws && ws.findTarget is IGridFindTarget grid)
+            grid.DrawGizmos(this);
+    }
+#endif
+
 }

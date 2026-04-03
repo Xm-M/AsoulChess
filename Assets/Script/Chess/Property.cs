@@ -194,6 +194,18 @@ public class PropertyController:Controller
         //if (!freezy)
             
     }
+
+    /// <summary>
+    /// 仅影响 <see cref="GetMoveSpeed"/>（格子移动等），不改 <see cref="GetAccelerate"/>（普攻间隔、技能 CD、Animator 速度）。
+    /// 与 <see cref="ChangeAcceleRate"/> 独立叠加：移速 = speed × max(0, acceleRated) × max(0, moveAcceleRated)。
+    /// </summary>
+    public void ChangeMoveAcceleRate(float value)
+    {
+        Data.moveAcceleRated += value;
+    }
+
+    /// <summary>移速专用倍率（默认 1）；攻速/CD/动画仍看 <see cref="GetAccelerate"/>。</summary>
+    public float GetMoveAcceleRate() => Data.moveAcceleRated;
     public void ChangeDizznessTime(float value)
     {
         
@@ -222,7 +234,7 @@ public class PropertyController:Controller
     public void SetAtttackRange(float value) => Data.attackRange = value;
     public float GetMoveSpeed()
     {
-        return Data.speed * Mathf.Max(0, Data.acceleRated);
+        return Data.speed * Mathf.Max(0f, Data.acceleRated) * Mathf.Max(0f, Data.moveAcceleRated);
     }
      
     public float GetAttack()
@@ -349,7 +361,9 @@ public class Property
 
     public float speed = 0f;//移动速度
     //public float attackSpeed = 1f;//攻击速度
-    public float acceleRated=1f;//攻速移速的加成都取决于这个属性
+    public float acceleRated=1f;//攻速、技能急速、Animator 速度（见 ChangeAcceleRate / GetAccelerate）
+    /// <summary>仅乘在移速上（GetMoveSpeed），不影响攻速/CD；默认 1。</summary>
+    public float moveAcceleRated = 1f;
 
     [HideInInspector] public float dizzinessTime;//眩晕时间
     [LabelText("韧性")]
@@ -392,7 +406,8 @@ public class Property
         healRate = property.healRate;
         //attackSpeed = property.attackSpeed;
         acceleRated = 1;
-        
+        moveAcceleRated = 1f;
+
         attackRange = property.attackRange;
         price = property.price;
         rarity = property.rarity;
@@ -412,6 +427,8 @@ public class DamageMessege
     public DamageType damageType;//伤害的类型
     public ElementType damageElementType;//元素的类型
     public bool ifCrit;//是否暴击
+    [Tooltip("为 true 时 DamagePanel 不飘字（如护甲自掉血等）")]
+    public bool suppressFloatingDamage;
     [SerializeReference]
     public Buff takeBuff;
     public DamageMessege()

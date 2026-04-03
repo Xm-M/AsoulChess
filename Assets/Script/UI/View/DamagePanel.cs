@@ -26,12 +26,19 @@ public class DamagePanel : View
     public void ShowDamageMes(DamageMessege dm)
     {
         //Debug.Log("damhe"); 
-        if (!showDamage||dm.damage<1.5f) return;
+        if (dm == null || dm.suppressFloatingDamage) return;
+        if (!showDamage || dm.damage < 1.5f) return;
+        if (dm.damageTo == null || Camera.main == null) return;
         //Debug.Log("չʾ");
         GameObject text= ObjectPool.instance.Create(damageText);
         text.transform.SetParent(transform);
         text.transform.position=Camera.main.WorldToScreenPoint(dm.damageTo.transform.position+Vector3.up*0.75f);
         TMP_Text t = text.GetComponentInChildren<TMP_Text>();
+        if (t == null)
+        {
+            ObjectPool.instance.Recycle(text);
+            return;
+        }
         if (!dm.ifCrit)
         {
             text.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -56,6 +63,7 @@ public class DamagePanel : View
     //生成一个Text 显示Miss
     public void ShowMiss(DamageMessege dm)
     {
+        if (dm == null || dm.damageTo == null || Camera.main == null) return;
         GameObject text = ObjectPool.instance.Create(damageText);
         text.transform.SetParent(transform);
         text.transform.position = Camera.main.WorldToScreenPoint(dm.damageTo.transform.position + Vector3.up * 0.75f);
@@ -65,6 +73,7 @@ public class DamagePanel : View
     }
     public void ShowText(DamageMessege dm,string mes,Color color)
     {
+        if (dm == null || dm.damageTo == null || Camera.main == null) return;
         GameObject text = ObjectPool.instance.Create(chineseText);
         text.transform.SetParent(transform);
         text.transform.position = Camera.main.WorldToScreenPoint(dm.damageTo.transform.position + Vector3.up * 0.75f);

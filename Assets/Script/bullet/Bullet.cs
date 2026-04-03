@@ -44,12 +44,13 @@ public class Bullet : MonoBehaviour
         if (damage == -1)
         {
             this.damage = shooter.propertyController.GetAttack() * rate;
-           
+            
         }
         else
         {
             this.damage = damage;
         }
+        Dm.damage = this.damage;
         bulletMove.InitMove(this);
     } 
     protected virtual void Update()

@@ -42,6 +42,20 @@ public class AnimatorController : MonoBehaviour,Controller
         if (animator != null && HasParameter(animator, paramName))
             animator.SetFloat(paramName, variant);
     }
+
+    /// <summary>无 AnimatorController 子类时（或仅写 Float）可由外部（如 IceCarArmor）写入 VisualTier。</summary>
+    public void SetVisualTierPublic(float tier, string paramName = DefaultVisualTierParam)
+    {
+        if (animator != null && HasParameter(animator, paramName))
+            animator.SetFloat(paramName, tier);
+    }
+
+    /// <summary>无子类时由外部写入 DeathVariant。</summary>
+    public void SetDeathVariantPublic(float variant, string paramName = DefaultDeathVariantParam)
+    {
+        if (animator != null && HasParameter(animator, paramName))
+            animator.SetFloat(paramName, variant);
+    }
     public SpriteRenderer sprite;
     public string dizzynesss;
     protected Chess chess;

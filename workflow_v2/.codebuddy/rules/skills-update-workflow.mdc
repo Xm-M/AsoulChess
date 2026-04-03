@@ -1,0 +1,275 @@
+---
+description: Skills更新后的工作流更新流程规范
+---
+
+# Skills更新后工作流更新流程
+
+## 📋 流程概览
+
+```
+新引入Skills → 判断工作流影响 → 更新工作流文档 → 判断Rules影响 → 更新Rules说明
+```
+
+---
+
+## 阶段一：新引入Skills
+
+### 触发条件
+
+- 新建Skill文件（`.codebuddy/skills/*.mdc`）
+- 更新现有Skill文件
+- 删除Skill文件
+
+### 执行步骤
+
+```
+Step 1: 记录Skills变更
+  - 新增Skill：记录名称、类型、触发词、功能
+  - 更新Skill：记录变更内容、影响范围
+  - 删除Skill：记录删除原因、影响评估
+
+Step 2: 更新Skills清单
+  - 更新 `.codebuddy/rules/unity-2d-game-development-workflow.mdc` 中的Skills索引
+  - 更新 `docs/skills-quick-reference.md` 中的Skills列表
+```
+
+---
+
+## 阶段二：判断工作流是否需要更新
+
+### 判断标准
+
+| Skills变更类型 | 工作流更新需求 | 判断依据 |
+|---------------|--------------|---------|
+| **新增A级Skill** | 需要 | 添加到Skills索引、更新快速参考 |
+| **新增B级Skill** | 强制需要 | 更新强制流程、更新文档 |
+| **新增C级Skill** | 强制需要 | 更新强制流程、更新文档 |
+| **新增D级Skill** | 可选 | 仅更新Skills索引 |
+| **修改Skill触发词** | 需要 | 更新所有文档中的触发词引用 |
+| **修改Skill功能** | 可能需要 | 判断是否影响工作流步骤 |
+| **删除Skill** | 需要 | 移除文档引用、评估替代方案 |
+| **Skill分级变更** | 需要 | 更新强制流程说明 |
+
+### 判断流程
+
+```
+1. 检查Skill分级：
+   - B级/C级变更 → 必须更新工作流（强制环节）
+   - A级变更 → 需要更新Skills索引
+   - D级变更 → 可选更新
+
+2. 检查触发词变更：
+   - 触发词修改 → 必须更新所有文档引用
+   - 触发词不变 → 跳过文档更新
+
+3. 检查功能变更：
+   - 影响工作流步骤 → 必须更新工作流文档
+   - 仅内部实现变更 → 可跳过文档更新
+
+4. 检查删除操作：
+   - 删除A级 → 需要评估替代方案、更新文档
+   - 删除B级/C级 → 必须更新强制流程说明
+   - 删除D级 → 移除文档引用即可
+```
+
+### 需要更新的文档
+
+| 文档 | 更新条件 |
+|------|---------|
+| `docs/workflow/ai-coding-workflow-guide.md` | B/C级变更、强制流程变更 |
+| `docs/quick-reference-guide.md` | 所有Skills变更 |
+| `docs/skills-quick-reference.md` | 所有Skills变更 |
+| `examples/*.md` | 触发词变更 |
+| `README.md` | Skills数量变更、分级变更 |
+
+---
+
+## 阶段三：工作流更新后判断Rules更新
+
+### 判断标准
+
+| 工作流变更类型 | Rules更新需求 | 判断依据 |
+|---------------|--------------|---------|
+| **新增强制环节** | 必须 | 影响AI执行流程 |
+| **修改强制流程** | 必须 | 影响AI执行流程 |
+| **修改Skills索引** | 必须 | 影响AI调用Skills |
+| **修改触发词** | 必须 | 影响AI调用Skills |
+| **修改渐进式披露原则** | 必须 | 影响AI行为模式 |
+| **仅文档说明变更** | 可选 | 不影响AI执行 |
+| **仅示例变更** | 可选 | 不影响AI执行 |
+
+### 判断流程
+
+```
+1. 检查是否影响AI执行：
+   - 强制流程变更 → 必须更新Rules
+   - Skills索引变更 → 必须更新Rules
+   - 触发词变更 → 必须更新Rules
+   - 仅文档优化 → 可跳过
+
+2. 检查Rules文件影响范围：
+   - unity-2d-game-development-workflow.mdc → 主要Rules文件
+   - 其他Rules文件 → 检查是否引用变更的Skills
+
+3. 执行更新：
+   - 更新强制执行规则
+   - 更新Skills索引
+   - 更新触发词引用
+   - 更新渐进式披露说明
+```
+
+### 需要更新的Rules文件
+
+| Rules文件 | 更新条件 |
+|----------|---------|
+| `.codebuddy/rules/unity-2d-game-development-workflow.mdc` | 所有工作流变更 |
+| 其他Skill相关Rules | 触发词变更、功能变更 |
+
+---
+
+## 📝 更新检查清单
+
+### Skills变更检查清单
+
+```
+□ 记录Skills变更内容
+□ 更新Skills清单（unity-2d-game-development-workflow.mdc）
+□ 更新Skills速查（docs/skills-quick-reference.md）
+□ 判断工作流更新需求
+  □ 检查分级变更（B/C级必须更新）
+  □ 检查触发词变更（必须更新引用）
+  □ 检查功能变更（判断影响范围）
+□ 执行工作流文档更新
+□ 判断Rules更新需求
+  □ 检查强制流程变更
+  □ 检查Skills索引变更
+  □ 检查触发词变更
+□ 执行Rules更新
+□ 验证更新完整性
+```
+
+### 工作流更新检查清单
+
+```
+□ 更新 ai-coding-workflow-guide.md
+  □ 强制流程说明
+  □ Skills分级体系
+  □ 使用示例
+□ 更新 quick-reference-guide.md
+  □ Skills速查表
+  □ 流程图
+□ 更新 skills-quick-reference.md
+  □ Skills列表
+  □ 使用示例
+□ 更新 examples/*.md
+  □ 触发词引用
+□ 更新 README.md
+  □ Skills数量
+  □ 分级说明
+```
+
+### Rules更新检查清单
+
+```
+□ 更新 unity-2d-game-development-workflow.mdc
+  □ 强制执行规则
+  □ 渐进式披露原则
+  □ Skills快速索引
+  □ 标准工作流程
+  □ 注意事项
+□ 检查其他Rules文件
+  □ 触发词引用
+  □ Skills引用
+□ 验证AI执行正确性
+```
+
+---
+
+## 🔄 完整流程示例
+
+### 示例1：新增A级Skill
+
+```
+场景：新增 @unity-2d-enemy-ai Skill（A级）
+
+执行流程：
+1. 记录变更：新增A级Skill，触发词@unity-2d-enemy-ai
+2. 更新Skills清单：
+   - unity-2d-game-development-workflow.mdc → 添加到A级索引
+   - docs/skills-quick-reference.md → 添加使用示例
+3. 判断工作流更新：
+   - A级变更 → 需要更新Skills索引，不影响强制流程
+   - 更新 quick-reference-guide.md
+   - 更新 README.md（Skills数量）
+4. 判断Rules更新：
+   - Skills索引变更 → 必须更新
+   - 更新 unity-2d-game-development-workflow.mdc 的Skills索引
+5. 验证：检查所有文档触发词一致
+```
+
+### 示例2：新增B级Skill（强制环节）
+
+```
+场景：新增 @security-analyzer Skill（B级，安全分析，强制）
+
+执行流程：
+1. 记录变更：新增B级Skill，触发词@security-analyzer，强制环节
+2. 更新Skills清单：
+   - unity-2d-game-development-workflow.mdc → 添加到B级索引
+   - docs/skills-quick-reference.md → 添加使用示例
+3. 判断工作流更新：
+   - B级变更 → 必须更新工作流（强制环节）
+   - 更新 ai-coding-workflow-guide.md → 添加安全分析环节
+   - 更新 quick-reference-guide.md → 更新强制流程图
+   - 更新 README.md → 更新强制流程说明
+4. 判断Rules更新：
+   - 强制流程变更 → 必须更新
+   - 更新 unity-2d-game-development-workflow.mdc：
+     - 更新"开发前必做"
+     - 更新"标准工作流程"
+     - 更新"注意事项"
+5. 验证：检查AI执行流程正确
+```
+
+### 示例3：修改Skill触发词
+
+```
+场景：@unity-config 改名为 @unity-scriptableobject-config
+
+执行流程：
+1. 记录变更：触发词变更，旧触发词@unity-config，新触发词@unity-scriptableobject-config
+2. 更新Skills清单：
+   - unity-2d-game-development-workflow.mdc → 更新触发词
+   - docs/skills-quick-reference.md → 更新触发词
+3. 判断工作流更新：
+   - 触发词变更 → 必须更新所有文档引用
+   - 更新 ai-coding-workflow-guide.md → 搜索替换触发词
+   - 更新 quick-reference-guide.md → 搜索替换触发词
+   - 更新 examples/*.md → 搜索替换触发词
+4. 判断Rules更新：
+   - 触发词变更 → 必须更新
+   - 更新 unity-2d-game-development-workflow.mdc → 搜索替换触发词
+5. 验证：全文搜索旧触发词，确保无遗漏
+```
+
+---
+
+## ⚠️ 注意事项
+
+1. **优先级原则**：B级/C级变更 > A级变更 > D级变更
+2. **强制优先**：涉及强制环节的变更必须优先更新
+3. **全局搜索**：触发词变更必须全文搜索，确保无遗漏
+4. **版本记录**：重要变更需记录到更新日志
+5. **验证测试**：更新后需验证AI执行正确性
+
+---
+
+## 📚 相关文档
+
+- **工作流包**: `unity-2d-ai-coding-workflow/`
+- **工作流主文档**: `unity-2d-ai-coding-workflow/docs/workflow/ai-coding-workflow-guide.md`
+- **快速参考**: `unity-2d-ai-coding-workflow/docs/quick-reference-guide.md`
+- **Skills速查**: `unity-2d-ai-coding-workflow/docs/skills-quick-reference.md`
+- **Rules主文件**: `.codebuddy/rules/unity-2d-game-development-workflow.mdc`
+- **Skills主目录**: `.codebuddy/skills/`
+- **Skills总览**: `.codebuddy/skills/README.md`

@@ -19,6 +19,7 @@ public class StartUI : View
     public Button settingsButton;
     [Header("退出按钮：退出游戏")]
     public Button exitButton;
+ 
     [Header("难度选择（首页选择，进入关卡前生效）")]
     public TMP_Dropdown difficultyDropdown;
     static readonly string[] DifficultyLabels = { "简单", "普通", "困难", "噩梦" };
@@ -197,4 +198,10 @@ public class StartUI : View
     {
         UIManage.GetView<CoinShopPanel>().Show();
     }
+
+    //void OnCodexButtonClick()
+    //{
+    //    var panel = UIManage.GetView<CodexPanel>();
+    //    if (panel != null) panel.Show();
+    //}
 }

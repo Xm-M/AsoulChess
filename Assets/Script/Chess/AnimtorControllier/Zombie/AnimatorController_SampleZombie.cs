@@ -5,6 +5,14 @@ using Sirenix.OdinInspector;
 public class AnimatorController_SampleZombie : AnimatorController
 {
     public bool deathfire;
+
+    /// <summary>与 <see cref="SyncVisualTierToAnimator"/> 一致：&gt;0.6 → 0；&gt;0.25 且 ≤0.6 → 1；≤0.25 → 2。供 IceCarArmor 按护甲比例复用。</summary>
+    public static float TierFromDamagePhaseRatio(float ratio01)
+    {
+        if (ratio01 <= 0.25f) return 2f;
+        if (ratio01 <= 0.6f) return 1f;
+        return 0f;
+    }
     [Tooltip("断手阶段生成一次的手臂掉落/特效预制体")]
     public GameObject leftarm;
     [Tooltip("断头阶段生成一次的头颅掉落/特效预制体")]
@@ -38,7 +46,8 @@ public class AnimatorController_SampleZombie : AnimatorController
         _spawnedHeadStageVfx = false;
         float n = UnityEngine.Random.Range(0, randomSpeed);
         chess.propertyController.ChangeAcceleRate(n);
-        SyncVisualTierToAnimator();
+        if (chess != null && chess.GetComponentInChildren<IceCarArmor>() == null)
+            SyncVisualTierToAnimator();
     }
 
     public override void PlayIdle()
@@ -48,7 +57,8 @@ public class AnimatorController_SampleZombie : AnimatorController
 
     public override void OnGetDamage(DamageMessege dm)
     {
-        if ((dm.damageElementType & ElementType.Explode) != 0 && chess.propertyController.GetHpPerCent() <= 0)
+        bool hasIceCar = chess != null && chess.GetComponentInChildren<IceCarArmor>() != null;
+        if (!hasIceCar && (dm.damageElementType & ElementType.Explode) != 0 && chess.propertyController.GetHpPerCent() <= 0)
         {
             deathfire = true;
             SyncVisualTierToAnimator();
@@ -87,30 +97,37 @@ public class AnimatorController_SampleZombie : AnimatorController
             }
         }
 
-        SyncVisualTierToAnimator();
+        if (!hasIceCar)
+            SyncVisualTierToAnimator();
     }
 
     /// <summary>
     /// 与血量档一致：&gt;0.6 完整；&lt;=0.6 且 &gt;0.25 断手；&lt;=0.25 断头。外观由 Animator Blend Tree + <see cref="visualTierParameterName"/> 驱动。
+    /// 带 <see cref="IceCarArmor"/> 时由护甲血量驱动，此处不写入（见 IceCarArmor）。
     /// </summary>
     void SyncVisualTierToAnimator()
     {
         if (chess == null || chess.propertyController == null) return;
+        if (chess.GetComponentInChildren<IceCarArmor>() != null) return;
         float hp = chess.propertyController.GetHpPerCent();
-        float tier = 0f;
-        if (hp <= 0.25f)
-            tier = 2f;
-        else if (hp <= 0.6f)
-            tier = 1f;
-        else
-            tier = 0f;
+        float tier = TierFromDamagePhaseRatio(hp);
         SetVisualTier(tier, visualTierParameterName);
+    }
+
+    /// <summary>由 IceCarArmor 按护甲比例写入，使用本类配置的 <see cref="visualTierParameterName"/>。</summary>
+    public void ApplyVisualTierFromRatio(float ratio01)
+    {
+        SetVisualTier(TierFromDamagePhaseRatio(ratio01), visualTierParameterName);
     }
 
     public override void PlayDeath()
     {
         if (animator == null) return;
-        SetDeathVariant(deathfire ? 1f : 0f, deathVariantParameterName);
+        bool explodeVariant = deathfire;
+        var ice = chess != null ? chess.GetComponentInChildren<IceCarArmor>() : null;
+        if (ice != null && ice.ExplodeDeathVariant)
+            explodeVariant = true;
+        SetDeathVariant(explodeVariant ? 1f : 0f, deathVariantParameterName);
         animator.Play("death");
     }
 

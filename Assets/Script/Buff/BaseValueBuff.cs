@@ -269,7 +269,7 @@ public class Buff_BaseValueBuff_Size : Buff_BaseValueBuff
     public override void BuffReset(Buff resetBuff) { base.BuffReset(resetBuff); int v = (resetBuff as Buff_BaseValueBuff_Size).size; if (v > size) { target.propertyController.ChangeSize(-size); size = v; target.propertyController.ChangeSize(size); } }
 }
 
-/// <summary>移速/攻速（ChangeAcceleRate 同时影响）</summary>
+/// <summary>攻速/技能急速/动画与移速共用 acceleRated；移速实际为 speed×acceleRated×moveAcceleRated（见 <see cref="PropertyController.GetMoveSpeed"/>）。</summary>
 public class Buff_BaseValueBuff_AcceleRate : Buff_BaseValueBuff
 {
     public float rate;

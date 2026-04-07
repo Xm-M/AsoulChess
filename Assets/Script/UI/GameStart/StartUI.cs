@@ -19,7 +19,9 @@ public class StartUI : View
     public Button settingsButton;
     [Header("退出按钮：退出游戏")]
     public Button exitButton;
- 
+    [Header("图鉴按钮：打开棋子图鉴面板")]
+    public Button codexButton;
+
     [Header("难度选择（首页选择，进入关卡前生效）")]
     public TMP_Dropdown difficultyDropdown;
     static readonly string[] DifficultyLabels = { "简单", "普通", "困难", "噩梦" };
@@ -36,6 +38,8 @@ public class StartUI : View
             settingsButton.onClick.AddListener(OnSettingsButtonClick);
         if (exitButton != null)
             exitButton.onClick.AddListener(OnExitButtonClick);
+        if (codexButton != null)
+            codexButton.onClick.AddListener(OnCodexButtonClick);
         InitDifficultyDropdown();
         RefreshShopButtonVisibility();
         var miniGame = Resources.LoadAll<LevelData>("LevelData/MiniMode");
@@ -204,4 +208,9 @@ public class StartUI : View
     //    var panel = UIManage.GetView<CodexPanel>();
     //    if (panel != null) panel.Show();
     //}
+
+    void OnCodexButtonClick()
+    {
+        UIManage.GetView<CodexPanel>()?.Show();
+    }
 }

@@ -195,7 +195,7 @@ public class LevelController_HammerZombie : LevelController
             creators=new List<PropertyCreator>();
             for (int i = 0; i < data.zombieList.Count; i++)
             {
-                if (data.zombieList[i].baseProperty.waveLimit <= wave)
+                if (data.zombieList[i].PassesWavePoolFilter(wave))
                 {
                     creators.Add(data.zombieList[i]);
                     raritySum += data.zombieList[i].baseProperty.rarity;

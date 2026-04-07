@@ -21,11 +21,14 @@ MonoBehaviour:
       data:
         fetterName: "\u9F13\u624B"
         fetterIcon: {fileID: 21300000, guid: d52f55372e3bc1341a2d48b30e8cfea5, type: 3}
+        fetterEffectDescription: "\u9F13\u624B\u4E3A\u5468\u56F43*3\u8303\u56F4\u5185\u7684\u6240\u6709\u5355\u4F4D\u6DFB\u52A0\u589E\u4F24\u589E\u76CA"
         detectMode: 0
         config:
           tag: "\u9F13\u624B"
           requiredMemberIds: []
           tierThresholds: 02000000030000000400000005000000
+        num: 2
+        tier: 0
         drummerAuraBuff:
           id: 1
     00000001:
@@ -33,9 +36,11 @@ MonoBehaviour:
       data:
         buffName: "\u9F13\u624B\u5149\u73AF"
         target: {fileID: 0}
-        extraDamage: 0.5
+        extraDamage: 0.1
         drummerDamageBuff:
           id: 2
+        auraEffect: {fileID: 0}
+        checkInterval: 0.5
     00000002:
       type: {class: Buff_DrummerDamage, ns: , asm: Assembly-CSharp}
       data:
@@ -43,9 +48,11 @@ MonoBehaviour:
         target: {fileID: 0}
         extraDamageBuff:
           id: 3
+        auraEffect: {fileID: 0}
     00000003:
       type: {class: Buff_BaseValueBuff_ExtraDamage, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u989D\u5916\u4F24\u5BB3"
         target: {fileID: 0}
-        extraDamage: 0
+        effect: {fileID: 0}
+        extraDamage: 0.1

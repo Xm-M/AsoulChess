@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 325550988053107125}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.9235687, y: -0.63238835, z: 2}
+  m_LocalPosition: {x: 1.9235687, y: -0.63238835, z: 0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6590946560865663330}
@@ -259,7 +259,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2901026751494952613}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.9235687, y: -0.63238835, z: 2}
+  m_LocalPosition: {x: 1.9235687, y: -0.63238835, z: 0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6590946560865663330}
@@ -519,7 +519,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3540264426018414354}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.9235687, y: -0.63238835, z: 2}
+  m_LocalPosition: {x: 1.9235687, y: -0.63238835, z: 0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6590946560865663330}
@@ -835,6 +835,7 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       ifCrit: 0
+      suppressFloatingDamage: 0
       takeBuff:
         id: 1
     onUseSkill:
@@ -918,6 +919,7 @@ MonoBehaviour:
           damageType: 0
           damageElementType: 1
           ifCrit: 0
+          suppressFloatingDamage: 0
           takeBuff:
             id: 1
 --- !u!61 &6127518310232861434
@@ -1106,6 +1108,7 @@ MonoBehaviour:
           damageType: 2
           damageElementType: 0
           ifCrit: 0
+          suppressFloatingDamage: 0
           takeBuff:
             id: 1
     00000001:

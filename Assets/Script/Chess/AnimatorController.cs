@@ -156,7 +156,10 @@ public class AnimatorController : MonoBehaviour,Controller
     {
         animator.SetInteger("skill", value);
     }
-
+    public virtual void ChangeFloat(float  value)
+    {
+        animator.SetFloat("Blend", value);
+    }
     public virtual void ChangeColor(Color color)
     {
         sprite.color = color;

@@ -67,6 +67,22 @@ public class PropertyCreator : ScriptableObject
     public virtual bool IfCanPlant(Tile tile){
         return plantFunction.ifCanPlant(this, tile);
     }
+
+    /// <summary>
+    /// 「一类/二类有限制」出怪或食物池筛选：默认当 <c>wave ≥ waveLimit</c> 时进池；
+    /// <see cref="PlantType.LimitType"/> 时仅当当前波次（1 起）为 <c>waveLimit</c> 的正整数倍且 <c>waveLimit &gt; 0</c> 时进池。
+    /// </summary>
+    public bool PassesWavePoolFilter(int wave1Based)
+    {
+        if (baseProperty == null) return false;
+        int limit = baseProperty.waveLimit;
+        if ((plantType & PlantType.LimitType)!=0)
+        {
+            if (limit <= 0) return false;
+            return wave1Based >= limit && wave1Based % limit == 0;
+        }
+        return limit <= wave1Based;
+    }
 }
 public interface IPlantFunction
 {

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
   m_Name: "\u51DB\u5FA1\u94F6\u7070"
   m_EditorClassIdentifier: 
-  chessName: 
+  chessName: "\u51DB\u5FA1\u94F6\u7070"
   chessDescription: 
+  chessShortDescription: 
   chessEffect: 
   baseProperty:
     attack: 0
@@ -30,6 +31,7 @@ MonoBehaviour:
     healRate: 1
     speed: 0
     acceleRated: 1
+    moveAcceleRated: 1
     dizzinessTime: 0
     tenacity: 0
     attackRange: 1
@@ -41,12 +43,15 @@ MonoBehaviour:
   chessPre: {fileID: 0}
   chessSprite: {fileID: 0}
   plantTags: []
+  fetterMemberId: 
   chessTileType: 0
   plantType: 0
   plantFunction:
     id: 0
   plantIfCanBuyCard:
     id: 0
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
   references:
     version: 1
     00000000:

@@ -108,6 +108,7 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       ifCrit: 0
+      suppressFloatingDamage: 0
       takeBuff:
         id: 1
     onUseSkill:
@@ -191,6 +192,7 @@ MonoBehaviour:
           damageType: 0
           damageElementType: 1
           ifCrit: 0
+          suppressFloatingDamage: 0
           takeBuff:
             id: 1
 --- !u!61 &6127518310232861434
@@ -356,12 +358,11 @@ MonoBehaviour:
   sprite: {fileID: 33642042939368810}
   dizzynesss: 
   attackStateNameAlt: 
-  arm: {fileID: 0}
-  body: {fileID: 0}
   deathfire: 0
   leftarm: {fileID: 5301964369265554846, guid: 01973c3c3f7ab7142aa9022fdd7f0993, type: 3}
   leftHead: {fileID: 7305185559257757046, guid: 1d7bdb064f31f39449f088db99b409de, type: 3}
   visualTierParameterName: VisualTier
+  deathVariantParameterName: DeathVariant
   player: {fileID: 1439222959508539336}
   bloodBuff:
     id: 0
@@ -380,6 +381,7 @@ MonoBehaviour:
           damageType: 2
           damageElementType: 0
           ifCrit: 0
+          suppressFloatingDamage: 0
           takeBuff:
             id: 1
     00000001:

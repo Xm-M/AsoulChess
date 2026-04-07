@@ -64,7 +64,7 @@ public abstract class RewardItemBase : UIItem
             elapsed += Time.deltaTime * timeSpeed;
             yield return null;
         }
-        LevelManage.instance.GamePause();
+        // 不在落地/曲线结束时暂停，仅在玩家点击拾取时由 OnPointerClick 调用 GamePause
     }
 
     public void MoveToCenter()

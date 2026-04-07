@@ -113,6 +113,7 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       ifCrit: 0
+      suppressFloatingDamage: 0
       takeBuff:
         id: 0
     onUseSkill:
@@ -121,6 +122,7 @@ MonoBehaviour:
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
@@ -141,6 +143,9 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 0
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 8154815472680880286}
   WhenEnterGame:
     m_PersistentCalls:
@@ -206,7 +211,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &3323562078212387340
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -219,10 +224,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8154815472680880286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,6 +244,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 3323562078212387340}
   sprite: {fileID: 4339981794206550926}
+  dizzynesss: 
+  attackStateNameAlt: 
 --- !u!1 &3574989099679953672
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,7 +271,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3574989099679953672}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.342, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 849869157818951935}
@@ -306,7 +315,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 5eb6042fe046f5d43a274b00b27ba725, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -340,7 +349,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8503115955464252077, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.342
       objectReference: {fileID: 0}
     - target: {fileID: 8503115955464252077, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
       propertyPath: m_LocalPosition.z

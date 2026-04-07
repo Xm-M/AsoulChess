@@ -83,6 +83,7 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       ifCrit: 0
+      suppressFloatingDamage: 0
       takeBuff:
         id: 0
     onUseSkill:
@@ -91,6 +92,7 @@ MonoBehaviour:
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
@@ -111,10 +113,25 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 0
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 5961782748534191724}
   WhenEnterGame:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7727738289225358906}
+        m_TargetAssemblyTypeName: EffectMiss, Assembly-CSharp
+        m_MethodName: CreateEffects
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 7196381099807767998, guid: 205ebe8749643ce4ea6b11f7653c9efd, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -213,6 +230,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 8890928546093342490}
   sprite: {fileID: 5778147292881605832}
+  dizzynesss: 
+  attackStateNameAlt: 
 --- !u!114 &7727738289225358906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,7 +314,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 315e9a661adee6b4ab4af6667b605d9c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

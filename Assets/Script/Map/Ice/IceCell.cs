@@ -47,13 +47,31 @@ public class IceCell : MonoBehaviour
             _lifeTimer = GameManage.instance.timerManage.AddTimer(Melt, lifetimeSeconds);
     }
 
-    /// <summary>刷新融化计时（已存在冰时延长持续时间）。</summary>
-    public void ResetLifetime(float lifetimeSeconds)
+    /// <summary>当前融化剩余秒数；无 <see cref="_lifeTimer"/> 视为整局不化（+∞）；已结束为 0。</summary>
+    float GetRemainingLifetimeSecondsForMerge()
     {
-        ApplyLifetime(lifetimeSeconds);
+        if (_lifeTimer == null) return float.PositiveInfinity;
+        if (_lifeTimer.IsFinish) return 0f;
+        return Mathf.Max(0f, _lifeTimer.LeftTime());
     }
 
-    /// <summary>由 <see cref="Effect_Snow"/> 在己方覆盖敌方冰时调用：改归属、挡板与计时。</summary>
+    /// <summary>
+    /// 刷新融化计时：已存在冰被再次铺冰时，若剩余时间大于本次请求时间则<strong>保留剩余时间</strong>，避免短时长（如冰车 30s）覆盖开局长冰（如 99999s）。
+    /// </summary>
+    public void ResetLifetime(float lifetimeSeconds)
+    {
+        if (lifetimeSeconds <= 0f)
+            return;
+
+        float remaining = GetRemainingLifetimeSecondsForMerge();
+        if (float.IsPositiveInfinity(remaining))
+            return;
+
+        float effective = Mathf.Max(remaining, lifetimeSeconds);
+        ApplyLifetime(effective);
+    }
+
+    /// <summary>由 <see cref="Effect_Snow"/> 在己方覆盖敌方冰时调用：改归属、挡板与计时（同样遵守「不缩短更长剩余」）。</summary>
     public void SetOwnerAndLifetime(string ownerTag, float lifetimeSeconds)
     {
         iceOwnerTag = ownerTag;
@@ -133,6 +151,8 @@ public class IceCell : MonoBehaviour
     public static bool BlocksPlayerPlantAt(Vector2 worldPos)
     {
         int iceBlockLayer = LayerMask.NameToLayer("IcePlantBlock");
+        // Test 下不按冰格阻挡（与 PlantsPanel 使用 !Blocks 一致：false=允许种）
+        if (GameManage.instance.mode == GameMode.Test) return false;
         if (iceBlockLayer >= 0 && Physics2D.OverlapPoint(worldPos, 1 << iceBlockLayer) != null)
             return true;
         foreach (Collider2D col in Physics2D.OverlapPointAll(worldPos))

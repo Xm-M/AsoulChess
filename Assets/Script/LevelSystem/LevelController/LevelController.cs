@@ -296,12 +296,17 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    /// <summary>大波前的波（9、19、29...）必须全灭才能进下一波，不能靠 maxtime 强制进入</summary>
+    /// <summary>
+    /// 第 9、19…波（大波前）与第 10、20…波（大波）：<see cref="WaveData.InitWave"/> 里 enterPecent=0，须清完；
+    /// 不能用 maxtime 强切，否则会出现「场上仍有僵尸就进下一波」。其余波可用血量阈值或 maxtime。
+    /// </summary>
     bool WaveCanAdvance()
     {
         var wd = waveDatas[currentWave];
         bool hpOk = wd.CheckZombieHp();
-        if (wd.Wave % 10 == 9) return hpOk && t > mintime; // 大波前：必须全灭且时间到
+        int mod = wd.Wave % 10;
+        if (mod == 9 || mod == 0)
+            return hpOk && t > mintime;
         return (hpOk && t > mintime) || (t > maxtime);
     }
 
@@ -400,6 +405,7 @@ public class WaveData
     [ShowInInspector]
     protected float enterPecent;
     protected float hpmax;
+    [ShowInInspector]
     protected int wave;
     public int Wave => wave;
     protected bool createOver;
@@ -430,7 +436,7 @@ public class WaveData
         {
             for (int i = 0; i < data.zombieList.Count; i++)
             {
-                if (data.zombieList[i].baseProperty.waveLimit <= wave)
+                if (data.zombieList[i].PassesWavePoolFilter(wave))
                 {
                     ZombieInWaveData zombieInWaveData = new ZombieInWaveData();
                     zombieList.Add(zombieInWaveData);
@@ -445,6 +451,12 @@ public class WaveData
         {
             for (int i = 0; i < data.zombieList.Count; i++)
             {
+                var plantType = data.zombieList[i].plantType;
+                if ((plantType & PlantType.LimitType) != 0&&wave%data.zombieList[i].baseProperty.waveLimit!=0) 
+                {
+                    Debug.Log("?");
+                    continue;
+                }
                 ZombieInWaveData zombieInWaveData = new ZombieInWaveData();
                 zombieList.Add(zombieInWaveData);
                 zombieInWaveData.zombieCreate = data.zombieList[i];
@@ -671,7 +683,11 @@ public class WaveData
         // 最后一波不通过血量百分比提前进入下一波，必须等所有僵尸死亡(IfDeath)后才生成奖励
         if (wave == LevelManage.instance.currentLevel.MaxWave)
             return false;
-        if (hpcurrent / hpmax < enterPecent)
+        // enterPecent==0 的波（第9、10、19…）不设血量阈值；且禁止 hpcurrent 为负时误满足「< 0」提前进波
+        if (enterPecent <= 0f || hpmax <= 1e-5f)
+            return false;
+        float ratio = hpcurrent / hpmax;
+        if (ratio >= 0f && ratio < enterPecent)
             return true;
         return false;
     }

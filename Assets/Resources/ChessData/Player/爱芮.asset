@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chessName: "\u7231\u82AE"
   chessDescription: 
+  chessShortDescription: 
   chessEffect: 
   baseProperty:
     attack: 180
@@ -24,12 +25,13 @@ MonoBehaviour:
     extraDamge: 0
     AR: 0
     extraDefence: 0
-    Hp: 500
-    HpMax: 500
+    Hp: 5000
+    HpMax: 5000
     lifeStealing: 0
     healRate: 1
     speed: 0
     acceleRated: 1
+    moveAcceleRated: 1
     dizzinessTime: 0
     tenacity: 0
     attackRange: 3.75
@@ -37,10 +39,11 @@ MonoBehaviour:
     rarity: 4000
     waveLimit: 1
     CD: 30
-    Size: 1
+    Size: 10
   chessPre: {fileID: 9032781921311277065, guid: 5fa9bfa1ade9c784e93cb91ac45963f8, type: 3}
   chessSprite: {fileID: 21300000, guid: 262b2adf76bdc4f41be1de8eb30de9a9, type: 3}
   plantTags: []
+  fetterMemberId: 
   chessTileType: 1
   plantType: 1
   plantFunction:

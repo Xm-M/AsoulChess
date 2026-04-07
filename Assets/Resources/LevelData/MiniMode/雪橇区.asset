@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u96EA\u6A47\u533A"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: "\u540E\u9662"
+  levelName: "\u96EA\u6A47\u533A"
+  levelSprit: {fileID: 863332376493903738, guid: 421afde933c35af4d8db856d5e639cd4, type: 3}
+  levelMode: 1
+  EnterMapPlugin:
+  - id: 0
+  - id: 1
+  PreParePlugin:
+  - id: 2
+  GameStartPlugin:
+  - id: 3
+  - id: 4
+  - id: 5
+  - id: 6
+  - id: 7
+  MaxWave: 40
+  n: 1
+  t: 1
+  zombieList:
+  - {fileID: 11400000, guid: 8d77ec938caad1b48b1376aa6fa41b12, type: 2}
+  - {fileID: 11400000, guid: 7148fbe358875874999b131e9c332e9e, type: 2}
+  - {fileID: 11400000, guid: 42d3131bb447ca4428040ab85436c26f, type: 2}
+  createZombieType: 3
+  nextLevel: {fileID: 0}
+  outcome:
+    id: 8
+  loadSkipToTime: 10
+  references:
+    version: 1
+    00000000:
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    00000001:
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u9009\u724C"
+        deleyPlayTime: 0
+    00000002:
+      type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 50
+        cards: []
+    00000003:
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u767D\u5929"
+        deleyPlayTime: 3
+    00000004:
+      type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
+      data:
+        sunlight: 25
+    00000005:
+      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
+    00000006:
+      type: {class: GameStartPlugin_Snow, ns: , asm: Assembly-CSharp}
+      data:
+        hideColumns: 3
+        iceLifetimeSeconds: 99999
+    00000007:
+      type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
+      data:
+        fastEnterTime: 28
+    00000008:
+      type: {class: , ns: , asm: }

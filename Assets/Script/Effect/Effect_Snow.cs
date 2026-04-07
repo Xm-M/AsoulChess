@@ -64,13 +64,12 @@ public class Effect_Snow : MonoBehaviour
         return FindObjectOfType<Effect_Snow>(true);
     }
 
-    /// <summary>地图内可铺冰：X 最大为 <c>mapSize.x - 2</c>（最右一列为僵尸出生列）。</summary>
+    /// <summary>地图内可铺冰：X 为 <c>0 .. mapSize.x - 1</c>（含最右一列）。</summary>
     public static bool IsValidIceMapPos(Vector2Int p, Vector2Int mapSize)
     {
-        if (mapSize.y <= 0) return false;
+        if (mapSize.x <= 0 || mapSize.y <= 0) return false;
+        if (p.x < 0 || p.x >= mapSize.x) return false;
         if (p.y < 0 || p.y >= mapSize.y) return false;
-        if (mapSize.x < 2) return false;
-        if (p.x < 0 || p.x > mapSize.x - 2) return false;
         return true;
     }
 
@@ -121,7 +120,10 @@ public class Effect_Snow : MonoBehaviour
         _iceByMapPos.Clear();
     }
 
-    /// <summary>在指定格铺冰或仅刷新持续时间；冰块由本组件持有的预制体生成。</summary>
+    /// <summary>
+    /// 在指定格铺冰；若已有冰且归属与 <paramref name="ownerTag"/> 相同则刷新时长；
+    /// 若已有冰且归属不同（如冰车被动 <c>IceTrail</c> 碾过异阵营雪块）则改为与来源同 <c>tag</c> 并刷新时长。
+    /// </summary>
     public bool PlaceOrRefreshIce(Vector2Int mapPos, float lifetimeSeconds, string ownerTag)
     {
         if (iceCellPrefab == null || MapManage.instance == null) return false;
@@ -130,7 +132,10 @@ public class Effect_Snow : MonoBehaviour
 
         if (_iceByMapPos.TryGetValue(mapPos, out IceCell existing) && existing != null)
         {
-            existing.ResetLifetime(lifetimeSeconds);
+            if (existing.IceOwnerTag != ownerTag)
+                existing.SetOwnerAndLifetime(ownerTag, lifetimeSeconds);
+            else
+                existing.ResetLifetime(lifetimeSeconds);
             return true;
         }
 
@@ -218,14 +223,14 @@ public class Effect_Snow : MonoBehaviour
 
     /// <summary>
     /// 开局铺冰：与 <see cref="Effect_Smoke.HideSmokeInColumns"/> 对称，列索引 ≤ <paramref name="excludeColumnsUpToInclusive"/> 的列不铺冰，
-    /// 其余可铺列仅对非 Water 格铺冰。
+    /// 其余可铺列（含最右列）仅对非 Water 格铺冰。
     /// </summary>
     public void PlaceInitialIceAfterExcludedColumns(int excludeColumnsUpToInclusive, float lifetimeSeconds, string ownerTag)
     {
         if (iceCellPrefab == null || MapManage.instance == null) return;
         var map = MapManage.instance;
         var mapSize = map.mapSize;
-        for (int x = excludeColumnsUpToInclusive + 1; x <= mapSize.x - 2; x++)
+        for (int x = excludeColumnsUpToInclusive + 1; x <= mapSize.x - 1; x++)
         {
             for (int y = 0; y < mapSize.y; y++)
             {
@@ -238,7 +243,7 @@ public class Effect_Snow : MonoBehaviour
 
     static Vector2Int ClampStartToValid(Vector2Int start, Vector2Int mapSize)
     {
-        int x = Mathf.Clamp(start.x, 0, Mathf.Max(0, mapSize.x - 2));
+        int x = Mathf.Clamp(start.x, 0, Mathf.Max(0, mapSize.x - 1));
         int y = Mathf.Clamp(start.y, 0, Mathf.Max(0, mapSize.y - 1));
         return new Vector2Int(x, y);
     }

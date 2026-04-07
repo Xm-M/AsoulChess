@@ -33,6 +33,7 @@ public class PlantsPanel : BaseHandPanel
                 {
                     Vector2 rayPos = cam.ScreenToWorldPoint(Input.mousePosition);
                     // 禁止在 continue 中跳过本循环末尾的 yield，否则同一帧内 GetMouseButtonDown 仍为 true 会死循环卡死/崩溃
+                    // BlocksPlayerPlantAt：true=该点被冰等阻挡，不可种；只有未阻挡时才尝试落子
                     if (!IceCell.BlocksPlayerPlantAt(rayPos))
                     {
                         Tile t = FindTileAtWorld(rayPos);

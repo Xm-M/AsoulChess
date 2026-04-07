@@ -105,4 +105,6 @@ public enum PlantType
     SupportPlant=1<<1,
     PotPlant=1<<2,
     Consume=1<<3,
+    /// <summary>与 waveLimit 配合：仅在波次为 waveLimit 的整数倍时进入有限制池（见 <see cref="PropertyCreator.PassesWavePoolFilter"/>）。</summary>
+    LimitType=1<<4,
 }

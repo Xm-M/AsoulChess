@@ -10,6 +10,6 @@ public class DeathMap : MonoBehaviour
         Debug.Log(collision.name);
         if (c != null) c.Death();
         else
-        Destroy(collision.gameObject);
+            Destroy(collision.gameObject);
     }
 }

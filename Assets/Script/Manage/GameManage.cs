@@ -139,6 +139,11 @@ public class GameManage : MonoBehaviour
         Screen.autorotateToLandscapeRight = true;
         Screen.orientation = ScreenOrientation.AutoRotation;
     }
+    [Button]
+     public void Trite()
+    {
+        playerOwnedCreators = new List<PropertyCreator>(allChess);
+    }
 }
 public enum GameMode
 {

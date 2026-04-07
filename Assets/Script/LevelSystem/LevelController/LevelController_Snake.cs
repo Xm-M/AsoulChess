@@ -580,7 +580,7 @@ public class LevelController_Snake : LevelController
             {
                 var c = src[i];
                 if (c == null) continue;
-                if (c.baseProperty.waveLimit <= wave1Based)
+                if (c.PassesWavePoolFilter(wave1Based))
                 {
                     pool.Add(c);
                     raritySum += c.baseProperty.rarity;

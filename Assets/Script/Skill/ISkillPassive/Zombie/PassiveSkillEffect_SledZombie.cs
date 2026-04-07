@@ -4,16 +4,15 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// 雪橇僵尸被动：在 <see cref="Chess.WhenEnterGame"/> 后叠加速、不可选中；
-/// 监听 <see cref="MoveController.OnReachTile"/>：落地格无冰则 <see cref="Armor_Sled.BrokenArmor"/>（与被打爆同一条破损链）；
-/// 监听 <see cref="ArmorBase.OnArmorBroken"/>：结束加速、恢复可选中、按行刷出步行雪橇尸。
-/// 全部逻辑在 <see cref="SkillEffect"/> 内用委托闭包完成，无需额外挂载脚本。
+/// 雪橇僵尸被动：入场时给予固定 <see cref="Buff_BaseValueBuff_AcceleRate"/>（rate=1，见 <see cref="SledAcceleRateBuffName"/>）；
+/// <see cref="ArmorBase.OnArmorBroken"/> 时移除该加速；仅当本体仍存活时按行刷出步行雪橇尸。
+/// 离开冰道破甲由 <see cref="Armor_Sled"/> 处理。
 /// </summary>
 [Serializable]
 public class PassiveSkillEffect_SledZombie : ISkillEffect
 {
-    [Tooltip("雪橇阶段额外移速（ChangeAcceleRate）；Buff 名用于结束时移除")]
-    public Buff_BaseValueBuff_AcceleRate sledSpeedBuff;
+    /// <summary>与入场添加的加速 Buff 同名，用于护甲销毁时 <see cref="BuffController.TryOverBuff"/>。</summary>
+    public const string SledAcceleRateBuffName = "雪橇被动移速";
 
     [Tooltip("破损后额外生成的步行雪橇僵尸（本体算第 4 只，此处通常填 3）")]
     public PropertyCreator footZombieCreator;
@@ -29,48 +28,46 @@ public class PassiveSkillEffect_SledZombie : ISkillEffect
         if (user == null) return;
 
         bool disbanded = false;
-        string speedBuffName = null;
         Armor_Sled armor = null;
 
-        UnityAction<Chess, Tile> onReach = null;
         UnityAction<ArmorBase> onArmorBroken = null;
+        UnityAction<Chess> onDeath = null;
         UnityAction<Chess> onRemove = null;
 
         void CleanupSubscriptions()
         {
-            if (user.moveController != null && onReach != null)
-                user.moveController.OnReachTile.RemoveListener(onReach);
             if (armor != null && onArmorBroken != null)
                 armor.OnArmorBroken.RemoveListener(onArmorBroken);
             if (user != null)
+            {
                 user.OnRemove.RemoveListener(onRemove);
+                if (onDeath != null)
+                    user.DeathEvent.RemoveListener(onDeath);
+            }
         }
 
-        onArmorBroken = _ =>
+        /// <param name="spawnEvenIfDead">为 true 时表示从 <see cref="Chess.DeathEvent"/> 调用，此时 <see cref="Chess.IfDeath"/> 已为 true，仍需刷步行尸。</param>
+        void DisbandSledAndSpawnIfAlive(bool spawnEvenIfDead = false)
         {
-            if (disbanded || user == null || user.IfDeath) return;
+            if (disbanded || user == null) return;
             disbanded = true;
             CleanupSubscriptions();
 
-            if (!string.IsNullOrEmpty(speedBuffName))
-            {
-                var stub = new Buff_BaseValueBuff_AcceleRate { buffName = speedBuffName };
-                user.buffController.TryOverBuff(stub);
-            }
+            var speedStub = new Buff_BaseValueBuff_AcceleRate { buffName = SledAcceleRateBuffName };
+            user.buffController.TryOverBuff(speedStub);
+            Timer t;
+            if (extraFootZombieCount > 0 && footZombieCreator != null && (spawnEvenIfDead || !user.IfDeath))
+                t=GameManage.instance.timerManage.AddTimer( ()=>SpawnFootZombies(user, footZombieCreator, extraFootZombieCount, footZombieWorldPositions),Time.deltaTime);
+        }
 
-            user.ResumeSelectable();
+        onArmorBroken = _ => DisbandSledAndSpawnIfAlive(false);
 
-            if (extraFootZombieCount > 0 && footZombieCreator != null)
-                SpawnFootZombies(user, footZombieCreator, extraFootZombieCount, footZombieWorldPositions);
-        };
-
-        onReach = (c, newTile) =>
+        /// <summary>进 <see cref="DeathState"/> 时：若雪橇仍未破甲（例如本体被非甲路径击杀），补一次与破甲相同的召唤，避免亡语丢失。</summary>
+        onDeath = _ =>
         {
-            if (disbanded || user == null || c != user || newTile == null) return;
-            var snow = Effect_Snow.GetInstanceOrNull();
-            if (snow != null && snow.HasIceAt(newTile.mapPos)) return;
+            if (disbanded || user == null) return;
             if (armor != null && !armor.IsBroken)
-                armor.BrokenArmor();
+                DisbandSledAndSpawnIfAlive(true);
         };
 
         onRemove = _ => { CleanupSubscriptions(); };
@@ -81,21 +78,17 @@ public class PassiveSkillEffect_SledZombie : ISkillEffect
             user.WhenEnterGame.RemoveListener(onEnter);
 
             armor = user.GetComponentInChildren<Armor_Sled>();
-            if (sledSpeedBuff != null)
+            user.buffController.AddBuff(new Buff_BaseValueBuff_AcceleRate
             {
-                var b = (Buff_BaseValueBuff_AcceleRate)sledSpeedBuff.Clone();
-                if (string.IsNullOrEmpty(b.buffName))
-                    b.buffName = "雪橇移速";
-                speedBuffName = b.buffName;
-                user.buffController.AddBuff(b);
-            }
+                rate = 1f,
+                buffName = SledAcceleRateBuffName
+            });
 
-            user.UnSelectable();
+            //user.UnSelectable();
 
             if (armor != null)
                 armor.OnArmorBroken.AddListener(onArmorBroken);
-            if (user.moveController != null)
-                user.moveController.OnReachTile.AddListener(onReach);
+            user.DeathEvent.AddListener(onDeath);
             user.OnRemove.AddListener(onRemove);
         };
 
@@ -107,34 +100,34 @@ public class PassiveSkillEffect_SledZombie : ISkillEffect
         if (leader == null || footCreator == null || count <= 0) return;
         var pvz = MapManage.instance as MapManage_PVZ;
         if (pvz == null || leader.moveController?.standTile == null) return;
+        if (leader.IfDeath||leader.propertyController.GetHpPerCent()<=0) return;    
+        //List<Tile> preTiles = pvz.preTiles;
+        //if (preTiles == null || preTiles.Count == 0) return;
 
-        List<Tile> preTiles = pvz.preTiles;
-        if (preTiles == null || preTiles.Count == 0) return;
-
-        Vector2Int row = leader.moveController.standTile.mapPos;
-        var rowTiles = new List<Tile>();
-        for (int i = 0; i < preTiles.Count; i++)
-        {
-            Tile t = preTiles[i];
-            if (t == null) continue;
-            if ((t.tileType & footCreator.chessTileType) == 0) continue;
-            if (t.mapPos.y == row.y)
-                rowTiles.Add(t);
-        }
-        if (rowTiles.Count == 0)
-        {
-            for (int i = 0; i < preTiles.Count; i++)
-            {
-                Tile t = preTiles[i];
-                if (t != null && (t.tileType & footCreator.chessTileType) != 0)
-                    rowTiles.Add(t);
-            }
-        }
-        if (rowTiles.Count == 0) return;
+        //Vector2Int row = leader.moveController.standTile.mapPos;
+        //var rowTiles = new List<Tile>();
+        //for (int i = 0; i < preTiles.Count; i++)
+        //{
+        //    Tile t = preTiles[i];
+        //    if (t == null) continue;
+        //    if ((t.tileType & footCreator.chessTileType) == 0) continue;
+        //    if (t.mapPos.y == row.y)
+        //        rowTiles.Add(t);
+        //}
+        //if (rowTiles.Count == 0)
+        //{
+        //    for (int i = 0; i < preTiles.Count; i++)
+        //    {
+        //        Tile t = preTiles[i];
+        //        if (t != null && (t.tileType & footCreator.chessTileType) != 0)
+        //            rowTiles.Add(t);
+        //    }
+        //}
+        //if (rowTiles.Count == 0) return;
 
         for (int k = 0; k < count; k++)
         {
-            Tile stand = rowTiles[k % rowTiles.Count];
+            Tile stand = leader.moveController.nextTile;
             Chess z = ChessTeamManage.Instance.CreateChess(footCreator, stand, "Enemy");
             if (worldPositionOverrides != null && k < worldPositionOverrides.Count && worldPositionOverrides[k] != null)
                 z.transform.position = worldPositionOverrides[k].position;

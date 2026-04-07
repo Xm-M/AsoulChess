@@ -682,7 +682,7 @@ GameObject:
   - component: {fileID: 7683746171000793239}
   - component: {fileID: 4573657594415720390}
   m_Layer: 5
-  m_Name: Dropdown
+  m_Name: "\u5206\u8FA8\u7387"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2448,7 +2448,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1989642987681280716
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4412,6 +4412,7 @@ MonoBehaviour:
   - {fileID: 6701701103170730346}
   baseValue: 0
   clipList: []
+  _audioUniqueLimit: 3
 --- !u!82 &2750351927955383143
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4990,8 +4991,9 @@ MonoBehaviour:
   subAudio: []
   baseValue: 0
   clipList:
-  - name: "\u5343\u590F\u9524"
+  - audioKey: "\u5343\u590F\u9524"
     clip: {fileID: 8300000, guid: 684158d25b9b5d7479caa269f54bfee2, type: 3}
+  _audioUniqueLimit: 3
 --- !u!1 &5472326506923003865
 GameObject:
   m_ObjectHideFlags: 0
@@ -5927,30 +5929,31 @@ MonoBehaviour:
   subAudio: []
   baseValue: 0
   clipList:
-  - name: "\u8BA8\u538C"
+  - audioKey: "\u8BA8\u538C"
     clip: {fileID: 8300000, guid: b3451d47fe9b2864e8c1d87fe1faa627, type: 3}
-  - name: "\u8BA8\u538C1"
+  - audioKey: "\u8BA8\u538C1"
     clip: {fileID: 8300000, guid: 6b007d46e335462439f4b0eff1d6353e, type: 3}
-  - name: "\u8BA8\u538C\u8BA8\u538C2"
+  - audioKey: "\u8BA8\u538C\u8BA8\u538C2"
     clip: {fileID: 8300000, guid: b78eba34e8e36ee4faad6aa2a395f3fd, type: 3}
-  - name: "3\u8BA8\u538C"
+  - audioKey: "3\u8BA8\u538C"
     clip: {fileID: 8300000, guid: f16a9dfc7dd2c694b8dcf4f46fa9eba4, type: 3}
-  - name: "\u8BA8\u538C4"
+  - audioKey: "\u8BA8\u538C4"
     clip: {fileID: 8300000, guid: 4ece16234bf68c046ba5133ed53882cd, type: 3}
-  - name: "\u8BA8\u538C5"
+  - audioKey: "\u8BA8\u538C5"
     clip: {fileID: 8300000, guid: cdb4fe46614e75547b575f1ea2c74655, type: 3}
-  - name: "\u8BA8\u538C6"
+  - audioKey: "\u8BA8\u538C6"
     clip: {fileID: 8300000, guid: 341a6a3be0113c64ea38a8e135963656, type: 3}
-  - name: "\u8BA8\u538C7"
+  - audioKey: "\u8BA8\u538C7"
     clip: {fileID: 8300000, guid: 2788e74722dc06045b1151cef6ca3d15, type: 3}
-  - name: "\u8BA8\u538C8"
+  - audioKey: "\u8BA8\u538C8"
     clip: {fileID: 8300000, guid: 67cb2b47f6e42654ab50b085a78e29f4, type: 3}
-  - name: "\u8BA8\u538C9"
+  - audioKey: "\u8BA8\u538C9"
     clip: {fileID: 8300000, guid: a425fa37943f978459e1696722a08eaa, type: 3}
-  - name: "\u8BA8\u538C0"
+  - audioKey: "\u8BA8\u538C0"
     clip: {fileID: 8300000, guid: 0603266df1a8cdf4584982330ac34313, type: 3}
-  - name: "\u8BA8\u538C11"
+  - audioKey: "\u8BA8\u538C11"
     clip: {fileID: 8300000, guid: dc1cbac55da737e4ea631f3bd863a58c, type: 3}
+  _audioUniqueLimit: 3
 --- !u!1 &6963544064288783392
 GameObject:
   m_ObjectHideFlags: 0
@@ -7350,12 +7353,13 @@ MonoBehaviour:
   subAudio: []
   baseValue: 0
   clipList:
-  - name: "\u6682\u505C"
+  - audioKey: "\u6682\u505C"
     clip: {fileID: 8300000, guid: d1ffa2759842b584884a516797eec3e2, type: 3}
-  - name: "\u5893\u7891\u6309\u94AE"
+  - audioKey: "\u5893\u7891\u6309\u94AE"
     clip: {fileID: 8300000, guid: faa0f6579050d7c4395400188f6609b3, type: 3}
-  - name: "\u9009\u9879\u6309\u94AE"
+  - audioKey: "\u9009\u9879\u6309\u94AE"
     clip: {fileID: 8300000, guid: b8b1cf9b443e4d44cbac44520a172049, type: 3}
+  _audioUniqueLimit: 3
 --- !u!222 &4126411506271277636
 CanvasRenderer:
   m_ObjectHideFlags: 0

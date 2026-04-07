@@ -82,8 +82,8 @@ MonoBehaviour:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
       damage: 0
-      damageType: 0
-      damageElementType: 0
+      damageType: 2
+      damageElementType: 16
       ifCrit: 0
       suppressFloatingDamage: 0
       takeBuff:
@@ -160,10 +160,11 @@ MonoBehaviour:
     00000003:
       type: {class: , ns: , asm: }
     00000004:
-      type: {class: IBoxSearch, ns: , asm: Assembly-CSharp}
+      type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
-        boxCheck: {x: 1.3, y: 1}
-        centerOffset: {x: 0, y: 0}
+        relativeCells:
+        - {x: 0, y: 0}
+        boxHalfExtents: {x: 2, y: 1.25}
     00000005:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:

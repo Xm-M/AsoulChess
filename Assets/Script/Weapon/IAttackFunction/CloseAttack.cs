@@ -5,11 +5,13 @@ public class CloseAttack : IAttackFunction
 {
     public ChessEffect effect;
     public DamageMessege DM;
+    Buff Buff;
     public void Attack(Chess user, List<Chess> targets)
     {
         if (targets != null && targets.Count > 0)
         {
             float damage = user.propertyController.GetAttack();
+            Buff = DM.takeBuff;
             for (int i = 0; i < targets.Count; i++)
             {
                 if (!targets[i].IfDeath)
@@ -18,6 +20,7 @@ public class CloseAttack : IAttackFunction
                     DM.damageTo = targets[i];
                     DM.damage = damage;
                     user.propertyController.TakeDamage(DM);
+                    DM.takeBuff = Buff;
                 }
             }
             effect?.InitChessEffect(user, targets);

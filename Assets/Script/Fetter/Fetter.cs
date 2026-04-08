@@ -145,13 +145,25 @@ public class TogenashiTogeari : Fetter
     Timer rainStopTimer;
     Timer rainDamageLoop;
 
+    enum GbcRainSource { None, Bond, Skill }
+
+    /// <summary>当前刺雨由羁绊定时触发还是 Nina 技能触发；<see cref="Stop"/> 后为 None。</summary>
+    GbcRainSource _rainSource;
+
     /// <summary>刺雨是否正在下</summary>
     public bool IsRaining => rainStopTimer != null;
 
-    /// <summary>主唱Nina主动：清空所有无刺有刺成员的压力（OnStressChange 会自动把减少量累加到 stressChangeValue），然后触发刺雨。刺雨正在下时无法调用。</summary>
+    /// <summary>当前是否为羁绊定时触发的雨（技能在此期间无效）。</summary>
+    public bool IsBondRaining => IsRaining && _rainSource == GbcRainSource.Bond;
+
+    /// <summary>
+    /// 主唱 Nina 主动：清空压力并下「技能雨」。羁绊雨进行中时<strong>完全无效</strong>；技能雨进行中再次释放无效。
+    /// 技能雨<strong>不占用</strong>羁绊冷却节奏：羁绊 tick 仍按 coldDown 走，仅在「场上无雨」时才会真正开始羁绊雨。
+    /// </summary>
     public void TriggerRainFromMainSingerNina()
     {
-        if (rainStopTimer != null) return;
+        if (IsRaining && _rainSource == GbcRainSource.Bond) return;
+        if (IsRaining && _rainSource == GbcRainSource.Skill) return;
         foreach (var chess in GameManage.instance.chessTeamManage.GetTeam("Player"))
         {
             if (chess != null && chess.propertyController?.creator?.plantTags?.Contains("无刺有刺") == true && chess.CompareTag("Player"))
@@ -162,14 +174,21 @@ public class TogenashiTogeari : Fetter
                     chess.skillController.context.Set<int>("stress", 0);
             }
         }
-        Rain();
+        BeginRain(GbcRainSource.Skill);
+    }
+
+    /// <summary>羁绊冷却到点：若场上已有任意刺雨（含技能雨）则本次不触发，等下一轮 coldDown。</summary>
+    void BondRainTick()
+    {
+        if (IsRaining) return;
+        BeginRain(GbcRainSource.Bond);
     }
 
     public override void FetterEffect(int count, int tier)
     {
         base.FetterEffect(count, tier);
         EventController.Instance.AddListener<Chess>(EventName.WhenPlantChess.ToString(), AddBuff);
-        rainLoop = GameManage.instance.timerManage.AddTimer(Rain, coldDown, true);
+        rainLoop = GameManage.instance.timerManage.AddTimer(BondRainTick, coldDown, true);
         stressChangeValue = 0;
         if (rain == null)
         {
@@ -198,10 +217,12 @@ public class TogenashiTogeari : Fetter
             ObjectPool.instance.Recycle(rain.gameObject);
         }
         (MapManage.instance as MapManage_PVZ).ResumeLight();
+        _rainSource = GbcRainSource.None;
     }
 
-    public void Rain()
+    void BeginRain(GbcRainSource source)
     {
+        _rainSource = source;
         rainStopTimer = GameManage.instance.timerManage.AddTimer(Stop, continueTime, false);
         rainDamageLoop = GameManage.instance.timerManage.AddTimer(RainDamage, 1, true);
         (MapManage.instance as MapManage_PVZ).ChangeLight(-darkPecent);
@@ -230,8 +251,10 @@ public class TogenashiTogeari : Fetter
 
     public void Stop()
     {
-        rainDamageLoop.Stop();
+        rainDamageLoop?.Stop();
         rainDamageLoop = null;
+        rainStopTimer = null;
+        _rainSource = GbcRainSource.None;
         rain.Stop();
         stressChangeValue = 0;
         (MapManage.instance as MapManage_PVZ).ChangeLight(darkPecent);

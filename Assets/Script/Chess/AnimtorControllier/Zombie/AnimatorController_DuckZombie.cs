@@ -27,7 +27,17 @@ public class AnimatorController_DuckZombie : AnimatorController_SampleZombie
     GameObject waterRippleEffect;
 
     bool _inWater;
+    /// <summary>矿工等被动：强制 InWater 与水中一致（Blend Tree），不依赖水格；出土后设回 false。</summary>
+    bool _forceInWater;
     Tile _lastStandTile;
+
+    /// <summary>掘进/土行时强制 <see cref="inWaterParameterName"/> 为 true；出土后 <c>false</c> 恢复按格子判断。</summary>
+    public void SetForceInWater(bool value)
+    {
+        _forceInWater = value;
+        SyncInWaterFromStandTile();
+        TryRefreshLocomotionAnim();
+    }
 
     public override void InitController(Chess chess)
     {
@@ -49,6 +59,7 @@ public class AnimatorController_DuckZombie : AnimatorController_SampleZombie
     {
         if (chess?.moveController != null)
             chess.moveController.OnReachTile.RemoveListener(OnReachTile);
+        _forceInWater = false;
         SetWaterRippleActive(false);
         base.WhenControllerLeaveWar();
     }
@@ -76,9 +87,14 @@ public class AnimatorController_DuckZombie : AnimatorController_SampleZombie
 
     void SyncInWaterFromStandTile()
     {
-        _inWater = IsWaterTile(chess != null ? chess.moveController?.standTile : null);
+        if (_forceInWater)
+            _inWater = true;
+        else
+            _inWater = IsWaterTile(chess != null ? chess.moveController?.standTile : null);
         ApplyInWaterParameter();
-        SetWaterRippleActive(_inWater);
+        // 土行掘进不显示水波纹；真实站在水格仍显示
+        bool ripple = !_forceInWater && IsWaterTile(chess != null ? chess.moveController?.standTile : null);
+        SetWaterRippleActive(ripple);
     }
 
     void SetWaterRippleActive(bool on)

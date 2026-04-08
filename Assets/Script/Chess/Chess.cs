@@ -145,6 +145,17 @@ public class Chess : MonoBehaviour
             return;
         ForceFlip();
     }
+
+    /// <summary>
+    /// 与 <see cref="UpdateFacingFromHorizontalMove"/> 一致：<see cref="FacingRight"/> 为 true 表示面向世界 +X；
+    /// 不受水平差过小影响，用于出土等必须对齐左右朝向的场景。
+    /// </summary>
+    public void EnsureFacingWorldX(bool facePositiveWorldX)
+    {
+        if (facePositiveWorldX == FacingRight) return;
+        ForceFlip();
+    }
+
     /// <summary>
     /// 这个函数应该是用在估计动画触发效果的时候
     /// </summary>

@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
   m_Name: "\u4E3B\u5531Nina"
   m_EditorClassIdentifier: 
-  chessName: 
+  chessName: "\u4E95\u82B9\u4EC1\u83DC(\u4E3B\u5531)"
   chessDescription: 
   chessShortDescription: 
   chessEffect: 
   baseProperty:
-    attack: 0
+    attack: 180
     attackRate: 0
     crit: 0
     critDamage: 1.3
@@ -31,27 +31,34 @@ MonoBehaviour:
     healRate: 1
     speed: 0
     acceleRated: 1
+    moveAcceleRated: 1
     dizzinessTime: 0
     tenacity: 0
     attackRange: 1
-    price: 50
+    price: 175
     rarity: 4000
     waveLimit: 1
-    CD: 7.5
+    CD: 50
     Size: 1
-  chessPre: {fileID: 0}
-  chessSprite: {fileID: 0}
-  plantTags: []
-  fetterMemberId: 
-  chessTileType: 0
-  plantType: 0
+  chessPre: {fileID: 6692503982250395099, guid: e331c6b8e182f4940b391130e4b70eb5, type: 3}
+  chessSprite: {fileID: 6430773397052517446, guid: 26001cf0724e63740baadc0fc3569174, type: 3}
+  plantTags:
+  - "\u65E0\u523A\u6709\u523A"
+  - "\u4E3B\u5531"
+  fetterMemberId: "\u4E95\u82B9\u4EC1\u83DC"
+  chessTileType: 1
+  plantType: 1
   plantFunction:
     id: 0
   plantIfCanBuyCard:
-    id: 0
-  PlantCardPre: {fileID: 0}
-  PlantEntrepotCardPre: {fileID: 0}
+    id: 1
+  PlantCardPre: {fileID: 2991298695686272976, guid: 91a77fce93c536448808fdde343467f9, type: 3}
+  PlantEntrepotCardPre: {fileID: 3121051189400196229, guid: 0a232a3f09ea5114a99c4b848888d60c, type: 3}
   references:
     version: 1
     00000000:
-      type: {class: , ns: , asm: }
+      type: {class: LevelUpPlant, ns: , asm: Assembly-CSharp}
+      data:
+        basePlant: {fileID: 11400000, guid: 6f110f5d59bd8c847a1b05b973663c54, type: 2}
+    00000001:
+      type: {class: OnlyOne_Limit, ns: , asm: Assembly-CSharp}

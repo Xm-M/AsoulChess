@@ -120,6 +120,19 @@ public class Effect_Snow : MonoBehaviour
         _iceByMapPos.Clear();
     }
 
+    /// <summary>融掉地图上一整行（固定 <paramref name="mapPosY"/>）的冰，不分敌我归属。</summary>
+    public void MeltIceOnRow(int mapPosY)
+    {
+        if (MapManage.instance == null) return;
+        int w = MapManage.instance.mapSize.x;
+        for (int x = 0; x < w; x++)
+        {
+            var p = new Vector2Int(x, mapPosY);
+            if (TryGetIceCell(p, out IceCell ice) && ice != null)
+                ice.Melt();
+        }
+    }
+
     /// <summary>
     /// 在指定格铺冰；若已有冰且归属与 <paramref name="ownerTag"/> 相同则刷新时长；
     /// 若已有冰且归属不同（如冰车被动 <c>IceTrail</c> 碾过异阵营雪块）则改为与来源同 <c>tag</c> 并刷新时长。

@@ -67,6 +67,12 @@ MonoBehaviour:
     - transition:
         id: 17
       targetState: 4
+  - state:
+      id: 18
+    transitions:
+    - transition:
+        id: 19
+      targetState: 4
   references:
     version: 1
     00000000:
@@ -126,3 +132,12 @@ MonoBehaviour:
         chess: {fileID: 0}
     00000011:
       type: {class: IfGameStart, ns: , asm: Assembly-CSharp}
+    00000012:
+      type: {class: ResumeState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 7
+        chess: {fileID: 0}
+    00000013:
+      type: {class: IWaitTimeTransition, ns: , asm: Assembly-CSharp}
+      data:
+        WaitTime: 2

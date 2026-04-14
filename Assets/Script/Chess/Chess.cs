@@ -41,6 +41,8 @@ public class Chess : MonoBehaviour
     //public Animator animator;
     //public SpriteRenderer sprite;
     bool FacingRight = true;
+    /// <summary>是否面向世界 +X（与 <see cref="Flap"/> / <see cref="ForceFlip"/> 一致）。</summary>
+    public bool FacingWorldPositiveX => FacingRight;
     public bool IfDeath{get;  set;}
     public bool IfSelectable { get;private set;}
     Collider2D col;

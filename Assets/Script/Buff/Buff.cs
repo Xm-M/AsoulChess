@@ -306,32 +306,98 @@ public class Buff_Fear : TimeBuff {
 
 
 /// <summary>
-/// 魅惑buff
+/// 魅惑 buff：换队、翻面、染色与特效；结束时全部还原（再换队、再翻面、回收特效、恢复颜色）。
 /// </summary>
 public class Buff_Charm : Buff
 {
     public Color color;
-    public GameObject charmEffect;//魅惑特效
+    public GameObject charmEffect;
+
+    [NonSerialized] GameObject _spawnedCharmEffect;
+    [NonSerialized] Coroutine _idleRoutine;
+    //[NonSerialized] bool _charmFlippedFacing;
+
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
         ChessTeamManage.Instance.ChangeTeam(target);
-        target.transform.right = -target.transform.right;
-        //dm.damageTo.Death();
-        GameObject effect = ObjectPool.instance.Create(charmEffect);
-        effect.transform.SetParent(target.transform);
-        effect.transform.localPosition = Vector3.zero;
+
+        target.ForceFlip();
+
+        //_charmFlippedFacing = target.FacingWorldPositiveX != facingBefore;
+
+        if (charmEffect != null)
+        {
+            _spawnedCharmEffect = ObjectPool.instance.Create(charmEffect);
+            _spawnedCharmEffect.transform.SetParent(target.transform);
+            _spawnedCharmEffect.transform.localPosition = Vector3.zero;
+        }
+
         target.animatorController.ChangeColor(color);
-        target.StartCoroutine(Wait());
+        if (_idleRoutine != null)
+            target.StopCoroutine(_idleRoutine);
+        _idleRoutine = target.StartCoroutine(Wait());
     }
+
     IEnumerator Wait()
     {
         yield return null;
-        target.stateController.ChangeState(StateName.IdleState);
+        if (target != null)
+            target.stateController.ChangeState(StateName.IdleState);
+        _idleRoutine = null;
     }
+
     public override void BuffOver()
     {
+        if (_idleRoutine != null && target != null)
+        {
+            target.StopCoroutine(_idleRoutine);
+            _idleRoutine = null;
+        }
+
+        if (target != null)
+        {
+            ChessTeamManage.Instance.ChangeTeam(target);
+             target.ForceFlip();
+            if (_spawnedCharmEffect != null)
+            {
+                ObjectPool.instance.Recycle(_spawnedCharmEffect);
+                _spawnedCharmEffect = null;
+            }
+            target.animatorController.ChangeColor(Color.white);
+        }
+
         base.BuffOver();
+    }
+
+    /// <summary>
+    /// <paramref name="chess"/> 当前格沿 <c>−transform.right</c> 在地图上的前一格（邻格）；用于 <see cref="Chess.Flap"/> 参考位置。
+    /// </summary>
+    static bool TryGetStandTileNeighborTransformAlongMinusRight(Chess chess, out Transform tileTransform)
+    {
+        tileTransform = null;
+        if (chess == null || chess.moveController == null || chess.moveController.standTile == null)
+            return false;
+        MapManage map = MapManage.instance;
+        if (map == null || map.tiles == null)
+            return false;
+
+        Vector2Int mp = chess.moveController.standTile.mapPos;
+        Vector2 r = chess.transform.right;
+        Vector2Int gridStep;
+        if (Mathf.Abs(r.x) >= Mathf.Abs(r.y))
+            gridStep = new Vector2Int(r.x > 0f ? -1 : 1, 0);
+        else
+            gridStep = new Vector2Int(0, r.y > 0f ? -1 : 1);
+
+        Vector2Int prev = mp + gridStep;
+        if (!map.IfInMapRange(prev.x, prev.y))
+            return false;
+        Tile t = map.tiles[prev.x, prev.y];
+        if (t == null)
+            return false;
+        tileTransform = t.transform;
+        return true;
     }
 }
 

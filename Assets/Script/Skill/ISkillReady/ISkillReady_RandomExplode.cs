@@ -15,8 +15,11 @@ public class ISkillReady_RandomExplode : ISkillReady
         if (user.IfSelectable) return false;
         
         elapsed += Time.deltaTime;
-        //Debug.Log(elapsed + " " + explosionTime);
-        return elapsed >= explosionTime;
+        if (elapsed >= explosionTime)
+        {
+            elapsed = 0;
+            return true;
+        }return false;
     }
 
     public void InitSkillReady(Chess user, SkillConfig config, List<Chess> targets)

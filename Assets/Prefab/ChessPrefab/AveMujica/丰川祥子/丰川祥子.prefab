@@ -49,8 +49,9 @@ MonoBehaviour:
   subAudio: []
   baseValue: 0
   clipList:
-  - name: "saki\u54ED"
+  - audioKey: "saki\u54ED"
     clip: {fileID: 8300000, guid: f4bcd260c4ce8324699cd01162f9ae53, type: 3}
+  _audioUniqueLimit: 3
 --- !u!82 &2172819697003022077
 AudioSource:
   m_ObjectHideFlags: 0
@@ -247,7 +248,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 237e47f0d28005447bde9fa24b5b5be0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -262,7 +263,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &238345344110348691
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -275,10 +276,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3991805403020695830
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,8 +367,16 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       ifCrit: 0
+      suppressFloatingDamage: 0
       takeBuff:
         id: 1
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
+    skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
@@ -375,7 +386,7 @@ MonoBehaviour:
       state:
         id: 1
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 0daf3fd1077366a4dbef57cf44015c9b, type: 2}
+    stateGraph: {fileID: 11400000, guid: e2ccff8800ef1ca49a95346489261483, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -386,11 +397,17 @@ MonoBehaviour:
     nextTile: {fileID: 0}
     tileMethod:
       id: 3
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 8290993336677228060}
   WhenEnterGame:
     m_PersistentCalls:
       m_Calls: []
   DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRemove:
     m_PersistentCalls:
       m_Calls: []
   references:
@@ -401,57 +418,72 @@ MonoBehaviour:
         initWeapon:
           id: 1
         findTarget:
-          id: 1
+          id: 4
         attackFunction:
-          id: 1
-        enemys: []
+          id: 5
         interval: 0
     00000001:
       type: {class: , ns: , asm: }
     00000002:
-      type: {class: SkillEffect_Saki, ns: , asm: Assembly-CSharp}
+      type: {class: AttackSkill, ns: , asm: Assembly-CSharp}
       data:
-        skillRange: 8.75
-        useTimes: 4
-        frequency: 5
-        buffCharm:
-          id: 4
-        buffCoercion:
-          id: 5
-        fearBuff:
+        config: {fileID: 11400000, guid: 179133178ef30a14ca3bfb465e926ea5, type: 2}
+        readyChecker:
+          id: 1
+        effect:
           id: 6
-        bullet: {fileID: 6348487293743800855, guid: 8f24b198aa245484ab415c4f3dae54c0, type: 3}
-        auplayer: {fileID: 5607227094124317316}
-        qinggao: {fileID: 11400000, guid: 0365d4e67cd285749a31b904476cb530, type: 2}
+        skillFinish:
+          id: 7
+        runtime:
+          id: 8
     00000003:
       type: {class: HorMove, ns: , asm: Assembly-CSharp}
     00000004:
-      type: {class: Buff_Charm, ns: , asm: Assembly-CSharp}
+      type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
-        buffName: "\u9B45\u60D1"
-        target: {fileID: 0}
-        buffNum: 0
-        color: {r: 1, g: 0.2901961, b: 0.8509804, a: 1}
-        charmEffect: {fileID: 7196381099807767998, guid: 4a12e6a746d835a44b126abe6ccf8cea, type: 3}
+        relativeCells:
+        - {x: 0, y: -1}
+        - {x: 1, y: -1}
+        - {x: 1, y: 0}
+        - {x: 2, y: 0}
+        - {x: 3, y: 0}
+        - {x: 0, y: 1}
+        - {x: 1, y: 1}
+        boxHalfExtents: {x: 1.25, y: 1.25}
     00000005:
-      type: {class: Buff_Coercion, ns: , asm: Assembly-CSharp}
+      type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
-        buffName: "\u5A01\u538B"
-        target: {fileID: 0}
-        buffNum: 0
-        continueTime: 10
-        deAttack: 0.2
-        deDefence: 0.2
-        Coerctioneffect: {fileID: 5528529480491682693, guid: 310eaf154a2c4914196c9fe3e4dbd161, type: 3}
+        bullet: {fileID: 6348487293743800855, guid: 8f24b198aa245484ab415c4f3dae54c0, type: 3}
     00000006:
+      type: {class: SkillEffect_Saki, ns: , asm: Assembly-CSharp}
+      data:
+        fearBuff:
+          id: 9
+        auplayer: {fileID: 5607227094124317316}
+        qinggao: {fileID: 11400000, guid: 0365d4e67cd285749a31b904476cb530, type: 2}
+    00000007:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    00000008:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    00000009:
       type: {class: Buff_Fear, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u6050\u60E7"
         target: {fileID: 0}
-        buffNum: 0
-        continueTime: 10
+        continueTime: 5
         FearEffect: {fileID: 60859552351474783, guid: 5bb58ad649f96fd47b6e29b885d8ff28, type: 3}
         moveRate: 0.5
+        speedDownBuff:
+          id: 10
+    0000000A:
+      type: {class: Buff_BaseValueBuff_AcceleRate, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u52A0\u901F\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        rate: -0.5
 --- !u!61 &6919570412801994649
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -480,7 +512,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &8382564000308123968
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -493,10 +525,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8290993336677228060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -511,6 +545,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 8382564000308123968}
   sprite: {fileID: 5992515670742096586}
+  dizzynesss: 
+  attackStateNameAlt: 
 --- !u!1 &5263798042800589270
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,7 +616,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 9c93d29ca563f174a86f98376ae9e53f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

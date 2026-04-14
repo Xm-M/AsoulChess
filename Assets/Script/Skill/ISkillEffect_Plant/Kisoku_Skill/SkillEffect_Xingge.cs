@@ -28,5 +28,14 @@ public class SkillEffect_Xingge : ISkillEffect
                 zidan.Dm.damageTo = chess;
             }
         }
+        PlantsShop shop = UIManage.GetView<PlantsShop>();
+        if (shop.gameObject.activeSelf)
+        {
+            foreach(var icon in shop.currentShopIcons)
+            {
+                if(icon.good.plantTags.Contains("结束乐队"))
+                    icon.ChangeT(-2);
+            }
+        }
     }
 }

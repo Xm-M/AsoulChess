@@ -57,7 +57,7 @@ MonoBehaviour:
     transitions:
     - transition:
         id: 14
-      targetState: 7
+      targetState: 4
   references:
     version: 1
     00000000:
@@ -112,4 +112,4 @@ MonoBehaviour:
     0000000E:
       type: {class: IfAnimationOverTransisiton, ns: , asm: Assembly-CSharp}
       data:
-        animName: 
+        animName: resume

@@ -19,25 +19,24 @@ public class IfAnimPlayOverTransition : Transition
 }
 public class IfAnimationOverTransisiton : Transition
 {
-    public string animName; // 这里建议你明确：它到底是 State 名 还是 Clip 名
+    [Tooltip("Animator 第 0 层上的状态名（State 名，与 Animator 窗口里一致）。非空时：仅当该状态已播完（normalizedTime≥1 且不在 Transition）才为 true。留空则等同 AnimatorController.IfAnimPlayOver()。")]
+    public string animName;
 
     public override bool ifReach(Chess chess)
     {
-        var animator = chess.animatorController?.animator;
+        var ac = chess.animatorController;
+        var animator = ac?.animator;
         if (animator == null) return false;
 
-        // 可选：过渡中通常不判“播完”
-        if (animator.IsInTransition(0))
-        {
+        if (string.IsNullOrEmpty(animName))
+            return ac.IfAnimPlayOver();
+
+        AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+        if (!info.IsName(animName))
             return false;
-          
-        }
-        // 1) 如果你这里的 animName 是“State 名”
-        if (!string.IsNullOrEmpty(animName))
-        {
-            return animator.GetCurrentAnimatorStateInfo(0).IsName(animName);
-        }
-        return chess.animatorController.IfAnimPlayOver();
+
+        // 与 IfAnimPlayOver 一致：播完且不在层内过渡（避免过渡边界误触发）
+        return info.normalizedTime >= 1f && !animator.IsInTransition(0);
     }
 
     public override Transition Clone()

@@ -1,0 +1,27 @@
+---
+description: 技能脚本禁止随意新增运行时 MonoBehaviour；优先 ISkillEffect + Chess/事件框架
+globs: ["Assets/Script/Skill/**/*.cs"]
+alwaysApply: false
+---
+
+# 技能实现：禁止随意新增 MonoBehaviour
+
+在 `Assets/Script/Skill/`（含主动、被动、子弹相关技能逻辑）中编写或修改代码时遵守：
+
+## 强制
+
+1. **不要**为技能单独新建「运行时 `AddComponent` 挂到棋子/场景物体上」的 `MonoBehaviour`（例如 `XXXRuntime`、`GetComponent` + `AddComponent` 模式），**除非**现有框架**客观上无法实现**，且须在回复里用一两句话说明：已尝试过哪些无 Mono 方案（如仅 `ISkillEffect` + 委托 + `WhenEnterGame` / `OnRemove` / `PropertyController` 事件 / `SkillContext` / Buff·状态机等）仍不足。
+
+2. **优先**在框架内实现：
+   - 使用 `[Serializable] ISkillEffect`，在 `SkillEffect(Chess user, ...)` 里通过 **`UnityAction` / 本地函数** 订阅 `user.WhenEnterGame`、`user.OnRemove`、`moveController.OnReachTile`、`propertyController.onSetDamage` / `onGetDamage` 等，并在离场时 **对称 `RemoveListener`**；
+   - 需要延迟时用 **`user.StartCoroutine`**（`Chess` 为 `MonoBehaviour`）或项目已有计时器，而不是再挂一个技能专用组件。
+
+3. 与全项目「尽量少新增 MonoBehaviour」原则一致；本文件在匹配 `globs` 时对技能相关改动 **从严执行**。
+
+## 反面模式（应避免）
+
+- `SkillEffect` 里 `user.gameObject.AddComponent<SomeSkillRuntime>()`，把核心逻辑全塞进新组件。
+
+## 可参考的写法
+
+- `PassiveSkillEffect_MinerZombie`：仅用委托与事件，无技能专用 `MonoBehaviour`。

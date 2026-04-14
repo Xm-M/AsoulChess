@@ -18,4 +18,5 @@ Key conventions:
 - GameManage.instance is the global singleton
 - UIManage is a static class (no instance, use UIManage.GetView<T>())
 - EventController.Instance for event-driven communication
-- New features should extend existing controllers, avoid new MonoBehaviours
+- New features should extend existing controllers; avoid new MonoBehaviours
+- Skills under `Assets/Script/Skill/`: no runtime `AddComponent` skill-only MonoBehaviours—use `ISkillEffect` + Chess events (see `.cursor/rules/unity-skill-no-runtime-monobehaviour.mdc`)

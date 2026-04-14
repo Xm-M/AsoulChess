@@ -47,6 +47,15 @@ globs: ["**/*.cs", "**/*.unity", "**/*.prefab"]
    若新增，须在架构分析（@architecture-design-analyzer）中说明理由与已排除的替代方案。
 ```
 
+### 技能专项（与 `.cursor/rules/unity-skill-no-runtime-monobehaviour.mdc` 一致）
+
+```
+编写 Assets/Script/Skill/ 下技能逻辑时：
+- 禁止为技能再挂「运行时 AddComponent」的专用 MonoBehaviour；用 ISkillEffect + WhenEnterGame / OnRemove / Property 事件等完成订阅与清理。
+- 需要协程时可使用 Chess（MonoBehaviour）上 StartCoroutine，而非新建技能 Runtime 组件。
+- 详见 unity-skill-no-runtime-monobehaviour.mdc（匹配 Skill 路径时强制执行）。
+```
+
 ---
 
 ## 🎯 渐进式披露原则

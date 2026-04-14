@@ -33,6 +33,10 @@ public class ShopIcon : MonoBehaviour
         goodImage.color=new Color(255,255,255,255);
          
     }}//
+    public void ChangeT(float value)
+    {
+        t += value;
+    }
     public void InitShopIcon(ShopSelectIcon s){
         UIManage.GetView<PlantsShop>().AddShopIcon(this);
         this.selectIcon=s;

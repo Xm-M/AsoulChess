@@ -73,6 +73,7 @@ public class StateController:Controller
     public void StateUpdate()
     {
         if (LevelManage.instance.IfGameStart)
+
         {
             if (anyState != null)
             {

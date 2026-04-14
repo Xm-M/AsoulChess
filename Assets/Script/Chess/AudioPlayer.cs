@@ -424,6 +424,10 @@ public class AudioPlayer : MonoBehaviour
             sub.SetLoop(true);
         }
     }
+    public void StopSubN(int n)
+    {
+        subAudio[n].GetComponent<AudioPlayer>().Stop();
+    }
     public void Stop()
     {
         audioSource.Stop();

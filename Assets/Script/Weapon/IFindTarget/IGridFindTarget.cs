@@ -24,10 +24,10 @@ public class IGridFindTarget : IFindTarget
         if (user == null || MapManage.instance == null) return;
 
         MapManage map = MapManage.instance;
-        if (!TryGetBaseMapPos(user, map, out Vector2Int basePos))
+        if (!GridFindTargetGeometry.TryGetBaseMapPos(user, map, out Vector2Int basePos))
             return;
 
-        int forwardX = GetForwardX(user);
+        int forwardX = GridFindTargetGeometry.GetForwardX(user);
         LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
         Collider2D[] cols = CheckObjectPoolManage.GetColArray(ColPoolSize);
         Vector2 ts = map.tileSize;
@@ -42,14 +42,14 @@ public class IGridFindTarget : IFindTarget
         {
             int ax = basePos.x + rel.x * forwardX;
             int ay = basePos.y + rel.y;
-            if (!IsDetectableCell(ax, ay, map.mapSize))
+            if (!GridFindTargetGeometry.IsDetectableCell(ax, ay, map.mapSize))
                 continue;
 
             Tile tile = map.tiles[ax, ay];
             if (tile == null)
                 continue;
 
-            Vector2 center = GetCellOverlapCenter(tile, ts);
+            Vector2 center = GridFindTargetGeometry.GetCellOverlapCenter(tile, ts);
             int count = Physics2D.OverlapBoxNonAlloc(center, boxHalfExtents, 0f, cols, enemyLayer);
             for (int i = 0; i < count; i++)
             {
@@ -66,75 +66,6 @@ public class IGridFindTarget : IFindTarget
         CheckObjectPoolManage.ReleaseColArray(ColPoolSize, cols);
     }
 
-    static int GetForwardX(Chess user)
-    {
-        float rx = user.transform.right.x;
-        if (Mathf.Approximately(rx, 0f))
-            return 1;
-        return rx > 0f ? 1 : -1;
-    }
-
-    /// <summary>
-    /// 有 standTile 用其 mapPos；否则用世界坐标按 <see cref="MapManage.tileSize"/> 估格并钳到地图内。
-    /// </summary>
-    static bool TryGetBaseMapPos(Chess user, MapManage map, out Vector2Int outPos)
-    {
-        outPos = default;
-        if (user.moveController != null && user.moveController.standTile != null)
-        {
-            outPos = user.moveController.standTile.mapPos;
-            return true;
-        }
-
-        Vector2 p = user.transform.position;
-        Vector2 ts = map.tileSize;
-        if (ts.x <= 0f || ts.y <= 0f)
-            return false;
-
-        int ix = Mathf.FloorToInt(p.x / ts.x);
-        int iy = Mathf.FloorToInt(p.y / ts.y);
-        ix = Mathf.Clamp(ix, 0, Mathf.Max(0, map.mapSize.x - 1));
-        iy = Mathf.Clamp(iy, 0, Mathf.Max(0, map.mapSize.y - 1));
-        outPos = new Vector2Int(ix, iy);
-        return true;
-    }
-
-    /// <summary>Y 全高有效；X 排除最右一列（下标 mapSize.x - 1）。</summary>
-    static bool IsDetectableCell(int x, int y, Vector2Int mapSize)
-    {
-        if (mapSize.y <= 0)
-            return false;
-        if (y < 0 || y >= mapSize.y)
-            return false;
-        if (mapSize.x < 2)
-            return false;
-        if (x < 0 || x > mapSize.x - 2)
-            return false;
-        return true;
-    }
-
-    /// <summary>
-    /// 单格 OverlapBox 的世界中心。
-    /// 优先用草地 <see cref="SpriteRenderer"/> / <see cref="Collider2D"/> 的 <c>bounds.center</c>，
-    /// 与场景里格子、冰块（<see cref="Effect_Snow.PlaceOrRefreshIce"/> 用的 <see cref="Tile.transform"/> 同一块地）对齐；
-    /// 若 Tile 轴心已在格中心，再用 <c>position + tileSize*0.5</c> 会整体偏右上约半格。
-    /// 无渲染体/碰撞体时回退：<see cref="AutoInitMap"/> 左下角锚点 + 半格。
-    /// </summary>
-    static Vector2 GetCellOverlapCenter(Tile tile, Vector2 tileSize)
-    {
-        if (tile == null) return default;
-
-        var sr = tile.GetComponentInChildren<SpriteRenderer>(true);
-        if (sr != null)
-            return sr.bounds.center;
-
-        var col = tile.GetComponentInChildren<Collider2D>(true);
-        if (col != null)
-            return col.bounds.center;
-
-        return (Vector2)tile.transform.position + new Vector2(tileSize.x * 0.5f, tileSize.y * 0.5f);
-    }
-
 #if UNITY_EDITOR
     /// <summary>
     /// Scene 视图画出与 <see cref="FindTarget"/> 一致的每格 <see cref="Physics2D.OverlapBoxNonAlloc"/> 范围（半宽为 <see cref="boxHalfExtents"/>）。
@@ -149,10 +80,10 @@ public class IGridFindTarget : IFindTarget
             map =UnityEngine.Object.FindObjectOfType<MapManage>();
         if (map == null) return;
 
-        if (!TryGetBaseMapPos(user, map, out Vector2Int basePos))
+        if (!GridFindTargetGeometry.TryGetBaseMapPos(user, map, out Vector2Int basePos))
             return;
 
-        int forwardX = GetForwardX(user);
+        int forwardX = GridFindTargetGeometry.GetForwardX(user);
         Vector2 ts = map.tileSize;
 
         if (relativeCells == null)
@@ -165,14 +96,14 @@ public class IGridFindTarget : IFindTarget
         {
             int ax = basePos.x + rel.x * forwardX;
             int ay = basePos.y + rel.y;
-            if (!IsDetectableCell(ax, ay, map.mapSize))
+            if (!GridFindTargetGeometry.IsDetectableCell(ax, ay, map.mapSize))
                 continue;
 
             Tile tile = map.tiles[ax, ay];
             if (tile == null)
                 continue;
 
-            Vector2 c = GetCellOverlapCenter(tile, ts);
+            Vector2 c = GridFindTargetGeometry.GetCellOverlapCenter(tile, ts);
             Vector3 center = new Vector3(c.x, c.y, 0f);
             Vector3 size = new Vector3(boxHalfExtents.x * 2f, boxHalfExtents.y * 2f, 0.05f);
             Gizmos.DrawWireCube(center, size);

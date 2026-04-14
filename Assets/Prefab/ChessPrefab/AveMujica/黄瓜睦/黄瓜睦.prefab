@@ -85,8 +85,9 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       ifCrit: 0
+      suppressFloatingDamage: 0
       takeBuff:
-        id: 3
+        id: 1
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
@@ -97,11 +98,11 @@ MonoBehaviour:
   stateController:
     currentState:
       state:
-        id: 3
+        id: 1
       transitions: []
     preState:
       state:
-        id: 3
+        id: 1
       transitions: []
     stateGraph: {fileID: 11400000, guid: 4cf9bc0071e47f9439e4a2447f2307df, type: 2}
     EnterWarState: 4
@@ -113,7 +114,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 3
+      id: 1
     OnReachTile:
       m_PersistentCalls:
         m_Calls: []
@@ -133,32 +134,27 @@ MonoBehaviour:
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 3
+          id: 1
         findTarget:
-          id: 4
+          id: 3
         attackFunction:
-          id: 5
+          id: 4
         interval: -1
     00000001:
-      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
-      data:
-        effect:
-          id: 6
+      type: {class: , ns: , asm: }
     00000002:
       type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
       data:
         config: {fileID: 11400000, guid: 7ff48f5f303088b4aac349c7f0ece66f, type: 2}
         readyChecker:
-          id: 7
+          id: 5
         effect:
-          id: 8
+          id: 6
         skillFinish:
-          id: 9
+          id: 7
         runtime:
-          id: 10
+          id: 8
     00000003:
-      type: {class: , ns: , asm: }
-    00000004:
       type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
         relativeCells:
@@ -176,27 +172,19 @@ MonoBehaviour:
         - {x: 1, y: 1}
         - {x: 0, y: 2}
         boxHalfExtents: {x: 0.56, y: 0.45}
-    00000005:
+    00000004:
       type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
         bullet: {fileID: 2098010854589325911, guid: 15fa26a0c0a8b0747aba983ef11ef87d, type: 3}
-    00000006:
-      type: {class: PassiveSkillEffect_Hatsuyuki, ns: , asm: Assembly-CSharp}
-      data:
-        iceCellPrefab: {fileID: 0}
-        placeIceIntervalSeconds: 6
-        iceDurationSeconds: 15
-        findTargetWhenAttackEnabled:
-          id: 3
-    00000007:
+    00000005:
       type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
       data:
         clickBox: {fileID: 7895530665067381902}
-    00000008:
+    00000006:
       type: {class: SkillEffect_TriggerRain, ns: , asm: Assembly-CSharp}
-    00000009:
+    00000007:
       type: {class: DurationFinish, ns: , asm: Assembly-CSharp}
-    0000000A:
+    00000008:
       type: {class: SkillRuntimeInfo_Duration, ns: , asm: Assembly-CSharp}
       data:
         currentTime: 0
@@ -281,10 +269,11 @@ MonoBehaviour:
   subAudio: []
   baseValue: 0
   clipList:
-  - name: "\u53D1\u5C04"
+  - audioKey: "\u53D1\u5C04"
     clip: {fileID: 8300000, guid: 6b0c0a64e5e0d034ba4b7d6daec92687, type: 3}
-  - name: "\u53D1\u5C042"
+  - audioKey: "\u53D1\u5C042"
     clip: {fileID: 8300000, guid: 7a137ca4c7ced0443a1699786f7145c9, type: 3}
+  _audioUniqueLimit: 3
 --- !u!82 &8764439546490121493
 AudioSource:
   m_ObjectHideFlags: 0

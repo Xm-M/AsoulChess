@@ -104,17 +104,16 @@ public class MainPlant : IPlantFunction
 }
 public class SupportPlant : IPlantFunction
 {
-    //��ôsupport���͵�ȡ��tilestander����ֻ���ɱ���������
+ 
     public bool ifCanPlant(PropertyCreator creator, Tile tile)
     {
-        //������β�����Ϳ϶���ֲ����
+ 
         if ((creator.chessTileType & tile.tileType) == 0) return false;
-        //���������е�����chess,����и��������޷���ֲ
+ 
         for (int i = 0; i < tile.chessesIntile.Count; i++)
         {
             if (tile.chessesIntile[i].propertyController.creator.plantType == creator.plantType)
             {
-                Debug.Log("һ������ֻ����һ��������ֲ��");
                 return false;
             }
         }

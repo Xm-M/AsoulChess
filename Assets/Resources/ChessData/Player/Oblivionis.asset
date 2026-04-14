@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: Oblivionis
   m_EditorClassIdentifier: 
   chessName: "\u4E30\u5DDD\u7965\u5B50Oblivionis"
+  chessDescription: 
+  chessShortDescription: 
+  chessEffect: 
   baseProperty:
-    attack: 0
+    attack: 40
     attackRate: 0
     crit: 0
     critDamage: 1.3
+    dodgeRate: 0
     extraDamge: 0
     AR: 0
     extraDefence: 0
@@ -27,26 +31,34 @@ MonoBehaviour:
     healRate: 1
     speed: 0
     acceleRated: 1
-    attackRange: 1
-    price: 225
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 10
+    price: 475
     rarity: 4000
     waveLimit: 1
     CD: 7.5
     Size: 1
   chessPre: {fileID: 5456541324012391302, guid: 9199429850555d447bc2acdb76552def, type: 3}
-  chessSprite: {fileID: 21300000, guid: 833f724fc6e919246b344add3e214134, type: 3}
+  chessSprite: {fileID: -8452742265747795653, guid: c03c90f7c27cc4b42b82570cb08611d5, type: 3}
   plantTags:
   - AveMujica
   - "\u952E\u76D8\u624B"
+  fetterMemberId: "\u4E30\u5DDD\u7965\u5B50"
   chessTileType: 1
   plantType: 1
   plantFunction:
     id: 0
   plantIfCanBuyCard:
     id: 1
+  PlantCardPre: {fileID: 2991298695686272976, guid: 91a77fce93c536448808fdde343467f9, type: 3}
+  PlantEntrepotCardPre: {fileID: 3121051189400196229, guid: 0a232a3f09ea5114a99c4b848888d60c, type: 3}
   references:
     version: 1
     00000000:
-      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      type: {class: LevelUpPlant, ns: , asm: Assembly-CSharp}
+      data:
+        basePlant: {fileID: 11400000, guid: d944449962d51494dbd9e89afd0c260d, type: 2}
     00000001:
-      type: {class: , ns: , asm: }
+      type: {class: OnlyOne_Limit, ns: , asm: Assembly-CSharp}

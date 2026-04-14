@@ -138,6 +138,6 @@ MonoBehaviour:
         stateName: 7
         chess: {fileID: 0}
     00000013:
-      type: {class: IWaitTimeTransition, ns: , asm: Assembly-CSharp}
+      type: {class: IfAnimationOverTransisiton, ns: , asm: Assembly-CSharp}
       data:
-        WaitTime: 2
+        animName: resume

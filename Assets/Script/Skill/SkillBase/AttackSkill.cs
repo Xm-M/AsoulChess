@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Sirenix.OdinInspector;
 /// <summary>
 /// 问题就在于返还cd的问题
 /// </summary>
 public class AttackSkill : SkillBase<SkillConfig_Attack>
 {
+    [ShowInInspector]
     int t;//攻击次数
     
     public override void WhenEnter(Chess user)

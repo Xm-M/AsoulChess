@@ -19,7 +19,8 @@ public class Bullet : MonoBehaviour
     public Chess shooter;
     public Vector2 startPos;
     public Vector2 targetPos;
-    //public Chess lockTarget;
+    /// <summary><see cref="InitBullet"/> 传入的 target，在 <see cref="bulletMove.InitMove"/> 之前赋值，供弹道逻辑（如集束）使用。</summary>
+    public Chess initTarget;
     public DamageMessege Dm;
     protected float damage;
     protected Chess hitChess;
@@ -32,9 +33,9 @@ public class Bullet : MonoBehaviour
     {
         this.shooter = shooter;
         startPos = position;
-        if(target!=null)
+        initTarget = target;
+        if (target != null)
             targetPos = target.transform.position;
-        //lockTarget = target;
         this.tag = shooter.tag;
         current = MaxHitNum;
         transform.position = startPos;

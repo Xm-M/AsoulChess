@@ -31,10 +31,11 @@ MonoBehaviour:
     healRate: 1
     speed: 0
     acceleRated: 1
+    moveAcceleRated: 1
     dizzinessTime: 0
     tenacity: 0
     attackRange: 1
-    price: 50
+    price: 150
     rarity: 4000
     waveLimit: 1
     CD: 7.5
@@ -42,6 +43,7 @@ MonoBehaviour:
   chessPre: {fileID: 5308210827871897232, guid: 38adffc341296f64aa06ee2136c0e498, type: 3}
   chessSprite: {fileID: 21300000, guid: f5924f389363d044fbfb2f05efa4a247, type: 3}
   plantTags: []
+  fetterMemberId: 
   chessTileType: 1
   plantType: 1
   plantFunction:

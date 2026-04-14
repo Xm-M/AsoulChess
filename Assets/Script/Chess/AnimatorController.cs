@@ -140,9 +140,17 @@ public class AnimatorController : MonoBehaviour,Controller
         animator.Play("death");
     }
      
+    /// <summary>与 <c>Unlit/GameUnitShader</c> 等一致：材质含 <c>_FlashAmount</c> 时写入 <see cref="Time.time"/> 触发闪白。</summary>
+    public static void FlashSpriteRendererMaterial(SpriteRenderer sr)
+    {
+        if (sr?.material == null) return;
+        if (sr.material.HasProperty("_FlashAmount"))
+            sr.material.SetFloat("_FlashAmount", Time.time);
+    }
+
     public virtual void OnGetDamage(DamageMessege dm)
     {
-        sprite.material.SetFloat("_FlashAmount", Time.time);
+        FlashSpriteRendererMaterial(sprite);
     }
     public virtual void PlaySkill()
     {

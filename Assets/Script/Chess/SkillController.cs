@@ -129,7 +129,8 @@ public class SkillContext
             || key == ZombieKingContextKeys.SkillAnimKind
             || key == ZombieKingContextKeys.Row
             || key == ZombieKingContextKeys.StompBand
-            || key == ZombieKingContextKeys.BallVisual;
+            || key == ZombieKingContextKeys.BallVisual
+            || key == ZombieKingContextKeys.SpawnPoolIndex;
     }
 
     public SkillContextSaveData WriteToSaveData()

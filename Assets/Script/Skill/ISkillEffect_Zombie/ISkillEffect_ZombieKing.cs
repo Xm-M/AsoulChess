@@ -16,25 +16,46 @@ public class SkillEffect_ZombieKing_ZombieSummon : ISkillEffect
     public List<PropertyCreator> zombies;//估计出怪类型跟血量也有关系
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
-        //throw new System.NotImplementedException();
-        PropertyCreator creator = zombies[Random.Range(0, zombies.Count)];
+        if (zombies == null || zombies.Count == 0 || user.moveController?.standTile == null || MapManage.instance == null)
+            return;
+        PropertyCreator creator;
+        var ctx = user.skillController.context;
+        if (ctx.TryGet<int>(ZombieKingContextKeys.SpawnPoolIndex, out int poolIdx) && poolIdx >= 0 && poolIdx < zombies.Count)
+            creator = zombies[poolIdx];
+        else
+            creator = zombies[Random.Range(0, zombies.Count)];
         int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x * 2;
-        int y = 4;//这个其实应该是随机的
-        Tile tile = MapManage.instance.tiles[x, y];
-        GameManage.instance.chessTeamManage.CreateChess(creator,tile, user.tag);
+        int tileY = 4;
+        if (ctx.TryGet<int>(ZombieKingContextKeys.Row, out int rowAnim))
+            tileY = ZombieKingMapAnim.AnimRowToTileY(rowAnim, MapManage.instance.mapSize.y);
+        if (!MapManage.instance.IfInMapRange(x, tileY)) return;
+        Tile tile = MapManage.instance.tiles[x, tileY];
+        GameManage.instance.chessTeamManage.CreateChess(creator, tile, user.tag);
     }
 }
 public class SkillEffect_ZombieKing_FireBall: ISkillEffect
 {
     public GameObject ball;
+    [Tooltip("可选；BallVisual=1 且非空时用冰球")]
+    public GameObject iceBall;
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
+        if (user.moveController?.standTile == null || MapManage.instance == null || ball == null)
+            return;
+        var ctx = user.skillController.context;
         int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x * 3;
-        int y = 4;//这个其实应该是随机的
-        Tile tile = MapManage.instance.tiles[x, y];
-        GameObject b=GameObject.Instantiate(ball);
+        int tileY = 4;
+        if (ctx.TryGet<int>(ZombieKingContextKeys.Row, out int rowAnim))
+            tileY = ZombieKingMapAnim.AnimRowToTileY(rowAnim, MapManage.instance.mapSize.y);
+        if (!MapManage.instance.IfInMapRange(x, tileY)) return;
+        Tile tile = MapManage.instance.tiles[x, tileY];
+        GameObject prefab = ball;
+        if (ctx.TryGet<int>(ZombieKingContextKeys.BallVisual, out int vis) && vis == 1 && iceBall != null)
+            prefab = iceBall;
+        GameObject b = GameObject.Instantiate(prefab);
         b.tag = user.tag;
-        b.GetComponent<CarArmor>().user = user;
+        var armor = b.GetComponent<CarArmor>();
+        if (armor != null) armor.user = user;
         b.transform.position = tile.transform.position;
     }
 }
@@ -43,6 +64,33 @@ public class SkillEffect_ZombieKing_RV : ISkillEffect
 {
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
-        throw new System.NotImplementedException();
+        if (user.moveController?.standTile == null || MapManage.instance == null) return;
+        float dmg = user.propertyController.GetAttack();
+        if (config != null && config.baseDamage != null && config.baseDamage.Count > 0)
+            dmg *= config.baseDamage[0];
+        else
+            dmg *= 1000f;
+        var map = MapManage.instance;
+        int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x * 6;
+        const int y0 = 1;
+        int[] dx = { 0, 1, 2, 0, 1, 2 };
+        int[] dy = { 0, 0, 0, 1, 1, 1 };
+        string plantTag = user.CompareTag("Enemy") ? "Player" : "Enemy";
+        for (int i = 0; i < 6; i++)
+        {
+            int tx = x + dx[i];
+            int ty = y0 + dy[i];
+            if (!map.IfInMapRange(tx, ty)) continue;
+            var t = map.tiles[tx, ty];
+            var target = t?.stander;
+            if (target == null || !target.CompareTag(plantTag)) continue;
+            var dm = user.skillController.DM;
+            dm.damageFrom = user;
+            dm.damageTo = target;
+            dm.damage = dmg;
+            dm.damageType = DamageType.Real;
+            dm.damageElementType = ElementType.Grind;
+            target.propertyController.GetDamage(dm);
+        }
     }
 }

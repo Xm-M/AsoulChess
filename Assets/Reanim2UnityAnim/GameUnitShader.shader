@@ -1,4 +1,4 @@
-﻿Shader "Unlit/GameUnitShader"
+Shader "Unlit/GameUnitShader"
 {
     Properties
     {
@@ -9,6 +9,9 @@
         _ScaleY ("ScaleY", Float) = 1.0
         _Alpha ("Alpha", Float) = 1
         _IsVisible ("IsVisible", Range(-1,0)) = 0
+        _FlashAmount ("Flash Time Stamp (Time.time on hit, -1 off)", Float) = -1
+        [HDR] _FlashColor ("Flash Color HDR", Color) = (2,2,2,1)
+        _FlashDecay ("Flash Decay (higher = shorter flash)", Float) = 10
     }
     SubShader
     {
@@ -51,6 +54,9 @@
             float _Rotation;
             float _Alpha;
             float _IsVisible;
+            float _FlashAmount;
+            float4 _FlashColor;
+            float _FlashDecay;
 
             float2 scale(float2 v, float s_x, float s_y)
             {
@@ -93,13 +99,20 @@
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            float4 frag(v2f i) : SV_Target
             {
-                fixed4 tex_color = tex2D(_MainTex, i.uv);
+                float4 tex_color = tex2D(_MainTex, i.uv);
                 if (_IsVisible == -1)
                 {
                     tex_color.a = 0.0;
                     return tex_color;
+                }
+                // 与 AnimatorController.OnGetDamage 等一致：SetFloat("_FlashAmount", Time.time)
+                if (_FlashAmount >= 0.0)
+                {
+                    float dt = _Time.y - _FlashAmount;
+                    float w = saturate(1.0 - dt * max(_FlashDecay, 0.001));
+                    tex_color.rgb += _FlashColor.rgb * w;
                 }
                 tex_color.a *= _Alpha;
                 return tex_color;

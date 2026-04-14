@@ -30,7 +30,7 @@
    - **蹦极**：三处随机植物格召唤蹦极（`ISkillEffect` 实现）。  
    - **脚踩**：按 `僵王.md` 六格；`y` 随机上界同 **Min** 逻辑；**有植物**（`IFindTarget`）才排入本次站立；`StompBand` 与 `anim_stomp_1~4` 映射。  
    - **砸车**：`x = standTile.x + right.x * 6`，**`y = 1` 固定**（全地图一致，单动画）。  
-   - **俯身吐球**：`x = standTile.x + right.x * 3`，`y` 随机；冰/火随机；`Row` + `BallVisual`；眼嘴贴图在 Effect 中处理。
+   - **俯身吐球**：`x = standTile.x + right.x * 3`，`y` 随机；冰/火随机；`Row` + `BallVisual`；眼/嘴高光贴图由 `AnimatorController_Zombieking` 分部位 Sprite 与 `SyncPartSpritesFromContext` 处理（火球预制体等仍可由 Effect 负责）。
 
 4. **站立 / 俯身与选中、Buff**  
    - **进入站立**：`UnSelectable()`、**清除所有 Buff**（如 `buffController.ResetList()`）。  
@@ -73,16 +73,16 @@
 ## 功能清单
 
 ### 核心功能（必须）
-- [ ] `Skill_ZombieKingBoss`：站立队列 / 俯身计时 / `bendCount` / HP 档判定 / Context 写入。  
-- [ ] 蹦极仅 **HP &lt; 80%** 进入队列。  
-- [ ] 召唤 7/14 次单次生成、`ZombieCanSummons` 与 `waveLimit` 规则。  
-- [ ] 脚踩索敌再释放；砸车六格；吐球行+冰火。  
-- [ ] 站立入场 `UnSelectable` + `ResetList`；俯身 `ResumeSelectable`。  
-- [ ] 随机行 `Mathf.Min` + `mapSize` 边界。  
-- [ ] 存档：`WriteToSaveData` / `RestoreFromSaveData` 持久化 `bendCount` 与必要阶段字段。
+- [x] `Skill_ZombieKingBoss`：站立队列 / 俯身计时 / `bendCount` / Context 写入（逻辑已实现，Prefab 需挂 `activeSkill` + `AnimFinish` 等）。  
+- [x] 蹦极仅 **HP &lt; 80%** 进入队列。  
+- [x] 召唤 7/14 次单次生成、`ZombieCanSummons` 与 `waveLimit` 规则。  
+- [x] 脚踩索敌再释放；砸车六格；吐球行+冰火（主逻辑在 `Skill_ZombieKingBoss.UseSkill`，`SkillEffect_ZombieKing_RV` 已可单独复用）。  
+- [x] 站立入场 `UnSelectable` + `ResetList`；俯身 `ResumeSelectable`。  
+- [x] 随机行与 `mapSize` 边界（`RandomRowAnim` / 踩踏探测）。  
+- [x] 存档：`WriteToSaveData` / `RestoreFromSaveData`（`bendCount`、阶段、计时等；读档后若队列为空会重建站立队列）。
 
 ### 扩展功能（可选）
-- [ ] 四档破损与冒烟、低血闪烁与 `SetVisualTierPublic` 等表现对齐。
+- [x] 四档 `SetVisualTierPublic`、≤50% 冒烟、≤10% 闪烁协程（需在 Animator 上配置 `VisualTier` 参数；闪烁用 `AnimatorController.sprite`）。
 
 ## 验收标准
 - [ ] 血量 **≥80%** 站立队列中**不出现**蹦极；**&lt;80%** 可出现（且满足 §1 其它阶段条件）。  

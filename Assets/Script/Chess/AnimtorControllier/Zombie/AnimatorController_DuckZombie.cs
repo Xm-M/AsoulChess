@@ -71,7 +71,7 @@ public class AnimatorController_DuckZombie : AnimatorController_SampleZombie
         TryRefreshLocomotionAnim();
     }
 
-    void Update()
+    protected override void Update()
     {
         if (chess == null || chess.moveController == null) return;
         Tile st = chess.moveController.standTile;

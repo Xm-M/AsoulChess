@@ -42,8 +42,8 @@ public class Armor_Sled : ArmorBase
     public override void GetDamage(DamageMessege dm)
     {
         if (_broken || user == null || dm == null) return;
-        //Debug.Log("?");
-        dm.takeBuff = null;
+
+        dm.suppressTakeBuffApplication = true;
          
 
         if (armorCurrent >= dm.damage)

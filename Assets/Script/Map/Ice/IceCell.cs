@@ -1,4 +1,7 @@
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 /// <summary>
 /// 单格冰块：不改 <see cref="Tile.tileType"/>；用 <see cref="plantBlocker"/>（Layer IcePlantBlock）挡种植射线，
@@ -139,8 +142,16 @@ public class IceCell : MonoBehaviour
 #if UNITY_EDITOR
     void OnValidate()
     {
-        ApplyLayerToColliders();
+        // 禁止在 OnValidate 里直接改 layer：会触发 SendMessage(OnLayersChanged) 报错。
         RefreshSpriteAlpha();
+        EditorApplication.delayCall -= ApplyLayersEditorDeferred;
+        EditorApplication.delayCall += ApplyLayersEditorDeferred;
+    }
+
+    void ApplyLayersEditorDeferred()
+    {
+        if (this == null) return;
+        ApplyLayerToColliders();
     }
 #endif
 

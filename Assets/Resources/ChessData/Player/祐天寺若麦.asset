@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
   m_Name: "\u7950\u5929\u5BFA\u82E5\u9EA6"
   m_EditorClassIdentifier: 
-  chessName: 
+  chessName: "\u7950\u5929\u5BFA\u82E5\u9EA6"
   chessDescription: 
+  chessShortDescription: 
   chessEffect: 
   baseProperty:
-    attack: 0
+    attack: 40
     attackRate: 0
     crit: 0
     critDamage: 1.3
@@ -30,26 +31,32 @@ MonoBehaviour:
     healRate: 1
     speed: 0
     acceleRated: 1
+    moveAcceleRated: 1
     dizzinessTime: 0
     tenacity: 0
     attackRange: 1
-    price: 50
+    price: 150
     rarity: 4000
     waveLimit: 1
     CD: 7.5
     Size: 1
-  chessPre: {fileID: 0}
-  chessSprite: {fileID: 0}
-  plantTags: []
-  chessTileType: 0
-  plantType: 0
+  chessPre: {fileID: 3699522084473844001, guid: 5c5b9eb88d52a274788a1cf5106ce7ac, type: 3}
+  chessSprite: {fileID: 5743069556333460820, guid: b25af5eb20310584a9f762dddf1b9c33, type: 3}
+  plantTags:
+  - AveMujica
+  - "\u9F13\u624B"
+  fetterMemberId: "\u7950\u5929\u5BFA\u82E5\u9EA6"
+  chessTileType: 1
+  plantType: 1
   plantFunction:
     id: 0
   plantIfCanBuyCard:
-    id: 0
+    id: 1
   PlantCardPre: {fileID: 0}
   PlantEntrepotCardPre: {fileID: 0}
   references:
     version: 1
     00000000:
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+    00000001:
       type: {class: , ns: , asm: }

@@ -125,7 +125,11 @@ public class SkillContext
         // 秋山澪：溢出治疗缓冲为战斗内临时量，不写入 SkillContext 存档
         return key == "霸凌目标" || key == "stand" || key == "sword"
             || key == "akiOverflowHealBuffer"
-            || key == RitsuSkillContextKeys.RecordedDamageSnap;
+            || key == RitsuSkillContextKeys.RecordedDamageSnap
+            || key == ZombieKingContextKeys.SkillAnimKind
+            || key == ZombieKingContextKeys.Row
+            || key == ZombieKingContextKeys.StompBand
+            || key == ZombieKingContextKeys.BallVisual;
     }
 
     public SkillContextSaveData WriteToSaveData()

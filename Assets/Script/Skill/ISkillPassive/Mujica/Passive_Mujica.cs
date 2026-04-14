@@ -3,47 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// 按 <see cref="PropertyCreator"/> 缓存「该卡首次进场时」的普攻格子（relativeCells），避免读 <see cref="PropertyCreator.GetPre"/> 预制体上的 SerializeReference 大图导致栈溢出；
-/// 并避免两名 Oblivionis 互读对方已合并的 runtime <see cref="Weapon_Sample.findTarget"/>。
-/// </summary>
-static class MujicaAveGridBaseCache
-{
-    static bool _leaveSubscribed;
-    static readonly Dictionary<int, List<Vector2Int>> ByCreatorInstanceId = new Dictionary<int, List<Vector2Int>>();
+///// <summary>
+///// 按 <see cref="PropertyCreator"/> 缓存「该卡首次进场时」的普攻格子（relativeCells），避免读 <see cref="PropertyCreator.GetPre"/> 预制体上的 SerializeReference 大图导致栈溢出；
+///// 并避免两名 Oblivionis 互读对方已合并的 runtime <see cref="Weapon_Sample.findTarget"/>。
+///// </summary>
+//static class MujicaAveGridBaseCache
+//{
+//    static bool _leaveSubscribed;
+//    static readonly Dictionary<int, List<Vector2Int>> ByCreatorInstanceId = new Dictionary<int, List<Vector2Int>>();
 
-    public static void EnsureLeaveLevelClearsCache()
-    {
-        if (_leaveSubscribed)
-            return;
-        _leaveSubscribed = true;
-        if (EventController.Instance != null)
-            EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Clear);
-    }
+//    public static void EnsureLeaveLevelClearsCache()
+//    {
+//        if (_leaveSubscribed)
+//            return;
+//        _leaveSubscribed = true;
+//        if (EventController.Instance != null)
+//            EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Clear);
+//    }
 
-    static void Clear() => ByCreatorInstanceId.Clear();
+//    static void Clear() => ByCreatorInstanceId.Clear();
 
-    /// <summary>每种 PropertyCreator 只记第一次写入的格子（进场时尚未被延伸被动改写）。</summary>
-    public static void TryRegisterSnapshot(PropertyCreator creator, IList<Vector2Int> baseCells)
-    {
-        if (creator == null || baseCells == null || baseCells.Count == 0)
-            return;
-        int id = creator.GetInstanceID();
-        if (ByCreatorInstanceId.ContainsKey(id))
-            return;
-        var copy = new List<Vector2Int>(baseCells.Count);
-        for (int i = 0; i < baseCells.Count; i++)
-            copy.Add(baseCells[i]);
-        ByCreatorInstanceId[id] = copy;
-    }
+//    /// <summary>每种 PropertyCreator 只记第一次写入的格子（进场时尚未被延伸被动改写）。</summary>
+//    public static void TryRegisterSnapshot(PropertyCreator creator, IList<Vector2Int> baseCells)
+//    {
+//        if (creator == null || baseCells == null || baseCells.Count == 0)
+//            return;
+//        int id = creator.GetInstanceID();
+//        if (ByCreatorInstanceId.ContainsKey(id))
+//            return;
+//        var copy = new List<Vector2Int>(baseCells.Count);
+//        for (int i = 0; i < baseCells.Count; i++)
+//            copy.Add(baseCells[i]);
+//        ByCreatorInstanceId[id] = copy;
+//    }
 
-    public static IList<Vector2Int> TryGetSnapshot(PropertyCreator creator)
-    {
-        if (creator == null)
-            return null;
-        return ByCreatorInstanceId.TryGetValue(creator.GetInstanceID(), out var list) ? list : null;
-    }
-}
+//    public static IList<Vector2Int> TryGetSnapshot(PropertyCreator creator)
+//    {
+//        if (creator == null)
+//            return null;
+//        return ByCreatorInstanceId.TryGetValue(creator.GetInstanceID(), out var list) ? list : null;
+//    }
+//}
 
 /// <summary>
 /// Oblivionis：用运行时字典记录「已进入延伸条件」的右方单位及其攻击格子模板（相对该队友的 <c>relativeCells</c> 拷贝）；

@@ -70,6 +70,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   user: {fileID: 0}
   type: 2
+  OnArmorBroken:
+    m_PersistentCalls:
+      m_Calls: []
   dm:
     damageFrom: {fileID: 0}
     damageTo: {fileID: 0}
@@ -77,6 +80,7 @@ MonoBehaviour:
     damageType: 0
     damageElementType: 128
     ifCrit: 0
+    suppressFloatingDamage: 0
     takeBuff:
       id: 0
   player: {fileID: 0}
@@ -307,6 +311,10 @@ PrefabInstance:
     - target: {fileID: 4669471910727604776, guid: b3ba0811661725740a32e83792a93e06, type: 3}
       propertyPath: m_SortingLayerID
       value: -1081381483
+      objectReference: {fileID: 0}
+    - target: {fileID: 5836350446699766042, guid: b3ba0811661725740a32e83792a93e06, type: 3}
+      propertyPath: m_CullingMode
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5836350446699766042, guid: b3ba0811661725740a32e83792a93e06, type: 3}
       propertyPath: m_ApplyRootMotion

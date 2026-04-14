@@ -7,6 +7,7 @@ using UnityEngine;
 /// 那我们给skillcontext 一个bool stand的属性
 /// 再给 Animatorcontroller定制一下动画就行了
 /// 然后转换形态技能应该放在哪呢？
+/// 血量高于80%时 只有
 /// </summary>
 public class SkillEffect_ZombieKing_ZombieSummon : ISkillEffect
 {

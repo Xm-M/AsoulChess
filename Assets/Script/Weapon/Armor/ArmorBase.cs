@@ -6,7 +6,9 @@ using UnityEngine.Events;
 
 /// <summary>
 /// Armor属于什么类型呢 Armor属于防具对吧 所以我们等等也要改就是了 但是先放着
-/// Armor的本质是为Chess承伤，所以他的最主要用处还是加载在WhenGetDamage事件上
+/// Armor的本质是为Chess承伤，所以他的最主要用处还是加载在WhenGetDamage事件上。
+/// <para><b>二类</b>（Buff 不进本体）：在 <c>onSetDamage</c> 回调里请对传入的 <see cref="DamageMessege"/> 置
+/// <see cref="DamageMessege.suppressTakeBuffApplication"/>，不要写 <c>takeBuff = null</c>，以免破坏对象池子弹上预置的 <c>takeBuff</c>。</para>
 /// WhenLeaveGame 有几种情况：1.使用者阵亡时（比如说铁门被掏屁股）
 /// 2.自己消亡(吸收伤害达到上限)
 /// 3.被其他方法剥夺（比如磁力菇） 

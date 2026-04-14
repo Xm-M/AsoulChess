@@ -57,7 +57,8 @@ public class IceCarArmor : CarArmor
     {
         if (_broken || user == null || dm == null) return;
 
-        dm.takeBuff = null;
+        // 二类：不将命中 Buff 施加到僵尸本体；用标记而非 takeBuff=null，避免对象池子弹 Dm 丢失预制上的 takeBuff。
+        dm.suppressTakeBuffApplication = true;
         bool explode = (dm.damageElementType & ElementType.Explode) != 0;
         au?.RandomPlay();
         if (armorCurrent >= dm.damage)

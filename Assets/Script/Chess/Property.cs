@@ -43,59 +43,55 @@ public class PropertyController:Controller
     //受到伤害的函数
     public void GetDamage(DamageMessege mes)
     {
-        //
-        onSetDamage?.Invoke(mes);
-        //Debug.Log("基础伤害" + mes.damage);
-        if (mes.takeBuff != null)
+        try
         {
-            chess.buffController.AddBuff(mes.takeBuff);
-        }
-        if (mes.damageType == DamageType.Heal)
-        {
-            //Debug.Log(mes.damageFrom + " " + mes.damageType);
-            chess.animatorController.OnGetDamage(mes);
-            Heal(mes.damage);
-            return;
-        }
-        else if (mes.damageType == DamageType.Miss)
-            mes.damage = 0;
-        else if (mes.damageType != DamageType.Real)
-        {
-            //Debug.Log("倍率" + (1 - (Data.AR / (Data.AR + 100))));
-            mes.damage *= (1 - (Data.AR / (Data.AR + 100)));
-        }
-        
-        //Debug.Log("当前伤害" + mes.damage);
-        mes.damage *= (1 - Data.extraDefence);
-        float n = UnityEngine.Random.Range(0, 1f);
-        if (n < GetDodge())
-        {
-            mes.damage = 0;
-            UIManage.GetView<DamagePanel>().ShowMiss(mes);
-        }
+            onSetDamage?.Invoke(mes);
+            if (mes.takeBuff != null && !mes.suppressTakeBuffApplication)
+                chess.buffController.AddBuff(mes.takeBuff);
 
-        if (mes.damage > 0 && mes.damageType != DamageType.Real && mes.damageType != DamageType.Heal && mes.damageType != DamageType.Miss)
-            Buff_HoukagoTeaTime.TryApplyShareAfterMitigation(chess, mes);
-
-        if (mes.damage > 0)
-        {
-            Data.Hp -= mes.damage;
-            UIManage.GetView<DamagePanel>().ShowDamageMes(mes);
-            onGetDamage?.Invoke(mes);
-            chess.animatorController.OnGetDamage(mes);
-            if ((mes.damageElementType & ElementType.Grind) != 0 && mes.damageFrom != null)
+            if (mes.damageType == DamageType.Heal)
             {
-                if (mes.damageFrom.propertyController.GetSize() > GetSize())
+                chess.animatorController.OnGetDamage(mes);
+                Heal(mes.damage);
+                return;
+            }
+            else if (mes.damageType == DamageType.Miss)
+                mes.damage = 0;
+            else if (mes.damageType != DamageType.Real)
+                mes.damage *= (1 - (Data.AR / (Data.AR + 100)));
+
+            mes.damage *= (1 - Data.extraDefence);
+            float n = UnityEngine.Random.Range(0, 1f);
+            if (n < GetDodge())
+            {
+                mes.damage = 0;
+                UIManage.GetView<DamagePanel>().ShowMiss(mes);
+            }
+
+            if (mes.damage > 0 && mes.damageType != DamageType.Real && mes.damageType != DamageType.Heal && mes.damageType != DamageType.Miss)
+                Buff_HoukagoTeaTime.TryApplyShareAfterMitigation(chess, mes);
+
+            if (mes.damage > 0)
+            {
+                Data.Hp -= mes.damage;
+                UIManage.GetView<DamagePanel>().ShowDamageMes(mes);
+                onGetDamage?.Invoke(mes);
+                chess.animatorController.OnGetDamage(mes);
+                if ((mes.damageElementType & ElementType.Grind) != 0 && mes.damageFrom != null)
                 {
-                    UIManage.GetView<DamagePanel>().ShowText(mes, "GRIND!", Color.white);
-                    chess.Death();
+                    if (mes.damageFrom.propertyController.GetSize() > GetSize())
+                    {
+                        UIManage.GetView<DamagePanel>().ShowText(mes, "GRIND!", Color.white);
+                        chess.Death();
+                    }
                 }
             }
         }
-        
-        //chess.sprite?.material.SetFloat("_FlashAmount", Time.time);
-        //UIManage.instance.CreateDamage(mes);
-        //chess.StartCoroutine(ColorChange(1f));
+        finally
+        {
+            if (mes != null)
+                mes.suppressTakeBuffApplication = false;
+        }
     }
     //造成伤害的函数 
     public void TakeDamage(DamageMessege mes)
@@ -429,6 +425,12 @@ public class DamageMessege
     public bool ifCrit;//是否暴击
     [Tooltip("为 true 时 DamagePanel 不飘字（如护甲自掉血等）")]
     public bool suppressFloatingDamage;
+    /// <summary>
+    /// 二类防具等在 <see cref="PropertyController.onSetDamage"/> 内置位：<b>本次</b> <see cref="PropertyController.GetDamage"/> 不把 <see cref="takeBuff"/> 施加到受伤者本体。
+    /// 勿对对象池子弹上的本实例写 <c>takeBuff = null</c> 来“免疫”，否则回池后子弹丢失命中 Buff 配置。
+    /// </summary>
+    [NonSerialized]
+    public bool suppressTakeBuffApplication;
     [SerializeReference]
     public Buff takeBuff;
     public DamageMessege()

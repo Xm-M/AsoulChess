@@ -10,26 +10,8 @@ public class Animator_Soyo : AnimatorController
         base.WhenControllerEnterWar();
         friend = false;
     }
-    //public override void ChangeFloat(string vname, float value)
-    //{
-    //    base.ChangeFloat(vname, value);
-    //    //Debug.Log(chess);
-    //    if (chess.stateController.currentState.state!=null&&chess.stateController.currentState.state.stateName == StateName.IdleState)
-    //    {
-    //        if (value > 0 && !friend)
-    //        {
-    //            animator.Play("change1");
-    //            friend = true;
-    //        }
-    //        else if (value < 0.1f && friend)
-    //        {
-    //            animator.Play("change4");
-    //            friend = false;
-
-    //        }
-    //    }
-    //}
-    private void Update()
+ 
+    protected override void Update()
     {
         LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(chess.gameObject);
         RaycastHit2D hit = Physics2D.Raycast(chess.transform.position, chess.transform.right,

@@ -185,6 +185,7 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       ifCrit: 0
+      suppressFloatingDamage: 0
       takeBuff:
         id: 1
     onUseSkill:
@@ -256,7 +257,12 @@ MonoBehaviour:
     00000003:
       type: {class: HorMove, ns: , asm: Assembly-CSharp}
     00000004:
-      type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
+      type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
+      data:
+        relativeCells:
+        - {x: 0, y: 0}
+        - {x: 1, y: 0}
+        boxHalfExtents: {x: 1.25, y: 1.25}
     00000005:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
@@ -268,6 +274,7 @@ MonoBehaviour:
           damageType: 0
           damageElementType: 129
           ifCrit: 0
+          suppressFloatingDamage: 0
           takeBuff:
             id: 1
     00000006:
@@ -542,10 +549,11 @@ MonoBehaviour:
   subAudio: []
   baseValue: 0
   clipList:
-  - name: 
+  - audioKey: 
     clip: {fileID: 8300000, guid: 6d4a60d392464d04e980ef09582a9dbc, type: 3}
-  - name: 
+  - audioKey: 
     clip: {fileID: 8300000, guid: 30c752e71cb08034e91b120e527cdf54, type: 3}
+  _audioUniqueLimit: 3
 --- !u!1 &4953054719047342802
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,9 +7,9 @@
 - **提出日期**: 2026-03-30
 
 ## 功能描述
-- **语义**: `_FlashAmount` 与现有 `AnimatorController.OnGetDamage` 等一致，写入 **`Time.time`** 作为闪烁起点；`_Time.y - _FlashAmount` 衰减，向 `tex_color.rgb` 叠加 `_FlashColor`。
+- **语义**: `_FlashAmount` 写入 **`Time.time`** 为受击时刻；在原图色上做**加法**叠亮：`rgb += _FlashColor.rgb * max(0, _FlashPeak - (_Time.y - _FlashAmount) * _FlashSpeed) * _FlashColor.a`（与 Shader Graph 一致）。
 - **关闭**: `_FlashAmount < 0` 时不叠加（材质默认 `-1`）。
-- **可调**: `_FlashDecay` 控制衰减速度；`_FlashColor` 控制闪色。
+- **可调**: `_FlashPeak`、`_FlashSpeed`；`_FlashColor` 为 HDR，**A 控制整体叠加强度**（透明感/弱闪）。
 
 ## 验收标准
 - [ ] 使用 `GameUnitShader_Mat` 的 Sprite 受击时可见短时变亮

@@ -103,6 +103,8 @@ public abstract class Buff
     }
     public virtual void BuffOver()
     {
+        if (target == null || target.buffController == null)
+            return;
         target.buffController.RemoveBuff(this);
     }
     public virtual Buff Clone()
@@ -292,12 +294,18 @@ public class Buff_Fear : TimeBuff {
 
     public override void BuffOver()
     {
-        if (moveRate < 1f && speedDownBuff != null)
-            speedDownBuff?.BuffOver();
-        ObjectPool.instance.Recycle(effect);
-        target.moveController.StopMove();
-        target.moveController.Turn();
-        target.stateController.ChangeState(preState);
+        // 仅当 BuffEffect 里曾对 speedDownBuff 执行过 BuffEffect（target 已赋值）时才收尾，否则嵌套 Buff 会 NRE
+        if (moveRate < 1f && speedDownBuff != null && speedDownBuff.target != null)
+            speedDownBuff.BuffOver();
+        if (effect != null)
+            ObjectPool.instance.Recycle(effect);
+        if (target?.moveController != null)
+        {
+            target.moveController.StopMove();
+            target.moveController.Turn();
+        }
+        if (target?.stateController != null)
+            target.stateController.ChangeState(preState);
         base.BuffOver();
     }
 }

@@ -154,6 +154,14 @@ public class ShootBullet_Taki : IAttackFunction
         zidan.InitBullet(user, shooter.transform.position, targets[0], shooter.transform.right);
         zidan.Dm.damageTo = targets[0];
         zidan.Dm.takeBuff = armor.currentbuff;
+        user.propertyController.onTakeDamage.AddListener(OnAttackFear);
+    }
+    public void OnAttackFear(DamageMessege DM)
+    {
+        if (DM.damageTo.buffController.buffDic.ContainsKey("恐惧"))
+        {
+            DM.damage *= 2;
+        }
     }
 }
 public class PassiveSkill_MygoPassive_Taki : PassiveSkill_Mygo

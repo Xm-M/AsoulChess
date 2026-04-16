@@ -257,12 +257,15 @@ MonoBehaviour:
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
+    onHealDamage:
+      m_PersistentCalls:
+        m_Calls: []
   skillController:
     user: {fileID: 0}
     passiveSkill:
       id: 1
     activeSkill:
-      id: 1
+      id: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -272,7 +275,7 @@ MonoBehaviour:
       ifCrit: 0
       suppressFloatingDamage: 0
       takeBuff:
-        id: 1
+        id: 2
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
@@ -283,13 +286,13 @@ MonoBehaviour:
   stateController:
     currentState:
       state:
-        id: 1
+        id: 2
       transitions: []
     preState:
       state:
-        id: 1
+        id: 2
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 4cf9bc0071e47f9439e4a2447f2307df, type: 2}
+    stateGraph: {fileID: 11400000, guid: 47414d02708420a459ebd63e2eef5dc0, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -299,7 +302,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 2
     OnReachTile:
       m_PersistentCalls:
         m_Calls: []
@@ -319,15 +322,20 @@ MonoBehaviour:
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 1
-        findTarget:
           id: 2
-        attackFunction:
+        findTarget:
           id: 3
+        attackFunction:
+          id: 4
         interval: 0
     00000001:
-      type: {class: , ns: , asm: }
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
+      data:
+        effect:
+          id: 5
     00000002:
+      type: {class: , ns: , asm: }
+    00000003:
       type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
         relativeCells:
@@ -339,10 +347,14 @@ MonoBehaviour:
         - {x: 0, y: 1}
         - {x: 1, y: 1}
         boxHalfExtents: {x: 1.25, y: 1.25}
-    00000003:
+    00000004:
       type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
         bullet: {fileID: 2098010854589325911, guid: 9ff0409a25770c84b959fda1bde0841a, type: 3}
+    00000005:
+      type: {class: Passive_Mujica_Oblivionis, ns: , asm: Assembly-CSharp}
+      data:
+        tickInterval: 1
 --- !u!1 &6236122218113261595
 GameObject:
   m_ObjectHideFlags: 0

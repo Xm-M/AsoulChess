@@ -18,6 +18,7 @@ public class PropertyController:Controller
     [HideInInspector] public UnityEvent<DamageMessege> onGetDamage;//受到伤害的事件
     [HideInInspector] public UnityEvent<DamageMessege> onSetDamage;//受到伤害前的事件(主要是增伤或者缓和，还有护甲抵挡等问题)
     [HideInInspector] public UnityEvent<DamageMessege> onTakeDamage;//造成伤害的事件
+    [HideInInspector] public UnityEvent<DamageMessege> onHealDamage;//造成伤害的事件
     [ShowInInspector, ReadOnly]
     [ShowIf("@UnityEngine.Application.isPlaying")]
     Property Data;
@@ -38,6 +39,7 @@ public class PropertyController:Controller
         onGetDamage?.RemoveAllListeners();
         onTakeDamage?.RemoveAllListeners();
         onSetDamage?.RemoveAllListeners();
+        onHealDamage?.RemoveAllListeners();
     }
      
     //受到伤害的函数
@@ -122,6 +124,7 @@ public class PropertyController:Controller
             }
             else
             {
+                onHealDamage?.Invoke(mes);
                 mes.damageTo.propertyController.GetDamage(mes);
             }
         }

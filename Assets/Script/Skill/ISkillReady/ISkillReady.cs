@@ -52,8 +52,7 @@ public class SkillReady_MouseDown : ISkillReady
 
     public bool IfSkillReady(Chess user, SkillConfig config, List<Chess> targets)
     {
-        // 检测是否点鼠标左键
-        //Debug.Log("总不能是检测不到点击吧");
+        //user.animatorController.ChangeFlash(0.5f);
         if (!Input.GetMouseButtonDown(0))
             return false;
         //Debug.Log("点击了");

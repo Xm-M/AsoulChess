@@ -309,13 +309,13 @@ MonoBehaviour:
     passiveSkill:
       id: 1
     activeSkill:
-      id: 1
+      id: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
       damage: 0
-      damageType: 0
-      damageElementType: 0
+      damageType: 1
+      damageElementType: 69
       ifCrit: 0
       suppressFloatingDamage: 0
       takeBuff:
@@ -380,19 +380,34 @@ MonoBehaviour:
         initWeapon:
           id: 1
         findTarget:
-          id: 2
-        attackFunction:
           id: 3
+        attackFunction:
+          id: 4
         interval: 0
     00000001:
       type: {class: , ns: , asm: }
     00000002:
+      type: {class: AttackSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: c14f821eac3e55c4fbc410f6d6f1f284, type: 2}
+        readyChecker:
+          id: 5
+        effect:
+          id: 6
+        skillFinish:
+          id: 7
+        runtime:
+          id: 8
+    00000003:
       type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
         relativeCells:
+        - {x: -1, y: 0}
         - {x: 0, y: 0}
+        - {x: 1, y: 0}
+        - {x: 2, y: 0}
         boxHalfExtents: {x: 1.25, y: 1}
-    00000003:
+    00000004:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
@@ -406,6 +421,56 @@ MonoBehaviour:
           suppressFloatingDamage: 0
           takeBuff:
             id: 1
+    00000005:
+      type: {class: SkillReady_IfTargetInRange, ns: , asm: Assembly-CSharp}
+      data:
+        search:
+          id: 9
+    00000006:
+      type: {class: SkillEffect_Timoris, ns: , asm: Assembly-CSharp}
+      data:
+        fearBuff:
+          id: 10
+    00000007:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    00000008:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    00000009:
+      type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
+      data:
+        relativeCells:
+        - {x: -1, y: -1}
+        - {x: 0, y: -1}
+        - {x: 1, y: -1}
+        - {x: 2, y: -1}
+        - {x: -1, y: 0}
+        - {x: 1, y: 0}
+        - {x: 2, y: 0}
+        - {x: 3, y: 0}
+        - {x: -1, y: 1}
+        - {x: 0, y: 1}
+        - {x: 1, y: 1}
+        - {x: 2, y: 1}
+        boxHalfExtents: {x: 1.25, y: 1.25}
+    0000000A:
+      type: {class: Buff_Fear, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u6050\u60E7"
+        target: {fileID: 0}
+        continueTime: 5
+        FearEffect: {fileID: 60859552351474783, guid: 5bb58ad649f96fd47b6e29b885d8ff28, type: 3}
+        moveRate: 0.5
+        speedDownBuff:
+          id: 11
+    0000000B:
+      type: {class: Buff_BaseValueBuff_AcceleRate, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u52A0\u901F\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        rate: -0.5
 --- !u!61 &3033217462609107251
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -222,7 +222,11 @@ public class Chess : MonoBehaviour
     {
         if (equipWeapon == null) return;
         if (equipWeapon.weapon is Weapon_Sample ws && ws.findTarget is IGridFindTarget grid)
+        {
+            if (Passive_Mujica_Oblivionis.TryDrawAttackRangeGizmos(this))
+                return;
             grid.DrawGizmos(this);
+        }
     }
 #endif
 

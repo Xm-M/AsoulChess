@@ -77,7 +77,7 @@ MonoBehaviour:
     passiveSkill:
       id: 1
     activeSkill:
-      id: 1
+      id: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -87,7 +87,7 @@ MonoBehaviour:
       ifCrit: 0
       suppressFloatingDamage: 0
       takeBuff:
-        id: 1
+        id: 3
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
@@ -98,11 +98,11 @@ MonoBehaviour:
   stateController:
     currentState:
       state:
-        id: 1
+        id: 3
       transitions: []
     preState:
       state:
-        id: 1
+        id: 3
       transitions: []
     stateGraph: {fileID: 11400000, guid: 11a8d3c8ba4dd994b961ba2e19cad4f6, type: 2}
     EnterWarState: 4
@@ -114,7 +114,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      id: 3
     OnReachTile:
       m_PersistentCalls:
         m_Calls: []
@@ -146,15 +146,32 @@ MonoBehaviour:
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 1
+          id: 3
         findTarget:
-          id: 2
+          id: 4
         attackFunction:
-          id: 1
+          id: 3
         interval: 0
     00000001:
-      type: {class: , ns: , asm: }
+      type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
+      data:
+        effect:
+          id: 5
     00000002:
+      type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: ffe1b52f941f0e24ca18c9d048db3637, type: 2}
+        readyChecker:
+          id: 6
+        effect:
+          id: 7
+        skillFinish:
+          id: 8
+        runtime:
+          id: 9
+    00000003:
+      type: {class: , ns: , asm: }
+    00000004:
       type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
         relativeCells:
@@ -171,6 +188,70 @@ MonoBehaviour:
         - {x: 1, y: 1}
         - {x: 0, y: 2}
         boxHalfExtents: {x: 1.25, y: 1.25}
+    00000005:
+      type: {class: Passive_Mujica_Doloris, ns: , asm: Assembly-CSharp}
+      data:
+        buffTickInterval: 1
+        healTickInterval: 3
+        dolorisBuffTemplate:
+          id: 10
+        bardBuffTemplate:
+          id: 11
+        dm:
+          damageFrom: {fileID: 0}
+          damageTo: {fileID: 0}
+          damage: 0
+          damageType: 4
+          damageElementType: 0
+          ifCrit: 0
+          suppressFloatingDamage: 0
+          takeBuff:
+            id: 3
+    00000006:
+      type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
+      data:
+        clickBox: {fileID: 2929772296240516053}
+    00000007:
+      type: {class: SkillEffect_Mujica_Doloris, ns: , asm: Assembly-CSharp}
+      data:
+        allyTimeValueBuff:
+          id: 12
+    00000008:
+      type: {class: DurationFinish, ns: , asm: Assembly-CSharp}
+    00000009:
+      type: {class: SkillRuntimeInfo_Duration, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+        maxTime: 12
+    0000000A:
+      type: {class: Buff_Mujica_Doloris, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: Mujica_Doloris
+        target: {fileID: 0}
+        buffFrom: {fileID: 6798870067021178385}
+        damageRate: 0.3
+    0000000B:
+      type: {class: Buff_Bard, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: Bard_Doloris
+        target: {fileID: 0}
+        healRate: 0.1
+        continueTime: 6
+    0000000C:
+      type: {class: Buff_BaseValueBuff_TimeValueBuff, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u521D\u534E"
+        target: {fileID: 0}
+        continueTime: 1
+        valueBuff:
+          id: 13
+    0000000D:
+      type: {class: Buff_BaseValueBuff_Attack, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u653B\u51FB\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        extraAttack: 0.5
 --- !u!61 &4206507896591223068
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -516,6 +597,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1248270830150314343}
   - component: {fileID: 5438870927872332086}
+  - component: {fileID: 2929772296240516053}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -588,6 +670,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &2929772296240516053
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8137340132853116174}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.02416563, y: 0.33831608}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 4, y: 4.0625}
+    newSize: {x: 4, y: 4.0625}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.8251123, y: 3.3858678}
+  m_EdgeRadius: 0
 --- !u!1001 &2264258992757115546
 PrefabInstance:
   m_ObjectHideFlags: 0

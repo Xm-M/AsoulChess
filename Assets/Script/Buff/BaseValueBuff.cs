@@ -277,12 +277,18 @@ public class Buff_BaseValueBuff_AcceleRate : Buff_BaseValueBuff
     public override void SetSaveValue(float v) => rate = v;
     public Buff_BaseValueBuff_AcceleRate() { buffName = "加速增益"; }
     public override void BuffEffect(Chess target) { base.BuffEffect(target); target.propertyController.ChangeAcceleRate(rate); }
-    public override void BuffOver() { base.BuffOver(); target.propertyController.ChangeAcceleRate(-rate); }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        if (target?.propertyController != null)
+            target.propertyController.ChangeAcceleRate(-rate);
+    }
     public override void BuffReset(Buff resetBuff) { base.BuffReset(resetBuff); float v = (resetBuff as Buff_BaseValueBuff_AcceleRate).rate; if (v > rate) { target.propertyController.ChangeAcceleRate(-rate); rate = v; target.propertyController.ChangeAcceleRate(rate); } }
 }
 
 public class Buff_BaseValueBuff_TimeValueBuff : TimeBuff
 {
+    [SerializeReference]
     public Buff valueBuff;
     public override void BuffEffect(Chess target)
     {

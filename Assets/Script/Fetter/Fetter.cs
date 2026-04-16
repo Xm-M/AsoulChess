@@ -434,14 +434,3 @@ public class Buff_Mygo : Buff
         }
     }
 }
-public class AveMujica : Fetter
-{
-    public override void FetterEffect(int count, int tier)
-    {
-        base.FetterEffect(count, tier);
-    }
-    public override void ResetFetter()
-    {
-        base.ResetFetter();
-    }
-}

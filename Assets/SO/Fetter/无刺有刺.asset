@@ -21,6 +21,7 @@ MonoBehaviour:
       data:
         fetterName: "\u65E0\u523A\u6709\u523A"
         fetterIcon: {fileID: 0}
+        fetterEffectDescription: 
         detectMode: 1
         config:
           tag: "\u65E0\u523A\u6709\u523A"
@@ -30,7 +31,7 @@ MonoBehaviour:
           - "\u6CB3\u6E90\u6728\u6843\u9999"
           - "\u6D77\u8001\u51A2\u667A"
           - "\u5362\u5E15"
-          tierThresholds: 02000000
+          tierThresholds: 05000000
         num: 5
         tier: 0
         DM:
@@ -40,6 +41,7 @@ MonoBehaviour:
           damageType: 2
           damageElementType: 12
           ifCrit: 0
+          suppressFloatingDamage: 0
           takeBuff:
             id: 1
         GBCBuff:

@@ -281,10 +281,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -323,6 +325,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
   cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
@@ -335,6 +338,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -347,6 +351,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -359,6 +364,33 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -2201,9 +2233,96 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      iceman_0: 2728181207791317369
+      iceman_1: 1191565979825923768
+      iceman_10: 9030010739800871520
+      iceman_11: -6525385568454063125
+      iceman_12: 2069276878451667728
+      iceman_13: 8423620371884510069
+      iceman_14: 3127541242919541703
+      iceman_15: -8801762623768470344
+      iceman_16: -6778667614398961363
+      iceman_17: 1201647687500682307
+      iceman_18: 9142317092561957913
+      iceman_19: -4662524341087431724
+      iceman_2: -4942979408936438598
+      iceman_20: 8471113453259291845
+      iceman_21: -7181370600615440492
+      iceman_22: -4768223433508148404
+      iceman_23: 8376250095125944562
+      iceman_24: 5550678303287658005
+      iceman_25: -2860569203918666084
+      iceman_26: -8777404351902976449
+      iceman_27: 6737345618999360231
+      iceman_28: -1111410700482023006
+      iceman_29: -7659830680182786869
+      iceman_3: -4441357047725653855
+      iceman_30: -6564725108188458988
+      iceman_31: 4408589644130497707
+      iceman_32: 1850873383230094622
+      iceman_33: -1294696775194818344
+      iceman_34: -2533771644648173310
+      iceman_35: 6354660852306242556
+      iceman_36: -5317063409428440002
+      iceman_37: 999001019665061175
+      iceman_38: 8430567940436838492
+      iceman_39: 8559247284482763681
+      iceman_4: -990600811384055649
+      iceman_40: 629108605484222406
+      iceman_41: -5236556017384686443
+      iceman_42: 8181858123867855031
+      iceman_43: 3553821695937060586
+      iceman_44: 8121140028266011462
+      iceman_45: 3958366387898586889
+      iceman_46: -7097134346856453179
+      iceman_47: 8991944305052275095
+      iceman_48: -8093098179754463818
+      iceman_49: 7335067787414598467
+      iceman_5: 2993807228602457290
+      iceman_50: -1663983710885132410
+      iceman_51: 6611763835158660053
+      iceman_52: 2368245938957526911
+      iceman_53: -8582431092791418010
+      iceman_54: 6541239202222098529
+      iceman_55: -2184226376920162155
+      iceman_56: 5175109161074473992
+      iceman_57: 522964270109071864
+      iceman_58: 4896255364460783064
+      iceman_59: -2272854283344023211
+      iceman_6: -4379586753361832199
+      iceman_60: -3521786716772233977
+      iceman_61: 3546490831902667306
+      iceman_62: -4792930343914081892
+      iceman_63: -4292637251003331950
+      iceman_64: 19167506385721244
+      iceman_65: 5941092874145900996
+      iceman_66: -5163929807038323213
+      iceman_67: 2926753337388937613
+      iceman_68: -7114368511863744341
+      iceman_69: 8864682844384624249
+      iceman_7: -940038695695049032
+      iceman_70: -1876754335665516286
+      iceman_71: -4900769532971960791
+      iceman_72: 8811043687664705050
+      iceman_73: -171155595108402219
+      iceman_74: 5226221159459045637
+      iceman_75: -5117727346582601978
+      iceman_76: 7894453659030926418
+      iceman_77: 3439630099167841188
+      iceman_78: -373324811437218353
+      iceman_79: 3842193305171093353
+      iceman_8: 7417431979148916705
+      iceman_80: -6632026655585444476
+      iceman_81: -6274006560643735491
+      iceman_82: 8522839001161468992
+      iceman_83: -4225183837102290032
+      iceman_84: 753061763132309653
+      iceman_85: 239807452778702953
+      iceman_86: 1909286418878698876
+      iceman_9: -2443222854221308793
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

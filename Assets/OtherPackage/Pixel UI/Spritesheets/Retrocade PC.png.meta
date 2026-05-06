@@ -492,7 +492,7 @@ TextureImporter:
       213: 21300324
     second: Retrocade PC_162
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -509,10 +509,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -551,6 +553,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 1
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -562,6 +566,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   - serializedVersion: 3
@@ -574,6 +579,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   - serializedVersion: 3
@@ -586,6 +592,33 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
@@ -3226,9 +3259,134 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      Retrocade PC_0: 21300000
+      Retrocade PC_100: 21300200
+      Retrocade PC_101: 21300202
+      Retrocade PC_102: 21300204
+      Retrocade PC_103: 21300206
+      Retrocade PC_104: 21300208
+      Retrocade PC_105: 21300210
+      Retrocade PC_106: 21300212
+      Retrocade PC_107: 21300214
+      Retrocade PC_108: 21300216
+      Retrocade PC_109: 21300218
+      Retrocade PC_11: 21300022
+      Retrocade PC_110: 21300220
+      Retrocade PC_111: 21300222
+      Retrocade PC_112: 21300224
+      Retrocade PC_113: 21300226
+      Retrocade PC_114: 21300228
+      Retrocade PC_115: 21300230
+      Retrocade PC_116: 21300232
+      Retrocade PC_117: 21300234
+      Retrocade PC_118: 21300236
+      Retrocade PC_119: 21300238
+      Retrocade PC_120: 21300240
+      Retrocade PC_121: 21300242
+      Retrocade PC_122: 21300244
+      Retrocade PC_123: 21300246
+      Retrocade PC_124: 21300248
+      Retrocade PC_125: 21300250
+      Retrocade PC_126: 21300252
+      Retrocade PC_127: 21300254
+      Retrocade PC_128: 21300256
+      Retrocade PC_129: 21300258
+      Retrocade PC_13: 21300026
+      Retrocade PC_130: 21300260
+      Retrocade PC_131: 21300262
+      Retrocade PC_132: 21300264
+      Retrocade PC_133: 21300266
+      Retrocade PC_134: 21300268
+      Retrocade PC_135: 21300270
+      Retrocade PC_136: 21300272
+      Retrocade PC_137: 21300274
+      Retrocade PC_138: 21300276
+      Retrocade PC_139: 21300278
+      Retrocade PC_140: 21300280
+      Retrocade PC_141: 21300282
+      Retrocade PC_142: 21300284
+      Retrocade PC_143: 21300286
+      Retrocade PC_144: 21300288
+      Retrocade PC_145: 21300290
+      Retrocade PC_146: 21300292
+      Retrocade PC_147: 21300294
+      Retrocade PC_148: 21300296
+      Retrocade PC_149: 21300298
+      Retrocade PC_150: 21300300
+      Retrocade PC_154: 21300308
+      Retrocade PC_157: 21300314
+      Retrocade PC_159: 21300318
+      Retrocade PC_16: 21300032
+      Retrocade PC_160: 21300320
+      Retrocade PC_19: 21300038
+      Retrocade PC_2: 21300004
+      Retrocade PC_20: 21300040
+      Retrocade PC_21: 21300042
+      Retrocade PC_22: 21300044
+      Retrocade PC_23: 21300046
+      Retrocade PC_24: 21300048
+      Retrocade PC_25: 21300050
+      Retrocade PC_26: 21300052
+      Retrocade PC_27: 21300054
+      Retrocade PC_28: 21300056
+      Retrocade PC_29: 21300058
+      Retrocade PC_30: 21300060
+      Retrocade PC_31: 21300062
+      Retrocade PC_32: 21300064
+      Retrocade PC_33: 21300066
+      Retrocade PC_34: 21300068
+      Retrocade PC_35: 21300070
+      Retrocade PC_36: 21300072
+      Retrocade PC_37: 21300074
+      Retrocade PC_38: 21300076
+      Retrocade PC_39: 21300078
+      Retrocade PC_40: 21300080
+      Retrocade PC_41: 21300082
+      Retrocade PC_42: 21300084
+      Retrocade PC_43: 21300086
+      Retrocade PC_44: 21300088
+      Retrocade PC_45: 21300090
+      Retrocade PC_46: 21300092
+      Retrocade PC_47: 21300094
+      Retrocade PC_48: 21300096
+      Retrocade PC_49: 21300098
+      Retrocade PC_5: 21300010
+      Retrocade PC_50: 21300100
+      Retrocade PC_51: 21300102
+      Retrocade PC_52: 21300104
+      Retrocade PC_53: 21300106
+      Retrocade PC_54: 21300108
+      Retrocade PC_55: 21300110
+      Retrocade PC_56: 21300112
+      Retrocade PC_57: 21300114
+      Retrocade PC_58: 21300116
+      Retrocade PC_59: 21300118
+      Retrocade PC_60: 21300120
+      Retrocade PC_61: 21300122
+      Retrocade PC_62: 21300124
+      Retrocade PC_63: 21300126
+      Retrocade PC_64: 21300128
+      Retrocade PC_65: 21300130
+      Retrocade PC_66: 21300132
+      Retrocade PC_67: 21300134
+      Retrocade PC_68: 21300136
+      Retrocade PC_69: 21300138
+      Retrocade PC_7: 21300014
+      Retrocade PC_70: 21300140
+      Retrocade PC_74: 21300148
+      Retrocade PC_77: 21300154
+      Retrocade PC_79: 21300158
+      Retrocade PC_80: 21300160
+      Retrocade PC_82: 21300164
+      Retrocade PC_85: 21300170
+      Retrocade PC_87: 21300174
+      Retrocade PC_91: 21300182
+      Retrocade PC_93: 21300186
+      Retrocade PC_96: 21300192
+      Retrocade PC_99: 21300198
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

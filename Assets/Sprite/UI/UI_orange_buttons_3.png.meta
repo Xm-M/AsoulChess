@@ -93,7 +93,7 @@ TextureImporter:
       213: -6300268771660939246
     second: UI_orange_buttons_3_29
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -110,10 +110,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -152,6 +154,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -163,6 +167,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -175,6 +180,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -187,6 +193,33 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -832,9 +865,39 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      UI_orange_buttons_3_0: -9093045790675253167
+      UI_orange_buttons_3_1: -6739751608262483495
+      UI_orange_buttons_3_10: -3271462388100282093
+      UI_orange_buttons_3_11: -5436466934848681484
+      UI_orange_buttons_3_12: 4038675591923499023
+      UI_orange_buttons_3_13: 9084821443301456793
+      UI_orange_buttons_3_14: -8060889256972538706
+      UI_orange_buttons_3_15: -5312123162276276890
+      UI_orange_buttons_3_16: 4529993272426033446
+      UI_orange_buttons_3_17: 4514425235168634328
+      UI_orange_buttons_3_18: -7074195325321266380
+      UI_orange_buttons_3_19: -2169901935759742226
+      UI_orange_buttons_3_2: 8730926944760307520
+      UI_orange_buttons_3_20: 5801308479082466879
+      UI_orange_buttons_3_21: -4223202044933500079
+      UI_orange_buttons_3_22: 1820706039482168355
+      UI_orange_buttons_3_23: 7771266801651818889
+      UI_orange_buttons_3_24: -4115822432211574531
+      UI_orange_buttons_3_25: -1832953468102817833
+      UI_orange_buttons_3_26: -1886298804858683334
+      UI_orange_buttons_3_27: 6649186752745892273
+      UI_orange_buttons_3_28: -7649325828842929533
+      UI_orange_buttons_3_29: -6300268771660939246
+      UI_orange_buttons_3_3: 3742483289657983862
+      UI_orange_buttons_3_4: 4407018384374432668
+      UI_orange_buttons_3_5: -2142243387531303550
+      UI_orange_buttons_3_6: 8436100367915214455
+      UI_orange_buttons_3_7: -7417484111595396135
+      UI_orange_buttons_3_8: 8700360221265674712
+      UI_orange_buttons_3_9: -124917784595578607
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

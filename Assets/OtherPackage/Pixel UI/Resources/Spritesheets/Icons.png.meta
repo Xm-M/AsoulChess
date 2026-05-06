@@ -165,7 +165,7 @@ TextureImporter:
       213: 21300106
     second: Icons_53
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -182,10 +182,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -224,6 +226,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 1
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -235,6 +239,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   - serializedVersion: 3
@@ -247,6 +252,46 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
@@ -1354,9 +1399,61 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      Icons_0: 21300000
+      Icons_1: 21300002
+      Icons_10: 21300020
+      Icons_11: 21300022
+      Icons_12: 21300024
+      Icons_13: 21300026
+      Icons_14: 21300028
+      Icons_15: 21300030
+      Icons_16: 21300032
+      Icons_17: 21300034
+      Icons_18: 21300036
+      Icons_19: 21300038
+      Icons_2: 21300004
+      Icons_20: 21300040
+      Icons_21: 21300042
+      Icons_22: 21300044
+      Icons_23: 21300046
+      Icons_24: 21300048
+      Icons_25: 21300050
+      Icons_26: 21300052
+      Icons_27: 21300054
+      Icons_28: 21300056
+      Icons_29: 21300058
+      Icons_3: 21300006
+      Icons_30: 21300060
+      Icons_31: 21300062
+      Icons_32: 21300064
+      Icons_33: 21300066
+      Icons_34: 21300068
+      Icons_35: 21300070
+      Icons_36: 21300072
+      Icons_37: 21300074
+      Icons_38: 21300076
+      Icons_39: 21300078
+      Icons_4: 21300008
+      Icons_40: 21300080
+      Icons_41: 21300082
+      Icons_42: 21300084
+      Icons_43: 21300086
+      Icons_44: 21300088
+      Icons_45: 21300090
+      Icons_46: 21300092
+      Icons_47: 21300094
+      Icons_48: 21300096
+      Icons_49: 21300098
+      Icons_5: 21300010
+      Icons_50: 21300100
+      Icons_51: 21300102
+      Icons_6: 21300012
+      Icons_7: 21300014
+      Icons_8: 21300016
+      Icons_9: 21300018
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

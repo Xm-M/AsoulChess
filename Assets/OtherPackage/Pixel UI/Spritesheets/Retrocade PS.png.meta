@@ -108,7 +108,7 @@ TextureImporter:
       213: 21300068
     second: Retrocade PS_34
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -125,10 +125,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -167,6 +169,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 1
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -178,6 +182,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   - serializedVersion: 3
@@ -190,6 +195,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   - serializedVersion: 3
@@ -202,6 +208,33 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
@@ -910,9 +943,42 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      Retrocade PS_0: 21300000
+      Retrocade PS_1: 21300002
+      Retrocade PS_10: 21300020
+      Retrocade PS_11: 21300022
+      Retrocade PS_12: 21300024
+      Retrocade PS_13: 21300026
+      Retrocade PS_14: 21300028
+      Retrocade PS_15: 21300030
+      Retrocade PS_16: 21300032
+      Retrocade PS_17: 21300034
+      Retrocade PS_18: 21300036
+      Retrocade PS_19: 21300038
+      Retrocade PS_2: 21300004
+      Retrocade PS_20: 21300040
+      Retrocade PS_21: 21300042
+      Retrocade PS_22: 21300044
+      Retrocade PS_23: 21300046
+      Retrocade PS_24: 21300048
+      Retrocade PS_25: 21300050
+      Retrocade PS_26: 21300052
+      Retrocade PS_27: 21300054
+      Retrocade PS_28: 21300056
+      Retrocade PS_29: 21300058
+      Retrocade PS_3: 21300006
+      Retrocade PS_30: 21300060
+      Retrocade PS_31: 21300062
+      Retrocade PS_32: 21300064
+      Retrocade PS_4: 21300008
+      Retrocade PS_5: 21300010
+      Retrocade PS_6: 21300012
+      Retrocade PS_7: 21300014
+      Retrocade PS_8: 21300016
+      Retrocade PS_9: 21300018
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

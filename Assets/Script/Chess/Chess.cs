@@ -208,7 +208,8 @@ public class Chess : MonoBehaviour
             IfSelectable = false;
             
         }
-        gameObject.layer = LayerMask.NameToLayer(tag);
+        if(!CompareTag("Untagged"))
+            gameObject.layer = LayerMask.NameToLayer(tag);
     }
     public void StopMove() => moveController.ContinuMove();
     public void ContinumMove() => moveController.StopMove();

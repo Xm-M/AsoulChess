@@ -72,6 +72,9 @@ MonoBehaviour:
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
+    onHealDamage:
+      m_PersistentCalls:
+        m_Calls: []
   skillController:
     user: {fileID: 0}
     passiveSkill:
@@ -158,24 +161,20 @@ MonoBehaviour:
       type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
         relativeCells:
-        - {x: 0, y: -2}
-        - {x: -1, y: -1}
-        - {x: 0, y: -1}
-        - {x: 1, y: -1}
-        - {x: -2, y: 0}
-        - {x: -1, y: 0}
         - {x: 0, y: 0}
         - {x: 1, y: 0}
         - {x: 2, y: 0}
-        - {x: -1, y: 1}
-        - {x: 0, y: 1}
-        - {x: 1, y: 1}
-        - {x: 0, y: 2}
+        - {x: 3, y: 0}
+        - {x: 4, y: 0}
+        - {x: 5, y: 0}
+        - {x: 6, y: 0}
+        - {x: 7, y: 0}
+        - {x: 8, y: 0}
         boxHalfExtents: {x: 0.56, y: 0.45}
     00000004:
       type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
-        bullet: {fileID: 2098010854589325911, guid: 15fa26a0c0a8b0747aba983ef11ef87d, type: 3}
+        bullet: {fileID: 2098010854589325911, guid: ff9d21301bc540649a5a50ce3a75106a, type: 3}
     00000005:
       type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
       data:

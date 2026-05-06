@@ -46,13 +46,13 @@ public class Buff_BaseValueBuff_Attack: Buff_BaseValueBuff
     {
         base.BuffEffect(target);
         target.propertyController.ChangeAttack(extraAttack);
-        Debug.Log("增加了攻击力" + extraAttack);
+        //Debug.Log("增加了攻击力" + extraAttack);
     }
     public override void BuffOver()
     {
         base.BuffOver();
         target.propertyController.ChangeAttack(-extraAttack);
-        Debug.Log("减少了攻击力" + -extraAttack);
+        //Debug.Log("减少了攻击力" + -extraAttack);
     }
     public override void BuffReset(Buff resetBuff)
     {

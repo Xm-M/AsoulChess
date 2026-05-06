@@ -6,8 +6,9 @@ using UnityEngine;
 /// </summary>
  
 /// <summary>
-/// 主唱 Buff：每次攻击有 extraBulletChance 概率额外发射一发子弹。
+/// 主唱 Buff：每次攻击有 extraBulletChance 概率额外发射一发子弹。子弹的命中数量与羁绊人数有关
 /// 概率由羁绊人数决定：2人20%、3人45%、4人70%、5人100%
+/// 子弹类型为：火焰（双倍伤害，寒冷(减速效果，光（清除迷雾，
 /// </summary>
 public class Buff_Vocal : Buff
 {

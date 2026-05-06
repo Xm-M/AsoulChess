@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 9011993626441510362}
   - component: {fileID: 8607761482893557226}
   - component: {fileID: 8950482713801336731}
+  - component: {fileID: 34756230596073858}
   m_Layer: 0
   m_Name: "\u7950\u5929\u5BFA\u82E5\u9EA6"
   m_TagString: Untagged
@@ -230,13 +231,13 @@ MonoBehaviour:
     passiveSkill:
       id: 1
     activeSkill:
-      id: 1
+      id: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
       damage: 0
       damageType: 0
-      damageElementType: 0
+      damageElementType: 65
       ifCrit: 0
       suppressFloatingDamage: 0
       takeBuff:
@@ -257,7 +258,7 @@ MonoBehaviour:
       state:
         id: 1
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 4cf9bc0071e47f9439e4a2447f2307df, type: 2}
+    stateGraph: {fileID: 11400000, guid: 47414d02708420a459ebd63e2eef5dc0, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -274,7 +275,19 @@ MonoBehaviour:
   animatorController: {fileID: 9011993626441510362}
   WhenEnterGame:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7115520296946215016}
+        m_TargetAssemblyTypeName: AudioPlayer, Assembly-CSharp
+        m_MethodName: RandomPlay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -289,13 +302,25 @@ MonoBehaviour:
         initWeapon:
           id: 1
         findTarget:
-          id: 2
-        attackFunction:
           id: 3
+        attackFunction:
+          id: 4
         interval: 0
     00000001:
       type: {class: , ns: , asm: }
     00000002:
+      type: {class: AttackSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: c492a865013c42e458ab7a1e6757e316, type: 2}
+        readyChecker:
+          id: 5
+        effect:
+          id: 6
+        skillFinish:
+          id: 7
+        runtime:
+          id: 8
+    00000003:
       type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
         relativeCells:
@@ -308,7 +333,7 @@ MonoBehaviour:
         - {x: 0, y: 1}
         - {x: 1, y: 1}
         boxHalfExtents: {x: 1.3, y: 1}
-    00000003:
+    00000004:
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
@@ -317,11 +342,37 @@ MonoBehaviour:
           damageTo: {fileID: 0}
           damage: 0
           damageType: 0
-          damageElementType: 64
+          damageElementType: 65
           ifCrit: 0
           suppressFloatingDamage: 0
           takeBuff:
             id: 1
+    00000005:
+      type: {class: SkillReady_IfTargetInRange, ns: , asm: Assembly-CSharp}
+      data:
+        search:
+          id: 9
+    00000006:
+      type: {class: SkillEffect_KitaExplode, ns: , asm: Assembly-CSharp}
+    00000007:
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+    00000008:
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    00000009:
+      type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
+      data:
+        relativeCells:
+        - {x: -1, y: -1}
+        - {x: 0, y: -1}
+        - {x: 1, y: -1}
+        - {x: -1, y: 0}
+        - {x: 1, y: 0}
+        - {x: -1, y: 1}
+        - {x: 0, y: 1}
+        - {x: 1, y: 1}
+        boxHalfExtents: {x: 1.3, y: 1}
 --- !u!61 &5160041446495222045
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -422,7 +473,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -507,6 +558,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &34756230596073858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6885989903785382294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7489e648044d781428e116d6e6bd76c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  createAwake: 1
 --- !u!1 &7948115709590551320
 GameObject:
   m_ObjectHideFlags: 0

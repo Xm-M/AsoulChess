@@ -247,6 +247,7 @@ GameObject:
   - component: {fileID: 2199025025777486142}
   - component: {fileID: 4031684675121559050}
   - component: {fileID: 3518447451406383473}
+  - component: {fileID: -1535273936290550959}
   m_Layer: 0
   m_Name: "\u516B\u5E61\u6D77\u94C3"
   m_TagString: Untagged
@@ -302,6 +303,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     onTakeDamage:
+      m_PersistentCalls:
+        m_Calls: []
+    onHealDamage:
       m_PersistentCalls:
         m_Calls: []
   skillController:
@@ -656,6 +660,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-1535273936290550959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7587603825327281031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7489e648044d781428e116d6e6bd76c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  createAwake: 1
 --- !u!1001 &7541029566435813951
 PrefabInstance:
   m_ObjectHideFlags: 0

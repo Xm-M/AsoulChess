@@ -304,8 +304,8 @@ public class Buff_Fear : TimeBuff {
             target.moveController.StopMove();
             target.moveController.Turn();
         }
-        if (target?.stateController != null)
-            target.stateController.ChangeState(preState);
+        //if (target?.stateController != null)
+        //    target.stateController.ChangeState(preState);
         base.BuffOver();
     }
 }

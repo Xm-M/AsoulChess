@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8695860456903776210}
   - component: {fileID: 5537069939013186134}
   - component: {fileID: 8858286678017930164}
+  - component: {fileID: 2100908985873361369}
   m_Layer: 0
   m_Name: Mortis
   m_TagString: Untagged
@@ -71,6 +72,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     onTakeDamage:
+      m_PersistentCalls:
+        m_Calls: []
+    onHealDamage:
       m_PersistentCalls:
         m_Calls: []
   skillController:
@@ -164,6 +168,7 @@ MonoBehaviour:
       type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
         relativeCells:
+        - {x: 0, y: 0}
         - {x: 1, y: 0}
         boxHalfExtents: {x: 1.25, y: 1.25}
     00000004:
@@ -365,6 +370,19 @@ MonoBehaviour:
   - audioKey: 
     clip: {fileID: 8300000, guid: 7848669df879621468b41cd82e97e353, type: 3}
   _audioUniqueLimit: 3
+--- !u!114 &2100908985873361369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111136368299597287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7489e648044d781428e116d6e6bd76c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  createAwake: 1
 --- !u!1 &2272151930321686496
 GameObject:
   m_ObjectHideFlags: 0

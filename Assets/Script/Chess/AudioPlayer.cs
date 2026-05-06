@@ -16,7 +16,7 @@ public class AudioPlayer : MonoBehaviour
     }
     private void OnEnable()
     {
-       
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
         if(autype==AudioType.SoundEffect)
             audioSource.volume=AudioManage.SoundEffectValue*baseValue;
         else

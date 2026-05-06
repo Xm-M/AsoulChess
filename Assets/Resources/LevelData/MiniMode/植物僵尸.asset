@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u690D\u7269\u50F5\u5C38"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: "\u524D\u9662"
+  levelName: "\u690D\u7269\u50F5\u5C38"
+  levelSprit: {fileID: 3785816446736581452, guid: 421afde933c35af4d8db856d5e639cd4, type: 3}
+  levelMode: 1
+  EnterMapPlugin:
+  - id: 0
+  - id: 1
+  PreParePlugin:
+  - id: 2
+  GameStartPlugin:
+  - id: 3
+  - id: 4
+  - id: 5
+  - id: 6
+  MaxWave: 40
+  n: 1
+  t: 1
+  zombieList:
+  - {fileID: 11400000, guid: b0fb1639e5548bc4098221366a395e83, type: 2}
+  createZombieType: 3
+  nextLevel: {fileID: 0}
+  outcome:
+    id: 7
+  loadSkipToTime: 10
+  references:
+    version: 1
+    00000000:
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    00000001:
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u9009\u724C"
+        deleyPlayTime: 0
+    00000002:
+      type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 50
+        cards: []
+    00000003:
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u767D\u5929"
+        deleyPlayTime: 3
+    00000004:
+      type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
+      data:
+        sunlight: 25
+    00000005:
+      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
+    00000006:
+      type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
+      data:
+        fastEnterTime: 28
+    00000007:
+      type: {class: , ns: , asm: }

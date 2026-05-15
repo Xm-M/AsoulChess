@@ -25,12 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1806913272922540361}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8612358482202116274}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6773056505948482223
 MonoBehaviour:
@@ -49,10 +50,11 @@ MonoBehaviour:
   subAudio: []
   baseValue: 0
   clipList:
-  - name: "\u5C0F\u9B3C"
+  - audioKey: "\u5C0F\u9B3C"
     clip: {fileID: 8300000, guid: 3fff3832599981b438b7367e7d091ef2, type: 3}
-  - name: "\u5C0F\u9B3C2"
+  - audioKey: "\u5C0F\u9B3C2"
     clip: {fileID: 8300000, guid: 8bb8bc1b89663af469587c1b93720fea, type: 3}
+  _audioUniqueLimit: 3
 --- !u!82 &1069445834070274173
 AudioSource:
   m_ObjectHideFlags: 0
@@ -178,16 +180,17 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2129966309694177457}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2436771886613048410}
   - {fileID: 2881183094078492545}
   - {fileID: 1843529459419556202}
   - {fileID: 3794641263655053741}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3303855583524024484
 MonoBehaviour:
@@ -206,7 +209,7 @@ MonoBehaviour:
     master: {fileID: 0}
     weaponPos: {fileID: 0}
     weapon:
-      id: 0
+      rid: 0
     OnAttack:
       m_PersistentCalls:
         m_Calls: []
@@ -222,12 +225,15 @@ MonoBehaviour:
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
+    onHealDamage:
+      m_PersistentCalls:
+        m_Calls: []
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      rid: -2
     activeSkill:
-      id: 2
+      rid: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -235,8 +241,9 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       ifCrit: 0
+      suppressFloatingDamage: 0
       takeBuff:
-        id: 1
+        rid: -2
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
@@ -247,11 +254,11 @@ MonoBehaviour:
   stateController:
     currentState:
       state:
-        id: 1
+        rid: -2
       transitions: []
     preState:
       state:
-        id: 1
+        rid: -2
       transitions: []
     stateGraph: {fileID: 11400000, guid: b44f7b6ba640cf64faedcc9241b9b3ca, type: 2}
     EnterWarState: 4
@@ -263,7 +270,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 3
+      rid: 3
     OnReachTile:
       m_PersistentCalls:
         m_Calls: []
@@ -278,37 +285,39 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 1
+          rid: -2
         findTarget:
-          id: 4
+          rid: 4
         attackFunction:
-          id: 5
-        enemys: []
+          rid: 5
         interval: 0
-    00000001:
-      type: {class: , ns: , asm: }
-    00000002:
+    - rid: 2
       type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
       data:
         config: {fileID: 11400000, guid: 91d6cf9072670e24fa166cc26e8a6fa2, type: 2}
         readyChecker:
-          id: 1
+          rid: -2
         effect:
-          id: 6
+          rid: 7518339703537139735
         skillFinish:
-          id: 7
+          rid: 7
         runtime:
-          id: 8
-    00000003:
+          rid: 8
+    - rid: 3
       type: {class: HorMove, ns: , asm: Assembly-CSharp}
-    00000004:
+      data: 
+    - rid: 4
       type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
-    00000005:
+      data: 
+    - rid: 5
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
@@ -319,16 +328,19 @@ MonoBehaviour:
           damageType: 0
           damageElementType: 1
           ifCrit: 0
+          suppressFloatingDamage: 0
           takeBuff:
-            id: 1
-    00000006:
-      type: {class: ISkillEffect_Zombie_JumpToTagret, ns: , asm: Assembly-CSharp}
-    00000007:
+            rid: -2
+    - rid: 7
       type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
-    00000008:
+      data: 
+    - rid: 8
       type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
       data:
         currentTime: 0
+    - rid: 7518339703537139735
+      type: {class: ISkillEffect_Zombie_JumpToTagret, ns: , asm: Assembly-CSharp}
+      data: 
 --- !u!61 &5984150404066925717
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -339,6 +351,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -390,6 +421,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 3236718938354041168}
   sprite: {fileID: 896541167176832612}
+  dizzynesss: 
+  attackStateNameAlt: 
   arm: {fileID: 4061451625237922979}
   head: {fileID: 2487764644027895499}
   box: {fileID: 0}
@@ -398,11 +431,14 @@ MonoBehaviour:
   leftHead: {fileID: 7305185559257757046, guid: 1d7bdb064f31f39449f088db99b409de, type: 3}
   player: {fileID: 8125185701553400424}
   bloodBuff:
-    id: 0
+    rid: 0
   randomSpeed: 0.2
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: BloodBuff, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u81EA\u6D41\u8840"
@@ -414,10 +450,9 @@ MonoBehaviour:
           damageType: 0
           damageElementType: 0
           ifCrit: 0
+          suppressFloatingDamage: 0
           takeBuff:
-            id: 1
-    00000001:
-      type: {class: , ns: , asm: }
+            rid: -2
 --- !u!114 &5392021727122043450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,12 +471,13 @@ MonoBehaviour:
   - {fileID: 1806913272922540361}
   baseValue: 0
   clipList:
-  - name: 
+  - audioKey: 
     clip: {fileID: 8300000, guid: 5ea755169da0aae488cac4843fa2eac8, type: 3}
-  - name: 
+  - audioKey: 
     clip: {fileID: 8300000, guid: 5d3269051156bf847a82baf9cc954195, type: 3}
-  - name: 
+  - audioKey: 
     clip: {fileID: 8300000, guid: 2de811b9e8b9cd640bdbf6cee2a1546f, type: 3}
+  _audioUniqueLimit: 3
 --- !u!82 &1177335838981886171
 AudioSource:
   m_ObjectHideFlags: 0
@@ -562,12 +598,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4746389756666391985}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2436771886613048410}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4061451625237922979
 SpriteRenderer:
@@ -580,6 +617,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -607,7 +645,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -644,14 +682,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5873310968109576084}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.27, y: 0.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6312084925712716140}
   - {fileID: 2078538779107723259}
   m_Father: {fileID: 8612358482202116274}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &896541167176832612
 SpriteRenderer:
@@ -664,6 +703,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -691,7 +731,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: f7fd327ed4a9a3c4481f09cbb48ec04e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -728,12 +768,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8157120203446312301}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2436771886613048410}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2487764644027895499
 SpriteRenderer:
@@ -746,6 +787,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -773,7 +815,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -791,6 +833,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8612358482202116274}
     m_Modifications:
     - target: {fileID: 2673868079073005060, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
@@ -854,6 +897,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
 --- !u!4 &2881183094078492545 stripped
 Transform:
@@ -865,6 +911,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 8612358482202116274}
     m_Modifications:
     - target: {fileID: 4635104716620181003, guid: 6ff1bd5d662a73041acaa26250dd0871, type: 3}
@@ -916,6 +963,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ff1bd5d662a73041acaa26250dd0871, type: 3}
 --- !u!4 &1843529459419556202 stripped
 Transform:

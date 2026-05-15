@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+ 
 public class CarArmor : ArmorBase
 {
     public DamageMessege dm;
     public AudioPlayer player;
     public UnityEvent  onHit;
+    public Animator anim;
+    public float animSpeed=1;
     public override void BrokenArmor()
     {
           
@@ -19,7 +22,8 @@ public class CarArmor : ArmorBase
 
     public override void InitArmor()
     {
-         
+        if(anim!=null)
+            anim.speed = animSpeed;
     }
 
     public override void ResetArmor(Chess chess)

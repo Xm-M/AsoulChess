@@ -13,6 +13,8 @@ public class Weapon_Sample : Weapon
     /// <summary>仅运行时缓存目标，勿序列化；否则 Odin 在绘制 SerializeReference 嵌套武器时会与 List&lt;Chess&gt; 序列化冲突。</summary>
     [System.NonSerialized]
     public List<Chess> enemys;
+    public GameObject targetEffect;
+    public GameObject selfEffect;
     public float interval;
     public int FindEnemy(Chess user)
     {
@@ -45,6 +47,19 @@ public class Weapon_Sample : Weapon
     {
         //throw new System.NotImplementedException();
         attackFunction.Attack(user, enemys);
+        if (targetEffect != null)
+        {
+            foreach(var target in enemys)
+            {
+               GameObject effect=ObjectPool.instance.Create(targetEffect);
+               effect.transform.position = target.transform.position;
+            }
+        }
+        if (selfEffect != null)
+        {
+            GameObject effect = ObjectPool.instance.Create(selfEffect);
+            effect.transform.position = user.transform.position;
+        }
     }
 }//
 

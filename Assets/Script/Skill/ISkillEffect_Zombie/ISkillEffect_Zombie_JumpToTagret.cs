@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// 0:高度 1：跳跃速度  [2] 世界空间水平飞行距离、[3] 落地后占格的横向偏移（格数）
+/// </summary>
 public class ISkillEffect_Zombie_JumpToTagret : ISkillEffect
 {
     //public float dis;
@@ -17,7 +19,6 @@ public class ISkillEffect_Zombie_JumpToTagret : ISkillEffect
         //Debug.Log(endPos);
         var maxHeight = config.baseDamage[0];
         var speed = config.baseDamage[1];
-        user.moveController.JumpToTarget(user, user.transform, startPos, endPos, maxHeight, speed);
         var map = MapManage.instance;
         var tile = user.moveController.standTile;
         int dx = Mathf.RoundToInt(Mathf.Sign(user.transform.right.x)) * (int)config.baseDamage[3];
@@ -25,8 +26,14 @@ public class ISkillEffect_Zombie_JumpToTagret : ISkillEffect
         int newY = Mathf.Clamp(tile.mapPos.y, 0, map.mapSize.y - 1);
         // 若目标超出地图则取边缘格
         var targetTile = map.tiles[newX, newY];
-        tile.ChessLeave(user);
-        targetTile.ChessEnter(user);
+        user.moveController.standTile = targetTile;
+        user.moveController.JumpToTarget(user, user.transform, startPos, endPos, maxHeight, speed, () =>
+        {
+            if (user == null || user.IfDeath || tile == null || targetTile == null)
+                return;
+            //tile.ChessLeave(user);
+            //targetTile.ChessEnter(user);
+        });
     }
 
     

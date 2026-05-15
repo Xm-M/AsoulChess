@@ -39,6 +39,10 @@ public class MapManage : MonoBehaviour
     {
         return (x >= 0 && x < mapSize.x) && (y >= 0 && y < mapSize.y);
     }
+    public bool IfInMapViewRange(int x, int y)
+    {
+        return (x >= 0 && x < mapSize.x-1) && (y >= 0 && y < mapSize.y);
+    }
     public virtual void AwakeTile()
     {
         for (int i = 0; i < mapSize.x ; i++)

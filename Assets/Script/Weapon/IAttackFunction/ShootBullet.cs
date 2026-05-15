@@ -25,6 +25,38 @@ public class ShootBullet : IAttackFunction
         //Debug.Log(zidan.Dm.damageTo.name);
     }
 }
+
+/// <summary>
+/// 对索敌结果 <paramref name="targets"/> 中每个单位各发射一枚子弹（<see cref="ShootBullet"/> 仅对 <c>targets[0]</c> 单发）。
+/// 用于多目标时一人一发。
+/// </summary>
+public class ShootBullet_ShootAllTarget : IAttackFunction
+{
+    public GameObject bullet;
+
+    public void Attack(Chess user, List<Chess> targets)
+    {
+        if (user?.equipWeapon?.weaponPos == null || bullet == null || targets == null || targets.Count == 0)
+            return;
+
+        for (int i = 0; i < targets.Count; i++)
+        {
+            Chess t = targets[i];
+            if (t == null || t.IfDeath)
+                continue;
+
+            GameObject b = ObjectPool.instance.Create(bullet);
+            if (b == null)
+                continue;
+            Bullet zidan = b.GetComponent<Bullet>();
+            if (zidan == null)
+                continue;
+
+            zidan.InitBullet(user, user.equipWeapon.weaponPos.position, t, user.transform.right);
+            zidan.Dm.damageTo = t;
+        }
+    }
+}
 public class ShootBulletByDir : IAttackFunction
 {
     public GameObject bullet;

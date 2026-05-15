@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u8E66\u6781\u6728\u5076"
+  m_EditorClassIdentifier: 
+  chessName: "\u8E66\u6781\u6728\u5076"
+  chessDescription: 
+  chessShortDescription: 
+  chessEffect: 
+  baseProperty:
+    attack: 0
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 450
+    HpMax: 450
+    lifeStealing: 0
+    healRate: 1
+    speed: 0
+    acceleRated: 1
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 1
+    price: 75
+    rarity: 4000
+    waveLimit: 1
+    CD: 7.5
+    Size: 10
+  chessPre: {fileID: 8917651191695696960, guid: ddee0b6675ad2874dbe9704a5fa77bc2, type: 3}
+  chessSprite: {fileID: 21300000, guid: 6038ffd8f88ebe047bbdb07052a9923a, type: 3}
+  plantTags:
+  - "\u6728\u5076"
+  fetterMemberId: 
+  chessTileType: 15
+  plantType: 0
+  plantFunction:
+    rid: 7518339837549346828
+  plantIfCanBuyCard:
+    rid: -2
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 7518339837549346828
+      type: {class: NonePlant, ns: , asm: Assembly-CSharp}
+      data: 

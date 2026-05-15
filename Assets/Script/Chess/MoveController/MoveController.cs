@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.Events;
 /// <summary>
 /// 感觉moveController也是可有可无的东西 要不然就直接删了吧
@@ -180,12 +180,13 @@ public class MoveController:Controller
     }
      
     public void ContinuMove() => ifMove = true;
-    public void JumpToTarget(Chess chess, Transform transform, Vector2 startPos, Vector2 endPos, float maxHeight, float moveSpeed)
+    /// <param name="onJumpLanded">落地后、播 land/death 前调用；用于换格等，避免与抛物线首帧抢 <see cref="Transform.position"/>。</param>
+    public void JumpToTarget(Chess chess, Transform transform, Vector2 startPos, Vector2 endPos, float maxHeight, float moveSpeed, Action onJumpLanded = null)
     {
-        chess.StartCoroutine(Jump(chess,transform,startPos,endPos,maxHeight,moveSpeed));
+        chess.StartCoroutine(Jump(chess, transform, startPos, endPos, maxHeight, moveSpeed, onJumpLanded));
     }
 
-    public IEnumerator Jump(Chess chess, Transform transform, Vector2 startPos, Vector2 endPos, float maxHeight, float moveSpeed)
+    public IEnumerator Jump(Chess chess, Transform transform, Vector2 startPos, Vector2 endPos, float maxHeight, float moveSpeed, Action onJumpLanded = null)
     {
         chess.UnSelectable();
         ifMove = true;
@@ -202,6 +203,12 @@ public class MoveController:Controller
         if (moveSpeed <= 0.0001f || distForTime <= 0.0001f)
         {
             transform.position = endPos;
+            onJumpLanded?.Invoke();
+            if (!chess.IfDeath)
+                chess.animatorController.animator.Play("land");
+            else chess.animatorController.animator.Play("death");
+            ifMove = false;
+            chess.ResumeSelectable();
             yield break;
         }
 
@@ -226,7 +233,8 @@ public class MoveController:Controller
         }
         // 结束时强制落到终点，避免浮点误差
         transform.position = endPos;
-        if(!chess.IfDeath)
+        onJumpLanded?.Invoke();
+        if (!chess.IfDeath)
             chess.animatorController.animator.Play("land");
         else chess.animatorController.animator.Play("death");
         ifMove = false;

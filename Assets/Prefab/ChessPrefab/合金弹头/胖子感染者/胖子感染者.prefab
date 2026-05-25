@@ -105,7 +105,7 @@ MonoBehaviour:
       state:
         rid: -2
       transitions: []
-    stateGraph: {fileID: 11400000, guid: e8daeb6dbd59e294ebc61db5c15a0715, type: 2}
+    stateGraph: {fileID: 11400000, guid: e18fd1ac4d94c1248b96dedbc5846260, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -115,7 +115,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      rid: 7518339723739267141
+      rid: 7518339978766843905
     OnReachTile:
       m_PersistentCalls:
         m_Calls: []
@@ -143,7 +143,9 @@ MonoBehaviour:
           rid: 7518339723739267139
         attackFunction:
           rid: 7518339723739267140
-        interval: 0
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
+        interval: 5
     - rid: 7518339723739267139
       type: {class: StraightLaser, ns: , asm: Assembly-CSharp}
       data: 
@@ -151,9 +153,13 @@ MonoBehaviour:
       type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
         bullet: {fileID: 5520396717294064132, guid: a67b361dde29789479528d99681757ca, type: 3}
-    - rid: 7518339723739267141
-      type: {class: HorMove, ns: , asm: Assembly-CSharp}
-      data: 
+    - rid: 7518339978766843905
+      type: {class: PlantAreaBounceMove, ns: , asm: Assembly-CSharp}
+      data:
+        bounceJitterDegrees: 28
+        preferDiagonalMinAbs: 0.18
+        boundaryEpsilon: 0.02
+        diagonalSampleAttempts: 12
 --- !u!61 &226264540431765201
 BoxCollider2D:
   m_ObjectHideFlags: 0

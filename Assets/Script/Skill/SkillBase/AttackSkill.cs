@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 /// <summary>
 /// 问题就在于返还cd的问题
 /// </summary>
-public class AttackSkill : SkillBase<SkillConfig_Attack>
+public class AttackSkill : SkillBase<SkillConfig_Attack>, ISkillCooldownProgress
 {
     [ShowInInspector]
     int t;//攻击次数
@@ -52,6 +52,13 @@ public class AttackSkill : SkillBase<SkillConfig_Attack>
         t=config.attackTimeCold;
     }
     public void CaculateAttackTime(Chess chess) => t += 1;
+
+    public float GetCooldownProgress01()
+    {
+        if (config == null || config.attackTimeCold <= 0)
+            return 1f;
+        return Mathf.Clamp01((float)t / config.attackTimeCold);
+    }
 
     public override void WriteToSaveData(SkillStateSaveData data)
     {

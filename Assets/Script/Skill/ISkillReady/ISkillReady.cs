@@ -61,6 +61,8 @@ public class SkillReady_MouseDown : ISkillReady
 
         Vector2 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
+        if (clickBox == null)
+            return false;
         if (clickBox.OverlapPoint(mouse))
         {
             return true;
@@ -69,7 +71,7 @@ public class SkillReady_MouseDown : ISkillReady
     }
     public void InitSkillReady(Chess user, SkillConfig config, List<Chess> targets)
     {
-         
+        SkillColdFXPresenter.TrySpawnUnderChess(user);
     }
 }
 /// <summary>无刺有刺羁绊已触发且刺雨未在下的情况可用。用于主唱Nina主动技能。</summary>

@@ -11,7 +11,7 @@ public static class PlayerSaveSystem
     const string PlayerSaveFolder = "PlayerSaves";
     const string SaveExtension = ".json";
     public const string DefaultSaveName = "player";
-    public const int CurrentSaveVersion = 2;
+    public const int CurrentSaveVersion = 3;
 
     /// <summary>Test 模式下是否跳过存读档</summary>
     static bool SkipSaveLoad => GameManage.instance != null && GameManage.instance.mode == GameMode.Test;
@@ -179,6 +179,14 @@ public static class PlayerSaveSystem
         }
         if (data.difficultyLevel < 0 || data.difficultyLevel > 3)
             data.difficultyLevel = 1;
+        if (data.roguelikeBestActReached < 0)
+            data.roguelikeBestActReached = 0;
+        if (data.roguelikeBestLayerReached < 0)
+            data.roguelikeBestLayerReached = 0;
+        if (data.roguelikeRunsCompleted < 0)
+            data.roguelikeRunsCompleted = 0;
+        if (data.roguelikeActsCleared < 0)
+            data.roguelikeActsCleared = 0;
         data.saveVersion = CurrentSaveVersion;
     }
 }

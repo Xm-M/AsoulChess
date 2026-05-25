@@ -30,15 +30,16 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1225013984129097618}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5624535775817588737}
   - {fileID: 8260308214162042104}
   - {fileID: 8335059017417725963}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &3561257327488968547
 BoxCollider2D:
@@ -50,6 +51,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -242,7 +262,7 @@ MonoBehaviour:
     master: {fileID: 0}
     weaponPos: {fileID: 8335059017417725963}
     weapon:
-      id: 0
+      rid: 0
     OnAttack:
       m_PersistentCalls:
         m_Calls: []
@@ -264,9 +284,9 @@ MonoBehaviour:
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      rid: 1
     activeSkill:
-      id: 2
+      rid: 7518340001803796480
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -276,7 +296,7 @@ MonoBehaviour:
       ifCrit: 0
       suppressFloatingDamage: 0
       takeBuff:
-        id: 2
+        rid: -2
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
@@ -287,11 +307,11 @@ MonoBehaviour:
   stateController:
     currentState:
       state:
-        id: 2
+        rid: -2
       transitions: []
     preState:
       state:
-        id: 2
+        rid: -2
       transitions: []
     stateGraph: {fileID: 11400000, guid: 47414d02708420a459ebd63e2eef5dc0, type: 2}
     EnterWarState: 4
@@ -303,7 +323,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 2
+      rid: -2
     OnReachTile:
       m_PersistentCalls:
         m_Calls: []
@@ -342,25 +362,28 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 2
+          rid: -2
         findTarget:
-          id: 3
+          rid: 3
         attackFunction:
-          id: 4
+          rid: 4
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
         interval: 0
-    00000001:
+    - rid: 1
       type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
       data:
         effect:
-          id: 5
-    00000002:
-      type: {class: , ns: , asm: }
-    00000003:
+          rid: 5
+    - rid: 3
       type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
         relativeCells:
@@ -373,14 +396,46 @@ MonoBehaviour:
         - {x: 0, y: 1}
         - {x: 1, y: 1}
         boxHalfExtents: {x: 1.25, y: 1.25}
-    00000004:
+    - rid: 4
       type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
         bullet: {fileID: 2098010854589325911, guid: 9ff0409a25770c84b959fda1bde0841a, type: 3}
-    00000005:
+    - rid: 5
       type: {class: Passive_Mujica_Oblivionis, ns: , asm: Assembly-CSharp}
       data:
         tickInterval: 1
+    - rid: 7518340001803796480
+      type: {class: AttackSkill, ns: , asm: Assembly-CSharp}
+      data:
+        config: {fileID: 11400000, guid: 0011f1a30cac28545882c5cc607845c5, type: 2}
+        readyChecker:
+          rid: 7518340001803796484
+        effect:
+          rid: 7518340001803796481
+        skillFinish:
+          rid: 7518340001803796482
+        runtime:
+          rid: 7518340001803796483
+    - rid: 7518340001803796481
+      type: {class: SkillEffect_Oblivionis, ns: , asm: Assembly-CSharp}
+      data:
+        bulletA: {fileID: 2098010854589325911, guid: 9ff0409a25770c84b959fda1bde0841a, type: 3}
+        bulletB: {fileID: 2098010854589325911, guid: af74d5abb5807a7478d08005f84b4113, type: 3}
+        outLineColor: {r: 0.84276724, g: 0.32597592, b: 0.37257004, a: 1}
+        outlineSize: 1
+        continueTime: 25
+    - rid: 7518340001803796482
+      type: {class: DurationFinish, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 7518340001803796483
+      type: {class: SkillRuntimeInfo_Duration, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+        maxTime: 30
+    - rid: 7518340001803796484
+      type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
+      data:
+        clickBox: {fileID: 55616324190878086}
 --- !u!114 &898197712753037168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -405,6 +460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5624535775817588737}
   - component: {fileID: 9174243516339178775}
+  - component: {fileID: 55616324190878086}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -419,12 +475,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6236122218113261595}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.27, y: 0.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2150324091785428547}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &9174243516339178775
 SpriteRenderer:
@@ -437,6 +494,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -477,6 +535,51 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &55616324190878086
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6236122218113261595}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.3866489, y: 0.21615702}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 4, y: 4.0625}
+    newSize: {x: 4, y: 3.9375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3.2267022, y: 2.599122}
+  m_EdgeRadius: 0
 --- !u!1 &8952181770099258423
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,7 +592,7 @@ GameObject:
   - component: {fileID: 236985682176064621}
   - component: {fileID: 678888867803460705}
   m_Layer: 0
-  m_Name: w
+  m_Name: "\u7965\u5B50\u5165\u573A"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -502,12 +605,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8952181770099258423}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.29, y: 0.69, z: -5.5401535}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2150324091785428547}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &236985682176064621
 MonoBehaviour:
@@ -632,6 +736,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2150324091785428547}
     m_Modifications:
     - target: {fileID: 532688012659541290, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
@@ -699,6 +804,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
 --- !u!4 &8260308214162042104 stripped
 Transform:

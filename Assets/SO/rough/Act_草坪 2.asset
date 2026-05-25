@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c40533a01361c84f8a95504ace890d1, type: 3}
+  m_Name: "Act_\u8349\u576A 2"
+  m_EditorClassIdentifier: 
+  actId: 1
+  displayName: Act 1
+  targetMinutes: 35
+  layerCount: 12
+  minWidthPerLayer: 3
+  maxWidthPerLayer: 4
+  normalCombatCount: 4
+  eliteCombatCount: 1
+  restCount: 2
+  shopCount: 1
+  eventCount: 2
+  bossLevel: {fileID: 11400000, guid: 8f52c85bbc5307e4f83f3a1a24794c26, type: 2}
+  bossFlagCount: 3
+  normalLevelPool:
+  - {fileID: 11400000, guid: b0ce7a28b12e7a149819dd49edbf61ab, type: 2}
+  - {fileID: 11400000, guid: c225673d9c4fa4a4cb6e17749e241d03, type: 2}
+  - {fileID: 11400000, guid: a8054cbeaca9ba245b4f85395dd669bc, type: 2}
+  - {fileID: 11400000, guid: 652a2cbc491d7674fbfc30ab81c794f6, type: 2}
+  - {fileID: 11400000, guid: d7c49d371ddb18541818fc2e2c0485e7, type: 2}
+  - {fileID: 11400000, guid: fc59b1c9180cea446846f006d622e428, type: 2}
+  - {fileID: 11400000, guid: a0b290aadc696754c99ddd80c9a20911, type: 2}
+  eliteLevelPool:
+  - {fileID: 11400000, guid: 4324606a6017cba479dc0de7bbdf8cc7, type: 2}
+  - {fileID: 11400000, guid: db9c04b604e69ac40aa1cb9ac2f6b3ab, type: 2}
+  startRoomType: 0
+  eliteEarliestLayer: 3
+  eliteMinLayerSpacing: 3
+  preBossRoomType: 4
+  shopEarliestLayer: 4
+  shopLatestLayer: 999
+  noEliteFirstLayerFraction: 0.25
+  maxGenerateAttempts: 32

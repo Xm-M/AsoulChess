@@ -15,7 +15,10 @@ public class ReplaceSkill : ISkill
     [SerializeReference]
     public List<ISkill> replaces;
     
-    protected ISkill currentSkill;//当前技能 
+    protected ISkill currentSkill;//当前技能
+    /// <summary>当前子技能（用于 UI 冷却条等）。</summary>
+    public ISkill CurrentSubSkill => currentSkill;
+
     protected Chess user;
     int n;
     [HideInInspector]

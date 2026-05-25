@@ -22,6 +22,10 @@ public class StartUI : View
     [Header("图鉴按钮：打开棋子图鉴面板")]
     public Button codexButton;
 
+    [Header("肉鸽（可选）")]
+    [Tooltip("配置后可在 Inspector 用按钮或代码 RoguelikeMapPanel.OpenRun 开局")]
+    public RunMapConfig roguelikeRunConfig;
+
     [Header("难度选择（首页选择，进入关卡前生效）")]
     public TMP_Dropdown difficultyDropdown;
     static readonly string[] DifficultyLabels = { "简单", "普通", "困难", "噩梦" };
@@ -213,4 +217,35 @@ public class StartUI : View
     {
         UIManage.GetView<CodexPanel>()?.Show();
     }
+
+    /// <summary>开始肉鸽 Run 并打开地图面板（需配置 <see cref="roguelikeRunConfig"/>）。</summary>
+    public void StartRoguelikeRun()
+    {
+        if (roguelikeRunConfig == null)
+        {
+            Debug.LogWarning("[StartUI] 未配置 roguelikeRunConfig");
+            return;
+        }
+        Hide();
+        RoguelikeMapPanel.OpenRun(roguelikeRunConfig);
+    }
+
+    /// <summary>继续未完成的肉鸽 Run（需存在 active 存档）。</summary>
+    public void ContinueRoguelikeRun()
+    {
+        if (roguelikeRunConfig == null)
+        {
+            Debug.LogWarning("[StartUI] 未配置 roguelikeRunConfig");
+            return;
+        }
+        if (!RoguelikeRunService.HasContinuableRunSave)
+        {
+            Debug.LogWarning("[StartUI] 无可继续的肉鸽存档");
+            return;
+        }
+        Hide();
+        RoguelikeMapPanel.OpenContinuedRun(roguelikeRunConfig);
+    }
+
+    public bool HasContinuableRoguelikeRun => RoguelikeRunService.HasContinuableRunSave;
 }

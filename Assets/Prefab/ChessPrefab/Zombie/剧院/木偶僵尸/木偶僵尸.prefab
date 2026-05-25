@@ -249,6 +249,7 @@ MonoBehaviour:
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillColdFx: {fileID: 0}
     skillEffectFiredThisCast: 0
   stateController:
     currentState:
@@ -297,6 +298,8 @@ MonoBehaviour:
           rid: 3
         attackFunction:
           rid: 4
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
         interval: 0
     - rid: 2
       type: {class: HorMove, ns: , asm: Assembly-CSharp}
@@ -673,7 +676,7 @@ MonoBehaviour:
         buffName: "\u8840\u7EBF\u8FDE\u7ED3"
         target: {fileID: 0}
         lineOwner: {fileID: 0}
-        sourceArmor: {fileID: 0}
+        sourceArmors: []
         cuttingSelfHpFraction: 0.5
 --- !u!120 &4966796566022437831
 LineRenderer:

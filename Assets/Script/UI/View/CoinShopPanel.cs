@@ -17,7 +17,16 @@ public class CoinShopPanel : View
     public TMP_Text coinText;
     public Button returnButton;
 
+    [Header("翻页")]
+    [Tooltip("拖入车的 Animator，翻页时播放 next 状态")]
+    public Animator carAnimator;
+    [Tooltip("每页商品数量")]
+    public int itemsPerPage = 8;
+    [Tooltip("翻页时播放的 Animator 状态名")]
+    public string pageTurnAnimName = "next";
+
     List<GameObject> itemInstances = new List<GameObject>();
+    int currentPageIndex;
 
     const int TestModeCoins = 999999;
 
@@ -30,8 +39,37 @@ public class CoinShopPanel : View
     public override void Show()
     {
         base.Show();
+        currentPageIndex = 0;
         RefreshCoinDisplay();
         RefreshItemList();
+    }
+
+    /// <summary>下一页，供 Button OnClick 绑定</summary>
+    public void GoToNextPage()
+    {
+        if (currentPageIndex >= GetTotalPages() - 1) return;
+        currentPageIndex++;
+        PlayPageTurnAnim();
+        RefreshItemList();
+    }
+
+    /// <summary>上一页，供 Button OnClick 绑定</summary>
+    public void GoToPreviousPage()
+    {
+        if (currentPageIndex <= 0) return;
+        currentPageIndex--;
+        PlayPageTurnAnim();
+        RefreshItemList();
+    }
+
+    public int CurrentPageIndex => currentPageIndex;
+
+    public int TotalPages => GetTotalPages();
+
+    void PlayPageTurnAnim()
+    {
+        if (carAnimator == null || string.IsNullOrEmpty(pageTurnAnimName)) return;
+        carAnimator.Play(pageTurnAnimName, 0, 0f);
     }
 
     void RefreshCoinDisplay()
@@ -60,12 +98,56 @@ public class CoinShopPanel : View
         ClearItems();
         if (shopConfig == null || shopConfig.items == null || itemParent == null || shopItemPrefab == null) return;
 
-        foreach (var item in shopConfig.items)
+        var validItems = GetValidItems();
+        if (validItems.Count == 0)
         {
-            if (item == null) continue;
-            var go = CreateShopItem(item);
+            currentPageIndex = 0;
+            return;
+        }
+
+        ClampPageIndex(validItems.Count);
+        int pageSize = Mathf.Max(1, itemsPerPage);
+        int start = currentPageIndex * pageSize;
+        int end = Mathf.Min(start + pageSize, validItems.Count);
+
+        for (int i = start; i < end; i++)
+        {
+            var go = CreateShopItem(validItems[i]);
             if (go != null) itemInstances.Add(go);
         }
+    }
+
+    List<ShopItemData> GetValidItems()
+    {
+        var list = new List<ShopItemData>();
+        if (shopConfig?.items == null) return list;
+        foreach (var item in shopConfig.items)
+        {
+            if (item != null) list.Add(item);
+        }
+        return list;
+    }
+
+    int GetTotalPages()
+    {
+        int count = GetValidItems().Count;
+        if (count == 0) return 0;
+        int pageSize = Mathf.Max(1, itemsPerPage);
+        return (count + pageSize - 1) / pageSize;
+    }
+
+    void ClampPageIndex(int itemCount)
+    {
+        int totalPages = itemCount == 0 ? 0 : (itemCount + Mathf.Max(1, itemsPerPage) - 1) / Mathf.Max(1, itemsPerPage);
+        if (totalPages == 0)
+        {
+            currentPageIndex = 0;
+            return;
+        }
+        if (currentPageIndex >= totalPages)
+            currentPageIndex = totalPages - 1;
+        if (currentPageIndex < 0)
+            currentPageIndex = 0;
     }
 
     GameObject CreateShopItem(ShopItemData item)

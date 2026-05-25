@@ -22,3 +22,12 @@ public interface ISkillEffect
 {
     public void SkillEffect(Chess user,SkillConfig config,List<Chess> targets);
 }
+
+/// <summary>
+/// 主动技能「自身条件」进度（不含 <see cref="ISkillReady"/> 如点击/索敌），用于世界空间冷却图标 <see cref="SkillColdFXPresenter"/>。
+/// </summary>
+public interface ISkillCooldownProgress
+{
+    /// <summary>0~1：1 表示已达到与 <see cref="ISkill.IfSkillReady"/> 中第一段判断等价的进度（仍可能因 readyChecker 未通过而无法释放）。</summary>
+    float GetCooldownProgress01();
+}

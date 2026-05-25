@@ -7,7 +7,7 @@ using UnityEngine;
 /// 释放时将累计值写入 SkillContext 后交给 <see cref="SkillEffect_TainakaRitsuDrumSlam"/>，并清零累计。
 /// 可用 <see cref="SkillConfig_Defence.defenceTime"/> 作为「至少累计多少伤害才可释放」的整数阈值。
 /// </summary>
-public class DefenceSkill_TainakaRitsu : SkillBase<SkillConfig_Defence>
+public class DefenceSkill_TainakaRitsu : SkillBase<SkillConfig_Defence>, ISkillCooldownProgress
 {
     [LabelText("释放伤害下限"), Tooltip("大于 0 时优先用此处；否则用 SkillConfig_Defence.defenceTime 作为整数下限")]
     [MinValue(0f)]
@@ -43,6 +43,14 @@ public class DefenceSkill_TainakaRitsu : SkillBase<SkillConfig_Defence>
         if (config != null)
             return Mathf.Max(1f, config.defenceTime);
         return 1f;
+    }
+
+    public float GetCooldownProgress01()
+    {
+        float need = MinToRelease();
+        if (need <= 0f)
+            return 1f;
+        return Mathf.Clamp01(_recordedDamage / need);
     }
 
     public override bool IfSkillReady(Chess user)

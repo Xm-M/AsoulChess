@@ -62,6 +62,8 @@ public static class SaveSystem
     public static void SaveCurrentLevel()
     {
         if (!EnableLevelSaveLoad) return;
+        if (RoguelikeRunService.HasActiveRun)
+            return;
         if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test)
         {
             Debug.Log("[SaveSystem] Test 模式，跳过存档");

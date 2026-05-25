@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColdSkill : SkillBase<SkillConfig_Cold>
+public class ColdSkill : SkillBase<SkillConfig_Cold>, ISkillCooldownProgress
 {
     [ShowInInspector, ReadOnly]
     [ShowIf("@UnityEngine.Application.isPlaying")]
@@ -33,6 +33,14 @@ public class ColdSkill : SkillBase<SkillConfig_Cold>
         return readyChecker.IfSkillReady(user, config, targets);
 
     }
+
+    public float GetCooldownProgress01()
+    {
+        if (config == null || config.baseCd <= 0f)
+            return 1f;
+        return Mathf.Clamp01(t / config.baseCd);
+    }
+
     public override bool IsSkillFinished(Chess user)
     {
         return base.IsSkillFinished(user);

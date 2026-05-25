@@ -38,6 +38,18 @@ public class PlayerSaveData
     /// <summary>难度 0=简单 1=普通 2=困难 3=噩梦</summary>
     public int difficultyLevel;
 
+    /// <summary>到达过的最高 Act 索引（0-based）。肉鸽 Meta，与 active Run 文件分离。</summary>
+    public int roguelikeBestActReached;
+
+    /// <summary>到达过的最高地图层 layer 索引。</summary>
+    public int roguelikeBestLayerReached;
+
+    /// <summary>完整通关肉鸽 Run 次数。</summary>
+    public int roguelikeRunsCompleted;
+
+    /// <summary>累计通关 Act（Boss）次数。</summary>
+    public int roguelikeActsCleared;
+
     /// <summary>扩展数据，方便后续新增字段</summary>
     public List<PlayerSaveExtraEntry> extras;
 

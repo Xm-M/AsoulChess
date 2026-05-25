@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DefenceSkill : SkillBase<SkillConfig_Defence>
+public class DefenceSkill : SkillBase<SkillConfig_Defence>, ISkillCooldownProgress
 {
     int t;//受击次数
 
@@ -43,6 +43,14 @@ public class DefenceSkill : SkillBase<SkillConfig_Defence>
         t = 0;
     }
     public void CaculateDefenceTime(DamageMessege chess) => t += 1;
+
+    public float GetCooldownProgress01()
+    {
+        if (config == null || config.defenceTime <= 0)
+            return 1f;
+        return Mathf.Clamp01((float)t / config.defenceTime);
+    }
+
     bool returnCD;
     public override void ReturnCD()
     {

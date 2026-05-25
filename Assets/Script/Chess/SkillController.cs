@@ -21,6 +21,8 @@ public class SkillController:Controller
     public SkillContext context;
     [HideInInspector]public UnityEvent<Chess> onUseSkill;
     [HideInInspector]public UnityEvent<Chess> onSkillOver;
+    /// <summary>由 <see cref="SkillReady_MouseDown"/> 等创建的冷却图标实例；离场时销毁。</summary>
+    [HideInInspector] public SkillColdFXPresenter skillColdFx;
     /// <summary>当前技能释放中是否已触发 SkillEffect（动画某帧调用 UseSkill），读档时用于判断返还 CD 或正常结束</summary>
     [HideInInspector]public bool skillEffectFiredThisCast;
     public void InitController(Chess c){
@@ -38,6 +40,11 @@ public class SkillController:Controller
     }
     public void WhenControllerLeaveWar()
     {
+        if (skillColdFx != null)
+        {
+            UnityEngine.Object.Destroy(skillColdFx.gameObject);
+            skillColdFx = null;
+        }
         //DM.damageType=DamageType.Magic;
         passiveSkill?.LeaveSkill(user);
         activeSkill?.LeaveSkill(user);

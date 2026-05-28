@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u50F5\u5C38\u5FEB\u8DD1"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: "\u540E\u9662"
+  levelName: "\u50F5\u5C38\u5FEB\u8DD1"
+  levelSprit: {fileID: 1647678311, guid: 421afde933c35af4d8db856d5e639cd4, type: 3}
+  levelMode: 1
+  EnterMapPlugin:
+  - rid: 0
+  - rid: 1
+  PreParePlugin:
+  - rid: 2
+  GameStartPlugin:
+  - rid: 3
+  - rid: 4
+  - rid: 5
+  - rid: 7518340184154046464
+  MaxWave: 40
+  n: 1
+  t: 1
+  zombieList:
+  - {fileID: 11400000, guid: 0870f25798043a04c926041396bf57b3, type: 2}
+  - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+  - {fileID: 11400000, guid: 895c68db05cf2d7489a61f83bd3b78ed, type: 2}
+  - {fileID: 11400000, guid: ae5039e4a3290274e985148dba09a9fd, type: 2}
+  - {fileID: 11400000, guid: 9675f51f771adab4ba2235726058e5f6, type: 2}
+  createZombieType: 3
+  nextLevel: {fileID: 0}
+  outcome:
+    rid: -2
+  loadSkipToTime: 10
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    - rid: 1
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u9009\u724C"
+        deleyPlayTime: 0
+    - rid: 2
+      type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 50
+        cards: []
+    - rid: 3
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u5C0F\u6E38\u620F"
+        deleyPlayTime: 3
+    - rid: 4
+      type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
+      data:
+        sunlight: 25
+    - rid: 5
+      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 7518340184154046464
+      type: {class: GameStartPlugin_ZombieFast, ns: , asm: Assembly-CSharp}
+      data:
+        attackSpeedBuff:
+          rid: 7518340184154046465
+        attackSpeedBonus: 1
+    - rid: 7518340184154046465
+      type: {class: Buff_BaseValueBuff_AttackSpeed, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u653B\u901F\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        speed: 1

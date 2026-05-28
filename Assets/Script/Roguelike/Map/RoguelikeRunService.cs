@@ -25,7 +25,16 @@ public static class RoguelikeRunService
 
     public static bool HasContinuableRunSave => RoguelikeRunSaveSystem.HasActiveRunSave();
 
+    /// <summary>本 Run 获得新植物（奖励/商店等），写入 State 并 SaveRun。</summary>
+    public static bool AddOwnedPlant(string creatorChessName) =>
+        RoguelikeRunPlantPool.AddPlant(creatorChessName);
+
     public static void StartNewRun(RunMapConfig config, int? seed = null)
+    {
+        StartNewRun(config, null, seed);
+    }
+
+    public static void StartNewRun(RunMapConfig config, BandMes band, int? seed = null)
     {
         if (config == null)
             throw new ArgumentNullException(nameof(config));
@@ -41,6 +50,18 @@ public static class RoguelikeRunService
             currentActIndex = 0,
             runActive = true,
         };
+
+        if (band != null)
+        {
+            State.selectedBandId = band.bandId;
+            State.selectedBandName = band.bandName;
+            RoguelikeRunPlantPool.InitializeFromBand(band);
+        }
+        else
+        {
+            RoguelikeRunPlantPool.InitializeForNewRun(config);
+        }
+
         GenerateActMap(0);
         var start = State.currentMap.GetStartNode();
         if (start == null)
@@ -77,6 +98,9 @@ public static class RoguelikeRunService
         State.runActive = true;
         State.currentMap?.RebuildIndex();
         PendingNodeId = save.pendingNodeId;
+
+        if (State.ownedPlantCreatorIds == null || State.ownedPlantCreatorIds.Count == 0)
+            RoguelikeRunPlantPool.InitializeForNewRun(resolved);
 
         SaveRun();
         OnRunStarted?.Invoke(State);
@@ -115,6 +139,11 @@ public static class RoguelikeRunService
             },
             visitedNodeIds = new List<int>(src.visitedNodeIds),
             clearedNodeIds = new List<int>(src.clearedNodeIds),
+            ownedPlantCreatorIds = src.ownedPlantCreatorIds != null
+                ? new List<string>(src.ownedPlantCreatorIds)
+                : new List<string>(),
+            selectedBandId = src.selectedBandId,
+            selectedBandName = src.selectedBandName,
         };
 
         if (src.currentMap?.nodes != null)
@@ -250,6 +279,7 @@ public static class RoguelikeRunService
             return;
         }
         SaveRun();
+        RoguelikeRunPlantPool.ApplyRunPlantsToGame();
         LevelManage.instance.ChangeLevel(level);
     }
 
@@ -282,6 +312,7 @@ public static class RoguelikeRunService
         if (State != null)
             RoguelikeMetaProgress.ApplyFromRun(State, runCompleted: false, actClearedThisSession: false);
         RoguelikeRunSaveSystem.DeleteActiveSave();
+        RoguelikeRunPlantPool.RestoreMainlinePlantsFromPlayerSave();
         State.runActive = false;
         PendingNodeId = -1;
         OnNodeResolved?.Invoke(node, false);
@@ -295,6 +326,7 @@ public static class RoguelikeRunService
         {
             RoguelikeMetaProgress.ApplyFromRun(State, runCompleted: true, actClearedThisSession: false);
             RoguelikeRunSaveSystem.DeleteActiveSave();
+            RoguelikeRunPlantPool.RestoreMainlinePlantsFromPlayerSave();
             State.runActive = false;
             PendingNodeId = -1;
             OnRunCompleted?.Invoke();
@@ -317,6 +349,7 @@ public static class RoguelikeRunService
         if (State != null)
             RoguelikeMetaProgress.ApplyFromRun(State, runCompleted: false, actClearedThisSession: false);
         RoguelikeRunSaveSystem.DeleteActiveSave();
+        RoguelikeRunPlantPool.RestoreMainlinePlantsFromPlayerSave();
         PendingNodeId = -1;
         ActiveRunConfig = null;
         State = null;

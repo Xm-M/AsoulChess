@@ -20,8 +20,9 @@ public class ColdSkill : SkillBase<SkillConfig_Cold>, ISkillCooldownProgress
     }
     public override bool IfSkillReady(Chess user)
     {
-        t+=Time.deltaTime;
-        // 1. 自身触发条件（次数 / CD / 受击数）
+        float accel = Mathf.Max(0.01f, user.propertyController.GetAccelerate());
+        t += Time.deltaTime * accel;
+        // 1. 自身触发条件（次数 / CD / 受击数）；t 按攻速加速，实际墙钟 CD ≈ baseCd / accel
         if (t < config.baseCd)
             return false;
 

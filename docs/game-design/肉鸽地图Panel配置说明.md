@@ -36,25 +36,34 @@ RoguelikeMapPanel          ← 加 Image 当全屏背景，拖到「Panel Backgr
 ├── Header                 ← TMP，拖到 Header Text
 ├── Scroll View            ← ScrollRect，拖到 Map Scroll Rect
 │   ├── Viewport           ← 带 Mask，可见区域
-│   │   └── Content        ← 拖到 Map Content（地图实际高度由代码设置）
+│   │   └── Content        ← 拖到 Map Content（地图实际宽度由代码设置）
 │   │       ├── MapBackground
 │   │       └── Nodes        ← Nodes Root
-│   │           ├── Layer_0
+│   │           ├── Layer_0   ← 最左（起点）
 │   │           │   ├── Line…（运行时，从房间中心连出）
 │   │           │   └── 房间节点
-│   │           └── Layer_N（Boss 层只有节点，无出线）
-│   ├── Scrollbar Vertical （可选）
-│   └── Scrollbar Horizontal（建议关掉 ScrollRect 的 Horizontal）
+│   │           └── Layer_N   ← 最右（Boss 层只有节点，无出线）
+│   ├── Scrollbar Horizontal （可选，建议开启）
+│   └── Scrollbar Vertical（建议关掉 ScrollRect 的 Vertical）
 └── AbandonButton
 ```
 
-**滚动方向（杀戮尖塔）：** 起点在 **Content 底部**，Boss 在 **顶部**；滚轮向上 / 手指上滑 = 往 Boss 方向看。`Refresh` 后会自动滚到当前节点（可在面板关 `Scroll To Focus On Refresh`）。
+**滚动方向（横向）：** 起点在 **Content 最左**（`Layer_0`），Boss 在 **最右**；滚轮 / 拖拽向右 = 往 Boss 方向看。`Refresh` 后会自动滚到当前节点（可关 `Scroll To Focus On Refresh`）。
 
-把 **Auto Generate Missing Ui** 取消勾选（搭好后）。若已有 **Scroll View**，把 **Content** 拖到 **Map Content**，**Scroll View** 拖到 **Map Scroll Rect**；**Nodes** 放在 Content 下即可（连线运行时挂在各 `Layer_x` 下，无需单独 Lines 层）。
+**布局字段（兼容旧 prefab 命名）：**
 
-**ScrollRect 建议：** 只勾 Vertical；Content 锚点顶部居中，宽由 `layerRowWidth`（默认 1250）决定；不要用 Content Size Fitter 控高度。
+| Inspector 字段 | 横向语义 |
+|----------------|----------|
+| `layerRowWidth` | **列高**（slot 纵向可用高度，默认 1250） |
+| `layerRowHeight` | **列宽**（层间距，默认 200） |
+| `mapPaddingBottom` | **左侧**（起点）留白 |
+| `mapPaddingTop` | **右侧**（Boss 端）留白 |
 
-**每层一行：** 运行时自动建 `Layer_0`…`Layer_N`（1250×200），房间 100×100 挂在行下，在格子内随机偏移（`randomizeNodePlacement`，同种子位置不变）。Inspector：**Layer Row Width/Height**、**Node Size**。
+把 **Auto Generate Missing Ui** 取消勾选（搭好后）。若已有 **Scroll View**，把 **Content** 拖到 **Map Content**，**Scroll View** 拖到 **Map Scroll Rect**；**Nodes** 放在 Content 下即可。
+
+**ScrollRect 建议：** 只勾 Horizontal；Content 锚点 **左中** `(0, 0.5)`，宽由 `(层数+1)×列宽+左右 padding` 决定；不要用 Content Size Fitter 控宽度。
+
+**每层一列：** 运行时自动建 `Layer_0`…`Layer_N`（列宽×列高），房间 100×100 在列内按 slot **纵向**分布，格内随机偏移（`randomizeNodePlacement`，同种子位置不变）。Inspector：**Layer Row Width/Height**（语义见上表）、**Node Size**。
 
 ### 步骤 B：做一个「节点」预制体（只要 1 个）
 

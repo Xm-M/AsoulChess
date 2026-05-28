@@ -227,7 +227,7 @@ public class StartUI : View
             return;
         }
         Hide();
-        RoguelikeMapPanel.OpenRun(roguelikeRunConfig);
+        RoguelikeBandSelectPanel.OpenForNewRun(roguelikeRunConfig);
     }
 
     /// <summary>继续未完成的肉鸽 Run（需存在 active 存档）。</summary>

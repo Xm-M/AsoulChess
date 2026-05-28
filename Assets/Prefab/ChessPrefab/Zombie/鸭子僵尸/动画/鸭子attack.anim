@@ -18,7 +18,8 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
       value: {fileID: 21300000, guid: db4fde50f8b9a06478540bd37ba45810, type: 3}
     - time: 0.083333336
@@ -57,6 +58,7 @@ AnimationClip:
     path: sprite
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 60
   m_WrapMode: 0
   m_Bounds:
@@ -71,6 +73,8 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: 21300000, guid: db4fde50f8b9a06478540bd37ba45810, type: 3}
     - {fileID: 21300000, guid: 2a9176bd132b1444e875636466641ba9, type: 3}
@@ -122,7 +126,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 1.1666666
-    functionName: 
+    functionName: RandomPlay
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

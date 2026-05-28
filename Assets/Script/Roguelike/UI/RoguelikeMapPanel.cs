@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 肉鸽选路地图 UI。预制体：<c>Resources/UIPrefab/RoguelikeMapPanel</c>。
+/// 横向布局：起点在左（layer 0）、Boss 在右；每层一列，slot 在列内纵向分布。
 /// 配置说明见 <c>docs/game-design/肉鸽地图Panel配置说明.md</c>。
 /// </summary>
 public class RoguelikeMapPanel : View
@@ -32,19 +33,23 @@ public class RoguelikeMapPanel : View
     [Tooltip("节点的父节点（Content 下 Nodes）")]
     [SerializeField] RectTransform nodesRoot;
 
-    [Header("2. 布局（每层一行 + 格内随机）")]
+    [Header("2. 布局（每层一列 + 格内随机）")]
+    [Tooltip("列高（slot 纵向可用高度）；Inspector 字段名保留 layerRowWidth 以兼容旧 prefab")]
     [SerializeField] float layerRowWidth = 1250f;
+    [Tooltip("列宽（层与层之间的横向间距）；Inspector 字段名保留 layerRowHeight 以兼容旧 prefab")]
     [SerializeField] float layerRowHeight = 200f;
     [SerializeField] Vector2 nodeSize = new Vector2(100f, 100f);
-    [Tooltip("在各自格子 (行宽/列数 × 行高) 内随机偏移，避免地图过于整齐；同一 Run 种子下位置稳定")]
+    [Tooltip("在各自格子 (列高/行数 × 列宽) 内随机偏移，避免地图过于整齐；同一 Run 种子下位置稳定")]
     [SerializeField] bool randomizeNodePlacement = true;
     [SerializeField] Vector2 mapOffset;
     [SerializeField] float mapScale = 1f;
 
-    [Header("2b. 纵向滚动（起点在底、Boss 在顶，滚轮/拖拽向上查看）")]
+    [Header("2b. 横向滚动（起点在左、Boss 在右，滚轮/拖拽向右查看）")]
+    [Tooltip("Content 右侧（Boss 端）留白；字段名保留 mapPaddingTop")]
     [SerializeField] float mapPaddingTop = 48f;
+    [Tooltip("Content 左侧（起点）留白；字段名保留 mapPaddingBottom")]
     [SerializeField] float mapPaddingBottom = 48f;
-    [Tooltip("Refresh 后滚到当前节点；无当前则滚到底部（起点）")]
+    [Tooltip("Refresh 后滚到当前节点；无当前则滚到最左（起点）")]
     [SerializeField] bool scrollToFocusOnRefresh = true;
     [SerializeField] float scrollFocusViewportFraction = 0.35f;
 
@@ -149,12 +154,17 @@ public class RoguelikeMapPanel : View
         Refresh();
     }
 
-    void OnRunEnded() => RefreshHeader("通关！");
+    void OnRunEnded()
+    {
+        RefreshHeader("通关！");
+        RoguelikeRunInfoPanel.HideForRunEnded();
+    }
 
     public void ShowAndRefresh()
     {
         Show();
         Refresh();
+        RoguelikeRunInfoPanel.TryShowAndRefresh();
     }
 
     public override void Show()
@@ -174,12 +184,17 @@ public class RoguelikeMapPanel : View
 
     public static void OpenRun(RunMapConfig config, int? seed = null)
     {
+        OpenRun(config, null, seed);
+    }
+
+    public static void OpenRun(RunMapConfig config, BandMes band, int? seed = null)
+    {
         if (config == null)
         {
             Debug.LogError("[RoguelikeMapPanel] RunMapConfig 为空");
             return;
         }
-        RoguelikeRunService.StartNewRun(config, seed);
+        RoguelikeRunService.StartNewRun(config, band, seed);
         UIManage.GetView<RoguelikeMapPanel>()?.ShowAndRefresh();
     }
 
@@ -242,17 +257,17 @@ public class RoguelikeMapPanel : View
         RefreshHeader(BuildHeaderText(state));
 
         int maxLayer = GetMaxLayer(map);
-        float contentWidth = layerRowWidth * mapScale;
-        float contentHeight = ComputeContentHeight(maxLayer);
+        float contentWidth = ComputeContentWidth(maxLayer);
+        float contentHeight = ComputeContentHeight();
         ApplyMapContentSize(contentWidth, contentHeight);
         SyncLinesRootWithNodesRoot();
 
-        BuildLayerRowsAndPlaceNodes(state, map, maxLayer);
+        BuildLayerColumnsAndPlaceNodes(state, map, maxLayer);
         Canvas.ForceUpdateCanvases();
         DrawLinesUnderLayers(map, maxLayer);
 
         if (scrollToFocusOnRefresh)
-            ScheduleScrollToFocus(map, state, maxLayer, contentHeight);
+            ScheduleScrollToFocus(map, state, maxLayer, contentWidth);
     }
 
     static int GetMaxLayer(GeneratedRoguelikeMap map)
@@ -266,11 +281,17 @@ public class RoguelikeMapPanel : View
         return maxLayer;
     }
 
-    float LayerRowStride => layerRowHeight * mapScale;
+    /// <summary>列宽（层与层横向间距）。</summary>
+    float LayerColumnStride => layerRowHeight * mapScale;
 
-    float ComputeContentHeight(int maxLayer)
+    float ComputeContentWidth(int maxLayer)
     {
-        return mapPaddingTop + mapPaddingBottom + (maxLayer + 1) * LayerRowStride;
+        return mapPaddingBottom + mapPaddingTop + (maxLayer + 1) * LayerColumnStride;
+    }
+
+    float ComputeContentHeight()
+    {
+        return layerRowWidth * mapScale;
     }
 
     void ApplyMapContentSize(float width, float height)
@@ -322,9 +343,9 @@ public class RoguelikeMapPanel : View
     {
         if (rt == null)
             return;
-        rt.anchorMin = new Vector2(0.5f, 1f);
-        rt.anchorMax = new Vector2(0.5f, 1f);
-        rt.pivot = new Vector2(0.5f, 1f);
+        rt.anchorMin = new Vector2(0f, 0.5f);
+        rt.anchorMax = new Vector2(0f, 0.5f);
+        rt.pivot = new Vector2(0f, 0.5f);
         rt.anchoredPosition = Vector2.zero;
         rt.sizeDelta = new Vector2(width, height);
     }
@@ -349,8 +370,8 @@ public class RoguelikeMapPanel : View
         return Math.Max(maxSlot + 1, 1);
     }
 
-    /// <summary>每层 1250×200 行父物体；房间 100×100 在行内，仅 X 方向格内随机（local Y=0，锚点行中心）。</summary>
-    void BuildLayerRowsAndPlaceNodes(RoguelikeRunState state, GeneratedRoguelikeMap map, int maxLayer)
+    /// <summary>每层一列（列宽 layerRowHeight × 列高 layerRowWidth）；房间在列内 slot 纵向分布。</summary>
+    void BuildLayerColumnsAndPlaceNodes(RoguelikeRunState state, GeneratedRoguelikeMap map, int maxLayer)
     {
         if (nodesRoot == null)
             return;
@@ -360,8 +381,8 @@ public class RoguelikeMapPanel : View
 
         int gridWidth = ResolveMapGridWidth(map);
         int layoutSeed = state.runSeed ^ (map.seed * 486187739);
-        float rowW = layerRowWidth * mapScale;
-        float rowH = layerRowHeight * mapScale;
+        float colW = layerRowHeight * mapScale;
+        float colH = layerRowWidth * mapScale;
         Vector2 scaledNodeSize = nodeSize * mapScale;
 
         var selectable = new HashSet<int>();
@@ -371,21 +392,21 @@ public class RoguelikeMapPanel : View
 
         for (int layer = 0; layer <= maxLayer; layer++)
         {
-            float rowTopY = mapPaddingTop + (maxLayer - layer) * LayerRowStride;
-            var layerRow = CreateLayerRow(layer, rowW, rowH, rowTopY);
+            float colLeftX = mapPaddingBottom + layer * LayerColumnStride;
+            var layerColumn = CreateLayerColumn(layer, colW, colH, colLeftX);
 
-            var rowNodes = map.GetNodesOnLayer(layer);
-            for (int i = 0; i < rowNodes.Count; i++)
+            var columnNodes = map.GetNodesOnLayer(layer);
+            for (int i = 0; i < columnNodes.Count; i++)
             {
-                var node = rowNodes[i];
-                Vector2 localInRow = ComputeNodeLocalInRow(node, gridWidth, rowW, scaledNodeSize, layoutSeed);
+                var node = columnNodes[i];
+                Vector2 localInColumn = ComputeNodeLocalInColumn(node, gridWidth, colH, scaledNodeSize, layoutSeed);
 
                 var visual = ResolveVisualState(state, node.id, selectable);
-                var widget = SpawnNodeWidget(layerRow);
+                var widget = SpawnNodeWidget(layerColumn);
                 var rt = widget.GetComponent<RectTransform>();
                 rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = new Vector2(localInRow.x, 0f);
+                rt.anchoredPosition = new Vector2(0f, localInColumn.y);
                 widget.SetSize(scaledNodeSize);
                 widget.Bind(node.id, node.roomType, visual, OnNodeClicked, GetTypeStyle(node.roomType), stateStyle,
                     showLabelWhenIconPresent);
@@ -395,24 +416,28 @@ public class RoguelikeMapPanel : View
         }
     }
 
-    RectTransform CreateLayerRow(int layer, float rowW, float rowH, float rowTopY)
+    RectTransform CreateLayerColumn(int layer, float colW, float colH, float colLeftX)
     {
         var go = new GameObject($"Layer_{layer}", typeof(RectTransform));
         go.transform.SetParent(nodesRoot, false);
         var rt = go.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.5f, 1f);
-        rt.anchorMax = new Vector2(0.5f, 1f);
-        rt.pivot = new Vector2(0.5f, 1f);
-        rt.sizeDelta = new Vector2(rowW, rowH);
-        rt.anchoredPosition = new Vector2(0f, -rowTopY);
+        rt.anchorMin = new Vector2(0f, 0.5f);
+        rt.anchorMax = new Vector2(0f, 0.5f);
+        rt.pivot = new Vector2(0f, 0.5f);
+        rt.sizeDelta = new Vector2(colW, colH);
+        rt.anchoredPosition = new Vector2(colLeftX + mapOffset.x, mapOffset.y);
         _layerRowObjects.Add(go);
         _layerRowsByLayer[layer] = rt;
         return rt;
     }
 
-    /// <summary>连线挂在源节点所在层（Boss 层不挂）；起点为房间中心，终点为下一层房间。</summary>
+    /// <summary>连线画在 linesRoot（与 nodesRoot 同布局）；端点为各节点 rect 中心的世界坐标转本地。</summary>
     void DrawLinesUnderLayers(GeneratedRoguelikeMap map, int bossLayer)
     {
+        var lineRoot = ResolveLineDrawRoot();
+        if (lineRoot == null)
+            return;
+
         var style = EffectiveLineStyle ?? new RoguelikeMapLineStyle();
         bool prefabOnly = style.usePrefabAppearanceOnly && linePrefab != null;
 
@@ -421,8 +446,6 @@ public class RoguelikeMapPanel : View
             var from = map.nodes[i];
             if (from.layer >= bossLayer)
                 continue;
-            if (!_layerRowsByLayer.TryGetValue(from.layer, out var layerRow))
-                continue;
             if (!_widgetByNodeId.TryGetValue(from.id, out var fromWidget))
                 continue;
 
@@ -430,7 +453,7 @@ public class RoguelikeMapPanel : View
             if (fromRt == null)
                 continue;
 
-            Vector2 startInRow = fromRt.anchoredPosition;
+            Vector2 startLocal = WorldCenterToLocal(fromRt, lineRoot);
 
             for (int j = 0; j < from.nextNodeIds.Count; j++)
             {
@@ -440,46 +463,58 @@ public class RoguelikeMapPanel : View
                 if (toRt == null)
                     continue;
 
-                Vector3 toWorld = toRt.TransformPoint(toRt.rect.center);
-                Vector2 endInRow = layerRow.InverseTransformPoint(toWorld);
-                CreateLine(layerRow, startInRow, endInRow, style, prefabOnly);
+                Vector2 endLocal = WorldCenterToLocal(toRt, lineRoot);
+                CreateLine(lineRoot, startLocal, endLocal, style, prefabOnly);
             }
         }
     }
 
-    Vector2 ComputeNodeLocalInRow(
+    RectTransform ResolveLineDrawRoot()
+    {
+        if (linesRoot != null && linesRoot != nodesRoot)
+            return linesRoot;
+        return nodesRoot;
+    }
+
+    static Vector2 WorldCenterToLocal(RectTransform nodeRt, RectTransform root)
+    {
+        Vector3 world = nodeRt.TransformPoint(nodeRt.rect.center);
+        return root.InverseTransformPoint(world);
+    }
+
+    Vector2 ComputeNodeLocalInColumn(
         RoguelikeMapNode node,
         int gridWidth,
-        float rowW,
+        float colH,
         Vector2 scaledNodeSize,
         int layoutSeed)
     {
-        float cellW = rowW / gridWidth;
-        float centerX = (node.slot + 0.5f) * cellW - rowW * 0.5f;
-        float maxDx = Mathf.Max(0f, (cellW - scaledNodeSize.x) * 0.5f);
+        float cellH = colH / gridWidth;
+        float centerY = (node.slot + 0.5f) * cellH - colH * 0.5f;
+        float maxDy = Mathf.Max(0f, (cellH - scaledNodeSize.y) * 0.5f);
 
-        float rx = 0f;
-        if (randomizeNodePlacement && maxDx > 0f)
+        float ry = 0f;
+        if (randomizeNodePlacement && maxDy > 0f)
         {
             var rng = new System.Random(layoutSeed + node.id * 73856093 + node.layer * 19349663 + node.slot * 83492791);
-            rx = (float)(rng.NextDouble() * 2.0 - 1.0) * maxDx;
+            ry = (float)(rng.NextDouble() * 2.0 - 1.0) * maxDy;
         }
 
-        return new Vector2(centerX + rx, 0f);
+        return new Vector2(0f, centerY + ry);
     }
 
-    void ScheduleScrollToFocus(GeneratedRoguelikeMap map, RoguelikeRunState state, int maxLayer, float contentHeight)
+    void ScheduleScrollToFocus(GeneratedRoguelikeMap map, RoguelikeRunState state, int maxLayer, float contentWidth)
     {
         if (_scrollFocusCoroutine != null)
             StopCoroutine(_scrollFocusCoroutine);
-        _scrollFocusCoroutine = StartCoroutine(ScrollToFocusNextFrame(map, state, maxLayer, contentHeight));
+        _scrollFocusCoroutine = StartCoroutine(ScrollToFocusNextFrame(map, state, maxLayer, contentWidth));
     }
 
     System.Collections.IEnumerator ScrollToFocusNextFrame(
         GeneratedRoguelikeMap map,
         RoguelikeRunState state,
         int maxLayer,
-        float contentHeight)
+        float contentWidth)
     {
         yield return null;
         Canvas.ForceUpdateCanvases();
@@ -492,10 +527,10 @@ public class RoguelikeMapPanel : View
         if (viewport == null)
             yield break;
 
-        float viewportH = viewport.rect.height;
-        if (viewportH <= 0f || contentHeight <= viewportH)
+        float viewportW = viewport.rect.width;
+        if (viewportW <= 0f || contentWidth <= viewportW)
         {
-            scroll.verticalNormalizedPosition = 0f;
+            scroll.horizontalNormalizedPosition = 0f;
             yield break;
         }
 
@@ -507,11 +542,11 @@ public class RoguelikeMapPanel : View
                 focusLayer = cur.layer;
         }
 
-        float focusYFromTop = mapPaddingTop + (maxLayer - focusLayer) * LayerRowStride;
-        float scrollRange = contentHeight - viewportH;
-        float offsetFromTop = focusYFromTop - viewportH * scrollFocusViewportFraction;
-        offsetFromTop = Mathf.Clamp(offsetFromTop, 0f, scrollRange);
-        scroll.verticalNormalizedPosition = 1f - offsetFromTop / scrollRange;
+        float focusXFromLeft = mapPaddingBottom + focusLayer * LayerColumnStride;
+        float scrollRange = contentWidth - viewportW;
+        float offsetFromLeft = focusXFromLeft - viewportW * scrollFocusViewportFraction;
+        offsetFromLeft = Mathf.Clamp(offsetFromLeft, 0f, scrollRange);
+        scroll.horizontalNormalizedPosition = offsetFromLeft / scrollRange;
         _scrollFocusCoroutine = null;
     }
 
@@ -564,26 +599,27 @@ public class RoguelikeMapPanel : View
     void OnAbandonClicked()
     {
         RoguelikeRunService.AbandonRun();
+        RoguelikeRunInfoPanel.HideForRunEnded();
         Hide();
         UIManage.GetView<StartUI>()?.Show();
     }
 
-    void CreateLine(RectTransform layerRow, Vector2 a, Vector2 b, RoguelikeMapLineStyle style, bool usePrefabAppearanceOnly)
+    void CreateLine(RectTransform lineParent, Vector2 a, Vector2 b, RoguelikeMapLineStyle style, bool usePrefabAppearanceOnly)
     {
-        if (layerRow == null)
+        if (lineParent == null)
             return;
 
         GameObject go;
         if (linePrefab != null)
         {
-            var line = Instantiate(linePrefab, layerRow);
+            var line = Instantiate(linePrefab, lineParent);
             line.ApplyBetween(a, b, style, usePrefabAppearanceOnly);
             go = line.gameObject;
         }
         else
         {
             go = new GameObject("Line", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-            go.transform.SetParent(layerRow, false);
+            go.transform.SetParent(lineParent, false);
             var lineWidget = go.AddComponent<RoguelikeMapLineWidget>();
             lineWidget.ApplyBetween(a, b, style, false);
         }
@@ -696,14 +732,15 @@ public class RoguelikeMapPanel : View
 
         SyncLinesRootWithNodesRoot();
 
-        if (_lastContentHeight > 0f)
+        if (_lastContentWidth > 0f)
         {
-            float w = _lastContentWidth > 0f ? _lastContentWidth : layerRowWidth;
-            ApplyMapContentSize(w, _lastContentHeight);
+            float w = _lastContentWidth;
+            float h = _lastContentHeight > 0f ? _lastContentHeight : layerRowWidth;
+            ApplyMapContentSize(w, h);
         }
         else if (content != null)
         {
-            ApplyDrawRootSize(nodesRoot, layerRowWidth, content.sizeDelta.y);
+            ApplyDrawRootSize(nodesRoot, layerRowWidth, content.sizeDelta.y > 0f ? content.sizeDelta.y : layerRowWidth);
             SyncLinesRootWithNodesRoot();
         }
 
@@ -730,8 +767,8 @@ public class RoguelikeMapPanel : View
 
         if (mapScrollRect != null)
         {
-            mapScrollRect.horizontal = false;
-            mapScrollRect.vertical = true;
+            mapScrollRect.horizontal = true;
+            mapScrollRect.vertical = false;
             mapScrollRect.movementType = ScrollRect.MovementType.Elastic;
             mapScrollRect.scrollSensitivity = 24f;
 
@@ -743,9 +780,9 @@ public class RoguelikeMapPanel : View
                     mapContent = mapViewport;
 
                 var content = mapScrollRect.content;
-                content.anchorMin = new Vector2(0f, 1f);
-                content.anchorMax = new Vector2(1f, 1f);
-                content.pivot = new Vector2(0.5f, 1f);
+                content.anchorMin = new Vector2(0f, 0.5f);
+                content.anchorMax = new Vector2(0f, 0.5f);
+                content.pivot = new Vector2(0f, 0.5f);
                 content.anchoredPosition = Vector2.zero;
 
                 var fitter = content.GetComponent<ContentSizeFitter>();

@@ -168,14 +168,17 @@ public class PreParePlugin_Conveyor : ILevelPlugin
         UIManage.Show<ConveyorPanel>();
         UIManage.GetView<ConveyorPanel>().InitCreator(creators, 6);
         (MapManage_PVZ.instance as MapManage_PVZ).WhenGameStart();
-        for (int i = 3; i < MapManage_PVZ.instance.mapSize.x; i++)
-            for (int j = 0; j < MapManage.instance.mapSize.y; j++)
-            {
-                MapManage.instance.tiles[i, j].gameObject.layer = 0;
-            }
-        //line = ObjectPool.instance.Create(redLine);
-        line = GameObject.Instantiate(redLine);
-        line.transform.position = MapManage.instance.tiles[2, 2].transform.position;
+ 
+        if (line != null)
+        {
+            for (int i = 3; i < MapManage_PVZ.instance.mapSize.x; i++)
+                for (int j = 0; j < MapManage.instance.mapSize.y; j++)
+                {
+                    MapManage.instance.tiles[i, j].gameObject.layer = 0;
+                }
+            line = GameObject.Instantiate(redLine);
+            line.transform.position = MapManage.instance.tiles[2, 2].transform.position;
+        }
         //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), GameOver);
     }
     public void OverPlugin(LevelController levelController)

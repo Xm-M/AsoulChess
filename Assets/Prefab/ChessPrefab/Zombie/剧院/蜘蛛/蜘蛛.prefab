@@ -75,10 +75,10 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 4, y: 3.9375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -93,10 +93,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 174192528337115689}
-  - component: {fileID: 2695699038428126834}
   - component: {fileID: 7113928385384272000}
   - component: {fileID: 990230659435029250}
   - component: {fileID: 7045708049606528844}
+  - component: {fileID: 8326043392053827240}
   m_Layer: 0
   m_Name: "\u8718\u86DB"
   m_TagString: Untagged
@@ -120,104 +120,6 @@ Transform:
   - {fileID: 6824668283624071440}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2695699038428126834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9215643800562222532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8729a6c8903dcef4da08f715be80c379, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  instanceID: 0
-  equipWeapon:
-    master: {fileID: 0}
-    weaponPos: {fileID: 0}
-    weapon:
-      rid: -2
-    OnAttack:
-      m_PersistentCalls:
-        m_Calls: []
-    attackOver: 0
-  propertyController:
-    creator: {fileID: 11400000, guid: 1e2802ac1a45f0b4c95283b54c2a1baf, type: 2}
-    onGetDamage:
-      m_PersistentCalls:
-        m_Calls: []
-    onSetDamage:
-      m_PersistentCalls:
-        m_Calls: []
-    onTakeDamage:
-      m_PersistentCalls:
-        m_Calls: []
-    onHealDamage:
-      m_PersistentCalls:
-        m_Calls: []
-  skillController:
-    user: {fileID: 0}
-    passiveSkill:
-      rid: -2
-    activeSkill:
-      rid: -2
-    DM:
-      damageFrom: {fileID: 0}
-      damageTo: {fileID: 0}
-      damage: 0
-      damageType: 0
-      damageElementType: 0
-      ifCrit: 0
-      suppressFloatingDamage: 0
-      takeBuff:
-        rid: -2
-    onUseSkill:
-      m_PersistentCalls:
-        m_Calls: []
-    onSkillOver:
-      m_PersistentCalls:
-        m_Calls: []
-    skillColdFx: {fileID: 0}
-    skillEffectFiredThisCast: 0
-  stateController:
-    currentState:
-      state:
-        rid: -2
-      transitions: []
-    preState:
-      state:
-        rid: -2
-      transitions: []
-    stateGraph: {fileID: 0}
-    EnterWarState: 4
-  buffController:
-    chess: {fileID: 0}
-    onEnterBuff: []
-  moveController:
-    chess: {fileID: 0}
-    standTile: {fileID: 0}
-    nextTile: {fileID: 0}
-    tileMethod:
-      rid: -2
-    OnReachTile:
-      m_PersistentCalls:
-        m_Calls: []
-  animatorController: {fileID: 0}
-  WhenEnterGame:
-    m_PersistentCalls:
-      m_Calls: []
-  DeathEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnRemove:
-    m_PersistentCalls:
-      m_Calls: []
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!61 &7113928385384272000
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -273,7 +175,7 @@ Animator:
   m_GameObject: {fileID: 9215643800562222532}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fdae1504329b24e4abae05438fd443de, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -300,3 +202,130 @@ MonoBehaviour:
   sprite: {fileID: 6668338124163824327}
   dizzynesss: 
   attackStateNameAlt: 
+--- !u!114 &8326043392053827240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9215643800562222532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8729a6c8903dcef4da08f715be80c379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instanceID: 0
+  equipWeapon:
+    master: {fileID: 0}
+    weaponPos: {fileID: 0}
+    weapon:
+      rid: 7518340156934848512
+    OnAttack:
+      m_PersistentCalls:
+        m_Calls: []
+    attackOver: 0
+  propertyController:
+    creator: {fileID: 11400000, guid: 1e2802ac1a45f0b4c95283b54c2a1baf, type: 2}
+    onGetDamage:
+      m_PersistentCalls:
+        m_Calls: []
+    onSetDamage:
+      m_PersistentCalls:
+        m_Calls: []
+    onTakeDamage:
+      m_PersistentCalls:
+        m_Calls: []
+    onHealDamage:
+      m_PersistentCalls:
+        m_Calls: []
+  skillController:
+    user: {fileID: 0}
+    passiveSkill:
+      rid: -2
+    activeSkill:
+      rid: -2
+    DM:
+      damageFrom: {fileID: 0}
+      damageTo: {fileID: 0}
+      damage: 0
+      damageType: 0
+      damageElementType: 0
+      ifCrit: 0
+      suppressFloatingDamage: 0
+      takeBuff:
+        rid: -2
+    onUseSkill:
+      m_PersistentCalls:
+        m_Calls: []
+    onSkillOver:
+      m_PersistentCalls:
+        m_Calls: []
+    skillColdFx: {fileID: 0}
+    skillEffectFiredThisCast: 0
+  stateController:
+    currentState:
+      state:
+        rid: -2
+      transitions: []
+    preState:
+      state:
+        rid: -2
+      transitions: []
+    stateGraph: {fileID: 11400000, guid: 4cf9bc0071e47f9439e4a2447f2307df, type: 2}
+    EnterWarState: 4
+  buffController:
+    chess: {fileID: 0}
+    onEnterBuff: []
+  moveController:
+    chess: {fileID: 0}
+    standTile: {fileID: 0}
+    nextTile: {fileID: 0}
+    tileMethod:
+      rid: -2
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
+  animatorController: {fileID: 7045708049606528844}
+  WhenEnterGame:
+    m_PersistentCalls:
+      m_Calls: []
+  DeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRemove:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 7518340156934848512
+      type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
+      data:
+        initWeapon:
+          rid: -2
+        findTarget:
+          rid: 7518340156934848514
+        attackFunction:
+          rid: 7518340156934848515
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
+        interval: 0
+    - rid: 7518340156934848514
+      type: {class: StraightLaser, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 7518340156934848515
+      type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
+      data:
+        effect: {fileID: 0}
+        DM:
+          damageFrom: {fileID: 0}
+          damageTo: {fileID: 0}
+          damage: 0
+          damageType: 0
+          damageElementType: 1
+          ifCrit: 0
+          suppressFloatingDamage: 0
+          takeBuff:
+            rid: -2

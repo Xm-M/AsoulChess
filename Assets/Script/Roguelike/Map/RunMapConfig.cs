@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -7,6 +8,15 @@ public class RunMapConfig : ScriptableObject
 {
     [LabelText("整局目标时长（分钟，策划参考）")]
     public int targetRunMinutes = 120;
+
+    [FoldoutGroup("Run 植物池"), Tooltip("新开 Run 的初始植物（creator.chessName）。为空则从 PlayerSaveData 复制；若已选乐队则以乐队为准")]
+    public List<string> startingPlantCreatorIds = new List<string>();
+
+    [FoldoutGroup("开局乐队"), Tooltip("可选：集中管理所有 BandMes")]
+    public RoguelikeBandCatalog bandCatalog;
+
+    [FoldoutGroup("开局乐队"), Tooltip("未使用 Catalog 时，直接在此配置乐队列表")]
+    public List<BandMes> startingBands = new List<BandMes>();
 
     public ActMapConfig act1;
     public ActMapConfig act2;
@@ -24,6 +34,13 @@ public class RunMapConfig : ScriptableObject
     }
 
     public int ActCount => 3;
+
+    public List<BandMes> GetStartingBands()
+    {
+        if (bandCatalog != null && bandCatalog.bands != null && bandCatalog.bands.Count > 0)
+            return bandCatalog.bands;
+        return startingBands ?? new List<BandMes>();
+    }
 
     public bool Validate(out string error)
     {

@@ -16,6 +16,13 @@ public class RoguelikeRunState
     /// <summary>已通关的节点（战斗胜利 / 非战斗房间已处理）。</summary>
     public List<int> clearedNodeIds = new List<int>();
 
+    /// <summary>本 Run 已获得的植物（PropertyCreator.chessName），进战斗时写入 GameManage.playerOwnedCreators。</summary>
+    public List<string> ownedPlantCreatorIds = new List<string>();
+
+    /// <summary>开局所选乐队（展示 / Meta）。</summary>
+    public string selectedBandId;
+    public string selectedBandName;
+
     public bool runActive;
 
     public RoguelikeMapNode CurrentNode => currentMap.GetNode(currentNodeId);

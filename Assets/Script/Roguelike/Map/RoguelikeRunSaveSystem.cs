@@ -74,6 +74,8 @@ public static class RoguelikeRunSaveSystem
                 data.state.visitedNodeIds = new System.Collections.Generic.List<int>();
             if (data.state.clearedNodeIds == null)
                 data.state.clearedNodeIds = new System.Collections.Generic.List<int>();
+            if (data.state.ownedPlantCreatorIds == null)
+                data.state.ownedPlantCreatorIds = new System.Collections.Generic.List<string>();
 
             data.state.currentMap.RebuildIndex();
             Debug.Log("[RoguelikeRunSaveSystem] 读档成功");

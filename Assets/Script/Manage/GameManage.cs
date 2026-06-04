@@ -26,14 +26,22 @@ public class GameManage : MonoBehaviour
     [SerializeReference]
     public FetterController fetterManage;
     [SerializeReference]
+    public PropController propManage;
+    [LabelText("全部道具配置表")]
+    public List<PropItemData> allProps;
+    /// <summary>由 <c>ownedPropIds</c> 解析；为 null 或空时 <see cref="PropController"/> 回退 <see cref="allProps"/>。</summary>
+    public List<PropItemData> playerOwnedProps;
+    [SerializeReference]
     public GameCameraManage cameraManage;
     public Camera mainCamera;
-    public static GameManage instance;
+    [Tooltip("为 true 时 ObjectPool / ChessFactory 回收时直接 Destroy，不入池（用于排查内存泄漏）")]
+    public bool IsDestroy;
     public List<PropertyCreator> allChess;
     /// <summary>读档后玩家拥有的植物 creator 列表，为 null 时 PlantsShop 使用 allChess</summary>
     public List<PropertyCreator> playerOwnedCreators;
     public UnityEvent WhenGameOver,WhenGameStart;
     public LevelData TestLevel;
+    public static GameManage instance;
     //public bool ifGameStart{get;private set;}
     private void Awake()
     {
@@ -60,11 +68,19 @@ public class GameManage : MonoBehaviour
     private void Start()
     {
         if (mode == GameMode.Test && allChess != null) playerOwnedCreators = new List<PropertyCreator>(allChess);
+        if (mode == GameMode.Test)
+        {
+            if (PlayerSaveContext.CurrentData == null)
+                PlayerSaveContext.CurrentData = PlayerSaveSystem.CreateNew();
+            PlayerSaveContext.ApplyPlayerPropsToGame();
+        }
         timerManage.InitManage();
         checkObjectPoolManage.InitManage();
         weatherManage.InitManage();
         chessFactory.InitManage();
         fetterManage.InitController();
+        if (propManage == null) propManage = new PropController();
+        propManage.InitController();
         cameraManage.InitManage();
         UIManage=new UIManage();
         if (mode == GameMode.Test) UIManage.GetView<StartUI>().startLevelData=TestLevel;

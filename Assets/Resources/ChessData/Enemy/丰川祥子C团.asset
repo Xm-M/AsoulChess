@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u4E30\u5DDD\u7965\u5B50C\u56E2"
+  m_EditorClassIdentifier: 
+  chessName: "\u4E30\u5DDD\u7965\u5B50C\u56E2"
+  chessDescription: 
+  chessShortDescription: 
+  chessEffect: 
+  baseProperty:
+    attack: 40
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 300
+    HpMax: 300
+    lifeStealing: 0
+    healRate: 1
+    speed: 0.5
+    acceleRated: 1
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 10
+    price: 200
+    rarity: 3000
+    waveLimit: 21
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 4578762227932890891, guid: d3ce49e421e87734baf4d4d06d17db8d, type: 3}
+  chessSprite: {fileID: -8452742265747795653, guid: c03c90f7c27cc4b42b82570cb08611d5, type: 3}
+  plantTags:
+  - AveMujica
+  - "\u952E\u76D8\u624B"
+  fetterMemberId: "\u4E30\u5DDD\u7965\u5B50"
+  chessTileType: 5
+  plantType: 0
+  plantFunction:
+    rid: 7518340223871221764
+  plantIfCanBuyCard:
+    rid: -2
+  PlantCardPre: {fileID: 2991298695686272976, guid: 91a77fce93c536448808fdde343467f9, type: 3}
+  PlantEntrepotCardPre: {fileID: 3121051189400196229, guid: 0a232a3f09ea5114a99c4b848888d60c, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 7518340223871221764
+      type: {class: NonePlant, ns: , asm: Assembly-CSharp}
+      data: 

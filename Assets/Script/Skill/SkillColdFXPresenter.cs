@@ -132,6 +132,9 @@ public static class SkillCooldownProgress
         if (skill is ReplaceSkill replace && replace.CurrentSubSkill != null)
             return Resolve(replace.CurrentSubSkill);
 
+        if (skill is MultySkill_Mio mio)
+            return Mathf.Clamp01(mio.GetCooldownProgress01());
+
         if (skill is MultySkill multy)
             return ResolveMulty(multy);
 

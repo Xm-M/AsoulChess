@@ -13,60 +13,61 @@ MonoBehaviour:
   m_Name: "\u690D\u7269\u50F5\u5C38"
   m_EditorClassIdentifier: 
   ifClearStadge: 0
-  sceneName: "\u524D\u9662"
+  sceneName: Ring
   levelName: "\u690D\u7269\u50F5\u5C38"
   levelSprit: {fileID: 3785816446736581452, guid: 421afde933c35af4d8db856d5e639cd4, type: 3}
   levelMode: 1
   EnterMapPlugin:
-  - id: 0
-  - id: 1
+  - rid: 0
+  - rid: 1
   PreParePlugin:
-  - id: 2
+  - rid: 2
   GameStartPlugin:
-  - id: 3
-  - id: 4
-  - id: 5
-  - id: 6
+  - rid: 3
+  - rid: 4
+  - rid: 5
   MaxWave: 40
   n: 1
   t: 1
   zombieList:
   - {fileID: 11400000, guid: b0fb1639e5548bc4098221366a395e83, type: 2}
-  createZombieType: 3
+  - {fileID: 11400000, guid: 97e70c3130c2c0347b7e6cdfa552357e, type: 2}
+  - {fileID: 11400000, guid: 5a52e0234b8ca50459b3bc87ae558aca, type: 2}
+  - {fileID: 11400000, guid: eb52f8538e95ac944a465ca4f93d8a31, type: 2}
+  - {fileID: 11400000, guid: 119511cbc94bbeb45b3a9b7ad97af079, type: 2}
+  createZombieType: 0
   nextLevel: {fileID: 0}
   outcome:
-    id: 7
+    rid: -2
   loadSkipToTime: 10
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
       data:
         car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
-    00000001:
+    - rid: 1
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:
         audioName: "\u9009\u724C"
         deleyPlayTime: 0
-    00000002:
+    - rid: 2
       type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
       data:
         baseSunLight: 50
         cards: []
-    00000003:
+    - rid: 3
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:
         audioName: "\u767D\u5929"
         deleyPlayTime: 3
-    00000004:
+    - rid: 4
       type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
       data:
         sunlight: 25
-    00000005:
+    - rid: 5
       type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
-    00000006:
-      type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
-      data:
-        fastEnterTime: 28
-    00000007:
-      type: {class: , ns: , asm: }
+      data: 

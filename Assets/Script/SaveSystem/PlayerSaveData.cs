@@ -18,6 +18,9 @@ public class PlayerSaveData
     /// <summary>拥有的植物 creator.chessName 列表</summary>
     public List<string> ownedCreatorIds;
 
+    /// <summary>拥有的道具 <see cref="PropItemData.GetPropId"/> 列表</summary>
+    public List<string> ownedPropIds;
+
     /// <summary>金币（全局货币）</summary>
     public int coins;
 
@@ -57,6 +60,7 @@ public class PlayerSaveData
     {
         completedLevelIds = new List<string>();
         ownedCreatorIds = new List<string>();
+        ownedPropIds = new List<string>();
         extras = new List<PlayerSaveExtraEntry>();
     }
 }

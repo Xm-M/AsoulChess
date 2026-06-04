@@ -59,6 +59,7 @@ public class Weapon_Sample : Weapon
         {
             GameObject effect = ObjectPool.instance.Create(selfEffect);
             effect.transform.position = user.transform.position;
+            effect.transform.right = user.transform.right;
         }
     }
 }//

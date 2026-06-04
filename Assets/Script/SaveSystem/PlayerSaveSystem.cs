@@ -11,7 +11,7 @@ public static class PlayerSaveSystem
     const string PlayerSaveFolder = "PlayerSaves";
     const string SaveExtension = ".json";
     public const string DefaultSaveName = "player";
-    public const int CurrentSaveVersion = 3;
+    public const int CurrentSaveVersion = 4;
 
     /// <summary>Test 模式下是否跳过存读档</summary>
     static bool SkipSaveLoad => GameManage.instance != null && GameManage.instance.mode == GameMode.Test;
@@ -87,6 +87,7 @@ public static class PlayerSaveSystem
             saveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             completedLevelIds = new List<string>(),
             ownedCreatorIds = new List<string> { "广井菊里" },
+            ownedPropIds = new List<string>(),
             coins = 0,
             shopUnlocked = false,
             bgmVolume = 1f,
@@ -170,6 +171,7 @@ public static class PlayerSaveSystem
     {
         if (data.completedLevelIds == null) data.completedLevelIds = new List<string>();
         if (data.ownedCreatorIds == null) data.ownedCreatorIds = new List<string>();
+        if (data.ownedPropIds == null) data.ownedPropIds = new List<string>();
         if (data.extras == null) data.extras = new List<PlayerSaveExtraEntry>();
         if (data.saveVersion < 2)
         {
@@ -263,12 +265,39 @@ public static class PlayerSaveContext
         }
     }
 
+    /// <summary>将 ownedPropIds 应用到 GameManage.playerOwnedProps，供本局道具栏使用。</summary>
+    public static void ApplyPlayerPropsToGame()
+    {
+        var data = CurrentData;
+        if (GameManage.instance == null) return;
+
+        GameManage.instance.playerOwnedProps = new List<PropItemData>();
+        if (data?.ownedPropIds == null) return;
+
+        foreach (var propId in data.ownedPropIds)
+        {
+            var prop = GetPropById(propId);
+            if (prop != null)
+                GameManage.instance.playerOwnedProps.Add(prop);
+        }
+    }
+
     static PropertyCreator GetCreatorByChessName(string chessName)
     {
         if (string.IsNullOrEmpty(chessName) || GameManage.instance?.allChess == null) return null;
         foreach (var c in GameManage.instance.allChess)
         {
             if (c != null && c.chessName == chessName) return c;
+        }
+        return null;
+    }
+
+    static PropItemData GetPropById(string propId)
+    {
+        if (string.IsNullOrEmpty(propId) || GameManage.instance?.allProps == null) return null;
+        foreach (var p in GameManage.instance.allProps)
+        {
+            if (p != null && p.GetPropId() == propId) return p;
         }
         return null;
     }

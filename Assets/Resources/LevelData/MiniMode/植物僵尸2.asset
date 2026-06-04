@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u690D\u7269\u50F5\u5C382"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: Ring
+  levelName: "\u690D\u7269\u50F5\u5C382"
+  levelSprit: {fileID: 3785816446736581452, guid: 421afde933c35af4d8db856d5e639cd4, type: 3}
+  levelMode: 1
+  EnterMapPlugin:
+  - rid: 0
+  - rid: 1
+  PreParePlugin:
+  - rid: 2
+  GameStartPlugin:
+  - rid: 3
+  - rid: 4
+  - rid: 5
+  MaxWave: 40
+  n: 1
+  t: 2
+  zombieList:
+  - {fileID: 11400000, guid: b0fb1639e5548bc4098221366a395e83, type: 2}
+  - {fileID: 11400000, guid: 97e70c3130c2c0347b7e6cdfa552357e, type: 2}
+  - {fileID: 11400000, guid: 5a52e0234b8ca50459b3bc87ae558aca, type: 2}
+  - {fileID: 11400000, guid: eb52f8538e95ac944a465ca4f93d8a31, type: 2}
+  - {fileID: 11400000, guid: 119511cbc94bbeb45b3a9b7ad97af079, type: 2}
+  createZombieType: 0
+  nextLevel: {fileID: 0}
+  outcome:
+    rid: -2
+  loadSkipToTime: 10
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    - rid: 1
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u9009\u724C"
+        deleyPlayTime: 0
+    - rid: 2
+      type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 50
+        cards: []
+    - rid: 3
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u767D\u5929"
+        deleyPlayTime: 3
+    - rid: 4
+      type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
+      data:
+        sunlight: 25
+    - rid: 5
+      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
+      data: 

@@ -297,15 +297,15 @@ public class LevelController : MonoBehaviour
     }
 
     /// <summary>
-    /// 第 9、19…波（大波前）与第 10、20…波（大波）：<see cref="WaveData.InitWave"/> 里 enterPecent=0，须清完；
-    /// 不能用 maxtime 强切，否则会出现「场上仍有僵尸就进下一波」。其余波可用血量阈值或 maxtime。
+    /// 仅最后一轮大波（第 10、20…且 wave == <see cref="LevelData.MaxWave"/>）须清场，无 maxtime 强切；
+    /// 其余波（含第 9、19…与非终局的第 10、20…）可在 t&gt;maxtime 时进下一波。
     /// </summary>
     bool WaveCanAdvance()
     {
         var wd = waveDatas[currentWave];
         bool hpOk = wd.CheckZombieHp();
-        int mod = wd.Wave % 10;
-        if (mod == 9 || mod == 0)
+        bool isFinalBigWave = wd.Wave == levelData.MaxWave && wd.Wave % 10 == 0;
+        if (isFinalBigWave)
             return hpOk && t > mintime;
         return (hpOk && t > mintime) || (t > maxtime);
     }
@@ -669,7 +669,11 @@ public class WaveData
                 aliveCount++;
             }
             else
-                lastZombiePos = z.transform.position;
+            {
+                if (z != null)
+                    lastZombiePos = z.transform.position;
+                else lastZombiePos = Vector2.zero;
+            }
         }
         if (aliveCount == 0)
         {

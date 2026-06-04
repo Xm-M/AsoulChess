@@ -26,6 +26,7 @@ public class UIManage
         {
             PlayerSaveContext.LoadCurrent();
             PlayerSaveContext.ApplyPlayerChessToGame();
+            PlayerSaveContext.ApplyPlayerPropsToGame();
             PlayerSaveContext.ApplyLevelClearStateToGame();
             PlayerSaveContext.ApplySettingsToGame();
         }

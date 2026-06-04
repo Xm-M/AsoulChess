@@ -32,6 +32,20 @@ public class ChessFactory : IManager
     }
     public void RecycleChess(Chess c,string chessName)
     {
+        if (c == null) return;
+        if (GameManage.instance != null && GameManage.instance.IsDestroy)
+        {
+            if (LevelManage.instance.IfGameStart)
+            {
+                c.gameObject.SetActive(false);
+                Timer timer = GameManage.instance.timerManage.AddTimer(() => GameObject.Destroy(c.gameObject), 3);
+            }
+            else
+            {
+                GameObject.Destroy(c.gameObject);
+            }
+            return;
+        }
         if (chessPool.ContainsKey(chessName))
         {
             c.gameObject.SetActive(false);
@@ -78,4 +92,3 @@ public class ChessFactory : IManager
         Debug.Log("chessFactory清理完成");
     }
 }
- 

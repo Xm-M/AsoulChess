@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public class SkillEffect_AkiyamaMioSun : ISkillEffect
 {
-    public const string ContextKeyOverflowHealBuffer = "akiOverflowHealBuffer";
+    public const string ContextKeyOverflowHealBuffer = SkillEffect_OverflowHeal.ContextKeyOverflowHealBuffer;
 
     [Tooltip("溢出治疗量 → 阳光换算系数（再乘 1+生命偷取）")]
     [Range(0f, 2f)]

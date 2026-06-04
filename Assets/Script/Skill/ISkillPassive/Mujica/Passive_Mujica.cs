@@ -392,6 +392,8 @@ public class Passive_Mujica_Mortis : ISkillEffect
     public void OnGetDamage(DamageMessege dm)
     {
         Chess user = dm.damageTo;
+        if (user.stateController.currentState.state.stateName == StateName.ResumeState)
+            return;
         if (user.propertyController.GetHp() <= 0)
         {
             user.propertyController.ChangeHp(1);

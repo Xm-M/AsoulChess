@@ -250,6 +250,7 @@ MonoBehaviour:
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillColdFx: {fileID: 0}
     skillEffectFiredThisCast: 0
   stateController:
     currentState:
@@ -310,6 +311,8 @@ MonoBehaviour:
           rid: 3
         attackFunction:
           rid: 4
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
         interval: 0
     - rid: 2
       type: {class: AttackSkill, ns: , asm: Assembly-CSharp}
@@ -590,7 +593,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6885989903785382294}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7489e648044d781428e116d6e6bd76c4, type: 3}
   m_Name: 

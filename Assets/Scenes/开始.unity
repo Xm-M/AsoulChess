@@ -1087,9 +1087,16 @@ MonoBehaviour:
     rid: 0
   fetterManage:
     rid: 1
+  propManage:
+    rid: -2
+  allProps:
+  - {fileID: 11400000, guid: 3c2d0a769d9a9dd4a86f547e5cdc41f5, type: 2}
+  playerOwnedProps:
+  - {fileID: 11400000, guid: 3c2d0a769d9a9dd4a86f547e5cdc41f5, type: 2}
   cameraManage:
     rid: 2
   mainCamera: {fileID: 519420031}
+  IsDestroy: 1
   allChess:
   - {fileID: 11400000, guid: 0b45a281d6f9c4e4bac6cf69f1cc233e, type: 2}
   - {fileID: 11400000, guid: 93e4d5ea07618ee42babdd49a4e6ebc5, type: 2}
@@ -1136,6 +1143,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7ca129a1c2891ba42b9d2464d33100bf, type: 2}
   - {fileID: 11400000, guid: 80d1da89b1d717c409f7dd0ac4a66cf6, type: 2}
   - {fileID: 11400000, guid: 80d1da89b1d717c409f7dd0ac4a66cf6, type: 2}
+  - {fileID: 11400000, guid: ea5d1d7f3baae47408399e5df1fdaf01, type: 2}
+  - {fileID: 11400000, guid: 0258eeb1c8f7c30439a3cf461ca36319, type: 2}
+  - {fileID: 11400000, guid: 93da2a15e3000e54d9f9809d0b17b5bc, type: 2}
   playerOwnedCreators:
   - {fileID: 11400000, guid: 0b45a281d6f9c4e4bac6cf69f1cc233e, type: 2}
   - {fileID: 11400000, guid: 93e4d5ea07618ee42babdd49a4e6ebc5, type: 2}
@@ -1177,10 +1187,12 @@ MonoBehaviour:
   WhenGameStart:
     m_PersistentCalls:
       m_Calls: []
-  TestLevel: {fileID: 11400000, guid: 2f928e1e1fde43f48951d118a6893b97, type: 2}
+  TestLevel: {fileID: 11400000, guid: 2aca715d45014134681726d5602f2e22, type: 2}
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 0
       type: {class: WeatherManage, ns: , asm: Assembly-CSharp}
       data:

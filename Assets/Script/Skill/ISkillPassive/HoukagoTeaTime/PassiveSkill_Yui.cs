@@ -50,13 +50,13 @@ public class PassiveSkill_Yui : ISkillEffect
         {
             weapon.findTarget = healFindTarget;
             shoot.bullet = healBullet;
-            user.animatorController.SetAttackAnimationVariant(1);
+            user.animatorController.ChangeFloat(1);
         }
         else
         {
             weapon.findTarget = baseFindTarget;
             shoot.bullet = baseBullet;
-            user.animatorController.SetAttackAnimationVariant(0);
+            user.animatorController.ChangeFloat(0);
         }
     }
 }

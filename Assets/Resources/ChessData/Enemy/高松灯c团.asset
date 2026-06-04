@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
   m_Name: "\u9AD8\u677E\u706Fc\u56E2"
   m_EditorClassIdentifier: 
-  chessName: "\u9AD8\u677E\u706Fcychi"
+  chessName: "\u9AD8\u677E\u706FC\u56E2"
   chessDescription: 
   chessShortDescription: 
   chessEffect: 
   baseProperty:
-    attack: 7.5
+    attack: 20
     attackRate: 0
     crit: 0
     critDamage: 1.3
@@ -34,7 +34,7 @@ MonoBehaviour:
     moveAcceleRated: 1
     dizzinessTime: 0
     tenacity: 0
-    attackRange: 12.5
+    attackRange: 7.5
     price: 25
     rarity: 4000
     waveLimit: 1
@@ -49,14 +49,16 @@ MonoBehaviour:
   chessTileType: 1
   plantType: 0
   plantFunction:
-    id: 0
+    rid: 0
   plantIfCanBuyCard:
-    id: 1
+    rid: -2
   PlantCardPre: {fileID: 0}
   PlantEntrepotCardPre: {fileID: 0}
   references:
-    version: 1
-    00000000:
-      type: {class: NonePlant, ns: , asm: Assembly-CSharp}
-    00000001:
+    version: 2
+    RefIds:
+    - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: NonePlant, ns: , asm: Assembly-CSharp}
+      data: 

@@ -247,7 +247,7 @@ public static class SaveSystem
 
     private static LevelSaveData CaptureLevelProgress(LevelController controller)
     {
-        return new LevelSaveData
+        var data = new LevelSaveData
         {
             currentWave = controller.GetCurrentWave(),
             t = controller.GetWaveTime(),
@@ -255,6 +255,13 @@ public static class SaveSystem
             maxtime = controller.GetMaxtime(),
             gameTime = TimerManage.GameTime
         };
+        if (controller is LevelController_Endless endless)
+        {
+            data.selectionIndex = endless.RunState.selectionIndex;
+            data.totalWavesCleared = endless.RunState.totalWavesCleared;
+            data.segmentPoolIds = endless.RunState.GetSegmentPoolIds();
+        }
+        return data;
     }
 
     private static System.Collections.Generic.List<ChessSaveData> CapturePlayerPlants()

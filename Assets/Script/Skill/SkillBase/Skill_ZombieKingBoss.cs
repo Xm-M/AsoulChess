@@ -7,6 +7,7 @@ using Sirenix.OdinInspector;
 /// <summary>
 /// 僵王主动：站立队列、俯身 10s 吐球 / 20s 回站立、召唤池与 <see cref="ZombieKingContextKeys"/>。
 /// 需求：<c>docs/requirements/僵王Boss行为.md</c> 与 <c>僵王.md</c>。
+/// 蹦极：<see cref="StandActionKind.Bungee"/> 一次施法播 enter 入口，leave 由 Animator 串联；结束判定见 <see cref="ZombieKingSkillFinish"/>。
 /// </summary>
 public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
 {
@@ -53,8 +54,8 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
     enum StandActionKind
     {
         Spawn,
-        BungeeEnter,
-        BungeeLeave,
+        /// <summary>召唤蹦极：一次施法，Animator 内 enter→leave 串联。</summary>
+        Bungee,
         Stomp,
         ThrowCar,
     }
@@ -212,6 +213,14 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
     static float GetSpawnInterval(Chess user) =>
         user.propertyController.GetHpPerCent() > 0.5f ? 4.5f : 3f;
 
+    /// <summary>技能落点列偏移方向：僵王/僵尸朝植物一侧（与 <see cref="EnemyManage"/> 的 Vector2.left 一致）。</summary>
+    static int SkillForwardColumnSign(Chess user)
+    {
+        if (user != null && user.CompareTag("Enemy"))
+            return -1;
+        return user != null && user.transform.right.x < -0.01f ? -1 : 1;
+    }
+
     /// <summary>首次入场站立（不增加 bendCount）。</summary>
     void EnterStandingInitial(Chess user)
     {
@@ -290,20 +299,14 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
             for (int i = 0; i < 7; i++)
                 standQueue.Add(new QueuedStandAction { Kind = StandActionKind.Spawn });
             if (hp < BungeeHpGate)
-            {
-                standQueue.Add(new QueuedStandAction { Kind = StandActionKind.BungeeEnter });
-                standQueue.Add(new QueuedStandAction { Kind = StandActionKind.BungeeLeave });
-            }
+                standQueue.Add(new QueuedStandAction { Kind = StandActionKind.Bungee });
         }
         else
         {
             for (int i = 0; i < 14; i++)
                 standQueue.Add(new QueuedStandAction { Kind = StandActionKind.Spawn });
             if (UnityEngine.Random.value < 0.5f && hp < BungeeHpGate && bungeeZombie != null)
-            {
-                standQueue.Add(new QueuedStandAction { Kind = StandActionKind.BungeeEnter });
-                standQueue.Add(new QueuedStandAction { Kind = StandActionKind.BungeeLeave });
-            }
+                standQueue.Add(new QueuedStandAction { Kind = StandActionKind.Bungee });
             else
                 standQueue.Add(new QueuedStandAction { Kind = StandActionKind.ThrowCar });
 
@@ -346,11 +349,8 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
                 ctx.Set(ZombieKingContextKeys.SpawnPoolIndex, poolIdx);
                 break;
             }
-            case StandActionKind.BungeeEnter:
-                ctx.Set(ZombieKingContextKeys.SkillAnimKind, (int)ZombieKingSkillAnimKind.BungeeEnter);
-                break;
-            case StandActionKind.BungeeLeave:
-                ctx.Set(ZombieKingContextKeys.SkillAnimKind, (int)ZombieKingSkillAnimKind.BungeeLeave);
+            case StandActionKind.Bungee:
+                ctx.Set(ZombieKingContextKeys.SkillAnimKind, (int)ZombieKingSkillAnimKind.BungeeSummon);
                 break;
             case StandActionKind.Stomp:
             {
@@ -421,7 +421,7 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         for (int t = 0; t < 12; t++)
         {
             int y0 = UnityEngine.Random.Range(0, Mathf.Min(4, Mathf.Max(1, map.mapSize.y - 1)));
-            int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x;
+            int x = user.moveController.standTile.mapPos.x + SkillForwardColumnSign(user);
             if (TryStompHasPlant(user, map, x, y0))
                 return Mathf.Clamp(y0 + 1, 1, 4);
         }
@@ -434,7 +434,7 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         if (map == null || user.moveController?.standTile == null) return false;
         for (int attempt = 0; attempt < 8; attempt++)
         {
-            int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x;
+            int x = user.moveController.standTile.mapPos.x + SkillForwardColumnSign(user);
             int y0 = UnityEngine.Random.Range(0, Mathf.Min(4, map.mapSize.y));
             if (TryStompHasPlant(user, map, x, y0))
                 return true;
@@ -445,11 +445,12 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
     static bool TryStompHasPlant(Chess user, MapManage map, int x, int y0)
     {
         string plantTag = user.CompareTag("Enemy") ? "Player" : "Enemy";
+        int sign = SkillForwardColumnSign(user);
         int[] dx = { 0, 1, 2, 0, 1, 2 };
         int[] dy = { 0, 0, 0, 1, 1, 1 };
         for (int i = 0; i < 6; i++)
         {
-            int tx = x + dx[i];
+            int tx = x + sign * dx[i];
             int ty = y0 + dy[i];
             if (!map.IfInMapRange(tx, ty)) continue;
             var t = map.tiles[tx, ty];
@@ -519,7 +520,7 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
             case ZombieKingSkillAnimKind.SpawnZombie:
                 ExecSpawn(user, ctx);
                 break;
-            case ZombieKingSkillAnimKind.BungeeEnter:
+            case ZombieKingSkillAnimKind.BungeeSummon:
                 ExecBungee(user);
                 break;
             case ZombieKingSkillAnimKind.BungeeLeave:
@@ -546,7 +547,7 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         var map = MapManage.instance;
         if (map == null || user.moveController?.standTile == null) return;
         int tileY = ZombieKingMapAnim.AnimRowToTileY(rowAnim, map.mapSize.y);
-        int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x * 2;
+        int x = user.moveController.standTile.mapPos.x + SkillForwardColumnSign(user) * 2;
         if (!map.IfInMapRange(x, tileY)) return;
         var tile = map.tiles[x, tileY];
         GameManage.instance.chessTeamManage.CreateChess(creator, tile, user.tag);
@@ -593,13 +594,13 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         if (map == null || user.moveController?.standTile == null) return;
         int gameBand = ZombieKingMapAnim.AnimStompBandToGameStompBand(animBand, map.mapSize.y);
         int y0 = gameBand - 1;
-        int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x;
+        int x = user.moveController.standTile.mapPos.x + SkillForwardColumnSign(user);
         float dmg = GetCrushDamage(user);
         int[] dx = { 0, 1, 2, 0, 1, 2 };
         int[] dy = { 0, 0, 0, 1, 1, 1 };
         for (int i = 0; i < 6; i++)
         {
-            int tx = x + dx[i];
+            int tx = x + SkillForwardColumnSign(user) * dx[i];
             int ty = y0 + dy[i];
             ApplyTileCrushDamage(user, map, tx, ty, dmg);
         }
@@ -609,14 +610,15 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
     {
         var map = MapManage.instance;
         if (map == null || user.moveController?.standTile == null) return;
-        int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x * 6;
+        int sign = SkillForwardColumnSign(user);
+        int x = user.moveController.standTile.mapPos.x + sign * 6;
         const int y0 = 1;
         float dmg = GetCrushDamage(user);
         int[] dx = { 0, 1, 2, 0, 1, 2 };
         int[] dy = { 0, 0, 0, 1, 1, 1 };
         for (int i = 0; i < 6; i++)
         {
-            int tx = x + dx[i];
+            int tx = x + sign * dx[i];
             int ty = y0 + dy[i];
             ApplyTileCrushDamage(user, map, tx, ty, dmg);
         }
@@ -654,7 +656,7 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         var map = MapManage.instance;
         if (map == null || user.moveController?.standTile == null) return;
         int tileY = ZombieKingMapAnim.AnimRowToTileY(rowAnim, map.mapSize.y);
-        int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x * 3;
+        int x = user.moveController.standTile.mapPos.x + SkillForwardColumnSign(user) * 3;
         if (!map.IfInMapRange(x, tileY)) return;
         var tile = map.tiles[x, tileY];
         GameObject prefab = ballVisual == 1 && iceBallPrefab != null ? iceBallPrefab : fireBallPrefab;

@@ -24,18 +24,67 @@ public class MapManage_PVZ : MapManage
         base.Awake();
         if (SaveLoadContext.IsLoadFromSave && dir != null)
             dir.playOnAwake = false;
+        EnsureLevelController();
     }
 
 
     protected override void Start()
     {
+        EnsureLevelController();
         base.Start();
         lightBase = GlobleLight.intensity;
         lightRate = 1;
-        if (SaveLoadContext.IsLoadFromSave && dir != null && LevelManage.instance?.currentController != null)
+        if (SaveLoadContext.IsLoadFromSave && dir != null)
         {
             StartCoroutine(SkipTimelineAndRunLoadFlow());
         }
+    }
+
+    /// <summary>
+    /// 按关卡模式挂载对应 LevelController；生存模式使用 LevelController_Endless。
+    /// </summary>
+    public void EnsureLevelController()
+    {
+        if (LevelManage.instance?.currentLevel == null)
+            return;
+
+        bool survival = LevelManage.instance.currentLevel.levelMode == LevelMode.SurvivalMode;
+        var existing = GetComponent<LevelController>();
+
+        if (survival)
+        {
+            if (existing is LevelController_Endless)
+                return;
+            if (existing != null)
+                Destroy(existing);
+            gameObject.AddComponent<LevelController_Endless>();
+            return;
+        }
+
+        if (existing != null && existing is not LevelController_Endless)
+            return;
+        if (existing != null)
+            Destroy(existing);
+        if (GetComponent<LevelController>() == null)
+            gameObject.AddComponent<LevelController>();
+    }
+
+    public void Timeline_EnterMap()
+    {
+        EnsureLevelController();
+        LevelManage.instance?.currentController?.EnterMap();
+    }
+
+    public void Timeline_GamePrepare()
+    {
+        EnsureLevelController();
+        LevelManage.instance?.currentController?.GamePrepare();
+    }
+
+    public void Timeline_GameStart()
+    {
+        EnsureLevelController();
+        LevelManage.instance?.currentController?.GameStart();
     }
 
     private System.Collections.IEnumerator SkipTimelineAndRunLoadFlow()
@@ -59,6 +108,7 @@ public class MapManage_PVZ : MapManage
             dir.time = skipTime;
             dir.Evaluate();
         }
+        EnsureLevelController();
         var controller = LevelManage.instance?.currentController;
         if (controller != null && SaveLoadContext.IsLoadFromSave)
         {

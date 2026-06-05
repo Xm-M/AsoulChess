@@ -53,6 +53,15 @@ public class StartUI : View
             GameObject card= Instantiate(levelPrefab, miniParent);
             card.GetComponent<UI_LevelDataMesCard>().InitCard(data);
         }
+        if (SurvivalParent != null)
+        {
+            var survivalLevels = Resources.LoadAll<LevelData>("LevelData/SurvivalMode");
+            foreach (var data in survivalLevels)
+            {
+                GameObject card = Instantiate(levelPrefab, SurvivalParent);
+                card.GetComponent<UI_LevelDataMesCard>().InitCard(data);
+            }
+        }
     }
     public override void Show()
     {

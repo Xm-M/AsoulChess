@@ -29,9 +29,11 @@ public enum ZombieKingSkillAnimKind
 {
     /// <summary>站立：召唤僵尸，<see cref="ZombieKingContextKeys.Row"/> 1~5 对应 anim_spawn_1~5。</summary>
     SpawnZombie = 0,
-    /// <summary>站立：蹦极进场 anim_bungee_1_enter。</summary>
-    BungeeEnter = 1,
-    /// <summary>站立：蹦极离场 anim_bungee_1_leave。</summary>
+    /// <summary>站立：召唤蹦极（只播 anim_bungee_1_enter 入口，leave 由 Animator 过渡串联）。</summary>
+    BungeeSummon = 1,
+    /// <summary>已废弃别名，与 <see cref="BungeeSummon"/> 同值。</summary>
+    BungeeEnter = BungeeSummon,
+    /// <summary>已废弃：leave 不再单独施法，仅动画机串联或存档兼容。</summary>
     BungeeLeave = 2,
     /// <summary>站立：踩踏，<see cref="ZombieKingContextKeys.StompBand"/> 1~4 对应行带 12 / 23 / 34 / 45 → anim_stomp_1~4。</summary>
     Stomp = 3,
@@ -134,7 +136,8 @@ public class AnimatorController_Zombieking : AnimatorController
     public override void InitController(Chess chess)
     {
         base.InitController(chess);
-        chess.transform.right = Vector2.right;
+        // 与 EnemyManage.CreateChess 一致：面向植物（世界 -X）。勿用 Vector2.right，否则砸车/脚踩/召唤的列偏移会打到地图外右侧。
+        chess.transform.right = Vector2.left;
         firstEnter = false;
         stand = true;
         _lastAppliedDamageIdx = int.MinValue;
@@ -199,7 +202,7 @@ public class AnimatorController_Zombieking : AnimatorController
                 animator.Play($"anim_spawn_{row}");
                 break;
             }
-            case ZombieKingSkillAnimKind.BungeeEnter:
+            case ZombieKingSkillAnimKind.BungeeSummon:
                 animator.Play("anim_bungee_1_enter");
                 break;
             case ZombieKingSkillAnimKind.BungeeLeave:

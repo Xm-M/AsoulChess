@@ -117,7 +117,8 @@ AnimatorState:
   m_Name: anim_bungee_1_enter
   m_Speed: 1
   m_CycleOffset: 0
-  m_Transitions: []
+  m_Transitions:
+  - {fileID: 7440047025187014034}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -191,10 +192,10 @@ AnimatorStateMachine:
     m_Position: {x: 460, y: 290, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5780106039075782001}
-    m_Position: {x: 670, y: 290, z: 0}
+    m_Position: {x: 540, y: -160, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8921733752576768986}
-    m_Position: {x: 670, y: 40, z: 0}
+    m_Position: {x: 850, y: -140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5162439792028224209}
     m_Position: {x: 250, y: 240, z: 0}
@@ -244,7 +245,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: 10, y: -20, z: 0}
-  m_ExitPosition: {x: 920, y: -130, z: 0}
+  m_ExitPosition: {x: 1030, y: -110, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -7887935898431408660}
 --- !u!1101 &-2774192574154601030
@@ -719,6 +720,28 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0
   m_TransitionOffset: 0.0073487503
+  m_ExitTime: 1
+  m_HasExitTime: 1
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
+--- !u!1101 &7440047025187014034
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions: []
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: -8921733752576768986}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0
+  m_TransitionOffset: 0
   m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1

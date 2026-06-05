@@ -14,33 +14,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   States:
   - state:
-      id: 0
+      rid: 0
     transitions: []
   - state:
-      id: 1
+      rid: 1
     transitions: []
   - state:
-      id: 2
+      rid: 2
     transitions:
     - transition:
-        id: 3
+        rid: 3
       targetState: 5
+  - state:
+      rid: 1573513409286111232
+    transitions: []
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: DeathState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 5
         chess: {fileID: 0}
-    00000001:
+    - rid: 1
       type: {class: DizzinessState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 6
         chess: {fileID: 0}
-    00000002:
+    - rid: 2
       type: {class: IdleState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 4
         chess: {fileID: 0}
-    00000003:
+    - rid: 3
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 1573513409286111232
+      type: {class: PrepareState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 2
+        chess: {fileID: 0}

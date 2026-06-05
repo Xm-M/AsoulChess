@@ -71,14 +71,15 @@ public class SkillEffect_ZombieKing_RV : ISkillEffect
         else
             dmg *= 1000f;
         var map = MapManage.instance;
-        int x = user.moveController.standTile.mapPos.x + (int)user.transform.right.x * 6;
+        int sign = user.CompareTag("Enemy") ? -1 : (user.transform.right.x < -0.01f ? -1 : 1);
+        int x = user.moveController.standTile.mapPos.x + sign * 6;
         const int y0 = 1;
         int[] dx = { 0, 1, 2, 0, 1, 2 };
         int[] dy = { 0, 0, 0, 1, 1, 1 };
         string plantTag = user.CompareTag("Enemy") ? "Player" : "Enemy";
         for (int i = 0; i < 6; i++)
         {
-            int tx = x + dx[i];
+            int tx = x + sign * dx[i];
             int ty = y0 + dy[i];
             if (!map.IfInMapRange(tx, ty)) continue;
             var t = map.tiles[tx, ty];

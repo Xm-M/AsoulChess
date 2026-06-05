@@ -163,14 +163,16 @@ public class Chess : MonoBehaviour
     /// </summary>
     public void TakeDamage()
     {
-        equipWeapon.TakeDamages();
+        if (LevelManage.instance.IfGameStart)
+            equipWeapon.TakeDamages();
     }
     /// <summary>
     /// 这个函数是用在技能动画触发技能效果的时候
     /// </summary>
     public void UseSkill()
     {
-        skillController.UseSkill();
+        if(LevelManage.instance.IfGameStart)
+            skillController.UseSkill();
     }
     /// <summary>
     /// 这个估计是...我也不知道

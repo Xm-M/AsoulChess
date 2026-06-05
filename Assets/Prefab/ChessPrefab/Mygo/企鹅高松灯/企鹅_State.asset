@@ -14,51 +14,63 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   States:
   - state:
-      id: 0
+      rid: 0
     transitions: []
   - state:
-      id: 1
+      rid: 1
     transitions: []
   - state:
-      id: 2
+      rid: 2
     transitions:
     - transition:
-        id: 3
+        rid: 3
       targetState: 5
     - transition:
-        id: 4
+        rid: 4
       targetState: 3
   - state:
-      id: 5
+      rid: 5
     transitions:
     - transition:
-        id: 6
+        rid: 6
       targetState: 5
+  - state:
+      rid: 1573513409286111233
+    transitions: []
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: DeathState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 5
         chess: {fileID: 0}
-    00000001:
+    - rid: 1
       type: {class: DizzinessState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 6
         chess: {fileID: 0}
-    00000002:
+    - rid: 2
       type: {class: IdleState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 4
         chess: {fileID: 0}
-    00000003:
+    - rid: 3
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
-    00000004:
+      data: 
+    - rid: 4
       type: {class: IfAnimPlayOverTransition, ns: , asm: Assembly-CSharp}
-    00000005:
+      data: 
+    - rid: 5
       type: {class: SkillState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 3
         chess: {fileID: 0}
-    00000006:
+    - rid: 6
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 1573513409286111233
+      type: {class: PrepareState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 2
+        chess: {fileID: 0}

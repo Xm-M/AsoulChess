@@ -111,6 +111,15 @@ public class LevelSaveData
     /// TimerManage.GameTime，读档时需恢复以正确还原 Timer
     /// </summary>
     public float gameTime;
+
+    /// <summary>生存模式：当前轮次（从 1 起）</summary>
+    public int selectionIndex = 1;
+
+    /// <summary>生存模式：本轮出场池 creatorId 列表</summary>
+    public List<string> segmentPoolIds;
+
+    /// <summary>生存模式：累计完成波次</summary>
+    public int totalWavesCleared;
 }
 
 /// <summary>

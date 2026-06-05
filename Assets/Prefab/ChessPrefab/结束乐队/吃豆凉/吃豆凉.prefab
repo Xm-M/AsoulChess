@@ -29,14 +29,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1852651715080075118}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2342177239279217917}
   - {fileID: 5613512604207609488}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4064992780842919873
 MonoBehaviour:
@@ -55,7 +56,7 @@ MonoBehaviour:
     master: {fileID: 0}
     weaponPos: {fileID: 0}
     weapon:
-      id: 0
+      rid: 0
     OnAttack:
       m_PersistentCalls:
         m_Calls: []
@@ -71,12 +72,15 @@ MonoBehaviour:
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
+    onHealDamage:
+      m_PersistentCalls:
+        m_Calls: []
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      rid: -2
     activeSkill:
-      id: 1
+      rid: -2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -84,23 +88,25 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       ifCrit: 0
+      suppressFloatingDamage: 0
       takeBuff:
-        id: 1
+        rid: -2
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillColdFx: {fileID: 0}
     skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
-        id: 1
+        rid: -2
       transitions: []
     preState:
       state:
-        id: 1
+        rid: -2
       transitions: []
     stateGraph: {fileID: 11400000, guid: 5d45536681d478446b5d3e36d313d605, type: 2}
     EnterWarState: 4
@@ -112,7 +118,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 1
+      rid: -2
     OnReachTile:
       m_PersistentCalls:
         m_Calls: []
@@ -127,23 +133,26 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 1
+          rid: -2
         findTarget:
-          id: 2
+          rid: 2
         attackFunction:
-          id: 3
-        enemys: []
+          rid: 3
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
         interval: 42
-    00000001:
-      type: {class: , ns: , asm: }
-    00000002:
+    - rid: 2
       type: {class: StraightLaser, ns: , asm: Assembly-CSharp}
-    00000003:
+      data: 
+    - rid: 3
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
@@ -154,8 +163,9 @@ MonoBehaviour:
           damageType: 2
           damageElementType: 129
           ifCrit: 0
+          suppressFloatingDamage: 0
           takeBuff:
-            id: 1
+            rid: -2
 --- !u!61 &6505587982200098541
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -166,10 +176,29 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.20972121}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -180,7 +209,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 1.4194422}
   m_EdgeRadius: 0
 --- !u!95 &5188923728424087821
 Animator:
@@ -217,6 +246,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 5188923728424087821}
   sprite: {fileID: 3470352140543514179}
+  dizzynesss: 
+  attackStateNameAlt: 
 --- !u!114 &1158392320883893844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,8 +265,9 @@ MonoBehaviour:
   subAudio: []
   baseValue: 0
   clipList:
-  - name: 
+  - audioKey: 
     clip: {fileID: 8300000, guid: c321aab1fbac8f74291e674f18510864, type: 3}
+  _audioUniqueLimit: 3
 --- !u!82 &3257025560303240964
 AudioSource:
   m_ObjectHideFlags: 0
@@ -356,12 +388,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4957064683054797277}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.076, y: 0.429, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7387033916872149755}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3470352140543514179
 SpriteRenderer:
@@ -374,6 +407,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -401,7 +435,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 4f8584a34c22d7941864f161e1125a7f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -419,6 +453,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 7387033916872149755}
     m_Modifications:
     - target: {fileID: 2673868079073005060, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
@@ -482,6 +517,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
 --- !u!4 &5613512604207609488 stripped
 Transform:

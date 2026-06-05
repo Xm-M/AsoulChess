@@ -395,6 +395,7 @@ MonoBehaviour:
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillColdFx: {fileID: 0}
     skillEffectFiredThisCast: 0
   stateController:
     currentState:
@@ -455,11 +456,11 @@ MonoBehaviour:
         - {fileID: 11400000, guid: c0cb6e1f0882bfb449d5418e67da900b, type: 2}
         bungeeZombie: {fileID: 11400000, guid: 06b48e36f41dd5042ab448c259b3c20a, type: 2}
         fireBallPrefab: {fileID: 3858522063525295543, guid: 5b2c7eefabe078d47a66cd7ce4ed4e42, type: 3}
-        iceBallPrefab: {fileID: 16380033164033600, guid: f8a62dc301af1404abd5cd0c9c7f3926, type: 3}
+        iceBallPrefab: {fileID: 16380033164033600, guid: afd01b04442df15479a19a9bce727232, type: 3}
         smokeVfxRoot: {fileID: 4730472573852717889}
         debugForceReady: 0
     - rid: 2
-      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+      type: {class: ZombieKingSkillFinish, ns: , asm: Assembly-CSharp}
       data: 
     - rid: 3
       type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}

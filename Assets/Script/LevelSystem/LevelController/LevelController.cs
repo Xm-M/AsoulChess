@@ -195,14 +195,35 @@ public class LevelController : MonoBehaviour
             waveData.InitWave(i + 1, levelData);
             waveDatas.Add(waveData);
         }
-        //在MapManage的右侧生成所有可能出现的僵尸 小推车放在小推车插件里
-        for (int i = 0; i < levelData.zombieList.Count; i++)
-        {
-            Chess zombie = ChessTeamManage.Instance.CreateChess(levelData.zombieList[i], (MapManage.instance as MapManage_PVZ).zombiePreTile[i], "Enemy");
-            zombies.Add(zombie);
-        }
+        RefreshZombiePreviewTiles(levelData.zombieList);
         t = 0;
         currentWave = -1;
+    }
+
+    /// <summary>
+    /// 在 MapManage 右侧生成本关可能出现的僵尸预览；无尽模式 override 时传入 segmentPool。
+    /// </summary>
+    protected virtual void RefreshZombiePreviewTiles(IList<PropertyCreator> pool)
+    {
+        if (pool == null || pool.Count == 0)
+            return;
+        if (zombies == null)
+            zombies = new List<Chess>();
+        else
+        {
+            for (int i = 0; i < zombies.Count; i++)
+                zombies[i].Death();
+            zombies.Clear();
+        }
+        var mapPvz = MapManage.instance as MapManage_PVZ;
+        if (mapPvz == null || mapPvz.zombiePreTile == null)
+            return;
+        int count = Mathf.Min(pool.Count, mapPvz.zombiePreTile.Count);
+        for (int i = 0; i < count; i++)
+        {
+            Chess zombie = ChessTeamManage.Instance.CreateChess(pool[i], mapPvz.zombiePreTile[i], "Enemy");
+            zombies.Add(zombie);
+        }
     }
 
     /// <summary>
@@ -300,7 +321,7 @@ public class LevelController : MonoBehaviour
     /// 仅最后一轮大波（第 10、20…且 wave == <see cref="LevelData.MaxWave"/>）须清场，无 maxtime 强切；
     /// 其余波（含第 9、19…与非终局的第 10、20…）可在 t&gt;maxtime 时进下一波。
     /// </summary>
-    bool WaveCanAdvance()
+    protected virtual bool WaveCanAdvance()
     {
         var wd = waveDatas[currentWave];
         bool hpOk = wd.CheckZombieHp();
@@ -710,5 +731,19 @@ public class WaveData
     public virtual void ClearWave()
     {
 
+    }
+
+    public bool IsCreateOver => createOver;
+
+    /// <summary>轮末强制清理本波残怪。</summary>
+    public virtual void ForceClearRemaining()
+    {
+        if (waveZombies == null)
+            return;
+        foreach (var z in waveZombies)
+        {
+            if (z != null && !z.IfDeath)
+                z.Death();
+        }
     }
 }

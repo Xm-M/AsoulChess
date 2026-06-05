@@ -193,11 +193,13 @@ public class WaveData_Endless : WaveData
         int aliveCount = 0;
         foreach (var z in waveZombies)
         {
-            if (!z.IfDeath)
-            {
-                hpcurrent += z.propertyController.GetHp();
-                aliveCount++;
-            }
+            if (z == null || z.IfDeath)
+                continue;
+            float hp = z.propertyController.GetHp();
+            if (hp <= 0f)
+                continue;
+            hpcurrent += hp;
+            aliveCount++;
         }
         if (aliveCount == 0)
             return true;

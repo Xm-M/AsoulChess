@@ -23,8 +23,11 @@ public class EnterMapPlugin_EndlessSpawnConfig : ILevelPlugin
     [Tooltip("每种被抽中后稀有度衰减量，0 表示不衰减")]
     public int rarityDecayPerUse;
 
-    [Tooltip("第 2 轮起 Timeline 从该时间点播放（秒）")]
-    public float roundTimelineStartTime = 30f;
+    [Tooltip("第 2 轮起 Timeline 从该时间点播放（秒）；会自动 Clamp 到 Timeline 时长内，前院约 7s，建议 0~3")]
+    public float roundTimelineStartTime;
+
+    [Tooltip("轮末清场后、重播 Timeline 前的等待（秒），对齐原版「更多僵尸要来了」间隔")]
+    public float roundTransitionDelay = 4f;
 
     public void StadgeEffect(LevelController levelController)
     {

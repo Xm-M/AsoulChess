@@ -175,6 +175,7 @@ public class LevelController : MonoBehaviour
             }
         }
         CreateZombieWaves();
+        EventController.Instance.TriggerEvent(EventName.EnterMap.ToString());
     }
     public virtual void CreateZombieWaves()
     {
@@ -203,18 +204,27 @@ public class LevelController : MonoBehaviour
     /// <summary>
     /// 在 MapManage 右侧生成本关可能出现的僵尸预览；无尽模式 override 时传入 segmentPool。
     /// </summary>
+    /// <summary>清空右侧僵尸预览列表（先 Death 再 Clear）。</summary>
+    protected virtual void ClearZombiePreviews()
+    {
+        if (zombies == null)
+        {
+            zombies = new List<Chess>();
+            return;
+        }
+        for (int i = 0; i < zombies.Count; i++)
+        {
+            if (zombies[i] != null)
+                zombies[i].Death();
+        }
+        zombies.Clear();
+    }
+
     protected virtual void RefreshZombiePreviewTiles(IList<PropertyCreator> pool)
     {
         if (pool == null || pool.Count == 0)
             return;
-        if (zombies == null)
-            zombies = new List<Chess>();
-        else
-        {
-            for (int i = 0; i < zombies.Count; i++)
-                zombies[i].Death();
-            zombies.Clear();
-        }
+        ClearZombiePreviews();
         var mapPvz = MapManage.instance as MapManage_PVZ;
         if (mapPvz == null || mapPvz.zombiePreTile == null)
             return;
@@ -300,10 +310,16 @@ public class LevelController : MonoBehaviour
     }
     protected virtual void DoEnterNextWave()
     {
+        if (waveDatas == null || waveDatas.Count == 0 || levelData == null)
+            return;
+
+        int nextIndex = currentWave + 1;
+        if (nextIndex >= waveDatas.Count || nextIndex >= levelData.MaxWave)
+            return;
+
         t = -2;
-        UIManage.GetView<ProgressBar>().MoveBar(currentWave + 1, levelData.MaxWave);
-        if (currentWave + 1 < levelData.MaxWave)
-            waveDatas[currentWave + 1].EnterWave();
+        UIManage.GetView<ProgressBar>().MoveBar(nextIndex + 1, levelData.MaxWave);
+        waveDatas[nextIndex].EnterWave();
         currentWave++;
         if (currentWave % 10 == 9)
         {
@@ -393,12 +409,39 @@ public class LevelController : MonoBehaviour
     }
     public void OverPlugin()
     {
-        foreach (var plugin in levelData.GameStartPlugin)
-            plugin.OverPlugin(this );
-        foreach (var plugin in levelData.EnterMapPlugin)
-            plugin.OverPlugin(this);
-        foreach (var plugin in levelData.PreParePlugin)
-            plugin.OverPlugin(this);
+        InvokePluginOver(levelData?.GameStartPlugin);
+        InvokePluginOver(levelData?.EnterMapPlugin);
+        InvokePluginOver(levelData?.PreParePlugin);
+    }
+
+    /// <summary>
+    /// 生存模式每轮结束（非离场）时调用；与 <see cref="OverPlugin"/> 分离，避免只能绑在 LeaveLevel 上。
+    /// </summary>
+    public virtual void RoundOverPlugins()
+    {
+        InvokePluginRoundOver(levelData?.GameStartPlugin);
+        InvokePluginRoundOver(levelData?.EnterMapPlugin);
+        InvokePluginRoundOver(levelData?.PreParePlugin);
+    }
+
+    void InvokePluginOver(List<ILevelPlugin> plugins)
+    {
+        if (plugins == null) return;
+        foreach (var plugin in plugins)
+            plugin?.OverPlugin(this);
+    }
+
+    void InvokePluginRoundOver(List<ILevelPlugin> plugins)
+    {
+        if (plugins == null) return;
+        foreach (var plugin in plugins)
+        {
+            if (plugin == null) continue;
+            if (plugin is IRoundEndPlugin roundEnd)
+                roundEnd.RoundOverPlugin(this);
+            else
+                plugin.OverPlugin(this);
+        }
     }
 }
 /// <summary>

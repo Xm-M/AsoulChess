@@ -96,9 +96,12 @@ public class AnimatorController : MonoBehaviour,Controller
     }
     public virtual void WhenControllerLeaveWar()
     {
-        SetOutline(Color.white, 0);
-        ChangeColor(Color.white);
-        PlayIdle();
+        if (LevelManage.instance.IfGameStart)
+        {
+            SetOutline(Color.white, 0);
+            ChangeColor(Color.white);
+            PlayIdle();
+        }
     }
     public virtual void PlayIdle()
     {

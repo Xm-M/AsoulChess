@@ -52,6 +52,7 @@ public enum EventName
     SnakeEatZombie,
     /// <summary>贪吃蛇：场上新生成食物；载荷为 <see cref="SnakeGameEventId.FoodSpawned"/>。</summary>
     SnakeFoodSpawned,
+    EnterMap,
 }
 
 

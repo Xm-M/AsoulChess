@@ -195,23 +195,29 @@ public class Chess : MonoBehaviour
     /// </summary>
     public void UnSelectable()
     {
-        if (!IfSelectable)
+        if (LevelManage.instance.IfGameStart)
         {
-            IfSelectable = true;
+            if (!IfSelectable)
+            {
+                IfSelectable = true;
+            }
+            // 始终设置 layer：CreateChess 会在 WhenChessEnterWar 之前设置 Enemy，需在进场时再次应用
+            gameObject.layer = LayerMask.NameToLayer("Unselectable");
         }
-        // 始终设置 layer：CreateChess 会在 WhenChessEnterWar 之前设置 Enemy，需在进场时再次应用
-        gameObject.layer = LayerMask.NameToLayer("Unselectable");
     }
     public void ResumeSelectable()
     {
-        if (IfSelectable)
+        if (LevelManage.instance.IfGameStart)
         {
-            //Debug.Log("可以选中");
-            IfSelectable = false;
-            
+            if (IfSelectable)
+            {
+                //Debug.Log("可以选中");
+                IfSelectable = false;
+
+            }
+            if (!CompareTag("Untagged"))
+                gameObject.layer = LayerMask.NameToLayer(tag);
         }
-        if(!CompareTag("Untagged"))
-            gameObject.layer = LayerMask.NameToLayer(tag);
     }
     public void StopMove() => moveController.ContinuMove();
     public void ContinumMove() => moveController.StopMove();

@@ -9,7 +9,17 @@ using UnityEngine.Playables;
 public interface ILevelPlugin  
 {
      public void StadgeEffect(LevelController levelController);
+     /// <summary>关卡离场（LeaveState / GameOver）时调用。</summary>
      public void OverPlugin(LevelController levelController);
+}
+
+/// <summary>
+/// 生存/无尽每轮结束时的插件清理。未实现时 <see cref="LevelController.RoundOverPlugins"/> 回落为 <see cref="OverPlugin"/>。
+/// 若轮末与离场逻辑不同（例如轮次&gt;1 不销毁小推车），在此单独实现并在内部自判 <c>selectionIndex</c>。
+/// </summary>
+public interface IRoundEndPlugin : ILevelPlugin
+{
+    void RoundOverPlugin(LevelController levelController);
 }
 
 /// <summary>

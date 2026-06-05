@@ -42,6 +42,7 @@ public class MapManage_PVZ : MapManage
 
     /// <summary>
     /// 按关卡模式挂载对应 LevelController；生存模式使用 LevelController_Endless。
+    /// 先移除已有（含错误类型/重复挂载），再 Add，避免 Destroy 延迟导致同帧叠多个 Controller。
     /// </summary>
     public void EnsureLevelController()
     {
@@ -49,24 +50,35 @@ public class MapManage_PVZ : MapManage
             return;
 
         bool survival = LevelManage.instance.currentLevel.levelMode == LevelMode.SurvivalMode;
-        var existing = GetComponent<LevelController>();
+        var all = GetComponents<LevelController>();
+        LevelController kept = null;
 
-        if (survival)
+        foreach (var c in all)
         {
-            if (existing is LevelController_Endless)
-                return;
-            if (existing != null)
-                Destroy(existing);
-            gameObject.AddComponent<LevelController_Endless>();
-            return;
+            bool correct = survival ? c is LevelController_Endless : c is not LevelController_Endless;
+            if (correct && kept == null)
+            {
+                kept = c;
+                continue;
+            }
+            RemoveLevelControllerImmediate(c);
         }
 
-        if (existing != null && existing is not LevelController_Endless)
+        if (kept != null)
             return;
-        if (existing != null)
-            Destroy(existing);
-        if (GetComponent<LevelController>() == null)
+
+        if (survival)
+            gameObject.AddComponent<LevelController_Endless>();
+        else
             gameObject.AddComponent<LevelController>();
+    }
+
+    static void RemoveLevelControllerImmediate(LevelController controller)
+    {
+        if (controller == null)
+            return;
+        // EnsureLevelController 可能在 Awake/Start/Timeline 同帧连调，Destroy 延迟会导致叠多个 Controller
+        Object.DestroyImmediate(controller);
     }
 
     public void Timeline_EnterMap()
@@ -124,8 +136,10 @@ public class MapManage_PVZ : MapManage
     /// </summary>
     public void WhenGameStart()
     {
-        dir.Play();
-        
+        if (dir != null)
+            dir.Play();
+        else
+            Timeline_GameStart();
     }
     public void WhenGameOver()
     {

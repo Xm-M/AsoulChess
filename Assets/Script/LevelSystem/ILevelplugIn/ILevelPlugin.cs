@@ -164,43 +164,19 @@ public class EnterWarPlugin_CarCreate : ISaveableLevelPlugin
 }
 
 
-/// <summary>
-/// 这个其实是坚果保龄球的插件 因为会生成一条红线 红线外不可种植
-/// </summary>
+/// <summary>传送带关卡：随机权重出卡，无种植红线。</summary>
 public class PreParePlugin_Conveyor : ILevelPlugin
 {
     public List<PropertyCreator> creators;
-    public GameObject redLine;
-    //GameObject gameObject;
-    GameObject line;
     public void StadgeEffect(LevelController levelController)
     {
         UIManage.Show<ConveyorPanel>();
         UIManage.GetView<ConveyorPanel>().InitCreator(creators, 6);
         (MapManage_PVZ.instance as MapManage_PVZ).WhenGameStart();
- 
-        if (line != null)
-        {
-            for (int i = 3; i < MapManage_PVZ.instance.mapSize.x; i++)
-                for (int j = 0; j < MapManage.instance.mapSize.y; j++)
-                {
-                    MapManage.instance.tiles[i, j].gameObject.layer = 0;
-                }
-            line = GameObject.Instantiate(redLine);
-            line.transform.position = MapManage.instance.tiles[2, 2].transform.position;
-        }
-        //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), GameOver);
     }
     public void OverPlugin(LevelController levelController)
     {
-        GameOver();
-    }
-    public void GameOver()
-    {
-        //ObjectPool.instance.Recycle(line);
-        GameObject.Destroy(line);
         UIManage.Close<ConveyorPanel>();
-        //EventController.Instance.RemoveListener(EventName.WhenLeaveLevel.ToString(), GameOver);
     }
 }
 

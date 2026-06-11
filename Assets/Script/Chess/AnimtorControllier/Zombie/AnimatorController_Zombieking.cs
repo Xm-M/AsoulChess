@@ -82,6 +82,41 @@ public static class ZombieKingMapAnim
         int game = mapHeightY - animBand;
         return Mathf.Clamp(game, 1, Mathf.Max(1, mapHeightY - 1));
     }
+
+    /// <summary>僵王.md 砸车：前方第 6 列对齐的  3×2 区域（列 0,1,2 方向为地图 x 递增）。</summary>
+    public const int RvForwardColumnOffset = 6;
+    /// <summary>僵王.md「y=1」= 游戏第 1、2 行（tileY 0、1），见踩踏带 gameBand 语义。</summary>
+    public const int RvGameBand = 1;
+    const int CrushWidth = 3;
+    const int CrushHeight = 2;
+
+    /// <summary>
+    /// 砸车六格：参考列 <c>kingX + forwardSign * 6</c>，向植物侧占 3 列 × 2 行。
+    /// </summary>
+    public static void ForEachRvCrushTile(int kingTileX, int forwardSign, System.Action<int, int> visit)
+    {
+        int refCol = kingTileX + forwardSign * RvForwardColumnOffset;
+        int leftCol = refCol + (forwardSign < 0 ? forwardSign * (CrushWidth - 1) : 0);
+        int y0 = RvGameBand - 1;
+        for (int dy = 0; dy < CrushHeight; dy++)
+        {
+            for (int dx = 0; dx < CrushWidth; dx++)
+                visit(leftCol + dx, y0 + dy);
+        }
+    }
+
+    /// <summary>脚踩六格（与 <see cref="ForEachRvCrushTile"/> 同形，起点列 = kingX + forwardSign）。</summary>
+    public static void ForEachStompCrushTile(int kingTileX, int forwardSign, int gameBand, System.Action<int, int> visit)
+    {
+        int refCol = kingTileX + forwardSign;
+        int leftCol = refCol + (forwardSign < 0 ? forwardSign * (CrushWidth - 1) : 0);
+        int y0 = gameBand - 1;
+        for (int dy = 0; dy < CrushHeight; dy++)
+        {
+            for (int dx = 0; dx < CrushWidth; dx++)
+                visit(leftCol + dx, y0 + dy);
+        }
+    }
 }
 
 /// <summary>

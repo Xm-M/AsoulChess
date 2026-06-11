@@ -25,12 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 934096092361082345}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.82, y: 1.96, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6401073468719943456}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7025700811516485758
 SpriteRenderer:
@@ -43,6 +44,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -124,9 +126,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1635386176690438021}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1081404814237221688}
   - {fileID: 5053050017700795953}
@@ -137,7 +141,6 @@ Transform:
   - {fileID: 804330463104025911}
   - {fileID: 4755359203925863830}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5401666673208252020
 MonoBehaviour:
@@ -156,7 +159,7 @@ MonoBehaviour:
     master: {fileID: 0}
     weaponPos: {fileID: 0}
     weapon:
-      id: 0
+      rid: 0
     OnAttack:
       m_PersistentCalls:
         m_Calls: []
@@ -172,12 +175,15 @@ MonoBehaviour:
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
+    onHealDamage:
+      m_PersistentCalls:
+        m_Calls: []
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      rid: -2
     activeSkill:
-      id: 2
+      rid: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -187,22 +193,23 @@ MonoBehaviour:
       ifCrit: 0
       suppressFloatingDamage: 0
       takeBuff:
-        id: 1
+        rid: -2
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillColdFx: {fileID: 0}
     skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
-        id: 1
+        rid: -2
       transitions: []
     preState:
       state:
-        id: 1
+        rid: -2
       transitions: []
     stateGraph: {fileID: 11400000, guid: b44f7b6ba640cf64faedcc9241b9b3ca, type: 2}
     EnterWarState: 4
@@ -214,7 +221,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 3
+      rid: 3
     OnReachTile:
       m_PersistentCalls:
         m_Calls: []
@@ -229,41 +236,45 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 1
+          rid: -2
         findTarget:
-          id: 4
+          rid: 4
         attackFunction:
-          id: 5
+          rid: 5
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
         interval: 0
-    00000001:
-      type: {class: , ns: , asm: }
-    00000002:
+    - rid: 2
       type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
       data:
         config: {fileID: 11400000, guid: 251057fd43867f14084c3511a45105e2, type: 2}
         readyChecker:
-          id: 6
+          rid: 1573513499311079429
         effect:
-          id: 7
+          rid: 7
         skillFinish:
-          id: 8
+          rid: 8
         runtime:
-          id: 9
-    00000003:
+          rid: 9
+    - rid: 3
       type: {class: HorMove, ns: , asm: Assembly-CSharp}
-    00000004:
+      data: 
+    - rid: 4
       type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
         relativeCells:
         - {x: 0, y: 0}
         - {x: 1, y: 0}
         boxHalfExtents: {x: 1.25, y: 1.25}
-    00000005:
+    - rid: 5
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 3352402192976796263}
@@ -276,23 +287,34 @@ MonoBehaviour:
           ifCrit: 0
           suppressFloatingDamage: 0
           takeBuff:
-            id: 1
-    00000006:
-      type: {class: SkillReady_HpLimit, ns: , asm: Assembly-CSharp}
-      data:
-        hpPercentThreshold: 0.5
-    00000007:
+            rid: -2
+    - rid: 7
       type: {class: SkillEffect_Summon, ns: , asm: Assembly-CSharp}
       data:
         creators:
         - {fileID: 11400000, guid: 5a88c4d57cf2073499c0676f2ab4b0d1, type: 2}
         summonPos: {fileID: 4755359203925863830}
-    00000008:
+    - rid: 8
       type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
-    00000009:
+      data: 
+    - rid: 9
       type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
       data:
         currentTime: 0
+    - rid: 1573513499311079429
+      type: {class: SkillReady_Multy, ns: , asm: Assembly-CSharp}
+      data:
+        skillReadies:
+        - rid: 1573513499311079430
+        - rid: 1573513499311079431
+    - rid: 1573513499311079430
+      type: {class: SkillReady_HpLimit, ns: , asm: Assembly-CSharp}
+      data:
+        hpPercentThreshold: 0.5
+    - rid: 1573513499311079431
+      type: {class: SkillReady_BeforeMapHalf, ns: , asm: Assembly-CSharp}
+      data:
+        halfProgress: 0.5
 --- !u!61 &2518475852315555008
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -303,6 +325,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -397,12 +438,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1893976158720398149}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2.04, y: 4.78, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6401073468719943456}
-  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3332213878512625844
 GameObject:
@@ -429,12 +471,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3332213878512625844}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6401073468719943456}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &5060127835111807367
 AudioSource:
@@ -579,12 +622,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4953054719047342802}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.82, y: 1.96, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6401073468719943456}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3134605278077542476
 SpriteRenderer:
@@ -597,6 +641,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -674,12 +719,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9064981734752867312}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.82, y: 1.96, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6401073468719943456}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7250230440832989084
 SpriteRenderer:
@@ -692,6 +738,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -737,6 +784,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6401073468719943456}
     m_Modifications:
     - target: {fileID: 2801956235162450960, guid: 4ade384af500cdc45a796448b0020ca2, type: 3}
@@ -788,6 +836,9 @@ PrefabInstance:
       value: "\u666E\u901A\u50F5\u5C38\u97F3\u6548"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ade384af500cdc45a796448b0020ca2, type: 3}
 --- !u!4 &804330463104025911 stripped
 Transform:
@@ -799,6 +850,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6401073468719943456}
     m_Modifications:
     - target: {fileID: 2673868079073005060, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
@@ -854,6 +906,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
 --- !u!4 &262413452028739521 stripped
 Transform:
@@ -865,6 +920,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6401073468719943456}
     m_Modifications:
     - target: {fileID: 4635104716620181003, guid: 6ff1bd5d662a73041acaa26250dd0871, type: 3}
@@ -916,6 +972,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ff1bd5d662a73041acaa26250dd0871, type: 3}
 --- !u!4 &1912878285017029682 stripped
 Transform:

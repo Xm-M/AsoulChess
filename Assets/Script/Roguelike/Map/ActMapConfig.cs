@@ -63,6 +63,21 @@ public class ActMapConfig : ScriptableObject
     [FoldoutGroup("关卡池")]
     public List<LevelData> eliteLevelPool = new List<LevelData>();
 
+    [FoldoutGroup("关卡池"), Tooltip("事件/小游戏关卡（坚果保龄球、锤僵尸等）")]
+    public List<LevelData> eventLevelPool = new List<LevelData>();
+
+    [FoldoutGroup("关卡池-难度匹配"), Tooltip("layer 0 / 起点侧参考难度（如 1.0）")]
+    public float roguelikeDifficultyAtStart = 1f;
+
+    [FoldoutGroup("关卡池-难度匹配"), Tooltip("Boss 前一层参考难度（如 3.0）；中间层线性插值")]
+    public float roguelikeDifficultyAtPreBoss = 3f;
+
+    [FoldoutGroup("关卡池-难度匹配"), Min(0.01f), Tooltip("目标难度 ± 半宽；在此区间内的 LevelData 优先入选")]
+    public float roguelikeDifficultyMatchHalfRange = 0.5f;
+
+    [FoldoutGroup("关卡池-难度匹配"), Tooltip("精英节点在层目标难度上额外加算")]
+    public float roguelikeEliteDifficultyBonus = 0.5f;
+
     [FoldoutGroup("生成规则")]
     public MapRoomType startRoomType = MapRoomType.Start;
 

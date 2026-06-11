@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u6295\u7BEE\u7F51\u7403"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: Ring
+  levelName: "\u6295\u7BEE\u7F51\u7403"
+  levelSprit: {fileID: 0}
+  levelMode: 1
+  EnterMapPlugin:
+  - rid: 0
+  PreParePlugin:
+  - rid: 1573513541235245058
+  GameStartPlugin:
+  - rid: 2
+  - rid: 3
+  - rid: 4
+  MaxWave: 1
+  n: 0
+  t: 0
+  zombieList:
+  - {fileID: 11400000, guid: 5694f508841e37b48a0c215f9bd259b8, type: 2}
+  createZombieType: 0
+  nextLevel: {fileID: 0}
+  outcome:
+    rid: -2
+  loadSkipToTime: 10
+  roguelikeDifficulty: 3
+  roguelikeKind: 4
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    - rid: 2
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u5C0F\u6E38\u620F"
+        deleyPlayTime: 2
+    - rid: 3
+      type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
+      data:
+        fastEnterTime: 4
+    - rid: 4
+      type: {class: GameStartPlugin_BasketballTennis, ns: , asm: Assembly-CSharp}
+      data:
+        catapultCreator: {fileID: 11400000, guid: 5694f508841e37b48a0c215f9bd259b8, type: 2}
+        guardRows:
+        - guardPlant: {fileID: 11400000, guid: f95bed26485a04e4590f8dcf849dca80, type: 2}
+        - guardPlant: {fileID: 11400000, guid: f95bed26485a04e4590f8dcf849dca80, type: 2}
+        - guardPlant: {fileID: 11400000, guid: f95bed26485a04e4590f8dcf849dca80, type: 2}
+        - guardPlant: {fileID: 11400000, guid: f95bed26485a04e4590f8dcf849dca80, type: 2}
+        - guardPlant: {fileID: 11400000, guid: f95bed26485a04e4590f8dcf849dca80, type: 2}
+        - guardPlant: {fileID: 11400000, guid: f95bed26485a04e4590f8dcf849dca80, type: 2}
+        attackIntervalSeconds: 3
+        bulletPrefab: {fileID: 5520396717294064132, guid: 7c4e9a2b1d8f4036a5e0c9b3f2d1e8a7, type: 3}
+        autoDeflectTileRadius: 3
+        autoDeflectCheckInterval: 0.05
+    - rid: 1573513541235245058
+      type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 50
+        cards:
+        - {fileID: 11400000, guid: 93e4d5ea07618ee42babdd49a4e6ebc5, type: 2}

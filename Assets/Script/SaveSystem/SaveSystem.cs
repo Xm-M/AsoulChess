@@ -74,6 +74,8 @@ public static class SaveSystem
             Debug.LogWarning("[SaveSystem] 无法保存：LevelManage 或 currentLevel 为空");
             return;
         }
+        if (LevelManage.instance.currentLevel.levelMode == LevelMode.BossMode)
+            return;
 
         if (!LevelManage.instance.IfGameStart)
         {

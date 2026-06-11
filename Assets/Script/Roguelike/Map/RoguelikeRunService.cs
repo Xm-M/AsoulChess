@@ -229,20 +229,28 @@ public static class RoguelikeRunService
 
         if (node.roomType == MapRoomType.Elite && act.eliteLevelPool != null && act.eliteLevelPool.Count > 0)
         {
-            int idx = Mathf.Abs(State.runSeed + node.id * 31) % act.eliteLevelPool.Count;
-            return act.eliteLevelPool[idx];
+            return RoguelikeLevelPicker.PickFromPool(
+                act.eliteLevelPool, node, State.currentMap, act, State.runSeed, act.roguelikeEliteDifficultyBonus,
+                RoguelikeLevelKind.Elite);
+        }
+
+        if (node.roomType == MapRoomType.Event && act.eventLevelPool != null && act.eventLevelPool.Count > 0)
+        {
+            return RoguelikeLevelPicker.PickFromPool(
+                act.eventLevelPool, node, State.currentMap, act, State.runSeed, 0f, RoguelikeLevelKind.Event);
         }
 
         if (act.normalLevelPool != null && act.normalLevelPool.Count > 0)
         {
-            int idx = Mathf.Abs(State.runSeed + node.id * 31) % act.normalLevelPool.Count;
-            return act.normalLevelPool[idx];
+            return RoguelikeLevelPicker.PickFromPool(
+                act.normalLevelPool, node, State.currentMap, act, State.runSeed, 0f, RoguelikeLevelKind.Normal);
         }
 
         if (act.eliteLevelPool != null && act.eliteLevelPool.Count > 0)
         {
-            int idx = Mathf.Abs(State.runSeed + node.id * 31) % act.eliteLevelPool.Count;
-            return act.eliteLevelPool[idx];
+            return RoguelikeLevelPicker.PickFromPool(
+                act.eliteLevelPool, node, State.currentMap, act, State.runSeed, act.roguelikeEliteDifficultyBonus,
+                RoguelikeLevelKind.Elite);
         }
 
         return act.bossLevel;

@@ -105,7 +105,7 @@ public class ShootBullet_WaitBullet : IAttackFunction
     }
     IEnumerator WaitBullet()
     {
-        while (zidan == null||zidan.gameObject.activeSelf )
+        while (zidan != null&&zidan.gameObject.activeSelf )
         {
             yield return null;  
         }

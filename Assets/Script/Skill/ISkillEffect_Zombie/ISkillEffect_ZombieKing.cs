@@ -72,19 +72,14 @@ public class SkillEffect_ZombieKing_RV : ISkillEffect
             dmg *= 1000f;
         var map = MapManage.instance;
         int sign = user.CompareTag("Enemy") ? -1 : (user.transform.right.x < -0.01f ? -1 : 1);
-        int x = user.moveController.standTile.mapPos.x + sign * 6;
-        const int y0 = 1;
-        int[] dx = { 0, 1, 2, 0, 1, 2 };
-        int[] dy = { 0, 0, 0, 1, 1, 1 };
+        int kingX = user.moveController.standTile.mapPos.x;
         string plantTag = user.CompareTag("Enemy") ? "Player" : "Enemy";
-        for (int i = 0; i < 6; i++)
+        ZombieKingMapAnim.ForEachRvCrushTile(kingX, sign, (tx, ty) =>
         {
-            int tx = x + sign * dx[i];
-            int ty = y0 + dy[i];
-            if (!map.IfInMapRange(tx, ty)) continue;
+            if (!map.IfInMapRange(tx, ty)) return;
             var t = map.tiles[tx, ty];
             var target = t?.stander;
-            if (target == null || !target.CompareTag(plantTag)) continue;
+            if (target == null || !target.CompareTag(plantTag)) return;
             var dm = user.skillController.DM;
             dm.damageFrom = user;
             dm.damageTo = target;
@@ -92,6 +87,6 @@ public class SkillEffect_ZombieKing_RV : ISkillEffect
             dm.damageType = DamageType.Real;
             dm.damageElementType = ElementType.Grind;
             target.propertyController.GetDamage(dm);
-        }
+        });
     }
 }

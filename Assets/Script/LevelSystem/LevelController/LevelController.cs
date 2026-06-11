@@ -54,6 +54,17 @@ public class LevelController : MonoBehaviour
     /// </summary>
     public virtual float GetMaxtime() => maxtime;
 
+    /// <summary>小游戏等插件在波次生成前登记额外僵尸，避免空波次提前胜利。</summary>
+    public void RegisterExternalWaveZombie(Chess chess)
+    {
+        if (chess == null || waveDatas == null || waveDatas.Count == 0)
+            return;
+        int idx = currentWave >= 0 ? currentWave : 0;
+        if (idx >= waveDatas.Count)
+            idx = waveDatas.Count - 1;
+        waveDatas[idx].RegisterExternalZombie(chess);
+    }
+
     /// <summary>
     /// 读档时恢复关卡进度
     /// </summary>
@@ -466,6 +477,8 @@ public class WaveData
     /// <summary>本波生成的僵尸，用于检测本波剩余血量，不随死亡移除</summary>
     
     protected List<Chess> waveZombies;
+    [NonSerialized]
+    List<Chess> _pendingExternalZombies;
     [ShowInInspector]
     protected float enterPecent;
     protected float hpmax;
@@ -473,6 +486,7 @@ public class WaveData
     protected int wave;
     public int Wave => wave;
     protected bool createOver;
+    bool victoryRewardSpawned;
     [FoldoutGroup("zombieData"),ShowInInspector]
     protected int maxZombieValue = 0;
     protected ILevelOutcome outcome;
@@ -486,6 +500,8 @@ public class WaveData
         int raritySum = 0;
         this.wave = wave;
         outcome=data.outcome;
+        victoryRewardSpawned = false;
+        _pendingExternalZombies = null;
         if (zombieList == null)
         {
              zombieList = new List<ZombieInWaveData>();
@@ -682,24 +698,70 @@ public class WaveData
             {
                 //Debug.Log(zombieList[i].zombieCreate.chessName);
                 var chess = CreateChess(zombieList[i].zombieCreate);
+                if (chess == null) continue;
                 liveZombie.Add(chess);
                 waveZombies.Add(chess);
             }
             yield return null;
         }
+        MergePendingExternalZombies();
         createOver = true;
+    }
+
+    /// <summary>插件在 <see cref="EnterWave"/> 完成前登记的本波僵尸，并入 <see cref="waveZombies"/>。</summary>
+    public void RegisterExternalZombie(Chess chess)
+    {
+        if (chess == null)
+            return;
+        _pendingExternalZombies ??= new List<Chess>();
+        if (!_pendingExternalZombies.Contains(chess))
+            _pendingExternalZombies.Add(chess);
+        if (createOver && waveZombies != null && !waveZombies.Contains(chess))
+        {
+            waveZombies.Add(chess);
+            liveZombie ??= new List<Chess>();
+            if (!liveZombie.Contains(chess))
+                liveZombie.Add(chess);
+        }
+    }
+
+    void MergePendingExternalZombies()
+    {
+        if (_pendingExternalZombies == null || _pendingExternalZombies.Count == 0)
+            return;
+        liveZombie ??= new List<Chess>();
+        for (int i = 0; i < _pendingExternalZombies.Count; i++)
+        {
+            Chess chess = _pendingExternalZombies[i];
+            if (chess == null || chess.IfDeath)
+                continue;
+            if (!waveZombies.Contains(chess))
+                waveZombies.Add(chess);
+            if (!liveZombie.Contains(chess))
+                liveZombie.Add(chess);
+        }
+        _pendingExternalZombies.Clear();
     }
     public virtual Chess CreateChess(PropertyCreator creator)
     {
         Tile standTile = null;
         List<Tile> tiles = new List<Tile>();
-        List<Tile> all= ((MapManage.instance) as MapManage_PVZ).preTiles;
-        for (int i=0;i<all.Count; i++)
+        var mapPvz = MapManage.instance as MapManage_PVZ;
+        List<Tile> all = mapPvz != null ? mapPvz.preTiles : null;
+        if (all == null || all.Count == 0)
         {
-            if((all[i].tileType & creator.chessTileType) != 0)
-            {
+            Debug.LogError($"[WaveData] preTiles 为空，无法生成 {creator?.chessName}");
+            return null;
+        }
+        for (int i = 0; i < all.Count; i++)
+        {
+            if (creator.chessTileType == 0 || (all[i].tileType & creator.chessTileType) != 0)
                 tiles.Add(all[i]);
-            }
+        }
+        if (tiles.Count == 0)
+        {
+            Debug.LogWarning($"[WaveData] {creator.chessName} 的 chessTileType={creator.chessTileType} 与 preTiles 无交集，回落到全部出生列");
+            tiles.AddRange(all);
         }
         int n = UnityEngine.Random.Range(0, tiles.Count);
         standTile = tiles[n];
@@ -715,6 +777,9 @@ public class WaveData
     /// </summary>
     protected virtual void SpawnVictoryReward(Vector3 lastZombiePos)
     {
+        if (victoryRewardSpawned)
+            return;
+        victoryRewardSpawned = true;
         SaveSystem.DeleteSave(LevelManage.instance.currentLevel);
         (outcome ?? new LevelOutCome_Trophy()).HandleOutcome(true, lastZombiePos);
     }

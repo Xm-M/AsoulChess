@@ -611,17 +611,10 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         var map = MapManage.instance;
         if (map == null || user.moveController?.standTile == null) return;
         int sign = SkillForwardColumnSign(user);
-        int x = user.moveController.standTile.mapPos.x + sign * 6;
-        const int y0 = 1;
+        int kingX = user.moveController.standTile.mapPos.x;
         float dmg = GetCrushDamage(user);
-        int[] dx = { 0, 1, 2, 0, 1, 2 };
-        int[] dy = { 0, 0, 0, 1, 1, 1 };
-        for (int i = 0; i < 6; i++)
-        {
-            int tx = x + sign * dx[i];
-            int ty = y0 + dy[i];
-            ApplyTileCrushDamage(user, map, tx, ty, dmg);
-        }
+        ZombieKingMapAnim.ForEachRvCrushTile(kingX, sign, (tx, ty) =>
+            ApplyTileCrushDamage(user, map, tx, ty, dmg));
     }
 
     float GetCrushDamage(Chess user)

@@ -20,6 +20,7 @@ public class PrePlantImage : MonoBehaviour
         instance = this;
         handDIc = new Dictionary<HandItemType, BaseHandPanel>();
         handDIc.Add(HandItemType.Plants, new PlantsPanel());
+        handDIc.Add(HandItemType.ColumnPlants, new PlantsPanel_Column());
         handDIc.Add(HandItemType.Shovel,new ShovelPanel());
         handDIc.Add(HandItemType.Hammer, new HammerPanel());
         gameObject.SetActive(false);
@@ -126,6 +127,7 @@ public class PrePlantImage_Data
 public enum HandItemType
 {
     Plants,//种植
+    ColumnPlants,//列种植（排山倒海）
     Shovel,//手套
     Hammer,//锤子
 }

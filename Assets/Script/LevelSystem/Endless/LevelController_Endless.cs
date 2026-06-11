@@ -25,6 +25,15 @@ public class LevelController_Endless : LevelController
             return;
         }
 
+        if (SaveLoadContext.IsLoadFromSave && SaveLoadContext.CurrentSaveData != null)
+        {
+            RestoreLevelProgress(SaveLoadContext.CurrentSaveData.levelData);
+            BuffDatabase.RestoreRegistry(SaveLoadContext.CurrentSaveData.buffRegistry);
+            RestorePlayerPlants(SaveLoadContext.CurrentSaveData.playerPlants);
+            RestoreSunLightFromSave(SaveLoadContext.CurrentSaveData);
+            SyncShopHandFromSave(SaveLoadContext.CurrentSaveData);
+        }
+
         if (levelData.EnterMapPlugin != null)
         {
             for (int i = 0; i < levelData.EnterMapPlugin.Count; i++)
@@ -36,9 +45,9 @@ public class LevelController_Endless : LevelController
 
     void RunRoundEnter()
     {
-        RestoreSegmentPoolForLoadIfNeeded();
-        if (RunState.segmentPool.Count == 0)
-            RunState.RebuildSegmentPool(levelData, RunState.selectionIndex);
+        RestoreRunStateForLoadIfNeeded();
+        RunState.segmentPool.Clear();
+        RunState.RebuildSegmentPool(levelData, RunState.selectionIndex);
 
         RunState.ResetRarityUseCounts();
         ClearZombiePreviews();
@@ -49,7 +58,7 @@ public class LevelController_Endless : LevelController
         roundTransitioning = false;
     }
 
-    void RestoreSegmentPoolForLoadIfNeeded()
+    void RestoreRunStateForLoadIfNeeded()
     {
         if (!SaveLoadContext.IsLoadFromSave || SaveLoadContext.CurrentSaveData?.levelData == null)
             return;
@@ -57,8 +66,6 @@ public class LevelController_Endless : LevelController
         if (ld.selectionIndex > 0)
             RunState.selectionIndex = ld.selectionIndex;
         RunState.totalWavesCleared = ld.totalWavesCleared;
-        if (ld.segmentPoolIds != null && ld.segmentPoolIds.Count > 0)
-            RunState.RestoreSegmentPoolFromIds(levelData, ld.segmentPoolIds);
     }
 
     void CreateRoundWaves()
@@ -97,9 +104,6 @@ public class LevelController_Endless : LevelController
         }
 
         bool isLoadFromSave = SaveLoadContext.IsLoadFromSave && SaveLoadContext.CurrentSaveData != null;
-        if (isLoadFromSave)
-            RestoreLevelProgress(SaveLoadContext.CurrentSaveData.levelData);
-
         ClearZombiePreviews();
 
         if (levelData.GameStartPlugin != null)
@@ -108,12 +112,7 @@ public class LevelController_Endless : LevelController
                 levelData.GameStartPlugin[i].StadgeEffect(this);
         }
 
-        if (isLoadFromSave)
-        {
-            BuffDatabase.RestoreRegistry(SaveLoadContext.CurrentSaveData.buffRegistry);
-            RestorePlayerPlants(SaveLoadContext.CurrentSaveData.playerPlants);
-        }
-
+        TryLockShopHand();
         LevelManage.instance.GameStart();
         roundTransitioning = false;
 
@@ -125,22 +124,36 @@ public class LevelController_Endless : LevelController
         {
             UIManage.Show<TextPanel>();
             UIManage.GetView<TextPanel>().GameStart();
-            SaveSystem.SaveCurrentLevel();
-        }
-
-        if (isLoadFromSave && currentWave >= 0)
-        {
-            UIManage.Show<ProgressBar>();
-            UIManage.GetView<ProgressBar>().SetFlag(levelData.MaxWave / 10);
-            UIManage.GetView<ProgressBar>().MoveBar(currentWave + 1, levelData.MaxWave);
-            if (t >= mintime)
-                DoEnterNextWave();
         }
 
         if (isLoadFromSave)
-        {
             SceneManage.instance.LoadOver();
-            UIManage.GetView<ParsePanel>().ShowContinuePanel();
+    }
+
+    void TryLockShopHand()
+    {
+        if (levelData?.PreParePlugin == null) return;
+        for (int i = 0; i < levelData.PreParePlugin.Count; i++)
+        {
+            if (levelData.PreParePlugin[i] is PreParePlugun_ShowPlantShop shop)
+                shop.EnsureLockedHandFromShop();
+        }
+    }
+
+    static void RestoreSunLightFromSave(GameSaveData save)
+    {
+        if (save?.plantsShopData == null || SunLightPanel.instance == null)
+            return;
+        SunLightPanel.instance.SetSunLight(save.plantsShopData.sunLight);
+    }
+
+    void SyncShopHandFromSave(GameSaveData save)
+    {
+        if (levelData?.PreParePlugin == null || save == null) return;
+        for (int i = 0; i < levelData.PreParePlugin.Count; i++)
+        {
+            if (levelData.PreParePlugin[i] is PreParePlugun_ShowPlantShop shop)
+                shop.SyncLockedHandFromSave(save);
         }
     }
 
@@ -179,7 +192,6 @@ public class LevelController_Endless : LevelController
 
         if (currentWave == -1 && t > mintime)
         {
-            SaveSystem.SaveCurrentLevel();
             waveDatas[0].EnterWave();
             if (RunState.selectionIndex <= 1)
                 UIManage.GetView<TextPanel>().FirstZombieCom();
@@ -200,8 +212,6 @@ public class LevelController_Endless : LevelController
                 return;
             }
 
-            if (waveDatas[currentWave].GetCurrentZombieHpSum() <= 0 && currentWave < LastWaveIndex)
-                SaveSystem.SaveCurrentLevel();
             t = 0;
             DoEnterNextWave();
         }
@@ -228,17 +238,21 @@ public class LevelController_Endless : LevelController
         RoundOverPlugins();
 
         RunState.totalWavesCleared += waveDatas.Count;
-        SaveSystem.SaveCurrentLevel();
-        LevelManage.instance.GamePause();
-        UIManage.Close<ProgressBar>();
 
         if (CheckSurvivalWin())
         {
+            RunState.selectionIndex++;
+            SaveSystem.SaveCurrentLevel();
+            LevelManage.instance.GamePause();
+            UIManage.Close<ProgressBar>();
             roundTransitioning = false;
             yield break;
         }
 
         RunState.selectionIndex++;
+        SaveSystem.SaveCurrentLevel();
+        LevelManage.instance.GamePause();
+        UIManage.Close<ProgressBar>();
         currentWave = -1;
         t = 0;
         ClearZombiePreviews();

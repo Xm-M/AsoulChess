@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Playables;
 using UnityEngine.Rendering.Universal;
 /// <summary>
@@ -14,6 +13,8 @@ public class MapManage : MonoBehaviour
     public List<Tile> preTiles;
     public Vector2Int mapSize;
     public Vector2 tileSize = new Vector2(1.25f, 1);
+    /// <summary>≥0 时仅 <see cref="mapPos.x"/> 不小于本值的格可参与种植射线检测；-1 表示不限制（坚果保龄球等插件写入）。</summary>
+    [System.NonSerialized] public int plantMinMapColumnX = -1;
     [SerializeReference]
     public IInitMapManage initMapManage;
     public AudioPlayer BGMPlayer;
@@ -48,6 +49,8 @@ public class MapManage : MonoBehaviour
         for (int i = 0; i < mapSize.x ; i++)
             for (int j = 0; j < mapSize.y; j++)
             {
+                if (plantMinMapColumnX >= 0 && i < plantMinMapColumnX)
+                    continue;
                 var c = tiles[i, j] != null ? tiles[i, j].GetComponent<Collider2D>() : null;
                 if (c != null) c.enabled = true;
             }

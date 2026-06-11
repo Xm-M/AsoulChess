@@ -31,8 +31,7 @@ public class ISkillEffect_Zombie_JumpToTagret : ISkillEffect
         {
             if (user == null || user.IfDeath || tile == null || targetTile == null)
                 return;
-            //tile.ChessLeave(user);
-            //targetTile.ChessEnter(user);
+           
         });
     }
 

@@ -25,12 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3282245235995375078}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1013572895747360352}
-  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &3146642228904352057
 AudioSource:
@@ -175,12 +176,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3421455022351012679}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1013572895747360352}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &268493933806106675
 MonoBehaviour:
@@ -318,6 +320,7 @@ GameObject:
   - component: {fileID: 424438577991188016}
   - component: {fileID: 7567370618798058004}
   - component: {fileID: 2922442521725759064}
+  - component: {fileID: 5662963368539703805}
   m_Layer: 0
   m_Name: "\u5C0F\u4E11\u50F5\u5C38"
   m_TagString: Untagged
@@ -332,9 +335,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8692359774704960149}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6110208532375775920}
   - {fileID: 6864562309966523148}
@@ -343,7 +348,6 @@ Transform:
   - {fileID: 7952292151573359170}
   - {fileID: 2161878528887900964}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5122694943909080628
 MonoBehaviour:
@@ -362,7 +366,7 @@ MonoBehaviour:
     master: {fileID: 0}
     weaponPos: {fileID: 0}
     weapon:
-      id: 0
+      rid: 0
     OnAttack:
       m_PersistentCalls:
         m_Calls: []
@@ -378,12 +382,15 @@ MonoBehaviour:
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
+    onHealDamage:
+      m_PersistentCalls:
+        m_Calls: []
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      rid: -2
     activeSkill:
-      id: 2
+      rid: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -393,22 +400,23 @@ MonoBehaviour:
       ifCrit: 0
       suppressFloatingDamage: 0
       takeBuff:
-        id: 1
+        rid: -2
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillColdFx: {fileID: 0}
     skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
-        id: 1
+        rid: -2
       transitions: []
     preState:
       state:
-        id: 1
+        rid: -2
       transitions: []
     stateGraph: {fileID: 11400000, guid: b44f7b6ba640cf64faedcc9241b9b3ca, type: 2}
     EnterWarState: 4
@@ -420,7 +428,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 3
+      rid: 3
     OnReachTile:
       m_PersistentCalls:
         m_Calls: []
@@ -447,36 +455,41 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 1
+          rid: -2
         findTarget:
-          id: 4
+          rid: 4
         attackFunction:
-          id: 5
+          rid: 5
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
         interval: 0
-    00000001:
-      type: {class: , ns: , asm: }
-    00000002:
+    - rid: 2
       type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
       data:
         config: {fileID: 11400000, guid: ea5b207766fcabc4eac7df4411140286, type: 2}
         readyChecker:
-          id: 6
+          rid: 1573513499311079425
         effect:
-          id: 7
+          rid: 7
         skillFinish:
-          id: 8
+          rid: 8
         runtime:
-          id: 9
-    00000003:
+          rid: 9
+    - rid: 3
       type: {class: HorMove, ns: , asm: Assembly-CSharp}
-    00000004:
+      data: 
+    - rid: 4
       type: {class: StraightFindTarget, ns: , asm: Assembly-CSharp}
-    00000005:
+      data: 
+    - rid: 5
       type: {class: CloseAttack, ns: , asm: Assembly-CSharp}
       data:
         effect: {fileID: 0}
@@ -489,20 +502,38 @@ MonoBehaviour:
           ifCrit: 0
           suppressFloatingDamage: 0
           takeBuff:
-            id: 1
-    00000006:
+            rid: -2
+    - rid: 7
+      type: {class: SkillEffect_KitaExplode, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 8
+      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 9
+      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+      data:
+        currentTime: 0
+    - rid: 1573513499311079425
+      type: {class: SkillReady_Multy, ns: , asm: Assembly-CSharp}
+      data:
+        skillReadies:
+        - rid: 1573513499311079426
+        - rid: 1573513499311079427
+    - rid: 1573513499311079426
       type: {class: ISkillReady_RandomExplode, ns: , asm: Assembly-CSharp}
       data:
         t1: {x: 4.4, y: 7.56}
         t2: {x: 13.22, y: 22.68}
-    00000007:
-      type: {class: SkillEffect_KitaExplode, ns: , asm: Assembly-CSharp}
-    00000008:
-      type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
-    00000009:
-      type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
+    - rid: 1573513499311079427
+      type: {class: SkillReady_IfTargetInRange, ns: , asm: Assembly-CSharp}
       data:
-        currentTime: 0
+        search:
+          rid: 1573513499311079428
+    - rid: 1573513499311079428
+      type: {class: ICircleSearch, ns: , asm: Assembly-CSharp}
+      data:
+        checkRange: 3
+        dx: {x: 0, y: 0, z: 0}
 --- !u!61 &108932546172721284
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -513,6 +544,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -692,11 +742,14 @@ MonoBehaviour:
   deathVariantParameterName: DeathVariant
   player: {fileID: 8270455181247781865}
   bloodBuff:
-    id: 0
+    rid: 0
   randomSpeed: 0.2
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: BloodBuff, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u81EA\u6D41\u8840"
@@ -710,9 +763,25 @@ MonoBehaviour:
           ifCrit: 0
           suppressFloatingDamage: 0
           takeBuff:
-            id: 1
-    00000001:
-      type: {class: , ns: , asm: }
+            rid: -2
+--- !u!114 &5662963368539703805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8692359774704960149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aae06f80775e5d4682c14ee0635c190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Effect: {fileID: 7358585734562049957, guid: 8c6ebc183c48ae749b202bdab4a75827, type: 3}
+  radius: 1
+  continueTime: 3
+  interval: 0.5
+  createNumOnce: 3
+  center: {fileID: 0}
 --- !u!1 &9023046806202753050
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,12 +806,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9023046806202753050}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.8, y: 1.67, z: 0.22693}
   m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1013572895747360352}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5529474609249135265
 SpriteRenderer:
@@ -755,6 +825,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -800,6 +871,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1013572895747360352}
     m_Modifications:
     - target: {fileID: 1250987581081000726, guid: 3fe13bbe47411c2498587868b149a786, type: 3}
@@ -851,6 +923,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fe13bbe47411c2498587868b149a786, type: 3}
 --- !u!1 &890016189028916634 stripped
 GameObject:
@@ -867,6 +942,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1013572895747360352}
     m_Modifications:
     - target: {fileID: 2673868079073005060, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
@@ -926,6 +1002,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
 --- !u!4 &6864562309966523148 stripped
 Transform:
@@ -937,6 +1016,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1013572895747360352}
     m_Modifications:
     - target: {fileID: 4635104716620181003, guid: 6ff1bd5d662a73041acaa26250dd0871, type: 3}
@@ -988,6 +1068,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ff1bd5d662a73041acaa26250dd0871, type: 3}
 --- !u!4 &1986494483605739755 stripped
 Transform:

@@ -49,6 +49,14 @@ public class LevelData : ScriptableObject
     [Tooltip("读档时 Director 将跳转到此时间点（秒），跳过 EnterMap/GamePrepare 动画")]
     public float loadSkipToTime = 10f;
 
+    [LabelText("肉鸽难度"), FoldoutGroup("肉鸽")]
+    [Tooltip("肉鸽地图按层抽关时匹配用；0 表示未标注，仅在没有同难度候选时作为兜底池参与抽取")]
+    public float roguelikeDifficulty;
+
+    [LabelText("肉鸽关卡类型"), FoldoutGroup("肉鸽")]
+    [Tooltip("区分普通/精英/事件等；None 表示未标注，仍可按所在 ActMapConfig 池子参与抽取")]
+    public RoguelikeLevelKind roguelikeKind;
+
     /// <summary>
     /// 遍历所有插件（EnterMap + PrePare + GameStart）
     /// </summary>
@@ -78,5 +86,15 @@ public enum CreateZombieType
     二类有限制,
     一类无限制,
     二类无限制,
+}
+
+/// <summary>肉鸽 <see cref="LevelData"/> 用途标签（与地图节点 <see cref="MapRoomType"/> 对应，便于同池筛选）。</summary>
+public enum RoguelikeLevelKind
+{
+    None = 0,
+    Normal,
+    Elite,
+    Boss,
+    Event,
 }
 

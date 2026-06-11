@@ -12,10 +12,12 @@ public class Item_PlantCard : UIItem
     public static Item_PlantCard select;
     public PropertyCreator creator;
     public Image goodImage;
-    bool ifselect;
+    protected bool ifselect;
     public UnityEvent WhenRecycle;
     public AudioPlayer au;
-    bool plantOver;
+    protected bool plantOver;
+
+    protected virtual HandItemType PlantHandType => HandItemType.Plants;
 
     public AnimationCurve curve;
     public float totalTime = 1;
@@ -104,7 +106,7 @@ public class Item_PlantCard : UIItem
             data.creator = creator;
             data.preSprite = creator.chessSprite;
             data.tag = "Player";
-            PrePlantImage.instance.TryToPlant(CancelPlant, Recycle,data,HandItemType.Plants);
+            PrePlantImage.instance.TryToPlant(CancelPlant, Recycle, data, PlantHandType);
             if (select != null) select.CancelPlant();
             select = this;
             //au.RandomPlay();
@@ -123,11 +125,15 @@ public class Item_PlantCard : UIItem
     }
     public override void Recycle()
     {
-        //if (gameObject == null) return;
         transform.SetParent(UIManage.GetView<ItemPanel>().transform);
-        UIManage.GetView<ItemPanel>().Recycle<Item_PlantCard>(this);
+        RecycleToPool();
         WhenRecycle?.Invoke();
         plantOver = true;
-        if(select==this) select = null;
+        if (select == this) select = null;
+    }
+
+    protected virtual void RecycleToPool()
+    {
+        UIManage.GetView<ItemPanel>().Recycle<Item_PlantCard>(this);
     }
 }

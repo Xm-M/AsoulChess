@@ -9,6 +9,8 @@ public class ProgressBar : View
     public UIStatBar uiBar;
     public Text stadgeName;//关卡名
     public List<GameObject> flags;
+    bool bossHpMode;
+
     public override void Init()
     {
         uiBar.SetValue(0, 1);
@@ -24,7 +26,29 @@ public class ProgressBar : View
     }
     public void MoveBar(float cur,float max)
     {
+        bossHpMode = false;
         uiBar.SetValue(cur, max);
+    }
+
+    /// <summary>Boss 关：隐藏波次旗，进度条表示 Boss 剩余血量。</summary>
+    public void ShowBossHp(float current, float max)
+    {
+        bossHpMode = true;
+        ClearFlags();
+        uiBar.SetValue(current, max);
+    }
+
+    public void UpdateBossHp(float current, float max)
+    {
+        if (!bossHpMode) return;
+        uiBar.SetValue(current, max);
+    }
+
+    void ClearFlags()
+    {
+        if (flags == null) return;
+        for (int i = 0; i < flags.Count; i++)
+            flags[i].SetActive(false);
     }
     public override void Show()
     {
@@ -35,11 +59,9 @@ public class ProgressBar : View
     public override void Hide()
     {
         base.Hide();
-        for(int i = 0; i < flags.Count; i++)
-        {
-            flags[i].SetActive(false);
-            uiBar.SetValue(0,1);
-        }
+        bossHpMode = false;
+        ClearFlags();
+        uiBar.SetValue(0, 1);
         stadgeName.text = "";
     }
 }

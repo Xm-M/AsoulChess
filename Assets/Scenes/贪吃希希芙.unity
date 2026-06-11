@@ -7627,9 +7627,9 @@ MonoBehaviour:
     m_Events:
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1780611826}
-          m_TargetAssemblyTypeName: LevelController, Assembly-CSharp
-          m_MethodName: GamePrepare
+        - m_Target: {fileID: 1780611827}
+          m_TargetAssemblyTypeName: MapManage_PVZ, Assembly-CSharp
+          m_MethodName: Timeline_GamePrepare
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -7643,9 +7643,9 @@ MonoBehaviour:
         m_Calls: []
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1780611826}
-          m_TargetAssemblyTypeName: LevelController_Snake, Assembly-CSharp
-          m_MethodName: GameStart
+        - m_Target: {fileID: 1780611827}
+          m_TargetAssemblyTypeName: MapManage_PVZ, Assembly-CSharp
+          m_MethodName: Timeline_GameStart
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -7659,9 +7659,9 @@ MonoBehaviour:
         m_Calls: []
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1780611826}
-          m_TargetAssemblyTypeName: LevelController, Assembly-CSharp
-          m_MethodName: EnterMap
+        - m_Target: {fileID: 1780611827}
+          m_TargetAssemblyTypeName: MapManage_PVZ, Assembly-CSharp
+          m_MethodName: Timeline_EnterMap
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

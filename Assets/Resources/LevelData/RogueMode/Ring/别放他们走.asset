@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u522B\u653E\u4ED6\u4EEC\u8D70"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: Ring
+  levelName: "\u522B\u653E\u4ED6\u4EEC\u8D70"
+  levelSprit: {fileID: 0}
+  levelMode: 1
+  EnterMapPlugin:
+  - rid: 0
+  - rid: 1
+  PreParePlugin:
+  - rid: 2
+  GameStartPlugin:
+  - rid: 3
+  - rid: 4
+  - rid: 5
+  - rid: 6
+  MaxWave: 20
+  n: 1
+  t: 1
+  zombieList:
+  - {fileID: 11400000, guid: 8978a7eb10fe5af4aa98c0fd9f84bfa5, type: 2}
+  createZombieType: 3
+  nextLevel: {fileID: 0}
+  outcome:
+    rid: -2
+  loadSkipToTime: 10
+  roguelikeDifficulty: 2.5
+  roguelikeKind: 4
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    - rid: 1
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u9009\u724C"
+        deleyPlayTime: 0
+    - rid: 2
+      type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 50
+        cards: []
+    - rid: 3
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u5C0F\u6E38\u620F"
+        deleyPlayTime: 3
+    - rid: 4
+      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 5
+      type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
+      data:
+        fastEnterTime: 4
+    - rid: 6
+      type: {class: GameStartPlugin_MinerEscapeFail, ns: , asm: Assembly-CSharp}
+      data: 

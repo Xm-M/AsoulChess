@@ -149,6 +149,37 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &2470697798443012070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 413277617058492296}
+  m_Layer: 0
+  m_Name: "\u55B7\u706B\u4F4D\u7F6E"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &413277617058492296
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2470697798443012070}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: 0.5250001, y: -0.844, z: -1.7630765}
+  m_LocalScale: {x: 0.3125, y: 0.3125, z: 3.125}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2385381687420924504}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3710166087217761243
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,12 +479,7 @@ MonoBehaviour:
         runtime:
           rid: 3
         zombieTypes:
-        - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
-        - {fileID: 11400000, guid: 895c68db05cf2d7489a61f83bd3b78ed, type: 2}
-        - {fileID: 11400000, guid: 54b660ca58dee1f45b098cc3f928c826, type: 2}
-        - {fileID: 11400000, guid: ae5039e4a3290274e985148dba09a9fd, type: 2}
-        - {fileID: 11400000, guid: 8d77ec938caad1b48b1376aa6fa41b12, type: 2}
-        - {fileID: 11400000, guid: c0cb6e1f0882bfb449d5418e67da900b, type: 2}
+        - {fileID: 11400000, guid: 129ac75237c11ee41941cddae5ed9065, type: 2}
         bungeeZombie: {fileID: 11400000, guid: 06b48e36f41dd5042ab448c259b3c20a, type: 2}
         fireBallPrefab: {fileID: 3858522063525295543, guid: 5b2c7eefabe078d47a66cd7ce4ed4e42, type: 3}
         iceBallPrefab: {fileID: 16380033164033600, guid: afd01b04442df15479a19a9bce727232, type: 3}
@@ -1968,6 +1994,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6076759992820286548, guid: dc1234d350677a349bbcd1ca36753e99, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7898443806612447679}
+    - targetCorrespondingSourceObject: {fileID: 2303199851053236077, guid: dc1234d350677a349bbcd1ca36753e99, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 413277617058492296}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2471133407025784804, guid: dc1234d350677a349bbcd1ca36753e99, type: 3}
       insertIndex: -1
@@ -1978,6 +2007,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2471133407025784804, guid: dc1234d350677a349bbcd1ca36753e99, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4451620596853339505}
+    - targetCorrespondingSourceObject: {fileID: 2471133407025784804, guid: dc1234d350677a349bbcd1ca36753e99, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7937483011596641005}
   m_SourcePrefab: {fileID: 100100000, guid: dc1234d350677a349bbcd1ca36753e99, type: 3}
 --- !u!1 &2064674702226352849 stripped
 GameObject:
@@ -2149,6 +2181,30 @@ MonoBehaviour:
   mouthGlowIdleSprite: {fileID: 21300000, guid: 949f6613185017d4e91e0e397bf28559, type: 3}
   mouthGlowFireSprite: {fileID: 21300000, guid: 584a7f83e350ce24f99beb508fe7ed0c, type: 3}
   mouthGlowIceSprite: {fileID: 21300000, guid: 69501e61c9e39d04285c3c59c3b04540, type: 3}
+--- !u!114 &7937483011596641005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064674702226352849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee6c0b69b3b6eb048993f139a613d746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Effect: {fileID: 199662743551601540, guid: bfc36874f1a6d5b479548df52335f994, type: 3}
+  radius: 1
+  continueTime: 3
+  interval: 0.5
+  createNumOnce: 3
+  center: {fileID: 413277617058492296}
+  blendParam: Blend
+--- !u!4 &2385381687420924504 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2303199851053236077, guid: dc1234d350677a349bbcd1ca36753e99, type: 3}
+  m_PrefabInstance: {fileID: 4534007782901321013}
+  m_PrefabAsset: {fileID: 0}
 --- !u!212 &3173985824820251445 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1360169846758295040, guid: dc1234d350677a349bbcd1ca36753e99, type: 3}

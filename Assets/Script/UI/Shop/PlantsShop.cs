@@ -43,7 +43,12 @@ public class PlantsShop : View
     }
     public override void Show()
     {
-        if (SaveLoadContext.IsLoadFromSave && SaveLoadContext.CurrentSaveData?.plantsShopData != null)
+        // 生存模式读档由 Prepare 插件调用 ShowLockedHand，不走自动开战
+        bool survivalLoad = SaveLoadContext.IsLoadFromSave
+            && LevelManage.instance?.currentLevel?.levelMode == LevelMode.SurvivalMode;
+        if (!survivalLoad
+            && SaveLoadContext.IsLoadFromSave
+            && SaveLoadContext.CurrentSaveData?.plantsShopData != null)
         {
             ShowForLoad(SaveLoadContext.CurrentSaveData.plantsShopData);
             return;
@@ -157,25 +162,37 @@ public class PlantsShop : View
     }
 
     /// <summary>
-    /// 读档时调用：跳过选卡，直接恢复已选植物并播放 gameStart 动画
+    /// 冒险模式读档：跳过选卡，直接恢复顶栏并自动开战。
     /// </summary>
     public void ShowForLoad(PlantsShopSaveData data)
     {
+        ShowLockedHand(data, autoStart: true, restoreSunLight: true);
+    }
+
+    /// <summary>
+    /// 恢复已锁定手牌。生存轮间 Prepare 用 autoStart=false，等玩家点开战。
+    /// </summary>
+    public void ShowLockedHand(PlantsShopSaveData data, bool autoStart, bool restoreSunLight)
+    {
         if (data == null) return;
         gameObject.SetActive(true);
+        ClearSelectPanel();
+        ClearTopBar();
         currentSelectIcons.Clear();
-        currentShopIcons.Clear();
         allSelectIcons.Clear();
-        for (int i = shopIconParent.childCount - 1; i >= 0; i--)
-            Destroy(shopIconParent.GetChild(i).gameObject);
-        SunLightPanel.instance.SetSunLight(data.sunLight);
+        currentShopIcons.Clear();
+        SelectOver = false;
+
+        if (restoreSunLight)
+            SunLightPanel.instance.SetSunLight(data.sunLight);
+
         if (data.selectedCreatorIds != null && data.selectedCreatorIds.Count > 0)
         {
             foreach (var creatorId in data.selectedCreatorIds)
             {
                 var creator = GetCreatorByChessName(creatorId);
                 if (creator == null) continue;
-                GameObject shopIconObj = null;
+                GameObject shopIconObj;
                 if (creator.PlantCardPre == null)
                     shopIconObj = Instantiate(shopIconPre, shopIconParent);
                 else
@@ -185,12 +202,34 @@ public class PlantsShop : View
                 AddShopIcon(shopIcon);
             }
         }
-        var mapPvz = MapManage.instance as MapManage_PVZ;
-        if (mapPvz != null) mapPvz.WhenGameStart();
-        for (int i = 0; i < shopIconParent.childCount; i++)
-            shopIconParent.GetChild(i).GetComponent<ShopIcon>().SetClearColor();
-        anim.Play("end");
-        SelectOver = true;
+
+        if (autoStart)
+        {
+            var mapPvz = MapManage.instance as MapManage_PVZ;
+            if (mapPvz != null) mapPvz.WhenGameStart();
+            for (int i = 0; i < shopIconParent.childCount; i++)
+                shopIconParent.GetChild(i).GetComponent<ShopIcon>().SetClearColor();
+            anim.Play("end");
+            SelectOver = true;
+        }
+        else
+        {
+            p1.anchoredPosition = startPos1;
+            p2.anchoredPosition = startPos2;
+            anim.Play("end");
+        }
+    }
+
+    void ClearSelectPanel()
+    {
+        for (int i = selectIconParent.childCount - 1; i >= 0; i--)
+            Destroy(selectIconParent.GetChild(i).gameObject);
+    }
+
+    void ClearTopBar()
+    {
+        for (int i = shopIconParent.childCount - 1; i >= 0; i--)
+            Destroy(shopIconParent.GetChild(i).gameObject);
     }
 
     private PropertyCreator GetCreatorByChessName(string chessName)

@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u6392\u5C71\u5012\u6D77"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: "\u524D\u9662"
+  levelName: "\u6392\u5C71\u5012\u6D77"
+  levelSprit: {fileID: 136398765, guid: 421afde933c35af4d8db856d5e639cd4, type: 3}
+  levelMode: 1
+  EnterMapPlugin:
+  - rid: 0
+  - rid: 1573513499311079445
+  PreParePlugin:
+  - rid: 1573513499311079446
+  GameStartPlugin:
+  - rid: 2
+  - rid: 3
+  MaxWave: 20
+  n: 1
+  t: 4
+  zombieList:
+  - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+  - {fileID: 11400000, guid: 895c68db05cf2d7489a61f83bd3b78ed, type: 2}
+  - {fileID: 11400000, guid: ae5039e4a3290274e985148dba09a9fd, type: 2}
+  createZombieType: 0
+  nextLevel: {fileID: 0}
+  outcome:
+    rid: -2
+  loadSkipToTime: 10
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    - rid: 2
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u5C0F\u6E38\u620F"
+        deleyPlayTime: 2
+    - rid: 3
+      type: {class: GameStartPlugin_FastCreateZombie, ns: , asm: Assembly-CSharp}
+      data:
+        fastEnterTime: 15
+    - rid: 1573513499311079445
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u9009\u724C"
+        deleyPlayTime: 0
+    - rid: 1573513499311079446
+      type: {class: PreParePlugin_ConveyorColumn, ns: , asm: Assembly-CSharp}
+      data:
+        fixedPrefixCreators:
+        - {fileID: 11400000, guid: 6f110f5d59bd8c847a1b05b973663c54, type: 2}
+        - {fileID: 11400000, guid: 05443962c4f73b14c9c06d32389a7040, type: 2}
+        - {fileID: 11400000, guid: 5decb9d7c91cc454183ed7225c2d805f, type: 2}
+        - {fileID: 11400000, guid: 1c65ad1695e50444e8da46c81ea76868, type: 2}
+        - {fileID: 11400000, guid: ad2338db0dcc0f440867aa3b66ed298d, type: 2}
+        loopCreators:
+        - {fileID: 11400000, guid: 35ba3114aaca8f14d9818640ae354065, type: 2}
+        - {fileID: 11400000, guid: fe604c5fe275262429c6d239ba0bef63, type: 2}
+        spawnInterval: 6

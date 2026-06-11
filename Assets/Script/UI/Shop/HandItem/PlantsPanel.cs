@@ -37,7 +37,10 @@ public class PlantsPanel : BaseHandPanel
                     if (!IceCell.BlocksPlayerPlantAt(rayPos))
                     {
                         Tile t = FindTileAtWorld(rayPos);
-                        if (t != null && data.creator.IfCanPlant(t))
+                        if (t != null
+                            && (MapManage.instance.plantMinMapColumnX < 0
+                                || t.mapPos.x >= MapManage.instance.plantMinMapColumnX)
+                            && data.creator.IfCanPlant(t))
                         {
                             if (data.creator.plantFunction is LevelUpPlant) t.stander?.Death();
                             Chess c = ChessTeamManage.Instance.CreateChess(data.creator, t, data.tag);

@@ -89,18 +89,58 @@ public class Effect_Smoke : MonoBehaviour
 
     void ShowSmokeInRange(Vector2Int centerMapPos, int size)
     {
+        foreach (var pos in GetCellsInSquare(centerMapPos, size))
+        {
+            var ls = GetSmokeAt(pos);
+            if (ls != null)
+                ls.ForceShow();
+        }
+    }
+
+    /// <summary>指定格子雾气是否视为「存在」（正在 hide 动画中返回 false）。</summary>
+    public bool IsFogActiveAt(Vector2Int mapPos)
+    {
+        var ls = GetSmokeAt(mapPos);
+        return ls != null && ls.IsFogPresent;
+    }
+
+    /// <summary>以格子为中心驱散雾气（如 3 表示 3×3）。</summary>
+    public void HideSmokeInRange(Vector2Int centerMapPos, int size, float hideTime = 99999f)
+    {
+        if (smokes == null) return;
+        foreach (var pos in GetCellsInSquare(centerMapPos, size))
+        {
+            var ls = GetSmokeAt(pos);
+            if (ls != null)
+                ls.Hide(hideTime);
+        }
+    }
+
+    LittleSmoke GetSmokeAt(Vector2Int mapPos)
+    {
+        if (smokes == null) return null;
+        foreach (var ls in smokes)
+        {
+            if (ls.mapPos == mapPos)
+                return ls;
+        }
+        return null;
+    }
+
+    static IEnumerable<Vector2Int> GetCellsInSquare(Vector2Int centerMapPos, int size)
+    {
+        if (MapManage.instance == null || size <= 0)
+            yield break;
         int half = (size - 1) / 2;
         int minX = Mathf.Max(0, centerMapPos.x - half);
         int maxX = Mathf.Min(MapManage.instance.mapSize.x - 1, centerMapPos.x + half);
         int minY = Mathf.Max(0, centerMapPos.y - half);
         int maxY = Mathf.Min(MapManage.instance.mapSize.y - 1, centerMapPos.y + half);
-
-        foreach (var ls in smokes)
-        {
-            if (ls.mapPos.x >= minX && ls.mapPos.x <= maxX && ls.mapPos.y >= minY && ls.mapPos.y <= maxY)
-                ls.ForceShow();
-        }
+        for (int x = minX; x <= maxX; x++)
+        for (int y = minY; y <= maxY; y++)
+            yield return new Vector2Int(x, y);
     }
+
     public class LittleSmoke
     {
         public GameObject smoke;
@@ -147,6 +187,9 @@ public class Effect_Smoke : MonoBehaviour
         {
             return Vector2.Distance(smoke.transform.position,center)<=dis;
         }
+
+        /// <summary>未进入 hide 流程时视为有雾；播放 hide 动画后视为无雾。</summary>
+        public bool IsFogPresent => !hide;
     }
 
 }

@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u5168\u9762\u8FDB\u653B"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: "\u524D\u9662"
+  levelName: "\u5168\u5458\u96C6\u7ED3"
+  levelSprit: {fileID: 0}
+  levelMode: 0
+  EnterMapPlugin:
+  - rid: 0
+  - rid: 1
+  PreParePlugin:
+  - rid: 1573513517688160258
+  GameStartPlugin:
+  - rid: 3
+  - rid: 4
+  - rid: 5
+  MaxWave: 30
+  n: 4
+  t: 4
+  zombieList:
+  - {fileID: 11400000, guid: 895c68db05cf2d7489a61f83bd3b78ed, type: 2}
+  - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+  - {fileID: 11400000, guid: ae5039e4a3290274e985148dba09a9fd, type: 2}
+  - {fileID: 11400000, guid: 25099833c8935c44598f4d7446210ba7, type: 2}
+  createZombieType: 0
+  nextLevel: {fileID: 11400000, guid: c9c9e005df20b5d4ca70aff49c07ce11, type: 2}
+  outcome:
+    rid: 1573513517688160256
+  loadSkipToTime: 10
+  roguelikeDifficulty: 5
+  roguelikeKind: 4
+  references:
+    version: 2
+    RefIds:
+    - rid: 0
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    - rid: 1
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u9009\u724C"
+        deleyPlayTime: 0
+    - rid: 3
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u767D\u5929"
+        deleyPlayTime: 3
+    - rid: 4
+      type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
+      data:
+        sunlight: 25
+    - rid: 5
+      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 1573513517688160256
+      type: {class: LevelOutCome_Roguelike, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 1573513517688160258
+      type: {class: PreParePlugin_Conveyor, ns: , asm: Assembly-CSharp}
+      data:
+        creators:
+        - {fileID: 11400000, guid: 35ba3114aaca8f14d9818640ae354065, type: 2}
+        - {fileID: 11400000, guid: f95bed26485a04e4590f8dcf849dca80, type: 2}
+        - {fileID: 11400000, guid: e153857aab8c7784a8f151f88a4afac8, type: 2}
+        - {fileID: 11400000, guid: 0b45a281d6f9c4e4bac6cf69f1cc233e, type: 2}

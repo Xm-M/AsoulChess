@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -53,17 +52,6 @@ public class CodexPanel : View
 
     private GameObject previewChessInstance;
     private RenderTexture renderTexture;
-
-    // ==================== PlantType 中文名映射 ====================
-
-    static readonly Dictionary<PlantType, string> PlantTypeNames = new Dictionary<PlantType, string>
-    {
-        { PlantType.MainPlant, "主力" },
-        { PlantType.SupportPlant, "辅助" },
-        { PlantType.PotPlant, "地形" },
-        { PlantType.Consume, "消耗品" },
-        { PlantType.LimitType, "周期限制" },
-    };
 
     // ==================== View 生命周期 ====================
 
@@ -202,7 +190,7 @@ public class CodexPanel : View
                 if (seen.Add(c.plantType)) types.Add(c.plantType);
             foreach (var type in types)
             {
-                string label = PlantTypeNames.TryGetValue(type, out string name) ? name : type.ToString();
+                string label = PlantCreatorDetailHelper.GetPlantTypeName(type);
                 options.Add(new TMP_Dropdown.OptionData(label));
             }
             typeDropdown.options = options;
@@ -343,13 +331,13 @@ public class CodexPanel : View
 
         if (detailName != null) detailName.text = creator.chessName;
         if (detailPlantType != null)
-            detailPlantType.text = PlantTypeNames.TryGetValue(creator.plantType, out string name) ? name : creator.plantType.ToString();
+            detailPlantType.text = PlantCreatorDetailHelper.GetPlantTypeName(creator.plantType);
         if (detailTags != null)
-            detailTags.text = (creator.plantTags != null && creator.plantTags.Count > 0) ? string.Join("  ", creator.plantTags) : "无";
+            detailTags.text = PlantCreatorDetailHelper.BuildTagsText(creator);
         if (detailAttributes != null)
-            detailAttributes.text = BuildAttributeText(creator.baseProperty);
+            detailAttributes.text = PlantCreatorDetailHelper.BuildAttributeText(creator.baseProperty);
         if (descriptionText != null)
-            descriptionText.text = BuildDescriptionText(creator);
+            descriptionText.text = PlantCreatorDetailHelper.BuildDescriptionText(creator);
 
         if (descriptionScroll != null)
             descriptionScroll.normalizedPosition = Vector2.up;
@@ -363,37 +351,6 @@ public class CodexPanel : View
         if (detailTags != null) detailTags.text = "";
         if (detailAttributes != null) detailAttributes.text = "";
         if (descriptionText != null) descriptionText.text = "";
-    }
-
-    // ==================== 文本构建 ====================
-
-    string BuildAttributeText(Property prop)
-    {
-        if (prop == null) return "";
-        return $"生命值: {(int)prop.HpMax}        攻击力: {prop.attack}\n" +
-               $"护甲: {prop.AR}            价格: {prop.price}\n" +
-               $"冷却: {prop.CD}s           攻击距离: {prop.attackRange}\n" +
-               $"移速: {prop.speed}";
-    }
-
-    string BuildDescriptionText(PropertyCreator creator)
-    {
-        var sb = new StringBuilder();
-        if (!string.IsNullOrEmpty(creator.chessDescription))
-            sb.AppendLine(creator.chessDescription);
-        if (!string.IsNullOrEmpty(creator.chessEffect))
-        {
-            if (sb.Length > 0) sb.AppendLine();
-            sb.AppendLine("【效果】");
-            sb.AppendLine(creator.chessEffect);
-        }
-        if (!string.IsNullOrEmpty(creator.chessShortDescription))
-        {
-            if (sb.Length > 0) sb.AppendLine();
-            sb.AppendLine("【简介】");
-            sb.AppendLine(creator.chessShortDescription);
-        }
-        return sb.ToString();
     }
 
     // ==================== 清理 ====================

@@ -61,6 +61,13 @@ public class Bullet : MonoBehaviour
     public virtual void RecycleBullet() {
         ObjectPool.instance.Recycle(gameObject);
     }
+
+    /// <summary>弹飞出屏后不再造成伤害。</summary>
+    public void DisableHitDamage()
+    {
+        current = 0;
+    }
+
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         //Debug.Log("bulllet hit "+collision.name); 

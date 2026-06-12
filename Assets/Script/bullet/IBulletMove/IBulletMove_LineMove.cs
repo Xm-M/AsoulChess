@@ -35,4 +35,12 @@ public class IBulletMove_LineMove : IBulletMove
             bullet.RecycleBullet();
         }
     }
+
+    /// <summary>莴苣保护伞弹飞：改为恒定高速直线飞出屏幕。</summary>
+    public void ApplyKnockOff(Vector2 dir, float speed)
+    {
+        force = 0f;
+        startMoveSpeed = speed;
+        currentMoveSpeed = speed;
+    }
 }

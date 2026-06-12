@@ -20,22 +20,29 @@ public class MultyIfCanBuyCard_And : IfCanBuyCard
         return ans;
     }
 }
+
+/// <summary>
+/// 场上同 <see cref="PropertyCreator"/> 数量上限；<see cref="maxCount"/> = 1 时为原「唯一」限制。
+/// </summary>
 public class OnlyOne_Limit : IfCanBuyCard
 {
+    [Tooltip("场上允许存在的同种植物数量上限（按 creator 比较）")]
+    [Min(1)]
+    public int maxCount = 1;
+
     public bool BuyCard(PropertyCreator creator)
     {
-        //throw new NotImplementedException();
+        if (creator == null || ChessTeamManage.Instance == null)
+            return false;
+
+        int onField = 0;
         List<Chess> team = ChessTeamManage.Instance.GetTeam("Player");
         foreach (var chess in team)
         {
-            if (chess.propertyController.creator == creator)
-            {
-                //Debug.Log("有相同单位"+chess.name);
-                return false;
-            }
+            if (chess?.propertyController?.creator == creator)
+                onField++;
         }
-        //Debug.Log("没有相同单位");
-        return true;
+        return onField < maxCount;
     }
 }
 public class LevelUp_Limit : IfCanBuyCard

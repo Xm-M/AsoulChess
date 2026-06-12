@@ -17,6 +17,14 @@ public class SkillEffect_Bungee : ISkillEffect
     {
         if (user == null || user.IfDeath) return;
 
+        if (user.skillController?.context != null
+            && user.skillController.context.TryGet<bool>(BungeeSkillContextKeys.InterruptedByUmbrella, out bool interrupted)
+            && interrupted)
+            return;
+
+        if (user.skillController == null)
+            return;
+
         if (!user.skillController.context.TryGet<List<Chess>>(BungeeSkillContextKeys.Victims, out var victims)
             || victims == null
             || victims.Count == 0)

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Playables;
 using Sirenix.OdinInspector;
+using TMPro;
 /// <summary>
 /// 这个是上方的那个栏，懂我意思吧
 /// 包括旁边的栏，反正这个就是整个选牌体系都放在这了
@@ -28,6 +29,15 @@ public class PlantsShop : View
     public Vector2 startPos1,startPos2;
     [FoldoutGroup("初始位置")]
     public RectTransform p1,p2;
+
+    [Header("植物详情")]
+    [SerializeField] private TMP_Text detailName;
+    [SerializeField] private Image detailPlantImage;
+    [SerializeField] private TMP_Text detailTags;
+    [SerializeField] private TMP_Text detailAttributes;
+    [SerializeField] private ScrollRect descriptionScroll;
+    [SerializeField] private TMP_Text descriptionText;
+
     public bool SelectOver { get; private set; }
     ShopIcon currentPlant;
     string Planttag = "Player";
@@ -75,6 +85,11 @@ public class PlantsShop : View
             selectIcon.InitSelectIcon(creator);
             allSelectIcons.Add(selectIcon);
         }
+
+        if (allSelectIcons.Count > 0 && allSelectIcons[0].select != null)
+            ShowPlantDetail(allSelectIcons[0].select);
+        else
+            ClearPlantDetail();
         
     }
     public override void Hide()
@@ -98,6 +113,7 @@ public class PlantsShop : View
         p1.anchoredPosition = startPos1;
         p2.anchoredPosition = startPos2;
         SelectOver = false;
+        ClearPlantDetail();
         base.Hide();
     }
     public void SelectPlant(ShopIcon icon)
@@ -182,6 +198,7 @@ public class PlantsShop : View
         allSelectIcons.Clear();
         currentShopIcons.Clear();
         SelectOver = false;
+        ClearPlantDetail();
 
         if (restoreSunLight)
             SunLightPanel.instance.SetSunLight(data.sunLight);
@@ -266,5 +283,46 @@ public class PlantsShop : View
     public void RemoveShopIcon(ShopIcon shopicon)
     {
         currentShopIcons.Remove(shopicon);
+    }
+
+    /// <summary>
+    /// 仓库选卡时在详情面板展示植物信息。
+    /// </summary>
+    public void ShowPlantDetail(PropertyCreator creator)
+    {
+        if (creator == null)
+        {
+            ClearPlantDetail();
+            return;
+        }
+
+        if (detailName != null)
+            detailName.text = creator.chessName;
+        if (detailPlantImage != null)
+        {
+            detailPlantImage.sprite = creator.chessSprite;
+            detailPlantImage.enabled = creator.chessSprite != null;
+        }
+        if (detailTags != null)
+            detailTags.text = PlantCreatorDetailHelper.BuildTagsText(creator);
+        if (detailAttributes != null)
+            detailAttributes.text = PlantCreatorDetailHelper.BuildAttributeText(creator.baseProperty);
+        if (descriptionText != null)
+            descriptionText.text = PlantCreatorDetailHelper.BuildDescriptionText(creator);
+        if (descriptionScroll != null)
+            descriptionScroll.normalizedPosition = Vector2.up;
+    }
+
+    void ClearPlantDetail()
+    {
+        if (detailName != null) detailName.text = "";
+        if (detailPlantImage != null)
+        {
+            detailPlantImage.sprite = null;
+            detailPlantImage.enabled = false;
+        }
+        if (detailTags != null) detailTags.text = "";
+        if (detailAttributes != null) detailAttributes.text = "";
+        if (descriptionText != null) descriptionText.text = "";
     }
 }

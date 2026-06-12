@@ -5,7 +5,7 @@ using UnityEngine;
 public class AnimatorController : MonoBehaviour,Controller
 {
     public Animator animator;
-
+    public AudioPlayer BeAttack;
     /// <summary>
     /// 判断 Animator 是否包含指定参数，避免 GetInteger 等调用不存在的参数时产生警告
     /// </summary>
@@ -77,12 +77,23 @@ public class AnimatorController : MonoBehaviour,Controller
     public virtual void WhenControllerEnterWar()
     {
         ChangeColor(Color.white);
+        OnBeAttack();
     }
     protected virtual void Update(){
         if(chess==null)chess = GetComponent<Chess>();
         Vector3 currentPos= chess.transform.position;
         Vector3 spritpos = sprite.transform.position;
         chess.transform.position=new Vector3(currentPos.x,currentPos.y,-GetZByPosition(currentPos));
+    }
+    public void OnBeAttack()
+    {
+        if (BeAttack != null)
+        {
+            chess.propertyController.onGetDamage.AddListener((chess) =>
+            {
+                BeAttack.RandomPlay();
+            });
+        }
     }
     public virtual bool IfAnimPlayOver()
     {

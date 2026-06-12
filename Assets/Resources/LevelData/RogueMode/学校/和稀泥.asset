@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u548C\u7A00\u6CE5"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: "\u5B66\u6821"
+  levelName: "\u548C\u7A00\u6CE5"
+  levelSprit: {fileID: 0}
+  levelMode: 0
+  EnterMapPlugin:
+  - rid: 0
+  PreParePlugin:
+  - rid: 1
+  GameStartPlugin:
+  - rid: 2
+  - rid: 3
+  - rid: 4
+  - rid: 5
+  MaxWave: 30
+  n: 1
+  t: 3
+  zombieList:
+  - {fileID: 11400000, guid: ca3a1861f010b5546aaa7688b384c23e, type: 2}
+  - {fileID: 11400000, guid: 50770e1bd2ce84947802d67c09d22c2a, type: 2}
+  - {fileID: 11400000, guid: 129ac75237c11ee41941cddae5ed9065, type: 2}
+  - {fileID: 11400000, guid: f5d3c264ad8b9d64887a782b2587749c, type: 2}
+  - {fileID: 11400000, guid: e8a03df9178a7cd458aced16791817ba, type: 2}
+  - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
+  - {fileID: 11400000, guid: 895c68db05cf2d7489a61f83bd3b78ed, type: 2}
+  createZombieType: 0
+  nextLevel: {fileID: 11400000, guid: 5ced86f66b56a55489cd2477a4842cba, type: 2}
+  outcome:
+    rid: 1573513545880436738
+  loadSkipToTime: 10
+  roguelikeDifficulty: 3.5
+  roguelikeKind: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 0
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    - rid: 1
+      type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 50
+        cards: []
+    - rid: 2
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u767D\u5929"
+        deleyPlayTime: 3
+    - rid: 3
+      type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
+      data:
+        sunlight: 25
+    - rid: 4
+      type: {class: GameStartPlugin_PlaySchoolAudio, ns: , asm: Assembly-CSharp}
+      data:
+        interval_classBegin: 20
+        interval_classOver: 50
+        audioEffect: {fileID: 8083856290253730264, guid: 3e25964741fc5a540b7554f94ed38378, type: 3}
+        beginBuff:
+          rid: 8
+        overBuff:
+          rid: 9
+        zombieList:
+        - {fileID: 11400000, guid: 129ac75237c11ee41941cddae5ed9065, type: 2}
+    - rid: 5
+      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 8
+      type: {class: Buff_ClassBegin, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u4E0A\u8BFE"
+        target: {fileID: 0}
+        continueTime: 45
+        extraDefenceBuff:
+          rid: 1573513545880436741
+        acceleRateBuff:
+          rid: 1573513545880436742
+        _extraDefence: 0.3
+        _extraSpeed: 0.25
+    - rid: 9
+      type: {class: Buff_ClassOver, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u4E0B\u8BFE"
+        target: {fileID: 0}
+        continueTime: 10
+        attackBuff:
+          rid: 1573513545880436743
+        acceleRateBuff:
+          rid: 1573513545880436744
+        _extraAttack: 0.3
+        _extraSpeed: 0.25
+    - rid: 1573513545880436738
+      type: {class: LevelOutCome_Roguelike, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 1573513545880436741
+      type: {class: Buff_BaseValueBuff_ExtraDefence, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u51CF\u4F24\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        extraDefence: 0.1
+    - rid: 1573513545880436742
+      type: {class: Buff_BaseValueBuff_AcceleRate, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u52A0\u901F\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        rate: -0.1
+    - rid: 1573513545880436743
+      type: {class: Buff_BaseValueBuff_Attack, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u653B\u51FB\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        extraAttack: 0.1
+    - rid: 1573513545880436744
+      type: {class: Buff_BaseValueBuff_AcceleRate, ns: , asm: Assembly-CSharp}
+      data:
+        buffName: "\u52A0\u901F\u589E\u76CA"
+        target: {fileID: 0}
+        effect: {fileID: 0}
+        rate: 0.25

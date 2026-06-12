@@ -27,6 +27,9 @@ public class ShopSelectIcon : MonoBehaviour
     }
     public void SelectCard()
     {
+        if (select != null)
+            UIManage.GetView<PlantsShop>().ShowPlantDetail(select);
+
         if (select != null && !ifSelect)
         {
             if (UIManage.GetView<PlantsShop>().AddSelection(this))

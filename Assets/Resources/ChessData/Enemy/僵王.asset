@@ -25,8 +25,8 @@ MonoBehaviour:
     extraDamge: 0
     AR: 0
     extraDefence: 0
-    Hp: 4000
-    HpMax: 4000
+    Hp: 60000
+    HpMax: 60000
     lifeStealing: 0
     healRate: 1
     speed: 0
@@ -47,14 +47,16 @@ MonoBehaviour:
   chessTileType: 1
   plantType: 0
   plantFunction:
-    id: 0
+    rid: 0
   plantIfCanBuyCard:
-    id: 1
+    rid: -2
   PlantCardPre: {fileID: 0}
   PlantEntrepotCardPre: {fileID: 0}
   references:
-    version: 1
-    00000000:
-      type: {class: NonePlant, ns: , asm: Assembly-CSharp}
-    00000001:
+    version: 2
+    RefIds:
+    - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: NonePlant, ns: , asm: Assembly-CSharp}
+      data: 

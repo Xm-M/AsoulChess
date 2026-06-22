@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
   m_Name: "\u7EAF\u7530\u771F\u5948"
   m_EditorClassIdentifier: 
-  chessName: 
+  chessName: "\u7EAF\u7530\u771F\u5948"
   chessDescription: 
   chessShortDescription: 
   chessEffect: 
   baseProperty:
-    attack: 0
+    attack: 50
     attackRate: 0
     crit: 0
     critDamage: 1.3
@@ -40,14 +40,16 @@ MonoBehaviour:
     waveLimit: 1
     CD: 7.5
     Size: 1
-  chessPre: {fileID: 0}
-  chessSprite: {fileID: 0}
-  plantTags: []
-  fetterMemberId: 
-  chessTileType: 0
-  plantType: 0
+  chessPre: {fileID: 8743271958161520662, guid: 00f0f6467bd3d7a41be97f0b26c258b8, type: 3}
+  chessSprite: {fileID: 1183501450, guid: db844a78d08f06746846dca450a47841, type: 3}
+  plantTags:
+  - "\u4E3B\u5531"
+  - sumimi
+  fetterMemberId: "\u7EAF\u7530\u771F\u5948"
+  chessTileType: 1
+  plantType: 1
   plantFunction:
-    rid: -2
+    rid: 4540112551784218625
   plantIfCanBuyCard:
     rid: -2
   PlantCardPre: {fileID: 0}
@@ -57,3 +59,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 4540112551784218625
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

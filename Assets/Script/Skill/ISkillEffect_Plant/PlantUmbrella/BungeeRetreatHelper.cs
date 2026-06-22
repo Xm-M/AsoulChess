@@ -30,24 +30,25 @@ public static class BungeeRetreatHelper
 
     public static bool IsInDropPhase(Chess bungee)
     {
-        if (!CanInterruptDropPhase(bungee)) return false;
+        if (!CanForceRetreat(bungee, requireDropPhase: true)) return false;
         return IsPlayingSkillDropAnim(bungee);
     }
 
-    static bool CanInterruptDropPhase(Chess bungee)
+    static bool CanForceRetreat(Chess bungee, bool requireDropPhase)
     {
         if (bungee == null || bungee.IfDeath) return false;
-        if (bungee.stateController?.currentState?.state?.stateName != StateName.SkillState)
-            return false;
-        if (bungee.skillController != null && bungee.skillController.skillEffectFiredThisCast)
-            return false;
-        if (bungee.skillController?.context != null
-            && bungee.skillController.context.TryGet<bool>(BungeeSkillContextKeys.InterruptedByUmbrella, out bool interrupted)
+        if (bungee.skillController?.context == null) return false;
+        if (bungee.skillController.context.TryGet<bool>(BungeeSkillContextKeys.InterruptedByUmbrella, out bool interrupted)
             && interrupted)
             return false;
-        if (bungee.skillController?.context != null
-            && bungee.skillController.context.TryGet<bool>(BungeeSkillContextKeys.RetreatInProgress, out bool retreating)
+        if (bungee.skillController.context.TryGet<bool>(BungeeSkillContextKeys.RetreatInProgress, out bool retreating)
             && retreating)
+            return false;
+        if (!requireDropPhase) return true;
+
+        if (bungee.stateController?.currentState?.state?.stateName != StateName.SkillState)
+            return false;
+        if (bungee.skillController.skillEffectFiredThisCast)
             return false;
         return true;
     }
@@ -64,9 +65,9 @@ public static class BungeeRetreatHelper
         return !bungee.skillController.skillEffectFiredThisCast;
     }
 
-    public static bool TryForceRetreat(Chess bungee)
+    public static bool TryForceRetreat(Chess bungee, bool requireDropPhase = true)
     {
-        if (!CanInterruptDropPhase(bungee)) return false;
+        if (!CanForceRetreat(bungee, requireDropPhase)) return false;
 
         var sc = bungee.skillController;
         if (sc?.context == null) return false;

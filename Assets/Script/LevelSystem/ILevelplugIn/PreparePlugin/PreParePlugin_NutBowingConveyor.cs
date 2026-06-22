@@ -6,7 +6,7 @@ public class PreParePlugin_NutBowingConveyor : ILevelPlugin
 {
     public List<PropertyCreator> creators;
     public GameObject redLine;
-    [Tooltip("红线以左（含）不可种植；默认 3 即列 0~2 禁种，与红线放在第 2 列一致")]
+    [Tooltip("红线以右不可种植；默认 3 即列 0~2 可种，红线放在第 2 列")]
     public int plantMinColumnX = 3;
 
     GameObject line;
@@ -18,12 +18,12 @@ public class PreParePlugin_NutBowingConveyor : ILevelPlugin
         (MapManage_PVZ.instance as MapManage_PVZ).WhenGameStart();
 
         if (MapManage.instance != null)
-            MapManage.instance.plantMinMapColumnX = plantMinColumnX;
+            MapManage.instance.plantMaxMapColumnX = plantMinColumnX - 1;
 
         var map = MapManage.instance;
         if (map != null)
         {
-            for (int i = 0; i < plantMinColumnX && i < map.mapSize.x; i++)
+            for (int i = plantMinColumnX; i < map.mapSize.x; i++)
             {
                 for (int j = 0; j < map.mapSize.y; j++)
                 {
@@ -52,7 +52,7 @@ public class PreParePlugin_NutBowingConveyor : ILevelPlugin
             line = null;
         }
         if (MapManage.instance != null)
-            MapManage.instance.plantMinMapColumnX = -1;
+            MapManage.instance.plantMaxMapColumnX = -1;
         UIManage.Close<ConveyorPanel>();
     }
 }

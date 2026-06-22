@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
-  m_Name: "\u516B\u5E61\u6D77\u94C3"
+  m_Name: "\u82CD\u89D2"
   m_EditorClassIdentifier: 
-  chessName: "\u516B\u5E61\u6D77\u94C3Timoris"
+  chessName: "\u82CD\u89D2"
   chessDescription: 
   chessShortDescription: 
   chessEffect: 
   baseProperty:
-    attack: 20
+    attack: 180
     attackRate: 0
     crit: 0
     critDamage: 1.3
-    dodgeRate: 0.5
+    dodgeRate: 0
     extraDamge: 0
     AR: 0
     extraDefence: 0
-    Hp: 300
-    HpMax: 300
+    Hp: 3000
+    HpMax: 3000
     lifeStealing: 0
     healRate: 1
     speed: 0
@@ -35,28 +35,28 @@ MonoBehaviour:
     dizzinessTime: 0
     tenacity: 0
     attackRange: 1
-    price: 100
+    price: 125
     rarity: 4000
     waveLimit: 1
-    CD: 7.5
-    Size: 5
-  chessPre: {fileID: 1619512631396866123, guid: 451bbb9a44649ac459d0372a39a40ec5, type: 3}
-  chessSprite: {fileID: 1908068545867573077, guid: 63d705f7ca1389f46bcce452953ea497, type: 3}
-  plantTags:
-  - AveMujica
-  - "\u8D1D\u65AF"
-  fetterMemberId: "\u516B\u5E61\u6D77\u73B2"
+    CD: 50
+    Size: 11
+  chessPre: {fileID: 8449152266337641926, guid: 64f855da7c647fb4eb714c3fef339f15, type: 3}
+  chessSprite: {fileID: 408032484, guid: 67f76b731a663ca4ba1c64b9d42014ae, type: 3}
+  plantTags: []
+  fetterMemberId: 
   chessTileType: 1
   plantType: 1
   plantFunction:
-    id: 0
+    rid: 4540112576166494208
   plantIfCanBuyCard:
-    id: 1
+    rid: -2
   PlantCardPre: {fileID: 0}
   PlantEntrepotCardPre: {fileID: 0}
   references:
-    version: 1
-    00000000:
-      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
-    00000001:
+    version: 2
+    RefIds:
+    - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 4540112576166494208
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

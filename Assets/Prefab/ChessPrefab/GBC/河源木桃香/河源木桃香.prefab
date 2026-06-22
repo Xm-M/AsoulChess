@@ -27,16 +27,18 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1966883570934180324}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2166783340252325950}
   - {fileID: 7760999703937475864}
   - {fileID: 3637789709521558416}
   - {fileID: 1518337869784385707}
+  - {fileID: 5816926264938924807}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2687001491946545818
 MonoBehaviour:
@@ -55,7 +57,7 @@ MonoBehaviour:
     master: {fileID: 0}
     weaponPos: {fileID: 3637789709521558416}
     weapon:
-      id: 0
+      rid: 0
     OnAttack:
       m_PersistentCalls:
         m_Calls: []
@@ -71,12 +73,15 @@ MonoBehaviour:
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
+    onHealDamage:
+      m_PersistentCalls:
+        m_Calls: []
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      rid: 1
     activeSkill:
-      id: 2
+      rid: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -84,22 +89,25 @@ MonoBehaviour:
       damageType: 0
       damageElementType: 0
       ifCrit: 0
+      suppressFloatingDamage: 0
       takeBuff:
-        id: 3
+        rid: -2
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillColdFx: {fileID: 0}
+    skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
-        id: 3
+        rid: -2
       transitions: []
     preState:
       state:
-        id: 3
+        rid: -2
       transitions: []
     stateGraph: {fileID: 11400000, guid: 11a8d3c8ba4dd994b961ba2e19cad4f6, type: 2}
     EnterWarState: 4
@@ -111,11 +119,26 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 3
+      rid: -2
+    OnReachTile:
+      m_PersistentCalls:
+        m_Calls: []
   animatorController: {fileID: 2197393818001168133}
   WhenEnterGame:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3233633507155710022}
+        m_TargetAssemblyTypeName: AudioPlayer, Assembly-CSharp
+        m_MethodName: RandomPlay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   DeathEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -123,69 +146,83 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 4
+          rid: 4
         findTarget:
-          id: 5
+          rid: 5
         attackFunction:
-          id: 6
-        enemys: []
+          rid: 6
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
         interval: 0
-    00000001:
+    - rid: 1
       type: {class: PassiveSkill, ns: , asm: Assembly-CSharp}
       data:
         effect:
-          id: 7
-    00000002:
+          rid: 7
+    - rid: 2
       type: {class: AttackSkill, ns: , asm: Assembly-CSharp}
       data:
         config: {fileID: 11400000, guid: ead63767f7fda2146be9c94ba63669f2, type: 2}
         readyChecker:
-          id: 8
+          rid: 8
         effect:
-          id: 9
+          rid: 9
         skillFinish:
-          id: 10
+          rid: 10
         runtime:
-          id: 11
-    00000003:
-      type: {class: , ns: , asm: }
-    00000004:
+          rid: 11
+    - rid: 4
       type: {class: InitWeapon_AutoAttack, ns: , asm: Assembly-CSharp}
       data:
         attackInterval: 1.5
-    00000005:
+    - rid: 5
       type: {class: StraightLaser_AllChess, ns: , asm: Assembly-CSharp}
-    00000006:
+      data: 
+    - rid: 6
       type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
         bullet: {fileID: 2098010854589325911, guid: 4a37f73ec340a59488f01971300830aa, type: 3}
-    00000007:
+    - rid: 7
       type: {class: Passive_GBC, ns: , asm: Assembly-CSharp}
       data:
         stressBuff:
-          id: 12
+          rid: 12
         user: {fileID: 0}
-    00000008:
+    - rid: 8
       type: {class: SkillReady_IfTargetInRange, ns: , asm: Assembly-CSharp}
       data:
         search:
-          id: 13
-    00000009:
+          rid: 13
+    - rid: 9
       type: {class: SKillEffect_MMK, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u575A\u6BC5"
-    0000000A:
+        DM:
+          damageFrom: {fileID: 0}
+          damageTo: {fileID: 0}
+          damage: 0
+          damageType: 0
+          damageElementType: 0
+          ifCrit: 0
+          suppressFloatingDamage: 0
+          takeBuff:
+            rid: -2
+    - rid: 10
       type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
-    0000000B:
+      data: 
+    - rid: 11
       type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
       data:
         currentTime: 0
-    0000000C:
+    - rid: 12
       type: {class: Buff_StressBuff_MMK, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u538B\u529B"
@@ -196,8 +233,9 @@ MonoBehaviour:
         Nina: {fileID: 11400000, guid: 6f110f5d59bd8c847a1b05b973663c54, type: 2}
         delayTime: 1
         addStress: 1
-    0000000D:
+    - rid: 13
       type: {class: StraightLaser_AllChess, ns: , asm: Assembly-CSharp}
+      data: 
 --- !u!61 &2757600680634391305
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -208,6 +246,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -226,7 +283,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &2090837290426088376
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -239,10 +296,12 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &2197393818001168133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,8 +315,164 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 2090837290426088376}
+  BeAttack: {fileID: 0}
   sprite: {fileID: 4481740270144477353}
+  dizzynesss: 
+  attackStateNameAlt: 
   ninaCreator: {fileID: 11400000, guid: 6f110f5d59bd8c847a1b05b973663c54, type: 2}
+--- !u!1 &5813883094923612519
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5816926264938924807}
+  - component: {fileID: 3233633507155710022}
+  - component: {fileID: 3622265219729677966}
+  m_Layer: 0
+  m_Name: mmk
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5816926264938924807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5813883094923612519}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.639432, y: 0.9635987, z: -0.024045836}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2223865053805149441}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3233633507155710022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5813883094923612519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cb11ae55d6a7c4c9440a27b7f2aca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autype: 0
+  audioSource: {fileID: 3622265219729677966}
+  subAudio: []
+  baseValue: 0
+  clipList:
+  - audioKey: 
+    clip: {fileID: 8300000, guid: 3f86b6be17f39554492ea6b697111883, type: 3}
+  - audioKey: 
+    clip: {fileID: 8300000, guid: 76975bb410dfb8e43913ab1d347c16c8, type: 3}
+  - audioKey: 
+    clip: {fileID: 8300000, guid: 81c445b635c86ec44a97c8b89dd7ab58, type: 3}
+  _audioUniqueLimit: 3
+--- !u!82 &3622265219729677966
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5813883094923612519}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.633
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6444112976403193438
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,12 +496,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6444112976403193438}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.195, y: 0.813, z: -3.3736641}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2223865053805149441}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8791050870287385523
 GameObject:
@@ -312,12 +528,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8791050870287385523}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2223865053805149441}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4481740270144477353
 SpriteRenderer:
@@ -330,6 +547,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -357,7 +575,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: dc2ccddcd8aae3e48a4758505b3cb5f7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -375,6 +593,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2223865053805149441}
     m_Modifications:
     - target: {fileID: 2673868079073005060, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
@@ -426,6 +645,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
 --- !u!4 &7760999703937475864 stripped
 Transform:
@@ -437,6 +659,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2223865053805149441}
     m_Modifications:
     - target: {fileID: 4987320287646775565, guid: 92937554df6dd074799f9b285e0a0a41, type: 3}
@@ -496,6 +719,9 @@ PrefabInstance:
       value: -0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92937554df6dd074799f9b285e0a0a41, type: 3}
 --- !u!4 &1518337869784385707 stripped
 Transform:

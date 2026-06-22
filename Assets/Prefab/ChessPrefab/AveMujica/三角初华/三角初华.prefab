@@ -56,7 +56,7 @@ MonoBehaviour:
   instanceID: 0
   equipWeapon:
     master: {fileID: 0}
-    weaponPos: {fileID: 0}
+    weaponPos: {fileID: 8380491126071882485}
     weapon:
       rid: 0
     OnAttack:
@@ -110,7 +110,7 @@ MonoBehaviour:
       state:
         rid: -2
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 11a8d3c8ba4dd994b961ba2e19cad4f6, type: 2}
+    stateGraph: {fileID: 11400000, guid: 47414d02708420a459ebd63e2eef5dc0, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -261,7 +261,7 @@ MonoBehaviour:
       data:
         buffName: "\u653B\u51FB\u589E\u76CA"
         target: {fileID: 0}
-        effect: {fileID: 0}
+        effect: {fileID: 7144144593624138565, guid: 52724aa8b7aac0d49a350c571f49e25e, type: 3}
         extraAttack: 0.5
 --- !u!61 &4206507896591223068
 BoxCollider2D:
@@ -342,6 +342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1506395180305728268}
+  BeAttack: {fileID: 0}
   sprite: {fileID: 5438870927872332086}
   dizzynesss: 
   attackStateNameAlt: 
@@ -508,7 +509,7 @@ Transform:
   m_GameObject: {fileID: 2079003049260689942}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.054, y: 0.853, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

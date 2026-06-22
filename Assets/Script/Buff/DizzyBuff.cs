@@ -100,18 +100,13 @@ public class FreezyBuff : DizznessBuff
     public GameObject FreezyEffect; //这个也是没有音效的
     public override void BuffEffect(Chess target)
     {
+        // base：ChangeDizznessTime → DizzyState → PlayDizzy()（有 dizzynesss 播动画，否则定住）
         base.BuffEffect(target);
         if (this.FreezyEffect != null)
         {
             GameObject cold = ObjectPool.instance.Create(FreezyEffect);
             cold.transform.position = target.transform.position;
         }
-        target.animatorController.Freezy();
         target.buffController.AddBuff(buff);
-    }
-    public override void BuffOver()
-    {
-        base.BuffOver();
-        target.animatorController.ResumeSpeed();
     }
 }

@@ -42,6 +42,9 @@ public static class RoguelikeRunInfoFormatter
         return $"L{node.layer + 1} · {FormatRoomType(node.roomType)} · #{node.id}";
     }
 
+    public static string FormatRunGold(RoguelikeRunState state) =>
+        state == null ? "0" : state.runGold.ToString();
+
     public static string FormatProgress(RoguelikeRunState state)
     {
         if (state?.currentMap?.nodes == null)

@@ -50,13 +50,24 @@ public class SkillEffect_ZombieKing_FireBall: ISkillEffect
         if (!MapManage.instance.IfInMapRange(x, tileY)) return;
         Tile tile = MapManage.instance.tiles[x, tileY];
         GameObject prefab = ball;
-        if (ctx.TryGet<int>(ZombieKingContextKeys.BallVisual, out int vis) && vis == 1 && iceBall != null)
+        bool isIce = ctx.TryGet<int>(ZombieKingContextKeys.BallVisual, out int vis) && vis == 1 && iceBall != null;
+        if (isIce)
             prefab = iceBall;
         GameObject b = GameObject.Instantiate(prefab);
         b.tag = user.tag;
         var armor = b.GetComponent<CarArmor>();
         if (armor != null) armor.user = user;
         b.transform.position = tile.transform.position;
+        if (isIce)
+        {
+            var iceBallMarker = b.GetComponent<ZombieKingIceBall>() ?? b.AddComponent<ZombieKingIceBall>();
+            iceBallMarker.mapRowY = tileY;
+        }
+        else
+        {
+            var fireBall = b.GetComponent<ZombieKingFireBall>() ?? b.AddComponent<ZombieKingFireBall>();
+            fireBall.mapRowY = tileY;
+        }
     }
 }
 

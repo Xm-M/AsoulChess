@@ -25,8 +25,14 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
     [Tooltip("冰球预制体（BallVisual=1）")]
     public GameObject iceBallPrefab;
 
-    [Tooltip("可选：冒烟根物体，血量 ≤50% 激活")]
+    [Tooltip("可选：遗留单烟雾根；未配置 smokeVfxParent / smokeVfxParts 时仍启用整节点")]
     public GameObject smokeVfxRoot;
+
+    [Tooltip("三个烟雾预制体的父节点；未填 smokeVfxParts 时按子节点顺序采集（最多 3 个）")]
+    public Transform smokeVfxParent;
+
+    [Tooltip("按顺序激活的烟雾；留空则从 smokeVfxParent 自动采集")]
+    public List<GameObject> smokeVfxParts = new List<GameObject>();
 
     [SerializeField, Tooltip("调试：强制满足 readyChecker 后每帧可 cast")]
     bool debugForceReady;
@@ -76,7 +82,8 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
     /// <summary>已写好 Context 并返回过 true，在 <see cref="SkillOver"/> 前不再重复 IfSkillReady=true。</summary>
     bool castPending;
     int lastVisualTier = -1;
-    bool smokeActivated;
+    /// <summary>0=无烟雾；1=血量低于 80% 显示 1 个；2=血量低于 50% 显示全部。</summary>
+    int smokeStage;
     Coroutine flashCo;
     bool lastCastWasFireball;
     /// <summary>登场或俯身→站立后倒计时，期间不进入站立技能（与 anim_enter / anim_head_leave 等衔接）。</summary>
@@ -98,6 +105,10 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         castPending = false;
         standRiseSkillLockTimer = 0f;
         zombieCanSummons.Clear();
+        lastVisualTier = -1;
+        smokeStage = 0;
+        EnsureSmokeParts();
+        ApplySmokeStage();
     }
 
     public override void WhenEnter(Chess user)
@@ -261,6 +272,7 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
     {
         user.UnSelectable();
         user.buffController?.ResetList();
+        user.buffController?.AddBuff(new Buff_ZombieKingStandImmunity());
         user.skillController.context.Set("stand", true);
         if (playIdleForStandVisual)
             user.animatorController?.PlayIdle();
@@ -272,6 +284,7 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         crouchTimer = 0f;
         fireballPlayed = false;
         castPending = false;
+        user.buffController?.TryOverBuff(new Buff_ZombieKingStandImmunity());
         user.skillController.context.Set("stand", false);
         user.ResumeSelectable();
         user.animatorController?.PlayIdle();
@@ -372,11 +385,25 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         return true;
     }
 
+    static int _debugBallFireCount;
+    static int _debugBallIceCount;
+
     bool TryPrepareFireballCast(Chess user)
     {
         var ctx = user.skillController.context;
         int rowAnim = RandomRowAnim(user);
         int ball = UnityEngine.Random.Range(0, 2);
+        if (ball == 1)
+            _debugBallIceCount++;
+        else
+            _debugBallFireCount++;
+        int total = _debugBallFireCount + _debugBallIceCount;
+        float icePct = total > 0 ? _debugBallIceCount * 100f / total : 0f;
+        Debug.Log(
+            $"[ZombieKing] 吐球随机 roll={ball} ({(ball == 1 ? "冰 BallVisual=1" : "火 BallVisual=0")}) " +
+            $"rowAnim={rowAnim} | 累计 火{_debugBallFireCount} 冰{_debugBallIceCount} 冰率{icePct:F1}% " +
+            $"(Random.Range(0,2) 期望各50%)",
+            user);
         ctx.Set(ZombieKingContextKeys.SkillAnimKind, (int)ZombieKingSkillAnimKind.FireIceBall);
         ctx.Set(ZombieKingContextKeys.Row, rowAnim);
         ctx.Set(ZombieKingContextKeys.BallVisual, ball);
@@ -473,11 +500,13 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
             user.animatorController?.SetVisualTierPublic(tier);
         }
 
-        if (hp <= 0.5f && smokeVfxRoot != null && !smokeActivated)
-        {
-            smokeActivated = true;
-            smokeVfxRoot.SetActive(true);
-        }
+        int prevSmokeStage = smokeStage;
+        if (hp < 0.8f && smokeStage < 1)
+            smokeStage = 1;
+        if (hp < 0.5f && smokeStage < 2)
+            smokeStage = 2;
+        if (smokeStage != prevSmokeStage)
+            ApplySmokeStage();
 
         if (hp <= 0.1f && flashCo == null)
             flashCo = user.StartCoroutine(LowHpFlashRoutine(user));
@@ -645,7 +674,7 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
     void ExecFireball(Chess user, SkillContext ctx)
     {
         ctx.TryGet<int>(ZombieKingContextKeys.Row, out int rowAnim);
-        ctx.TryGet<int>(ZombieKingContextKeys.BallVisual, out int ballVisual);
+        bool hasBallVisual = ctx.TryGet<int>(ZombieKingContextKeys.BallVisual, out int ballVisual);
         var map = MapManage.instance;
         if (map == null || user.moveController?.standTile == null) return;
         int tileY = ZombieKingMapAnim.AnimRowToTileY(rowAnim, map.mapSize.y);
@@ -653,12 +682,26 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         if (!map.IfInMapRange(x, tileY)) return;
         var tile = map.tiles[x, tileY];
         GameObject prefab = ballVisual == 1 && iceBallPrefab != null ? iceBallPrefab : fireBallPrefab;
+        Debug.Log(
+            $"[ZombieKing] ExecFireball context.TryGet(BallVisual)={hasBallVisual} ballVisual={ballVisual} " +
+            $"prefab={(prefab != null ? prefab.name : "null")} tile=({x},{tileY})",
+            user);
         if (prefab == null) return;
         GameObject b = UnityEngine.Object.Instantiate(prefab);
         b.tag = user.tag;
         var armor = b.GetComponent<CarArmor>();
         if (armor != null) armor.user = user;
         b.transform.position = tile.transform.position;
+        if (ballVisual == 1)
+        {
+            var iceBall = b.GetComponent<ZombieKingIceBall>() ?? b.AddComponent<ZombieKingIceBall>();
+            iceBall.mapRowY = tileY;
+        }
+        else
+        {
+            var fireBall = b.GetComponent<ZombieKingFireBall>() ?? b.AddComponent<ZombieKingFireBall>();
+            fireBall.mapRowY = tileY;
+        }
     }
 
     public override bool IsSkillFinished(Chess user) => base.IsSkillFinished(user);
@@ -701,7 +744,7 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         data.Set("zkPost", Mathf.RoundToInt(postStandDelayTimer * 1000f));
         data.Set("zkCast", Mathf.RoundToInt(castCooldownTimer * 1000f));
         data.Set("zkVis", lastVisualTier);
-        data.Set("zkSmoke", smokeActivated ? 1 : 0);
+        data.Set("zkSmoke", smokeStage);
         data.Set("zkRiseLock", Mathf.RoundToInt(standRiseSkillLockTimer * 1000f));
     }
 
@@ -716,11 +759,50 @@ public class Skill_ZombieKingBoss : SkillBase<SkillConfig_Cold>
         postStandDelayTimer = data.GetInt("zkPost", 0) / 1000f;
         castCooldownTimer = data.GetInt("zkCast", 0) / 1000f;
         lastVisualTier = data.GetInt("zkVis", -1);
-        smokeActivated = data.GetInt("zkSmoke", 0) != 0;
+        smokeStage = data.GetInt("zkSmoke", 0);
+        EnsureSmokeParts();
+        ApplySmokeStage();
         standRiseSkillLockTimer = data.GetInt("zkRiseLock", 0) / 1000f;
         castPending = false;
         RebuildSummonPool();
         if (standQueue.Count == 0 && phase == ZombieKingBossPhase.StandingQueue)
             BuildStandQueue(user);
+    }
+
+    const int MaxSmokePartCount = 3;
+
+    void EnsureSmokeParts()
+    {
+        if (smokeVfxParts.Count > 0)
+            return;
+        if (smokeVfxParent == null)
+            return;
+        smokeVfxParts.Clear();
+        for (int i = 0; i < smokeVfxParent.childCount && smokeVfxParts.Count < MaxSmokePartCount; i++)
+            smokeVfxParts.Add(smokeVfxParent.GetChild(i).gameObject);
+    }
+
+    void ApplySmokeStage()
+    {
+        EnsureSmokeParts();
+        if (smokeVfxParts.Count > 0)
+        {
+            int activeCount = smokeStage switch
+            {
+                1 => 1,
+                >= 2 => smokeVfxParts.Count,
+                _ => 0,
+            };
+            for (int i = 0; i < smokeVfxParts.Count; i++)
+            {
+                var part = smokeVfxParts[i];
+                if (part != null)
+                    part.SetActive(i < activeCount);
+            }
+            return;
+        }
+
+        if (smokeVfxRoot != null)
+            smokeVfxRoot.SetActive(smokeStage >= 2);
     }
 }

@@ -13,8 +13,8 @@ public class MapManage : MonoBehaviour
     public List<Tile> preTiles;
     public Vector2Int mapSize;
     public Vector2 tileSize = new Vector2(1.25f, 1);
-    /// <summary>≥0 时仅 <see cref="mapPos.x"/> 不小于本值的格可参与种植射线检测；-1 表示不限制（坚果保龄球等插件写入）。</summary>
-    [System.NonSerialized] public int plantMinMapColumnX = -1;
+    /// <summary>≥0 时仅 <see cref="mapPos.x"/> 不大于本值的格可参与种植；-1 表示不限制（保龄球等插件写入）。</summary>
+    [System.NonSerialized] public int plantMaxMapColumnX = -1;
     [SerializeReference]
     public IInitMapManage initMapManage;
     public AudioPlayer BGMPlayer;
@@ -44,12 +44,17 @@ public class MapManage : MonoBehaviour
     {
         return (x >= 0 && x < mapSize.x-1) && (y >= 0 && y < mapSize.y);
     }
+    public bool IsPlantColumnAllowed(int columnX)
+    {
+        return plantMaxMapColumnX < 0 || columnX <= plantMaxMapColumnX;
+    }
+
     public virtual void AwakeTile()
     {
         for (int i = 0; i < mapSize.x ; i++)
             for (int j = 0; j < mapSize.y; j++)
             {
-                if (plantMinMapColumnX >= 0 && i < plantMinMapColumnX)
+                if (!IsPlantColumnAllowed(i))
                     continue;
                 var c = tiles[i, j] != null ? tiles[i, j].GetComponent<Collider2D>() : null;
                 if (c != null) c.enabled = true;

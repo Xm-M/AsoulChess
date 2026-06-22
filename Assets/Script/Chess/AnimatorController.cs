@@ -186,7 +186,29 @@ public class AnimatorController : MonoBehaviour,Controller
     }
     public virtual void ChangeColor(Color color)
     {
-        sprite.color = color;
+        ApplyColorToSpriteRenderer(sprite, color);
+    }
+
+    /// <summary>
+    /// <see cref="Unlit/GameUnitShader"/> 等自定义材质用 <c>_ColorAppend</c> 乘色；否则回退 <see cref="SpriteRenderer.color"/>。
+    /// </summary>
+    protected void ApplyColorToSpriteRenderer(SpriteRenderer sr, Color color)
+    {
+        if (sr == null) return;
+        var mat = sr.material;
+        if (mat != null && mat.HasProperty("_ColorAppend"))
+        {
+            mat.SetColor("_ColorAppend", color);
+            sr.color = Color.white;
+            return;
+        }
+        if (mat != null && mat.HasProperty("_Color"))
+        {
+            mat.SetColor("_Color", color);
+            sr.color = Color.white;
+            return;
+        }
+        sr.color = color;
     }
     public virtual void ChangeFlash(float value)
     {

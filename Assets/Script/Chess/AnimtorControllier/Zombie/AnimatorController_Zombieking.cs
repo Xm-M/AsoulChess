@@ -168,6 +168,19 @@ public class AnimatorController_Zombieking : AnimatorController
     int _lastAppliedDamageIdx = int.MinValue;
     int _lastAppliedBallVisual = int.MinValue;
 
+    const string DoctorIdleState = "anim_idle";
+    const string DoctorDeathState = "anim_death";
+
+    [Header("头部博士（僵博）")]
+    [Tooltip("与机体分离的博士 Animator；留空则在 Init 时从子节点自动查找（非机体 animator）")]
+    public Animator doctorAnimator;
+
+    [Header("死亡特效")]
+    [Tooltip("死亡时调用 CreateEffectInCircle；留空则用同物体上的 EffectMiss")]
+    public EffectMiss deathCircleEffect;
+
+    bool _doctorVisible;
+
     public override void InitController(Chess chess)
     {
         base.InitController(chess);
@@ -179,6 +192,8 @@ public class AnimatorController_Zombieking : AnimatorController
         _lastAppliedBallVisual = int.MinValue;
         float hp = chess.propertyController != null ? chess.propertyController.GetHpPerCent() : 1f;
         SyncPartSpritesFromContext(hp);
+        EnsureDoctorAnimator();
+        HideDoctor();
     }
     public override void PlayIdle()
     {
@@ -188,6 +203,7 @@ public class AnimatorController_Zombieking : AnimatorController
             animator.Play("anim_enter");
             chess.skillController.context.Set<bool>("stand",true);
             stand = true;
+            HideDoctor();
             return;
         }
         bool s = false;
@@ -196,20 +212,24 @@ public class AnimatorController_Zombieking : AnimatorController
             if (stand)
             {
                 animator.Play("anim_idle");
+                HideDoctor();
             } else
             {
                 animator.Play("anim_head_idle");
+                PlayDoctorIdle();
             }
         } 
         else //如果不一样说明要切换形态
         {
-            if (s)//s是战力 stand是俯身 那就是俯身->站立 head_leave
+            if (s)//s是站立 stand是俯身 那就是俯身->站立 head_leave
             {
                 animator.Play("anim_head_leave");
+                HideDoctor();
             }
             else
             {
                 animator.Play("anim_head_enter");
+                PlayDoctorIdle();
             }
             stand = s;
         }
@@ -275,6 +295,8 @@ public class AnimatorController_Zombieking : AnimatorController
     public override void PlayDeath()
     {
         animator.Play(("anim_death"));
+        PlayDoctorDeath();
+        (deathCircleEffect != null ? deathCircleEffect : GetComponent<EffectMiss>())?.CreateEffectInCircle();
     }
 
     public override void OnGetDamage(DamageMessege dm)
@@ -284,6 +306,20 @@ public class AnimatorController_Zombieking : AnimatorController
         FlashSpriteRendererMaterial(jaw);
         FlashSpriteRendererMaterial(upperBody);
         FlashSpriteRendererMaterial(outerArm);
+    }
+
+    /// <summary>
+    /// 僵王可见部位由分部件 <see cref="SpriteRenderer"/> 驱动（<see cref="headSprites"/> 等），
+    /// 染色需写到各部件材质 <c>_ColorAppend</c>，不能只改根节点 <see cref="AnimatorController.sprite"/>。
+    /// </summary>
+    public override void ChangeColor(Color color)
+    {
+        ApplyColorToSpriteRenderer(head, color);
+        ApplyColorToSpriteRenderer(jaw, color);
+        ApplyColorToSpriteRenderer(footRight, color);
+        ApplyColorToSpriteRenderer(footLeft, color);
+        ApplyColorToSpriteRenderer(upperBody, color);
+        ApplyColorToSpriteRenderer(outerArm, color);
     }
 
     /// <summary>
@@ -376,6 +412,59 @@ public class AnimatorController_Zombieking : AnimatorController
         }
         sr.sprite = sprite;
         sr.enabled = true;
+    }
+
+    void EnsureDoctorAnimator()
+    {
+        if (doctorAnimator != null)
+            return;
+        foreach (var t in GetComponentsInChildren<Transform>(true))
+        {
+            if (t.name != "僵博")
+                continue;
+            doctorAnimator = t.GetComponent<Animator>();
+            if (doctorAnimator != null)
+                return;
+        }
+        foreach (var childAnimator in GetComponentsInChildren<Animator>(true))
+        {
+            if (childAnimator == animator || childAnimator.runtimeAnimatorController == null)
+                continue;
+            doctorAnimator = childAnimator;
+            return;
+        }
+    }
+
+    void HideDoctor()
+    {
+        EnsureDoctorAnimator();
+        if (doctorAnimator == null || !_doctorVisible)
+            return;
+        _doctorVisible = false;
+        doctorAnimator.gameObject.SetActive(false);
+    }
+
+    void PlayDoctorIdle()
+    {
+        EnsureDoctorAnimator();
+        if (doctorAnimator == null)
+            return;
+        if (!_doctorVisible)
+        {
+            _doctorVisible = true;
+            doctorAnimator.gameObject.SetActive(true);
+        }
+        doctorAnimator.Play(DoctorIdleState, 0, 0f);
+    }
+
+    void PlayDoctorDeath()
+    {
+        EnsureDoctorAnimator();
+        if (doctorAnimator == null)
+            return;
+        _doctorVisible = true;
+        doctorAnimator.gameObject.SetActive(true);
+        doctorAnimator.Play(DoctorDeathState, 0, 0f);
     }
 
 }

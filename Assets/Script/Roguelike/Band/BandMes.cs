@@ -18,6 +18,9 @@ public class BandMes
 
     public Sprite backgroundImage;
 
+    [Tooltip("选乐队界面 BGM，对应 AudioPlayer Clip List 的 audioKey")]
+    public string bgm;
+
     [Tooltip("本 Run 开局获得的初始植物（creator 资产）")]
     public List<PropertyCreator> startingMembers = new List<PropertyCreator>();
 

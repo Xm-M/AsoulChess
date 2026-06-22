@@ -35,6 +35,11 @@ public class PassiveSkill_LettuceUmbrella : ISkillEffect
     [LabelText("可打断的蹦极棋子名")]
     public string[] bungeeChessNames = { BungeeRetreatHelper.BungeePuppetChessName };
 
+    [LabelText("蹦极弹飞延迟(秒)")]
+    [Tooltip("检测到蹦极后立即播放伞面动画；持续存在达此时间后强制蹦极 skill_raise")]
+    [MinValue(0f)]
+    public float bungeeRetreatDelay = 1f;
+
     [LabelText("伞面反馈 Animator Trigger")]
     [Tooltip("留空则不播反馈动画")]
     public string deflectAnimTrigger = "Deflect";
@@ -47,6 +52,9 @@ public class PassiveSkill_LettuceUmbrella : ISkillEffect
     Timer _timer;
     float _lastDeflectAnimTime = float.NegativeInfinity;
     readonly List<Bullet> _knockedBullets = new List<Bullet>();
+    readonly Dictionary<Chess, float> _bungeeFirstSeenTime = new Dictionary<Chess, float>();
+    readonly HashSet<Chess> _bungeeRetreatTriggered = new HashSet<Chess>();
+    readonly List<Chess> _bungeeCleanupBuffer = new List<Chess>();
 
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
@@ -134,7 +142,7 @@ public class PassiveSkill_LettuceUmbrella : ISkillEffect
         return bullet?.shooter != null && !bullet.shooter.IfDeath && bullet.shooter.CompareTag("Enemy");
     }
 
-    bool ProcessBungees(Tile centerTile)
+    void ProcessBungees(Tile centerTile)
     {
         CollectTilesInRadius(centerTile, protectTileRadius, TileBuffer);
         BungeeScanBuffer.Clear();
@@ -147,13 +155,40 @@ public class PassiveSkill_LettuceUmbrella : ISkillEffect
             {
                 var chess = tile.chessesIntile[ci];
                 if (chess == null || chess == _user || chess.IfDeath) continue;
-                if (!BungeeScanBuffer.Add(chess)) continue;
                 if (!BungeeRetreatHelper.IsBungeeChess(chess, bungeeChessNames)) continue;
-                if (BungeeRetreatHelper.TryForceRetreat(chess))
-                    TryPlayDeflectFeedback();
+                BungeeScanBuffer.Add(chess);
             }
         }
-        return false;
+
+        _bungeeCleanupBuffer.Clear();
+        foreach (var kv in _bungeeFirstSeenTime)
+        {
+            var bungee = kv.Key;
+            if (bungee == null || bungee.IfDeath || !BungeeScanBuffer.Contains(bungee))
+                _bungeeCleanupBuffer.Add(bungee);
+        }
+        for (int i = 0; i < _bungeeCleanupBuffer.Count; i++)
+            _bungeeFirstSeenTime.Remove(_bungeeCleanupBuffer[i]);
+
+        foreach (var bungee in BungeeScanBuffer)
+        {
+            if (_bungeeRetreatTriggered.Contains(bungee)) continue;
+
+            if (!_bungeeFirstSeenTime.TryGetValue(bungee, out float firstSeen))
+            {
+                _bungeeFirstSeenTime[bungee] = Time.time;
+                TryPlayDeflectFeedback(force: true);
+                continue;
+            }
+
+            if (Time.time - firstSeen < bungeeRetreatDelay) continue;
+
+            if (BungeeRetreatHelper.TryForceRetreat(bungee, requireDropPhase: false))
+            {
+                _bungeeRetreatTriggered.Add(bungee);
+                _bungeeFirstSeenTime.Remove(bungee);
+            }
+        }
     }
 
     void RecycleOffScreenBullets()
@@ -214,10 +249,10 @@ public class PassiveSkill_LettuceUmbrella : ISkillEffect
         }
     }
 
-    void TryPlayDeflectFeedback()
+    void TryPlayDeflectFeedback(bool force = false)
     {
         if (string.IsNullOrEmpty(deflectAnimTrigger)) return;
-        if (Time.time - _lastDeflectAnimTime < deflectAnimCooldown) return;
+        if (!force && Time.time - _lastDeflectAnimTime < deflectAnimCooldown) return;
         var anim = _user?.animatorController?.animator;
         if (anim == null) return;
         anim.SetTrigger(deflectAnimTrigger);
@@ -229,6 +264,8 @@ public class PassiveSkill_LettuceUmbrella : ISkillEffect
         _timer?.Stop();
         _timer = null;
         _knockedBullets.Clear();
+        _bungeeFirstSeenTime.Clear();
+        _bungeeRetreatTriggered.Clear();
         if (_user != null)
             _user.OnRemove.RemoveListener(OnChessRemove);
         _user = null;

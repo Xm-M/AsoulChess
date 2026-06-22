@@ -26,6 +26,7 @@ public class RoguelikeRunInfoPanel : View
     [SerializeField] TMP_Text selectableNextText;
     [SerializeField] TMP_Text progressText;
     [SerializeField] TMP_Text ownedPlantCountText;
+    [SerializeField] TMP_Text runGoldText;
     [SerializeField] TMP_Text summaryText;
 
     [Header("植物图标")]
@@ -135,6 +136,7 @@ public class RoguelikeRunInfoPanel : View
 
         int plantCount = state.ownedPlantCreatorIds?.Count ?? 0;
         SetText(ownedPlantCountText, plantCount.ToString());
+        SetText(runGoldText, RoguelikeRunInfoFormatter.FormatRunGold(state));
         SetText(summaryText, BuildSummary(state, config, plantCount));
 
         RefreshPlantIcons(state);
@@ -154,7 +156,7 @@ public class RoguelikeRunInfoPanel : View
         string band = string.IsNullOrEmpty(state.selectedBandName) ? "未知乐队" : state.selectedBandName;
         string act = RoguelikeRunInfoFormatter.FormatActTitle(state, config);
         string node = RoguelikeRunInfoFormatter.FormatCurrentNode(state);
-        return $"{band}\n{act}\n{node}\n植物 {plantCount}";
+        return $"{band}\n{act}\n{node}\n金币 {state.runGold} · 植物 {plantCount}";
     }
 
     void RefreshPlantIcons(RoguelikeRunState state)

@@ -251,8 +251,9 @@ GameObject:
   - component: {fileID: 4031684675121559050}
   - component: {fileID: 3518447451406383473}
   - component: {fileID: -1535273936290550959}
+  - component: {fileID: 1406253077680716161}
   m_Layer: 0
-  m_Name: "\u516B\u5E61\u6D77\u94C3"
+  m_Name: "\u516B\u5E61\u6D77\u73B2"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -345,7 +346,7 @@ MonoBehaviour:
       state:
         rid: -2
       transitions: []
-    stateGraph: {fileID: 11400000, guid: 4cf9bc0071e47f9439e4a2447f2307df, type: 2}
+    stateGraph: {fileID: 11400000, guid: 47414d02708420a459ebd63e2eef5dc0, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -395,7 +396,7 @@ MonoBehaviour:
           rid: 3
         attackFunction:
           rid: 4
-        targetEffect: {fileID: 0}
+        targetEffect: {fileID: 8066652535672360397, guid: 4ec98f76c79043745a5a4d153126a6f6, type: 3}
         selfEffect: {fileID: 0}
         interval: 0
     - rid: 2
@@ -563,6 +564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8259635646668089732}
+  BeAttack: {fileID: 0}
   sprite: {fileID: 3738685241566137457}
   dizzynesss: 
   attackStateNameAlt: 
@@ -702,6 +704,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   createAwake: 1
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1406253077680716161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7587603825327281031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aae06f80775e5d4682c14ee0635c190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Effect: {fileID: 4616019976830216600, guid: a56d6dff3ba86a14ab640a8e231c3f7f, type: 3}
+  radius: 1
+  continueTime: 3
+  interval: 0.5
+  createNumOnce: 3
+  center: {fileID: 0}
 --- !u!1001 &7541029566435813951
 PrefabInstance:
   m_ObjectHideFlags: 0

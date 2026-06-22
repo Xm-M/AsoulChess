@@ -18,7 +18,8 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
       value: {fileID: 21300000, guid: 386f32a952cf27940a2e95051a8b3a79, type: 3}
     - time: 0.083333336
@@ -45,6 +46,7 @@ AnimationClip:
     path: sprite
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 60
   m_WrapMode: 0
   m_Bounds:
@@ -59,6 +61,8 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: 21300000, guid: 386f32a952cf27940a2e95051a8b3a79, type: 3}
     - {fileID: 21300000, guid: 91a8a012063ed1f47b5dfee9c790a669, type: 3}
@@ -105,6 +109,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.033333335
     functionName: UseSkill
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.033333335
+    functionName: CreateEffect
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

@@ -18,6 +18,10 @@ public class RunMapConfig : ScriptableObject
     [FoldoutGroup("开局乐队"), Tooltip("未使用 Catalog 时，直接在此配置乐队列表")]
     public List<BandMes> startingBands = new List<BandMes>();
 
+    [FoldoutGroup("经济"), LabelText("Run 经济配置")]
+    [Tooltip("战斗金币等；为空则使用尖塔参考默认值")]
+    public RoguelikeEconomyConfig economyConfig;
+
     public ActMapConfig act1;
     public ActMapConfig act2;
     public ActMapConfig act3;

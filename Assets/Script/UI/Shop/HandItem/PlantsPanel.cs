@@ -38,8 +38,7 @@ public class PlantsPanel : BaseHandPanel
                     {
                         Tile t = FindTileAtWorld(rayPos);
                         if (t != null
-                            && (MapManage.instance.plantMinMapColumnX < 0
-                                || t.mapPos.x >= MapManage.instance.plantMinMapColumnX)
+                            && MapManage.instance.IsPlantColumnAllowed(t.mapPos.x)
                             && data.creator.IfCanPlant(t))
                         {
                             if (data.creator.plantFunction is LevelUpPlant) t.stander?.Death();

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -25,16 +26,29 @@ public class RoguelikeBandSelectPanel : View
     [Header("成员站位（按顺序拖 Transform，生成 chessPre 于其下）")]
     [SerializeField] List<Transform> memberPos = new List<Transform>();
 
+    [Header("切换动画")]
+    [SerializeField] Animator panelAnimator;
+    [Tooltip("Animator 状态名，对应 change.anim")]
+    [SerializeField] string switchAnimStateName = "change";
+
+    [Header("BGM")]
+    [SerializeField] AudioPlayer bandBgmPlayer;
+
     [Header("可选")]
     [SerializeField] bool hideEmptyMemberSlots = true;
 
     RunMapConfig _activeRunConfig;
     List<BandMes> _bands = new List<BandMes>();
     int _currentIndex;
+    int _pendingBandDelta;
+    bool _bandSwitchInProgress;
+    string _lastPlayedBgmKey;
     readonly List<GameObject> _spawnedMembers = new List<GameObject>();
 
     public override void Init()
     {
+        if (panelAnimator == null)
+            panelAnimator = GetComponent<Animator>();
         if (prevBandButton != null)
             prevBandButton.onClick.AddListener(ShowPreviousBand);
         if (nextBandButton != null)
@@ -76,42 +90,88 @@ public class RoguelikeBandSelectPanel : View
             _bands = new List<BandMes>();
 
         _currentIndex = _bands.Count > 0 ? Mathf.Clamp(startIndex, 0, _bands.Count - 1) : 0;
-        RefreshView();
+        _pendingBandDelta = 0;
+        _bandSwitchInProgress = false;
     }
 
     public override void Show()
     {
         base.Show();
+        _pendingBandDelta = 0;
+        _bandSwitchInProgress = false;
         RefreshView();
     }
 
     public override void Hide()
     {
+        _bandSwitchInProgress = false;
+        _pendingBandDelta = 0;
+        _lastPlayedBgmKey = null;
         ClearMemberPreviews();
         base.Hide();
     }
 
     void ShowPreviousBand()
     {
-        if (_bands.Count == 0) return;
-        _currentIndex = (_currentIndex - 1 + _bands.Count) % _bands.Count;
-        RefreshView();
+        RequestBandSwitch(-1);
     }
 
     void ShowNextBand()
     {
-        if (_bands.Count == 0) return;
-        _currentIndex = (_currentIndex + 1) % _bands.Count;
+        RequestBandSwitch(1);
+    }
+
+    void RequestBandSwitch(int delta)
+    {
+        if (_bands.Count <= 1 || _bandSwitchInProgress)
+            return;
+
+        _pendingBandDelta = delta;
+        _bandSwitchInProgress = true;
+        SetBandNavInteractable(false);
+
+        if (panelAnimator != null && !string.IsNullOrEmpty(switchAnimStateName))
+        {
+            panelAnimator.Play(switchAnimStateName, 0, 0f);
+            return;
+        }
+
+        OnBandSwitchAnimationApply();
+        OnBandSwitchAnimationFinished();
+    }
+
+    /// <summary>change.anim 在合适帧添加 Animation Event 调用，用于真正切换乐队展示。</summary>
+    public void OnBandSwitchAnimationApply()
+    {
+        if (_bands.Count == 0 || _pendingBandDelta == 0)
+            return;
+
+        _currentIndex = (_currentIndex + _pendingBandDelta + _bands.Count) % _bands.Count;
+        _pendingBandDelta = 0;
         RefreshView();
+    }
+
+    /// <summary>change.anim 末帧 Animation Event 调用，恢复按钮。</summary>
+    public void OnBandSwitchAnimationFinished()
+    {
+        _bandSwitchInProgress = false;
+        _pendingBandDelta = 0;
+        SetBandNavInteractable(_bands.Count > 1);
+    }
+
+    void SetBandNavInteractable(bool navEnabled)
+    {
+        if (prevBandButton != null)
+            prevBandButton.interactable = navEnabled;
+        if (nextBandButton != null)
+            nextBandButton.interactable = navEnabled;
     }
 
     void RefreshView()
     {
         bool hasBands = _bands.Count > 0;
-        if (prevBandButton != null)
-            prevBandButton.interactable = _bands.Count > 1;
-        if (nextBandButton != null)
-            nextBandButton.interactable = _bands.Count > 1;
+        if (!_bandSwitchInProgress)
+            SetBandNavInteractable(_bands.Count > 1);
 
         if (!hasBands)
         {
@@ -127,6 +187,7 @@ public class RoguelikeBandSelectPanel : View
             ClearMemberPreviews();
             if (startChallengeButton != null)
                 startChallengeButton.interactable = false;
+            StopBandBgm();
             return;
         }
 
@@ -144,9 +205,51 @@ public class RoguelikeBandSelectPanel : View
         }
 
         RefreshMemberPreviews(band);
+        PlayBandBgm(band);
 
         if (startChallengeButton != null)
             startChallengeButton.interactable = band.IsValidForRun(out _);
+    }
+
+    void PlayBandBgm(BandMes band)
+    {
+        if (bandBgmPlayer == null)
+            return;
+
+        string key = band?.bgm;
+        if (string.IsNullOrEmpty(key))
+        {
+            if (!string.IsNullOrEmpty(_lastPlayedBgmKey))
+            {
+                bandBgmPlayer.Stop();
+                _lastPlayedBgmKey = null;
+            }
+            return;
+        }
+
+        if (key == _lastPlayedBgmKey)
+            return;
+
+        if (bandBgmPlayer.audioSource == null)
+            bandBgmPlayer.audioSource = bandBgmPlayer.GetComponent<AudioSource>();
+        if (bandBgmPlayer.audioSource == null)
+        {
+            Debug.LogWarning("[RoguelikeBandSelectPanel] bandBgmPlayer 缺少 AudioSource", bandBgmPlayer);
+            return;
+        }
+
+        _lastPlayedBgmKey = key;
+        bandBgmPlayer.SetLoop(true);
+        bandBgmPlayer.PlayAudio(key);
+    }
+
+    void StopBandBgm()
+    {
+        if (bandBgmPlayer == null)
+            return;
+
+        bandBgmPlayer.Stop();
+        _lastPlayedBgmKey = null;
     }
 
     void RefreshMemberPreviews(BandMes band)
@@ -193,10 +296,38 @@ public class RoguelikeBandSelectPanel : View
         if (chess != null)
         {
             chess.InitChess();
-            chess.animatorController?.PlayIdle();
+            PlayMemberIdle(chess);
         }
 
         _spawnedMembers.Add(go);
+    }
+
+    void PlayMemberIdle(Chess chess)
+    {
+        if (chess == null)
+            return;
+
+        if (isActiveAndEnabled)
+        {
+            StartCoroutine(PlayMemberIdleWhenReady(chess));
+            return;
+        }
+
+        if (chess.gameObject.activeInHierarchy)
+            chess.animatorController?.PlayIdle();
+    }
+
+    /// <summary>切换动画会晚一帧才激活成员展示父节点，需等 activeInHierarchy 后再 PlayIdle。</summary>
+    IEnumerator PlayMemberIdleWhenReady(Chess chess)
+    {
+        if (chess == null)
+            yield break;
+
+        for (int i = 0; i < 30 && chess != null && !chess.gameObject.activeInHierarchy; i++)
+            yield return null;
+
+        if (chess != null && chess.gameObject.activeInHierarchy)
+            chess.animatorController?.PlayIdle();
     }
 
     void ClearMemberPreviews()
@@ -211,6 +342,9 @@ public class RoguelikeBandSelectPanel : View
 
     void OnStartChallenge()
     {
+        if (_bandSwitchInProgress)
+            return;
+
         if (_activeRunConfig == null)
         {
             Debug.LogWarning("[RoguelikeBandSelectPanel] RunMapConfig 未设置");
@@ -236,6 +370,10 @@ public class RoguelikeBandSelectPanel : View
 
     void OnBack()
     {
+        if (_bandSwitchInProgress)
+            return;
+
+        StopBandBgm();
         Hide();
         UIManage.GetView<StartUI>()?.Show();
     }

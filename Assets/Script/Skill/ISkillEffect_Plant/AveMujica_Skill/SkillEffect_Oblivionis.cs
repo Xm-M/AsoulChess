@@ -16,12 +16,13 @@ public class SkillEffect_Oblivionis : ISkillEffect
     public Color outLineColor;
     public float outlineSize;
     public float continueTime = 25f;
+    Timer t;
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
         if (user == null || ObjectPool.instance == null)
             return;
         user.animatorController.SetOutline(outLineColor,outlineSize);
-        GameManage.instance.timerManage.AddTimer(() => user.animatorController.SetOutline(Color.white, 0), continueTime);
+        t= GameManage.instance.timerManage.AddTimer(() => { if (user!=null) user.animatorController.SetOutline(Color.white, 0); }, continueTime);
         SkillContext ctx = user.skillController?.context;
         int nextIndex = 0;
         if (ctx != null && ctx.TryGet(ContextKeyLastBulletIndex, out int last) && (last == 0 || last == 1))

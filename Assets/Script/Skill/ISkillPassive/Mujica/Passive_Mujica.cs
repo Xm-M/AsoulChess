@@ -47,7 +47,7 @@ static class MujicaAveGridBaseCache
 
 /// <summary>
 /// Oblivionis：维护 <see cref="_mujicaGridDir"/>（队友 → 其普攻相对格拷贝），与自身底形取并集后写入 <see cref="Weapon_Sample.findTarget"/>。
-/// 「在攻击范围内」= 队友站立格落在自身当前普攻覆盖的地图格集合内；「右方」= 同队队友（沿用现有队伍遍历）。
+/// 纳入条件：同队 AveMujica 且普攻格与自身底形在地图上有重叠，或四邻（上下左右）接壤。
 /// </summary>
 public class Passive_Mujica_Oblivionis : ISkillEffect
 {
@@ -179,7 +179,7 @@ public class Passive_Mujica_Oblivionis : ISkillEffect
             for (int i = 0; i < _keysScratch.Count; i++)
             {
                 Chess tracked = _keysScratch[i];
-                if (!ShouldTrackAlly(tracked, team, scanCells))
+                if (!ShouldTrackAlly(tracked, team, scanCells, map))
                     RemoveTrackedAlly(tracked);
             }
 
@@ -190,7 +190,7 @@ public class Passive_Mujica_Oblivionis : ISkillEffect
                     Chess ally = team[i];
                     if (ally == null || ally == _user || ally.IfDeath)
                         continue;
-                    if (!IsAllyEligibleForExtension(ally, scanCells))
+                    if (!IsAllyEligibleForExtension(ally, scanCells, map))
                         continue;
                     if (_mujicaGridDir.ContainsKey(ally))
                         continue;
@@ -260,27 +260,67 @@ public class Passive_Mujica_Oblivionis : ISkillEffect
         }
     }
 
-    static bool IsAllyEligibleForExtension(Chess ally, HashSet<Vector2Int> scanCells)
+    static bool IsAllyEligibleForExtension(Chess ally, HashSet<Vector2Int> scanCells, MapManage map)
     {
-        if (ally.moveController?.standTile == null)
-            return false;
         List<string> tags = ally.propertyController?.creator?.plantTags;
         if (tags == null || !tags.Contains(AveMujicaTag))
             return false;
-        if (!scanCells.Contains(ally.moveController.standTile.mapPos))
-            return false;
         if (!(ally.equipWeapon?.weapon is Weapon_Sample ws) || !(ws.findTarget is IGridFindTarget))
             return false;
-        return true;
+
+        IList<Vector2Int> pattern = ResolveAllyBaseRelativeCells(ally);
+        if (pattern == null || pattern.Count == 0)
+            return false;
+        if (!GridFindTargetGeometry.TryGetBaseMapPos(ally, map, out Vector2Int aBase))
+            return false;
+
+        int aForward = GridFindTargetGeometry.GetForwardX(ally);
+        return AllyAttackRangeBordersSet(aBase, aForward, pattern, map.mapSize, scanCells);
     }
 
-    static bool ShouldTrackAlly(Chess tracked, List<Chess> team, HashSet<Vector2Int> scanCells)
+    static bool ShouldTrackAlly(Chess tracked, List<Chess> team, HashSet<Vector2Int> scanCells, MapManage map)
     {
         if (tracked == null || tracked.IfDeath)
             return false;
         if (team == null || !team.Contains(tracked))
             return false;
-        return IsAllyEligibleForExtension(tracked, scanCells);
+        return IsAllyEligibleForExtension(tracked, scanCells, map);
+    }
+
+    /// <summary>队友普攻覆盖格与 <paramref name="targetCells"/> 有重叠，或四邻格接壤。</summary>
+    static bool AllyAttackRangeBordersSet(
+        Vector2Int allyBase,
+        int allyForward,
+        IList<Vector2Int> allyPattern,
+        Vector2Int mapSize,
+        HashSet<Vector2Int> targetCells)
+    {
+        if (targetCells == null || targetCells.Count == 0 || allyPattern == null)
+            return false;
+
+        for (int i = 0; i < allyPattern.Count; i++)
+        {
+            Vector2Int rel = allyPattern[i];
+            int mx = allyBase.x + rel.x * allyForward;
+            int my = allyBase.y + rel.y;
+            if (!GridFindTargetGeometry.IsDetectableCell(mx, my, mapSize))
+                continue;
+
+            var allyCell = new Vector2Int(mx, my);
+            if (targetCells.Contains(allyCell))
+                return true;
+            if (IsOrthogonallyAdjacentToAny(allyCell, targetCells))
+                return true;
+        }
+        return false;
+    }
+
+    static bool IsOrthogonallyAdjacentToAny(Vector2Int cell, HashSet<Vector2Int> targets)
+    {
+        return targets.Contains(new Vector2Int(cell.x - 1, cell.y))
+            || targets.Contains(new Vector2Int(cell.x + 1, cell.y))
+            || targets.Contains(new Vector2Int(cell.x, cell.y - 1))
+            || targets.Contains(new Vector2Int(cell.x, cell.y + 1));
     }
 
     static IList<Vector2Int> ResolveAllyBaseRelativeCells(Chess ally)

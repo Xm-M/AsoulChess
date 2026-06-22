@@ -14,117 +14,129 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   States:
   - state:
-      id: 0
+      rid: 0
     transitions:
     - transition:
-        id: 1
+        rid: 1
       targetState: 3
     - transition:
-        id: 2
+        rid: 2
       targetState: 0
     - transition:
-        id: 3
+        rid: 3
       targetState: 5
   - state:
-      id: 4
+      rid: 4
     transitions:
     - transition:
-        id: 5
+        rid: 5
       targetState: 3
     - transition:
-        id: 6
+        rid: 6
       targetState: 4
     - transition:
-        id: 7
+        rid: 7
       targetState: 5
   - state:
-      id: 8
+      rid: 8
     transitions:
     - transition:
-        id: 9
+        rid: 9
       targetState: 4
     - transition:
-        id: 10
+        rid: 10
       targetState: 5
   - state:
-      id: 11
+      rid: 11
     transitions: []
   - state:
-      id: 12
+      rid: 12
     transitions:
     - transition:
-        id: 13
+        rid: 13
       targetState: 4
   - state:
-      id: 14
+      rid: 14
     transitions:
     - transition:
-        id: 15
+        rid: 15
       targetState: 5
   - state:
-      id: 16
+      rid: 16
     transitions:
     - transition:
-        id: 17
+        rid: 17
       targetState: 4
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: IdleState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 4
         chess: {fileID: 0}
-    00000001:
+    - rid: 1
       type: {class: IfSkillReadyTransition, ns: , asm: Assembly-CSharp}
-    00000002:
+      data: 
+    - rid: 2
       type: {class: InRangeTransition, ns: , asm: Assembly-CSharp}
-    00000003:
+      data: 
+    - rid: 3
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
-    00000004:
+      data: 
+    - rid: 4
       type: {class: AttackState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 0
         chess: {fileID: 0}
-    00000005:
+    - rid: 5
       type: {class: IfSkillReadyTransition, ns: , asm: Assembly-CSharp}
-    00000006:
+      data: 
+    - rid: 6
       type: {class: OutRangeTransition, ns: , asm: Assembly-CSharp}
-    00000007:
+      data: 
+    - rid: 7
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
-    00000008:
+      data: 
+    - rid: 8
       type: {class: SkillState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 3
         chess: {fileID: 0}
-    00000009:
+    - rid: 9
       type: {class: IfAnimPlayOverTransition, ns: , asm: Assembly-CSharp}
-    0000000A:
+      data: 
+    - rid: 10
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
-    0000000B:
+      data: 
+    - rid: 11
       type: {class: DeathState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 5
         chess: {fileID: 0}
-    0000000C:
+    - rid: 12
       type: {class: PrepareState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 2
         chess: {fileID: 0}
-    0000000D:
+    - rid: 13
       type: {class: IfGameStart, ns: , asm: Assembly-CSharp}
-    0000000E:
+      data: 
+    - rid: 14
       type: {class: DizzinessState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 6
         chess: {fileID: 0}
-    0000000F:
+    - rid: 15
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
-    00000010:
+      data: 
+    - rid: 16
       type: {class: FeverState, ns: , asm: Assembly-CSharp}
       data:
         stateName: 10
         chess: {fileID: 0}
-    00000011:
+        feverEffect: {fileID: 6135386254345571767, guid: 341e5c865faaf5d4bbe1c81f2712765d, type: 3}
+    - rid: 17
       type: {class: IWaitTimeTransition, ns: , asm: Assembly-CSharp}
       data:
         WaitTime: 20

@@ -78,6 +78,8 @@ public class BuffController
     public void AddBuff(Buff buff)
     {
         if (buff == null) return;
+        if (Buff_ZombieKingStandImmunity.IsActiveOn(chess) && Buff_ZombieKingStandImmunity.BlocksControlBuff(buff))
+            return;
         if (buffDic.ContainsKey(buff.buffName))
         {
             buffDic[buff.buffName].BuffReset(buff);

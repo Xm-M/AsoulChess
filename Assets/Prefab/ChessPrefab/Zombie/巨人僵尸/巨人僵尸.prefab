@@ -211,7 +211,7 @@ MonoBehaviour:
       state:
         rid: -2
       transitions: []
-    stateGraph: {fileID: 11400000, guid: b44f7b6ba640cf64faedcc9241b9b3ca, type: 2}
+    stateGraph: {fileID: 11400000, guid: 0fdfba708c8919445ac54eec6b53f9b0, type: 2}
     EnterWarState: 4
   buffController:
     chess: {fileID: 0}
@@ -394,6 +394,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 5096913413454014059}
+  BeAttack: {fileID: 0}
   sprite: {fileID: 7250230440832989084}
   dizzynesss: 
   attackStateNameAlt: 

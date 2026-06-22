@@ -250,6 +250,7 @@ MonoBehaviour:
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillColdFx: {fileID: 0}
     skillEffectFiredThisCast: 0
   stateController:
     currentState:
@@ -298,7 +299,9 @@ MonoBehaviour:
           rid: 4
         attackFunction:
           rid: 5
-        interval: 0
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
+        interval: 1
     - rid: 2
       type: {class: ColdSkill, ns: , asm: Assembly-CSharp}
       data:
@@ -420,6 +423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3236718938354041168}
+  BeAttack: {fileID: 0}
   sprite: {fileID: 896541167176832612}
   dizzynesss: 
   attackStateNameAlt: 

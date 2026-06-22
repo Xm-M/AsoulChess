@@ -23,6 +23,9 @@ public class RoguelikeRunState
     public string selectedBandId;
     public string selectedBandName;
 
+    /// <summary>本 Run 持有金币（仅 Run 内有效，不写 PlayerSaveData）。</summary>
+    public int runGold;
+
     public bool runActive;
 
     public RoguelikeMapNode CurrentNode => currentMap.GetNode(currentNodeId);

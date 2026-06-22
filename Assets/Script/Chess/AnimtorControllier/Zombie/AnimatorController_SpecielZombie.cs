@@ -100,10 +100,10 @@ public class AnimatorController_SpecielZombie : AnimatorController
     public override void ChangeColor(Color color)
     {
         base.ChangeColor(color);
-        arm.color = color;
-        head.color = color;
-        if(box !=null)
-        box.color = color;
+        ApplyColorToSpriteRenderer(arm, color);
+        ApplyColorToSpriteRenderer(head, color);
+        if (box != null)
+            ApplyColorToSpriteRenderer(box, color);
     }
     
 }

@@ -144,6 +144,7 @@ public static class RoguelikeRunService
                 : new List<string>(),
             selectedBandId = src.selectedBandId,
             selectedBandName = src.selectedBandName,
+            runGold = src.runGold,
         };
 
         if (src.currentMap?.nodes != null)
@@ -256,26 +257,31 @@ public static class RoguelikeRunService
         return act.bossLevel;
     }
 
-    public static void ReturnToMapUI()
+    public static void ReturnToMapUI(Action onSceneReady = null)
     {
         if (State == null) return;
         if (HasActiveRun)
             SaveRun();
 
+        void OnReady()
+        {
+            onSceneReady?.Invoke();
+            UIManage.GetView<RoguelikeMapPanel>()?.ShowAndRefresh();
+            RoguelikeRunInfoPanel.TryShowAndRefresh();
+        }
+
         var sm = GameManage.instance != null ? GameManage.instance.sceneManage : null;
         if (sm == null)
         {
-            UIManage.GetView<RoguelikeMapPanel>()?.ShowAndRefresh();
+            OnReady();
             return;
         }
 
-        sm.LoadScene("开始",
-            () => UIManage.GetView<RoguelikeMapPanel>()?.ShowAndRefresh(),
-            () =>
-            {
-                if (LevelManage.instance != null)
-                    LevelManage.instance.LeaveState();
-            });
+        sm.LoadScene("开始", OnReady, () =>
+        {
+            if (LevelManage.instance != null)
+                LevelManage.instance.LeaveState();
+        });
     }
 
     public static void EnterCombatNode()

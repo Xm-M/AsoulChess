@@ -10,13 +10,23 @@ public class AudioPlayer : MonoBehaviour
     public AudioSource audioSource;
     public List<GameObject> subAudio;
     public float baseValue;
+
+    void EnsureAudioSource()
+    {
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+    }
+
     private void Awake()
     {
-        baseValue= audioSource.volume;
+        EnsureAudioSource();
+        if (audioSource != null)
+            baseValue = audioSource.volume;
     }
     private void OnEnable()
     {
-        if (audioSource == null) audioSource = GetComponent<AudioSource>();
+        EnsureAudioSource();
+        if (audioSource == null) return;
         if(autype==AudioType.SoundEffect)
             audioSource.volume=AudioManage.SoundEffectValue*baseValue;
         else
@@ -272,6 +282,52 @@ public class AudioPlayer : MonoBehaviour
         return null;
     }
 
+    /// <summary>将当前 <see cref="AudioSource.clip"/> 反查 Clip List 中的 audioKey；找不到时退回 clip.name。</summary>
+    public string ResolveAudioKeyForClip(AudioClip clip)
+    {
+        if (clip == null)
+            return null;
+        if (clipList != null)
+        {
+            for (int i = 0; i < clipList.Count; i++)
+            {
+                if (clipList[i]?.clip == clip && !string.IsNullOrEmpty(clipList[i].audioKey))
+                    return clipList[i].audioKey;
+            }
+        }
+        return clip.name;
+    }
+
+    /// <summary>读取当前播放状态，供 BGM 断点续播。</summary>
+    public bool TryGetCurrentPlaybackState(out string audioKey, out float time, out bool loop)
+    {
+        audioKey = null;
+        time = 0f;
+        loop = false;
+        if (audioSource == null || audioSource.clip == null)
+            return false;
+
+        audioKey = ResolveAudioKeyForClip(audioSource.clip);
+        time = audioSource.time;
+        loop = audioSource.loop;
+        return !string.IsNullOrEmpty(audioKey);
+    }
+
+    /// <summary>播放 Clip List 第一项（非循环）。</summary>
+    public bool TryPlayFirstClip(out float duration)
+    {
+        duration = 0f;
+        if (clipList == null || clipList.Count == 0)
+            return false;
+        var entry = clipList[0];
+        if (entry?.clip == null || string.IsNullOrEmpty(entry.audioKey))
+            return false;
+        SetLoop(false);
+        PlayAudio(entry.audioKey);
+        duration = entry.clip.length;
+        return true;
+    }
+
     float GetClipLength(string audioKey)
     {
         var c = GetClip(audioKey);
@@ -430,6 +486,8 @@ public class AudioPlayer : MonoBehaviour
     }
     public void Stop()
     {
+        EnsureAudioSource();
+        if (audioSource == null) return;
         audioSource.Stop();
     }
     public void Pause()
@@ -446,6 +504,8 @@ public class AudioPlayer : MonoBehaviour
     }
     public void SetLoop(bool loop)
     {
+        EnsureAudioSource();
+        if (audioSource == null) return;
         audioSource.loop = loop;
     }
     /// <summary>设置播放进度（秒），循环时自动取模</summary>

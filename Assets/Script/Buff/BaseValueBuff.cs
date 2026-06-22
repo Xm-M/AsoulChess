@@ -9,6 +9,7 @@ using UnityEngine;
 public class Buff_BaseValueBuff : Buff
 {
     public GameObject effect;
+    GameObject newEffect;
     /// <summary>供存读档使用，返回主数值（float）</summary>
     public virtual float GetSaveValue() => 0;
     /// <summary>供存读档使用，设置主数值</summary>
@@ -18,7 +19,7 @@ public class Buff_BaseValueBuff : Buff
         base.BuffEffect(target);
         if (effect != null)
         {
-            GameObject newEffect = ObjectPool.instance.Create(effect);
+             newEffect = ObjectPool.instance.Create(effect);
             newEffect.transform.position = target.transform.position;
         }
     }
@@ -27,8 +28,16 @@ public class Buff_BaseValueBuff : Buff
         base.BuffReset(resetBuff);
         if (effect != null)
         {
-            GameObject newEffect = ObjectPool.instance.Create(effect);
+             newEffect = ObjectPool.instance.Create(effect);
             newEffect.transform.position = target.transform.position;
+        }
+    }
+    public override void BuffOver()
+    {
+        base.BuffOver();
+        if (newEffect != null)
+        {
+            ObjectPool.instance.Recycle(newEffect);
         }
     }
 }

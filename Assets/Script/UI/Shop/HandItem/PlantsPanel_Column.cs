@@ -43,7 +43,9 @@ public class PlantsPanel_Column : BaseHandPanel
                     if (!IceCell.BlocksPlayerPlantAt(rayPos))
                     {
                         Tile anchor = FindTileAtWorld(rayPos);
-                        if (anchor != null && data.creator.IfCanPlant(anchor))
+                        if (anchor != null
+                            && MapManage.instance.IsPlantColumnAllowed(anchor.mapPos.x)
+                            && data.creator.IfCanPlant(anchor))
                         {
                             int colX = anchor.mapPos.x;
                             Chess first = null;
@@ -51,7 +53,7 @@ public class PlantsPanel_Column : BaseHandPanel
                             for (int y = 0; y < mapSize.y; y++)
                             {
                                 Tile t = MapManage.instance.tiles[colX, y];
-                                if (t == null || !data.creator.IfCanPlant(t)) continue;
+                                if (t == null || !MapManage.instance.IsPlantColumnAllowed(t.mapPos.x) || !data.creator.IfCanPlant(t)) continue;
                                 Chess c = PlantOnTile(t, data);
                                 if (first == null) first = c;
                             }

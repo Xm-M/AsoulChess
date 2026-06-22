@@ -38,7 +38,7 @@ MonoBehaviour:
     price: 475
     rarity: 4000
     waveLimit: 1
-    CD: 7.5
+    CD: 50
     Size: 1
   chessPre: {fileID: 4578762227932890891, guid: 9199429850555d447bc2acdb76552def, type: 3}
   chessSprite: {fileID: -8452742265747795653, guid: c03c90f7c27cc4b42b82570cb08611d5, type: 3}
@@ -49,16 +49,19 @@ MonoBehaviour:
   chessTileType: 1
   plantType: 1
   plantFunction:
-    id: 0
+    rid: 0
   plantIfCanBuyCard:
-    id: 1
+    rid: 1907368226269429760
   PlantCardPre: {fileID: 2991298695686272976, guid: 91a77fce93c536448808fdde343467f9, type: 3}
   PlantEntrepotCardPre: {fileID: 3121051189400196229, guid: 0a232a3f09ea5114a99c4b848888d60c, type: 3}
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: 0
       type: {class: LevelUpPlant, ns: , asm: Assembly-CSharp}
       data:
         basePlant: {fileID: 11400000, guid: d944449962d51494dbd9e89afd0c260d, type: 2}
-    00000001:
+    - rid: 1907368226269429760
       type: {class: OnlyOne_Limit, ns: , asm: Assembly-CSharp}
+      data:
+        maxCount: 3

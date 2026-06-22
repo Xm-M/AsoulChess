@@ -188,10 +188,9 @@ public class PropertyController:Controller
     public void ChangeAcceleRate(float value)
     {
         Data.acceleRated += value;
-        //chess.animator.speed = Data.acceleRated;
-        chess.animatorController.ChangeSpeed(Data.acceleRated);
-        //if (!freezy)
-            
+        // 眩晕/冻结期间由 DizzinessState → PlayDizzy() 控制 animator.speed，勿被 ColdBuff 等攻速 Buff 覆盖
+        if (chess.stateController?.currentState?.state?.stateName != StateName.DizzyState)
+            chess.animatorController.ChangeSpeed(Data.acceleRated);
     }
 
     /// <summary>
@@ -225,6 +224,8 @@ public class PropertyController:Controller
     {
         return Data.dizzinessTime*(1-Data.tenacity);
     }
+    public float GetTenacity() => Data.tenacity;
+    public void SetTenacity(float value) => Data.tenacity = Mathf.Clamp01(value);
     public void ResetDizznessTime()
     {
         Data.dizzinessTime = 0;

@@ -18,7 +18,8 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
       value: {fileID: 21300000, guid: dd3cdadbd439ace4ba887061bef545c8, type: 3}
     - time: 0.083333336
@@ -73,6 +74,7 @@ AnimationClip:
     path: sprite
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 60
   m_WrapMode: 0
   m_Bounds:
@@ -87,6 +89,8 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: 21300000, guid: dd3cdadbd439ace4ba887061bef545c8, type: 3}
     - {fileID: 21300000, guid: 2f879ef63847e2849bc5fef8f595e59e, type: 3}
@@ -140,6 +144,13 @@ AnimationClip:
   m_Events:
   - time: 0.33333334
     functionName: TakeDamage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.33333334
+    functionName: CreateEffect
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

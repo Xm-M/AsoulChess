@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2337250203813108000}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.06, y: 1.25, z: 0}
+  m_LocalPosition: {x: -1.22, y: 1.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -241,10 +241,13 @@ MonoBehaviour:
       type: {class: PassiveSkill_LettuceUmbrella, ns: , asm: Assembly-CSharp}
       data:
         interval: 0.05
+        protectTileRadius: 1
+        warnTileRadius: 3
         bulletKnockSpeed: 18
         offScreenPadding: 1.5
         bungeeChessNames:
         - "\u8E66\u6781\u6728\u5076"
+        bungeeRetreatDelay: 1
         deflectAnimTrigger: skill
         deflectAnimCooldown: 0.25
 --- !u!61 &6066318520152808876
@@ -497,7 +500,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8503115955464252077, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.14
+      value: -1.04
       objectReference: {fileID: 0}
     - target: {fileID: 8503115955464252077, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
       propertyPath: m_LocalPosition.y

@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 8607761482893557226}
   - component: {fileID: 8950482713801336731}
   - component: {fileID: 34756230596073858}
+  - component: {fileID: 8977428313647097194}
   m_Layer: 0
   m_Name: "\u7950\u5929\u5BFA\u82E5\u9EA6"
   m_TagString: Untagged
@@ -461,6 +462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 5602667614478877602}
+  BeAttack: {fileID: 0}
   sprite: {fileID: 2476008535862207373}
   dizzynesss: 
   attackStateNameAlt: 
@@ -600,6 +602,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   createAwake: 1
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &8977428313647097194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6885989903785382294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aae06f80775e5d4682c14ee0635c190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Effect: {fileID: 3650182651877128045, guid: 23bff4c1612315c4db08fe710cdae574, type: 3}
+  radius: 1
+  continueTime: 3
+  interval: 0.5
+  createNumOnce: 3
+  center: {fileID: 0}
 --- !u!1 &7948115709590551320
 GameObject:
   m_ObjectHideFlags: 0

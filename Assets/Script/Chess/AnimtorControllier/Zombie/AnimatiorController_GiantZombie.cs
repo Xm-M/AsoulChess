@@ -78,8 +78,8 @@ public class AnimatiorController_GiantZombie : AnimatorController
     public override void ChangeColor(Color color)
     {
         base.ChangeColor(color);
-        bengdai.color = color;
-        littleZombie.color = color;
+        ApplyColorToSpriteRenderer(bengdai, color);
+        ApplyColorToSpriteRenderer(littleZombie, color);
     }
     public void HideLittle()
     {

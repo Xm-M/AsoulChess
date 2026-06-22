@@ -19,6 +19,9 @@ public class Buff_AveMujica : Buff
     UnityAction<DamageMessege> _onSetDamage;
     UnityAction<Chess> _onUseSkillFever;
 
+    [System.NonSerialized]
+    FeverFXPresenter _feverFx;
+
     public Buff_AveMujica()
     {
         buffName = "Buff_AveMujica";
@@ -27,6 +30,8 @@ public class Buff_AveMujica : Buff
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
+
+        _feverFx = FeverFXPresenter.TrySpawnUnderChess(target);
 
         _onUseSkillFever = OnUseSkillFever;
         target.skillController.onUseSkill.AddListener(_onUseSkillFever);
@@ -110,6 +115,12 @@ public class Buff_AveMujica : Buff
         {
             _nyamuTimer.Stop();
             _nyamuTimer = null;
+        }
+
+        if (_feverFx != null)
+        {
+            _feverFx.DestroySafe();
+            _feverFx = null;
         }
 
         _onTakeDamage = null;

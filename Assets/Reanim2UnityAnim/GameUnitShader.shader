@@ -3,6 +3,8 @@ Shader "Unlit/GameUnitShader"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _ColorAppend ("Tint Multiply (Color1)", Color) = (1,1,1,1)
+        _CustomColorAppend ("Tint Multiply 2 (Color2)", Color) = (1,1,1,1)
         _AngleX ("AngleX", Float) = 0.0
         _AngleY ("AngleY", Float) = 0.0
         _ScaleX ("ScaleX", Float) = 1.0
@@ -38,16 +40,20 @@ Shader "Unlit/GameUnitShader"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+                fixed4 color : COLOR;
             };
 
             struct v2f
             {
                 float2 uv : TEXCOORD0;
+                fixed4 color : COLOR;
                 float4 vertex : SV_POSITION;
             };
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            fixed4 _ColorAppend;
+            fixed4 _CustomColorAppend;
             float _AngleX;
             float _AngleY;
             float _ScaleX;
@@ -98,12 +104,13 @@ Shader "Unlit/GameUnitShader"
 
                 o.vertex = UnityObjectToClipPos(float4(v_in.x, v_in.y, 0, 1.0));
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.color = v.color * _ColorAppend * _CustomColorAppend;
                 return o;
             }
 
             float4 frag(v2f i) : SV_Target
             {
-                float4 tex_color = tex2D(_MainTex, i.uv);
+                float4 tex_color = tex2D(_MainTex, i.uv) * i.color;
                 if (_IsVisible == -1)
                 {
                     tex_color.a = 0.0;

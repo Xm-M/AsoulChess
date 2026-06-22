@@ -771,7 +771,7 @@ GameObject:
   - component: {fileID: 638076721}
   - component: {fileID: 638076720}
   m_Layer: 0
-  m_Name: EventSystem (1)
+  m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1116,7 +1116,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 904b5e7980eacb44997a9c83217975b9, type: 2}
   - {fileID: 11400000, guid: d944449962d51494dbd9e89afd0c260d, type: 2}
   - {fileID: 11400000, guid: d47cb005112535b479e233447724e408, type: 2}
-  - {fileID: 11400000, guid: 58a2282dcbbd1ec41bd482e3aa68425c, type: 2}
+  - {fileID: 11400000, guid: 7c3f2959dc4dd3349b5301f3bf96e687, type: 2}
   - {fileID: 11400000, guid: 8d62d64185ceb7d41999f60aeb867025, type: 2}
   - {fileID: 11400000, guid: ad8162f24c33e4942a94f502b37dcada, type: 2}
   - {fileID: 11400000, guid: 76851a1f6b5effc47a37e7ab39df11d6, type: 2}
@@ -1148,6 +1148,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 93da2a15e3000e54d9f9809d0b17b5bc, type: 2}
   - {fileID: 11400000, guid: 723a4e0a98580bc49b8f337bd10907c6, type: 2}
   - {fileID: 11400000, guid: ef62c63d0c80a2f4987eb617b21b2afb, type: 2}
+  - {fileID: 11400000, guid: ef61e5610aef5c141a0e6ffdb1bcc197, type: 2}
   playerOwnedCreators:
   - {fileID: 11400000, guid: 0b45a281d6f9c4e4bac6cf69f1cc233e, type: 2}
   - {fileID: 11400000, guid: 93e4d5ea07618ee42babdd49a4e6ebc5, type: 2}
@@ -1189,7 +1190,7 @@ MonoBehaviour:
   WhenGameStart:
     m_PersistentCalls:
       m_Calls: []
-  TestLevel: {fileID: 11400000, guid: 2aca715d45014134681726d5602f2e22, type: 2}
+  TestLevel: {fileID: 11400000, guid: c3cebb505ad6f74449193f801b39c8f0, type: 2}
   references:
     version: 2
     RefIds:
@@ -1214,6 +1215,7 @@ MonoBehaviour:
         - {fileID: 11400000, guid: fd341481fc8dfe74cb2e6dd2d0dc192b, type: 2}
         - {fileID: 11400000, guid: 1c549edec3dc8044cabd73c584f1add1, type: 2}
         - {fileID: 11400000, guid: b398e26dd8cd4c8448d3fe648235966a, type: 2}
+        - {fileID: 11400000, guid: c9d8e7f6a5b4433221100ffeedccbbaa, type: 2}
     - rid: 2
       type: {class: GameCameraManage, ns: , asm: Assembly-CSharp}
       data: 

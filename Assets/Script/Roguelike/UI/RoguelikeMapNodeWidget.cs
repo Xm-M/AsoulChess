@@ -51,7 +51,7 @@ public class RoguelikeMapNodeWidget : MonoBehaviour
             if (hasIcon)
             {
                 iconImage.sprite = typeStyle.iconSprite;
-                iconImage.color = ResolveColor(state, typeStyle.baseColor, stateStyle);
+                iconImage.color = ResolveIconColor(state, typeStyle.baseColor, stateStyle);
             }
         }
 
@@ -62,10 +62,10 @@ public class RoguelikeMapNodeWidget : MonoBehaviour
             if (hasIcon && iconImage == null)
             {
                 background.sprite = typeStyle.iconSprite;
-                background.color = ResolveColor(state, typeStyle.baseColor, stateStyle);
+                background.color = ResolveIconColor(state, typeStyle.baseColor, stateStyle);
             }
             else
-                background.color = ResolveColor(state, typeStyle.baseColor, stateStyle);
+                background.color = ResolveBackgroundColor(state, typeStyle.baseColor, stateStyle);
         }
 
         if (label != null)
@@ -82,9 +82,11 @@ public class RoguelikeMapNodeWidget : MonoBehaviour
 
         if (button != null)
         {
-            button.interactable = state == RoguelikeNodeVisualState.Selectable;
+            bool clickable = state == RoguelikeNodeVisualState.Selectable
+                             || state == RoguelikeNodeVisualState.Current;
+            button.interactable = clickable;
             button.onClick.RemoveAllListeners();
-            if (state == RoguelikeNodeVisualState.Selectable)
+            if (clickable && state == RoguelikeNodeVisualState.Selectable)
                 button.onClick.AddListener(OnClick);
         }
     }
@@ -113,7 +115,15 @@ public class RoguelikeMapNodeWidget : MonoBehaviour
         };
     }
 
-    static Color ResolveColor(RoguelikeNodeVisualState state, Color baseColor, RoguelikeMapNodeStateStyle s)
+    /// <summary>图标保持原色，便于看清远处节点类型（底图承担状态区分）。</summary>
+    static Color ResolveIconColor(RoguelikeNodeVisualState state, Color baseColor, RoguelikeMapNodeStateStyle s)
+    {
+        if (state == RoguelikeNodeVisualState.Current)
+            return Color.Lerp(baseColor, Color.white, s.currentHighlightLerp);
+        return baseColor;
+    }
+
+    static Color ResolveBackgroundColor(RoguelikeNodeVisualState state, Color baseColor, RoguelikeMapNodeStateStyle s)
     {
         return state switch
         {

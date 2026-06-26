@@ -1,0 +1,985 @@
+{
+  "count": 67,
+  "plants": [
+    {
+      "file": "486.asset",
+      "name": "486",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u9F13\\u624B",
+        "\\u65E0\\u523A\\u6709\\u523A"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "H.asset",
+      "name": "H\\u5F39",
+      "price": 50,
+      "hp": 500,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 8,
+      "func": "ExclusivePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "M3.asset",
+      "name": "M3",
+      "price": 500,
+      "hp": 300,
+      "atk": 80,
+      "cd": "50",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u9F13\\u624B",
+        "\\u5DF4\\u522B\\u5854"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "Mortis.asset",
+      "name": "\\u82E5\\u53F6\\u7766Moritis",
+      "price": 0,
+      "hp": 4000,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "LevelUpPlant",
+      "tags": [
+        "AveMujica",
+        "\\u5409\\u4ED6"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "Oblivionis.asset",
+      "name": "\\u4E30\\u5DDD\\u7965\\u5B50Oblivionis",
+      "price": 475,
+      "hp": 300,
+      "atk": 40,
+      "cd": "50",
+      "plantType": 1,
+      "func": "LevelUpPlant",
+      "tags": [
+        "AveMujica",
+        "\\u952E\\u76D8\\u624B"
+      ],
+      "effect": "baseProperty:",
+      "buy": "OnlyOne"
+    },
+    {
+      "file": "Saki.asset",
+      "name": "\\u4E30\\u5DDD\\u7965\\u5B50(\\u821E\\u53F0)",
+      "price": 50,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "Soldier.asset",
+      "name": "Soldier",
+      "price": 0,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u58EB\\u5175"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "Tomo.asset",
+      "name": "Tomo",
+      "price": 50,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u65E0\\u523A\\u6709\\u523A",
+        "\\u952E\\u76D8"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "rupa.asset",
+      "name": "rupa",
+      "price": 75,
+      "hp": 6000,
+      "atk": 20,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u8D1D\\u65AF",
+        "\\u65E0\\u523A\\u6709\\u523A"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "三角初华.asset",
+      "name": "\\u4E09\\u89D2\\u521D\\u534E",
+      "price": 50,
+      "hp": 300,
+      "atk": 60,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "AveMujica",
+        "sumimi",
+        "\\u4E3B\\u5531",
+        "\\u5409\\u4ED6"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "丰川清告.asset",
+      "name": "\\u4E30\\u5DDD\\u6E05\\u544A",
+      "price": 0,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "",
+      "buy": ""
+    },
+    {
+      "file": "丰川祥子.asset",
+      "name": "\\u4E30\\u5DDD\\u7965\\u5B50",
+      "price": 75,
+      "hp": 5000,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u5E93\\u83B1\\u897F\\u88E4",
+        "\\u952E\\u76D8"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "主唱Nina.asset",
+      "name": "\\u4E95\\u82B9\\u4EC1\\u83DC(\\u4E3B\\u5531)",
+      "price": 175,
+      "hp": 300,
+      "atk": 180,
+      "cd": "50",
+      "plantType": 1,
+      "func": "LevelUpPlant",
+      "tags": [
+        "\\u65E0\\u523A\\u6709\\u523A",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": "OnlyOne"
+    },
+    {
+      "file": "井芹仁菜.asset",
+      "name": "\\u4E95\\u82B9\\u4EC1\\u83DC",
+      "price": 225,
+      "hp": 300,
+      "atk": 20,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u65E0\\u523A\\u6709\\u523A",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "仪玄.asset",
+      "name": "\\u4EEA\\u7384",
+      "price": 50,
+      "hp": 300000,
+      "atk": 1800,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "NonePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "企鹅高松灯.asset",
+      "name": "\\u4F01\\u9E45\\u9AD8\\u677E\\u706F",
+      "price": 125,
+      "hp": 8000,
+      "atk": 500,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "八九寺真宵.asset",
+      "name": "\\u516B\\u4E5D\\u5BFA\\u771F\\u5BB5",
+      "price": 0,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "八幡海玲.asset",
+      "name": "\\u516B\\u5E61\\u6D77\\u73B2Timoris",
+      "price": 100,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "AveMujica",
+        "\\u8D1D\\u65AF"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "凉.asset",
+      "name": "\\u51C9",
+      "price": 200,
+      "hp": 300,
+      "atk": 180,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u8D1D\\u65AF",
+        "\\u7ED3\\u675F\\u4E50\\u961F"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "凛御银灰.asset",
+      "name": "\\u51DB\\u5FA1\\u94F6\\u7070",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "初音小推车.asset",
+      "name": "\\u521D\\u97F3\\u5C0F\\u63A8\\u8F66",
+      "price": 50,
+      "hp": 50000,
+      "atk": 18000,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u5409\\u4ED6 ",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "千夏.asset",
+      "name": "千夏",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "千早爱音.asset",
+      "name": "\\u5343\\u65E9\\u7231\\u97F3",
+      "price": 25,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "Mygo",
+        "\\u5409\\u4ED6"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "南宫羽.asset",
+      "name": "\\u5357\\u5BAB\\u7FBD",
+      "price": 75,
+      "hp": 30000,
+      "atk": 1800,
+      "cd": "7.5",
+      "plantType": 2,
+      "func": "AimTargetPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "南瓜罩.asset",
+      "name": "\\u5357\\u74DC\\u7F69",
+      "price": 125,
+      "hp": 4000,
+      "atk": 0,
+      "cd": "30",
+      "plantType": 2,
+      "func": "SupportPlant",
+      "tags": [
+        "\\u4FDD\\u9556"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "史尔特尔.asset",
+      "name": "\\u53F2\\u5C14\\u7279\\u5C14",
+      "price": 125,
+      "hp": 300,
+      "atk": 180,
+      "cd": "50",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "叶瞬光.asset",
+      "name": "叶瞬光",
+      "price": 50,
+      "hp": 500,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "吃豆凉.asset",
+      "name": "\\u5403\\u8C46\\u51C9",
+      "price": 150,
+      "hp": 500,
+      "atk": 180,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "吉他英雄.asset",
+      "name": "\\u5409\\u4ED6\\u82F1\\u96C4",
+      "price": 500,
+      "hp": 300,
+      "atk": 140,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "LevelUpPlant",
+      "tags": [
+        "\\u5409\\u4ED6",
+        "\\u7ED3\\u675F\\u4E50\\u961F"
+      ],
+      "effect": "baseProperty:",
+      "buy": "OnlyOne"
+    },
+    {
+      "file": "喜多.asset",
+      "name": "\\u559C\\u591A",
+      "price": 150,
+      "hp": 500000,
+      "atk": 180,
+      "cd": "50",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u4E3B\\u5531",
+        "\\u5409\\u4ED6",
+        "\\u7ED3\\u675F\\u4E50\\u961F"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "喜多遗照.asset",
+      "name": "\\u559C\\u591A\\u7167\\u7247",
+      "price": 75,
+      "hp": 500,
+      "atk": 90,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "嘉然土豆雷.asset",
+      "name": "\\u5609\\u7136\\u571F\\u8C46\\u96F7",
+      "price": 25,
+      "hp": 300,
+      "atk": 1800,
+      "cd": "30",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "圣聆初雪.asset",
+      "name": "\\u5723\\u8046\\u521D\\u96EA",
+      "price": 275,
+      "hp": 600,
+      "atk": 80,
+      "cd": "70",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u8C22\\u62C9\\u683C"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "宇宙高松灯.asset",
+      "name": "\\u5B87\\u5B99\\u9AD8\\u677E\\u706F",
+      "price": 125,
+      "hp": 300,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 1,
+      "func": "LevelUpPlant_Mygo",
+      "tags": [
+        "Mygo",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": "OnlyOne"
+    },
+    {
+      "file": "小虹夏.asset",
+      "name": "\\u5C0F\\u8679\\u590F",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "希希芙.asset",
+      "name": "\\u5E0C\\u5E0C\\u8299",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "常服高松灯.asset",
+      "name": "\\u9AD8\\u677E\\u706F",
+      "price": 25,
+      "hp": 300,
+      "atk": 7,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "Mygo",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "平泽唯.asset",
+      "name": "\\u5E73\\u6CFD\\u552F",
+      "price": 175,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u653E\\u5B66\\u540E\\u8336\\u4F1A",
+        "\\u5409\\u4ED6",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "广井菊里.asset",
+      "name": "\\u5E7F\\u4E95\\u83CA\\u91CC",
+      "price": 100,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "抹茶芭菲.asset",
+      "name": "\\u62B9\\u8336\\u82AD\\u83F2",
+      "price": 75,
+      "hp": 500,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 8,
+      "func": "ConsumePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "星歌.asset",
+      "name": "\\u4F0A\\u5730\\u77E5\\u661F\\u6B4C",
+      "price": 150,
+      "hp": 300,
+      "atk": 300,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "OnlyOne"
+    },
+    {
+      "file": "桃金娘.asset",
+      "name": "\\u6843\\u91D1\\u5A18",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u9F13\\u624B"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "椎名立希.asset",
+      "name": "\\u690E\\u540D\\u7ACB\\u5E0C",
+      "price": 200,
+      "hp": 300,
+      "atk": 40,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "Mygo",
+        "\\u9F13\\u624B"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "槌蛇波奇.asset",
+      "name": "\\u69CC\\u86C7\\u6CE2\\u5947(\\u540E\\u85E4\\u4E00\\u91CC)",
+      "price": 25,
+      "hp": 2000,
+      "atk": 20,
+      "cd": "30",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "橘福福.asset",
+      "name": "\\u6A58\\u798F\\u798F",
+      "price": 0,
+      "hp": 180000,
+      "atk": 500,
+      "cd": "0",
+      "plantType": 1,
+      "func": "NonePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "河源木桃香.asset",
+      "name": "\\u6CB3\\u6E90\\u6728\\u6843\\u9999",
+      "price": 125,
+      "hp": 500,
+      "atk": 20,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u65E0\\u523A\\u6709\\u523A",
+        "\\u5409\\u4ED6\\u624B"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "波奇.asset",
+      "name": "\\u540E\\u85E4\\u4E00\\u91CC",
+      "price": 50,
+      "hp": 4000,
+      "atk": 0,
+      "cd": "30",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u5409\\u4ED6",
+        "\\u7ED3\\u675F\\u4E50\\u961F"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "潘引壶.asset",
+      "name": "\\u6F58\\u5F15\\u58F6",
+      "price": 50,
+      "hp": 30000,
+      "atk": 180,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "NonePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "灵感菇.asset",
+      "name": "\\u7075\\u611F\\u83C7",
+      "price": 75,
+      "hp": 500,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "爱芮.asset",
+      "name": "\\u7231\\u82AE",
+      "price": 50,
+      "hp": 5000,
+      "atk": 180,
+      "cd": "30",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u5984\\u60F3\\u5929\\u4F7F",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "牛肉饭.asset",
+      "name": "\\u725B\\u8089\\u996D",
+      "price": 75,
+      "hp": 300,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 8,
+      "func": "ConsumePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "猫猫.asset",
+      "name": "\\u732B\\u732B",
+      "price": 50,
+      "hp": 300,
+      "atk": 10,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "NonePlant",
+      "tags": [],
+      "effect": "",
+      "buy": ""
+    },
+    {
+      "file": "琴吹䌷.asset",
+      "name": "\\u7434\\u5439\\u4337",
+      "price": 75,
+      "hp": 1000,
+      "atk": 50,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u653E\\u5B66\\u540E\\u8336\\u4F1A",
+        "\\u952E\\u76D8"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "甜甜圈.asset",
+      "name": "\\u751C\\u751C\\u5708",
+      "price": 25,
+      "hp": 300,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 8,
+      "func": "ConsumePlant",
+      "tags": [
+        "sumimi"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "田井中律.asset",
+      "name": "田井中律",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "睡莲.asset",
+      "name": "\\u7761\\u83B2",
+      "price": 25,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 4,
+      "func": "PotPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "祐天寺若麦.asset",
+      "name": "\\u7950\\u5929\\u5BFA\\u82E5\\u9EA6",
+      "price": 150,
+      "hp": 300,
+      "atk": 40,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "AveMujica",
+        "\\u9F13\\u624B"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "秋山澪.asset",
+      "name": "\\u79CB\\u5C71\\u6FAA",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u653E\\u5B66\\u540E\\u8336\\u4F1A",
+        "\\u8D1D\\u65AF"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "纯田真奈.asset",
+      "name": "\\u7EAF\\u7530\\u771F\\u5948",
+      "price": 50,
+      "hp": 300,
+      "atk": 50,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u4E3B\\u5531",
+        "sumimi"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "苍角.asset",
+      "name": "\\u82CD\\u89D2",
+      "price": 125,
+      "hp": 3000,
+      "atk": 180,
+      "cd": "50",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "薇薇安.asset",
+      "name": "\\u8587\\u8587\\u5B89",
+      "price": 100,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 2,
+      "func": "SupportPlant",
+      "tags": [
+        "\\u53CD\\u820C\\u9E1F"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "虹夏.asset",
+      "name": "\\u8679\\u590F",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u9F13\\u624B",
+        "\\u7ED3\\u675F\\u4E50\\u961F"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "蛋包饭.asset",
+      "name": "\\u86CB\\u5305\\u996D",
+      "price": 25,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 8,
+      "func": "ConsumePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "要乐奈.asset",
+      "name": "\\u8981\\u4E50\\u5948",
+      "price": 175,
+      "hp": 300,
+      "atk": 20,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "Mygo",
+        "\\u5409\\u4ED6"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "迈巴赫.asset",
+      "name": "\\u8FC8\\u5DF4\\u8D6B",
+      "price": 50,
+      "hp": 500000,
+      "atk": 10000,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "",
+      "buy": ""
+    },
+    {
+      "file": "长崎素世.asset",
+      "name": "\\u957F\\u5D0E\\u7D20\\u4E16",
+      "price": 225,
+      "hp": 2000,
+      "atk": 30,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "Mygo",
+        "\\u8D1D\\u65AF"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    },
+    {
+      "file": "黄瓜睦.asset",
+      "name": "\\u82E5\\u53F6\\u7766",
+      "price": 75,
+      "hp": 5000000,
+      "atk": 15,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "AveMujica",
+        "\\u5409\\u4ED6"
+      ],
+      "effect": "baseProperty:",
+      "buy": ""
+    }
+  ]
+}

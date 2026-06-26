@@ -25,6 +25,8 @@ public class StartUI : View
     [Header("肉鸽（可选）")]
     [Tooltip("配置后可在 Inspector 用按钮或代码 RoguelikeMapPanel.OpenRun 开局")]
     public RunMapConfig roguelikeRunConfig;
+    [Tooltip("主菜单「继续冒险」按钮；无可继续 Run 时自动隐藏")]
+    public GameObject continueRoguelikeButton;
 
     [Header("难度选择（首页选择，进入关卡前生效）")]
     public TMP_Dropdown difficultyDropdown;
@@ -68,6 +70,7 @@ public class StartUI : View
         base.Show();
         RefreshSaveButtonText();
         RefreshShopButtonVisibility();
+        RefreshRoguelikeContinueButton();
         SyncDifficultyDropdownFromSave();
         if (saveButton != null)
             saveButton.interactable = GameManage.instance == null || GameManage.instance.mode != GameMode.Test;
@@ -227,6 +230,12 @@ public class StartUI : View
         UIManage.GetView<CodexPanel>()?.Show();
     }
 
+    void RefreshRoguelikeContinueButton()
+    {
+        if (continueRoguelikeButton != null)
+            continueRoguelikeButton.SetActive(CanContinueRoguelikeRun);
+    }
+
     /// <summary>开始肉鸽 Run 并打开地图面板（需配置 <see cref="roguelikeRunConfig"/>）。</summary>
     public void StartRoguelikeRun()
     {
@@ -247,14 +256,18 @@ public class StartUI : View
             Debug.LogWarning("[StartUI] 未配置 roguelikeRunConfig");
             return;
         }
-        if (!RoguelikeRunService.HasContinuableRunSave)
+        if (!RoguelikeRunService.HasContinuableRunSave && !RoguelikeRunService.HasActiveRun)
         {
-            Debug.LogWarning("[StartUI] 无可继续的肉鸽存档");
+            Debug.LogWarning("[StartUI] 无可继续的肉鸽 Run（无存档且内存中无进行中的 Run）");
             return;
         }
         Hide();
-        RoguelikeMapPanel.OpenContinuedRun(roguelikeRunConfig);
+        if (!RoguelikeMapPanel.OpenContinuedRun(roguelikeRunConfig))
+            Show();
     }
 
-    public bool HasContinuableRoguelikeRun => RoguelikeRunService.HasContinuableRunSave;
+  public bool CanContinueRoguelikeRun =>
+        RoguelikeRunService.HasContinuableRunSave || RoguelikeRunService.HasActiveRun;
+
+    public bool HasContinuableRoguelikeRun => CanContinueRoguelikeRun;
 }

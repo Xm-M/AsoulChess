@@ -56,6 +56,32 @@ public static class RoguelikeRunInfoFormatter
         return $"抵达 {visited} · 通关 {cleared} · 地图 {total}";
     }
 
+    public static string FormatLawnMowerCount(RoguelikeRunState state)
+    {
+        if (state == null)
+            return "0";
+
+        int count = state.runLawnMowerCount;
+        if (count <= 0)
+        {
+            var economy = RoguelikeRunService.ResolveEconomyConfig();
+            count = economy.GetInitialLawnMowerCount();
+        }
+
+        return count.ToString();
+    }
+
+    public static string FormatLoadoutSlotCount(RoguelikeRunState state)
+    {
+        if (state == null)
+            return "0";
+
+        var economy = RoguelikeRunService.ResolveEconomyConfig();
+        int current = state.GetLoadoutSlotCount(economy);
+        int max = economy.GetMaxLoadoutSlotCount();
+        return $"{current}/{max}";
+    }
+
     public static string FormatPendingNode(RoguelikeRunState state, int pendingNodeId)
     {
         if (pendingNodeId < 0 || state?.currentMap == null)

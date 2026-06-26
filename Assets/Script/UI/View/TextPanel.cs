@@ -15,6 +15,10 @@ public class TextPanel : View
     public GameObject lastWave;
     public GameObject gameOver;
 
+    [Header("失败 UI")]
+    [Tooltip("肉鸽战斗失败时显示的「结算」按钮（其他模式隐藏）")]
+    [SerializeField] Button roguelikeSettleButton;
+
     [Header("提示面板（队列）")]
     [SerializeField] GameObject tipPanelRoot;
     [SerializeField] Image tipIconImage;
@@ -38,6 +42,16 @@ public class TextPanel : View
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), Hide);
         if (tipPanelRoot != null)
             tipPanelRoot.SetActive(false);
+        WireGameOverButtons();
+    }
+
+    void WireGameOverButtons()
+    {
+        if (roguelikeSettleButton != null)
+        {
+            roguelikeSettleButton.onClick.RemoveAllListeners();
+            roguelikeSettleButton.onClick.AddListener(RoguelikeSettle);
+        }
     }
 
     public override void Show()
@@ -146,6 +160,28 @@ public class TextPanel : View
         MapManage.instance.BGMPlayer.PlayAudio("游戏失败");
         MapManage.instance.BGMPlayer.SetLoop(false);
         gameOver.SetActive(true);
+        RefreshGameOverButtons();
+    }
+
+    void RefreshGameOverButtons()
+    {
+        bool roguelikeCombat = RoguelikeRunService.IsRoguelikeCombatLevel();
+        if (roguelikeSettleButton != null)
+            roguelikeSettleButton.gameObject.SetActive(roguelikeCombat);
+    }
+
+    /// <summary>肉鸽战斗失败：结束本 Run 并打开奖励面板的结算视图（不离关，返回主菜单时再 LeaveLevel）。</summary>
+    public void RoguelikeSettle()
+    {
+        if (!RoguelikeRunService.IsRoguelikeCombatLevel())
+            return;
+
+        if (gameOver != null)
+            gameOver.SetActive(false);
+        Hide();
+
+        var summary = RoguelikeRunService.BuildDefeatSummaryAndFinishRun();
+        RoguelikeRewardPanel.ShowRunEnd(summary, RoguelikeRunService.ReturnToStartAfterRunEnded);
     }
 
     public void GameStart()

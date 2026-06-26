@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>一局肉鸽的运行时状态（可序列化进存档）。</summary>
 [System.Serializable]
@@ -19,6 +20,9 @@ public class RoguelikeRunState
     /// <summary>本 Run 已获得的植物（PropertyCreator.chessName），进战斗时写入 GameManage.playerOwnedCreators。</summary>
     public List<string> ownedPlantCreatorIds = new List<string>();
 
+    /// <summary>本 Run 已获得的道具（PropItemData.propId），进战斗时写入 GameManage.playerOwnedProps。</summary>
+    public List<string> ownedPropIds = new List<string>();
+
     /// <summary>开局所选乐队（展示 / Meta）。</summary>
     public string selectedBandId;
     public string selectedBandName;
@@ -26,13 +30,58 @@ public class RoguelikeRunState
     /// <summary>本 Run 持有金币（仅 Run 内有效，不写 PlayerSaveData）。</summary>
     public int runGold;
 
+    /// <summary>当前商店节点 id；无商店或已离开时为 -1。</summary>
+    public int activeShopNodeId = -1;
+
+    /// <summary>当前商店商品（与 activeShopNodeId 对应，进档可恢复）。</summary>
+    public List<RoguelikeShopOffer> shopOffers = new List<RoguelikeShopOffer>();
+
+    /// <summary>已在休息房成功选择过一项的节点 id（每节点仅能选一次）。</summary>
+    public List<int> restUsedNodeIds = new List<int>();
+
+    /// <summary>本 Run 拥有的小推车数量；进战斗时 spawn = Min(地图行数, 本值)。</summary>
+    public int runLawnMowerCount = 6;
+
+    /// <summary>本 Run 每场战斗 loadout 上限（携带格）；仅肉鸽 PlantsShop.maxCount 读取。</summary>
+    public int runLoadoutSlotCount = 10;
+
     public bool runActive;
+
+    /// <summary>方案 A：实际生成数 = Min(地图行数, runLawnMowerCount)。</summary>
+    public int ComputeLawnMowerSpawnCount(int mapRowCount)
+    {
+        if (mapRowCount <= 0)
+            return 0;
+
+        int owned = runLawnMowerCount > 0 ? runLawnMowerCount : 6;
+        return owned < mapRowCount ? owned : mapRowCount;
+    }
+
+    /// <summary>Clamp 后的本关 loadout 上限。</summary>
+    public int GetLoadoutSlotCount(RoguelikeEconomyConfig economy)
+    {
+        economy ??= RoguelikeRunService.ResolveEconomyConfig();
+        int value = runLoadoutSlotCount > 0
+            ? runLoadoutSlotCount
+            : economy.GetInitialLoadoutSlotCount();
+        return Mathf.Clamp(value, economy.GetMinLoadoutSlotCount(), economy.GetMaxLoadoutSlotCount());
+    }
 
     public RoguelikeMapNode CurrentNode => currentMap.GetNode(currentNodeId);
 
     public bool IsNodeCleared(int nodeId) => clearedNodeIds.Contains(nodeId);
 
     public bool IsNodeVisited(int nodeId) => visitedNodeIds.Contains(nodeId);
+
+    public bool IsRestChoiceUsed(int nodeId) => restUsedNodeIds != null && restUsedNodeIds.Contains(nodeId);
+
+    public void MarkRestChoiceUsed(int nodeId)
+    {
+        if (restUsedNodeIds == null)
+            restUsedNodeIds = new List<int>();
+        if (!restUsedNodeIds.Contains(nodeId))
+            restUsedNodeIds.Add(nodeId);
+    }
 
     public void MarkVisited(int nodeId)
     {

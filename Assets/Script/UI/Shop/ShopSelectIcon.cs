@@ -16,17 +16,29 @@ public class ShopSelectIcon : MonoBehaviour
 
     public AudioPlayer Audio;
     public bool ifSelect;
+
+    [Tooltip("肉鸽 HUD 卡组只读预览：仅展示详情，不加入出战栏")]
+    public bool viewOnly;
+
     private void OnEnable()
     {
         ifSelect = false;
     }
     public void InitSelectIcon(PropertyCreator c){
         this.select=c;
-        price.text=c.baseProperty.price.ToString();
+        if (price != null)
+            price.text = viewOnly ? "" : c.baseProperty.price.ToString();
         chessImage.sprite = c.chessSprite;
     }
     public void SelectCard()
     {
+        if (viewOnly)
+        {
+            if (select != null)
+                UIManage.GetView<RoguelikeRunInfoPanel>()?.ShowPlantDetail(select);
+            return;
+        }
+
         if (select != null)
             UIManage.GetView<PlantsShop>().ShowPlantDetail(select);
 

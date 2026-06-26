@@ -60,10 +60,9 @@ public class AttackController :  Controller
             timer = GameManage.instance.timerManage.AddTimer(
                 () =>
                 {
-                //Debug.Log("attack");
-                //master.animator.Play(atk);
-                attackOver=true;
-                master.animatorController.PlayAttack();
+                    attackOver = true;
+                    if (weapon.FindEnemy(master) > 0)
+                        master.animatorController.PlayAttack();
                 }
                 , weapon.GetInterval()/master.propertyController.GetAccelerate(),true);
         }

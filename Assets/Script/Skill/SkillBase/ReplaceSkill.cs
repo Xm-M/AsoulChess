@@ -21,6 +21,11 @@ public class ReplaceSkill : ISkill
 
     protected Chess user;
     int n;
+    /// <summary>本次施法锁定的子技能索引；<see cref="UseSkill"/> 多帧触发时勿因 <see cref="n"/> 变化切技能。</summary>
+    int _castSkillIndex = -1;
+
+    /// <summary>当前 Replace 子技能索引（与 <see cref="ChangeSkill"/> 同步）。</summary>
+    public int CurrentSkillIndex => n;
     [HideInInspector]
     public UnityEvent<Chess> CheckReady, OnUseSKill, OnSkillOver;
     public SkillConfig GetSkillConfig()
@@ -53,6 +58,7 @@ public class ReplaceSkill : ISkill
     /// <param name="user"></param>
     public void LeaveSkill(Chess user)
     {
+        _castSkillIndex = -1;
         checkReplace.WhenLeave(user, this);
         foreach(var replace in replaces)
         {
@@ -65,21 +71,19 @@ public class ReplaceSkill : ISkill
 
     public void SkillOver(Chess user)
     {
-        //checkReplace.WhenLeave(user, this);
-        //Debug.Log(n);
         OnSkillOver?.Invoke(user);
         currentSkill.SkillOver(user);
-        //Debug.Log(n);
-        //技能转换这件事 必须要在结束的时候调用
+        _castSkillIndex = -1;
         currentSkill = replaces[n];
     }
 
     public void UseSkill(Chess user)
     {
-        currentSkill = replaces[n];
+        if (_castSkillIndex < 0)
+            _castSkillIndex = n;
+        currentSkill = replaces[_castSkillIndex];
         OnUseSKill?.Invoke(user);
         currentSkill.UseSkill(user);
-        
     }
     /// <summary>
     /// 
@@ -120,9 +124,9 @@ public class ReplaceSkill : ISkill
     public void ChangeSkill(int n)
     {
         this.n = n;
-        if (user.stateController.currentState.state.stateName != StateName.SkillState)
+        if (_castSkillIndex < 0
+            && user.stateController.currentState.state.stateName != StateName.SkillState)
         {
-            Debug.Log("替换");
             currentSkill = replaces[n];
         }
     }

@@ -21,6 +21,7 @@ public class PlantsShop : View
     public List<ShopSelectIcon> allSelectIcons;//这个是你拥有的棋子 就是下面那个版的
     public GameObject Shovel;//铲子 
     public int maxCount=10;
+    int _baselineMaxCount = 10;
     public Animator anim;
     /// <summary>Show 前设置则使用此列表作为仓库卡池，Show 后自动清空</summary>
     public static List<PropertyCreator> OverrideCreators;
@@ -47,6 +48,7 @@ public class PlantsShop : View
         currentSelectIcons = new List<ShopSelectIcon>();
         allSelectIcons = new List<ShopSelectIcon>();
         currentShopIcons=new List<ShopIcon>();
+        _baselineMaxCount = maxCount;
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(),
             Hide);
         SelectOver = false;
@@ -60,9 +62,11 @@ public class PlantsShop : View
             && SaveLoadContext.IsLoadFromSave
             && SaveLoadContext.CurrentSaveData?.plantsShopData != null)
         {
+            ApplyLoadoutSlotLimitForCurrentLevel();
             ShowForLoad(SaveLoadContext.CurrentSaveData.plantsShopData);
             return;
         }
+        ApplyLoadoutSlotLimitForCurrentLevel();
         base.Show();
         currentSelectIcons.Clear();
         currentShopIcons.Clear();
@@ -324,5 +328,22 @@ public class PlantsShop : View
         if (detailTags != null) detailTags.text = "";
         if (detailAttributes != null) detailAttributes.text = "";
         if (descriptionText != null) descriptionText.text = "";
+    }
+
+    void ApplyLoadoutSlotLimitForCurrentLevel()
+    {
+        if (RoguelikeRunService.HasActiveRun
+            && LevelManage.instance?.currentLevel?.roguelikeKind != RoguelikeLevelKind.None)
+        {
+            var state = RoguelikeRunService.State;
+            if (state != null)
+            {
+                RoguelikeRunService.NormalizeRunStateFieldsForActiveRun(state);
+                maxCount = state.GetLoadoutSlotCount(RoguelikeRunService.ResolveEconomyConfig());
+                return;
+            }
+        }
+
+        maxCount = _baselineMaxCount;
     }
 }

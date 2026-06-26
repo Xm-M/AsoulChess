@@ -21,6 +21,8 @@ public class Item_Coin : UIItem, IPointerEnterHandler
     public float fallSpeed = 400f;
     Vector2 recyclePos;
     bool ifPick;
+    bool _roguelikeVisualOnly;
+    RoguelikeRewardCoinBatch _roguelikeBatch;
 
     /// <summary>回收目标位置（屏幕坐标），为空则用左下角</summary>
     public static Transform RecycleTarget { get; set; }
@@ -28,13 +30,11 @@ public class Item_Coin : UIItem, IPointerEnterHandler
     /// <summary>初始化：从世界坐标 startPos 曲线掉落，点击后获得 amount 金币并飞向左下角</summary>
     public void InitCoin(int amount, Vector3 startPos)
     {
+        _roguelikeVisualOnly = false;
+        _roguelikeBatch = null;
         coinAmount = amount;
         ifPick = false;
-        if (iconImage != null)
-        {
-            Sprite s = amount >= 1000 ? diamondIcon : amount >= 100 ? goldIcon : silverIcon;
-            if (s != null) iconImage.sprite = s;
-        }
+        ApplyIcon(amount);
         recyclePos = GetRecyclePos();
         float speed = dropMoveSpeed;
         if (MapManage_PVZ.instance != null && MapManage.instance != null)
@@ -43,6 +43,30 @@ public class Item_Coin : UIItem, IPointerEnterHandler
             if (startPos.x > center.x) speed *= -1;
         }
         StartCoroutine(CurveDropThenIdle(startPos, speed));
+    }
+
+    /// <summary>肉鸽搜刮：UI 位置 scatter，不加主线 coins；3s 或点击后飞向 Run 金币条。</summary>
+    public void InitRoguelikeRewardScatter(int faceValue, Vector2 screenPos, Vector2 scatterOffset,
+        RoguelikeRewardCoinBatch batch)
+    {
+        _roguelikeVisualOnly = true;
+        _roguelikeBatch = batch;
+        coinAmount = faceValue;
+        ifPick = false;
+        ApplyIcon(faceValue);
+        recyclePos = GetRecyclePos();
+        transform.position = screenPos + scatterOffset;
+        batch?.Register(this);
+    }
+
+    void ApplyIcon(int amount)
+    {
+        if (iconImage == null)
+            return;
+
+        Sprite s = amount >= 1000 ? diamondIcon : amount >= 100 ? goldIcon : silverIcon;
+        if (s != null)
+            iconImage.sprite = s;
     }
 
     IEnumerator CurveDropThenIdle(Vector3 startPos, float moveSpeed)
@@ -78,6 +102,30 @@ public class Item_Coin : UIItem, IPointerEnterHandler
         return new Vector2(80f, 80f);
     }
 
+    public bool BeginRoguelikeFly(RoguelikeRewardCoinBatch batch)
+    {
+        if (ifPick)
+            return false;
+
+        ifPick = true;
+        _roguelikeBatch = batch;
+        recyclePos = GetRecyclePos();
+        StartCoroutine(FlyRoguelikeRoutine());
+        return true;
+    }
+
+    IEnumerator FlyRoguelikeRoutine()
+    {
+        while (Vector2.Distance((Vector2)transform.position, recyclePos) > 1f)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, recyclePos, fallSpeed * Time.deltaTime * 3f);
+            yield return null;
+        }
+
+        _roguelikeBatch?.OnCoinFlyFinished();
+        Recycle();
+    }
+
     public IEnumerator Recycles()
     {
         var panel = UIManage.GetView<ItemPanel>();
@@ -93,7 +141,8 @@ public class Item_Coin : UIItem, IPointerEnterHandler
 
     void AddCoinsAndRecycle()
     {
-        if (ifPick) return;
+        if (ifPick || _roguelikeVisualOnly)
+            return;
         ifPick = true;
 
         var data = PlayerSaveContext.CurrentData;
@@ -117,16 +166,27 @@ public class Item_Coin : UIItem, IPointerEnterHandler
 
     public override void OnPointerClick(PointerEventData eventData)
     {
+        if (_roguelikeVisualOnly)
+        {
+            _roguelikeBatch?.CollectAll();
+            return;
+        }
+
         AddCoinsAndRecycle();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (_roguelikeVisualOnly)
+            return;
+
         AddCoinsAndRecycle();
     }
 
     public override void Recycle()
     {
+        _roguelikeVisualOnly = false;
+        _roguelikeBatch = null;
         UIManage.GetView<ItemPanel>().Recycle<Item_Coin>(this);
     }
 }

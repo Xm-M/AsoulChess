@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// 肉鸽战斗关胜利/失败流程。
-/// 胜利：僵尸全灭 → 当场弹出奖励面板 → 领完/跳过 → 离开关卡 → 回地图选路。
+/// 胜利：僵尸全灭 → 当场弹出奖励面板 → 领完/跳过 → 离开关卡 → 回地图或全通关结算。
+/// 失败：僵尸进家 → TextPanel 失败 UI → 玩家点「结算」→ 奖励面板结算视图 → 返回主菜单。
 /// </summary>
 [System.Serializable]
 public class LevelOutCome_Roguelike : ILevelOutcome
@@ -11,11 +13,10 @@ public class LevelOutCome_Roguelike : ILevelOutcome
     public void HandleOutcome(bool win, Vector3 lastZombiePos)
     {
         if (!win)
-        {
-            RoguelikeRunService.OnCombatFinished(false);
-            RoguelikeRunService.ReturnToMapUI();
             return;
-        }
+
+        // 奖励出现前结算（仅过关）；小推车实体尚未被 OverPlugin 销毁
+        RoguelikeRunService.SettleCombatLawnMowerLosses();
 
         var entries = RoguelikeRewardFlow.BuildCombatRewardEntries(LevelManage.instance?.currentLevel);
         ShowRewardsThenLeaveLevel(entries);
@@ -25,16 +26,23 @@ public class LevelOutCome_Roguelike : ILevelOutcome
     {
         if (entries == null || entries.Count == 0)
         {
-            LeaveLevelAndOpenMap();
+            LeaveLevelAfterCombatVictory();
             return;
         }
 
-        RoguelikeRewardPanel.ShowRewards(entries, LeaveLevelAndOpenMap);
+        RoguelikeRewardPanel.ShowRewards(entries, LeaveLevelAfterCombatVictory);
     }
 
-    static void LeaveLevelAndOpenMap()
+    static void LeaveLevelAfterCombatVictory()
     {
-        RoguelikeRunService.OnCombatFinished(true);
+        if (RoguelikeRunService.FinalizeCombatVictory())
+        {
+            RoguelikeRewardPanel.ShowRunEnd(
+                RoguelikeRunService.LastRunEndSummary,
+                RoguelikeRunService.ReturnToStartAfterRunEnded);
+            return;
+        }
+
         RoguelikeRunService.ReturnToMapUI();
     }
 }

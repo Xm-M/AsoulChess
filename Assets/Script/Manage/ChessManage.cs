@@ -106,6 +106,18 @@ public class ChessTeamManage
             return LayerMask.GetMask(player.playerTag);
         }
     }
+
+    /// <summary>与 <see cref="GetEnemyLayer"/> 对称：己方单位层（治疗索敌等）。Untagged 时退回 <c>gameObject.layer</c>。</summary>
+    public LayerMask GetFriendLayer(GameObject gameObject)
+    {
+        if (gameObject != null && gameObject.CompareTag(player.playerTag))
+            return LayerMask.GetMask(player.playerTag);
+        if (gameObject != null && gameObject.CompareTag(enemy.playerTag))
+            return LayerMask.GetMask(enemy.playerTag);
+        if (gameObject != null)
+            return 1 << gameObject.layer;
+        return LayerMask.GetMask(player.playerTag);
+    }
     public void RecycleChess(Chess chess)
     {
         if (chess.CompareTag(player.playerTag))

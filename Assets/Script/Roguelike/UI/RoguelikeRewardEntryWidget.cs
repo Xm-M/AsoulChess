@@ -37,6 +37,9 @@ public class RoguelikeRewardEntryWidget : MonoBehaviour
         if (labelText == null || _entry == null)
             return;
 
+        if (iconImage != null)
+            iconImage.enabled = false;
+
         switch (_entry.kind)
         {
             case RoguelikeRewardEntryKind.Gold:
@@ -46,7 +49,15 @@ public class RoguelikeRewardEntryWidget : MonoBehaviour
                 labelText.text = "将一张牌加入牌组";
                 break;
             case RoguelikeRewardEntryKind.Item:
-                labelText.text = "获得道具";
+                var prop = RoguelikeRunPropPool.ResolveProp(_entry.propId);
+                labelText.text = prop != null && !string.IsNullOrEmpty(prop.displayName)
+                    ? prop.displayName
+                    : "获得道具";
+                if (iconImage != null && prop?.icon != null)
+                {
+                    iconImage.sprite = prop.icon;
+                    iconImage.enabled = true;
+                }
                 break;
         }
     }

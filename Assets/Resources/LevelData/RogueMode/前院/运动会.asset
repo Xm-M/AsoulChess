@@ -26,12 +26,13 @@ MonoBehaviour:
   - rid: 3
   - rid: 4
   - rid: 5
+  - rid: 7518340207229534213
   MaxWave: 10
   n: 2
   t: 1
   zombieList:
   - {fileID: 11400000, guid: 25099833c8935c44598f4d7446210ba7, type: 2}
-  createZombieType: 0
+  createZombieType: 3
   nextLevel: {fileID: 11400000, guid: 9b3a9cba05750e844960e4e23c8a0e83, type: 2}
   outcome:
     rid: 1573513517688160256
@@ -69,4 +70,7 @@ MonoBehaviour:
       data: 
     - rid: 1573513517688160256
       type: {class: LevelOutCome_Roguelike, ns: , asm: Assembly-CSharp}
+      data:
+    - rid: 7518340207229534213
+      type: {class: GameStartPlugin_Prop, ns: , asm: Assembly-CSharp}
       data: 

@@ -17,10 +17,12 @@ MonoBehaviour:
   levelName: "\u50F5\u738B\u535A\u58EB\u7684\u590D\u4EC7"
   levelSprit: {fileID: 1455745775, guid: 421afde933c35af4d8db856d5e639cd4, type: 3}
   levelMode: 4
-  EnterMapPlugin: []
+  EnterMapPlugin:
+  - rid: 1573513816801542162
   PreParePlugin:
   - rid: 1573513502392057856
-  GameStartPlugin: []
+  GameStartPlugin:
+  - rid: 7518340207229534213
   MaxWave: 100
   n: 1
   t: 1
@@ -43,3 +45,10 @@ MonoBehaviour:
       data:
         baseSunLight: 50
         cards: []
+    - rid: 1573513816801542162
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    - rid: 7518340207229534213
+      type: {class: GameStartPlugin_Prop, ns: , asm: Assembly-CSharp}
+      data: 

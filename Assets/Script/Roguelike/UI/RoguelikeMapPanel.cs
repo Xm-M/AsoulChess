@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -53,6 +54,13 @@ public class RoguelikeMapPanel : View
     [SerializeField] bool scrollToFocusOnRefresh = true;
     [SerializeField] float scrollFocusViewportFraction = 0.35f;
 
+    [Header("2c. 地图 Intro 卷动（Boss 端 → 起点）")]
+    [SerializeField] bool mapIntroEnabled = true;
+    [Tooltip("通关 Boss 换 Act 后，下次进图是否再播 Intro")]
+    [SerializeField] bool mapIntroOnActAdvance = true;
+    [SerializeField] float mapIntroDuration = 2f;
+    [SerializeField] AnimationCurve mapIntroCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
     [Header("3. 节点（只需 1 个 nodePrefab，不同类型用下面列表换图）")]
     [Tooltip("节点 UI 预制体（挂 RoguelikeMapNodeWidget）。普通/精英/Boss 等共用这一个，不要每种做一个 prefab")]
     [SerializeField] RoguelikeMapNodeWidget nodePrefab;
@@ -93,9 +101,15 @@ public class RoguelikeMapPanel : View
     readonly List<GameObject> _layerRowObjects = new List<GameObject>();
     readonly Dictionary<int, RectTransform> _layerRowsByLayer = new Dictionary<int, RectTransform>();
     readonly Dictionary<int, RoguelikeMapNodeWidget> _widgetByNodeId = new Dictionary<int, RoguelikeMapNodeWidget>();
+    readonly Dictionary<int, Vector2> _nodeCenterInDrawRoot = new Dictionary<int, Vector2>();
     float _lastContentWidth;
     float _lastContentHeight;
     Coroutine _scrollFocusCoroutine;
+    Coroutine _mapIntroCoroutine;
+    bool _mapInputLocked;
+
+    /// <summary>下次 <see cref="Refresh"/> 且 Act 匹配时播地图 Intro；-1 表示不播。</summary>
+    static int _pendingMapIntroActIndex = -1;
 
     public override void Init()
     {
@@ -109,6 +123,7 @@ public class RoguelikeMapPanel : View
         RoguelikeRunService.OnActMapGenerated += OnMapChanged;
         RoguelikeRunService.OnNodeResolved += OnNodeResolved;
         RoguelikeRunService.OnRunCompleted += OnRunEnded;
+        RoguelikeRunService.OnActCompleted += OnActCompletedHandler;
     }
 
     void OnDisable()
@@ -116,6 +131,8 @@ public class RoguelikeMapPanel : View
         RoguelikeRunService.OnActMapGenerated -= OnMapChanged;
         RoguelikeRunService.OnNodeResolved -= OnNodeResolved;
         RoguelikeRunService.OnRunCompleted -= OnRunEnded;
+        RoguelikeRunService.OnActCompleted -= OnActCompletedHandler;
+        CancelMapIntroScroll(unlockInput: true);
     }
 
     void OnValidate()
@@ -160,10 +177,24 @@ public class RoguelikeMapPanel : View
         RoguelikeRunInfoPanel.HideForRunEnded();
     }
 
+    void OnActCompletedHandler()
+    {
+        if (!mapIntroOnActAdvance)
+            return;
+        var state = RoguelikeRunService.State;
+        if (state != null)
+            RequestMapIntroOnNextRefresh(state.currentActIndex);
+    }
+
+    /// <summary>请求在下次 <see cref="Refresh"/> 末尾播放地图 Intro（与当前 Act 索引匹配时消费）。</summary>
+    public static void RequestMapIntroOnNextRefresh(int actIndex)
+    {
+        _pendingMapIntroActIndex = actIndex;
+    }
+
     public void ShowAndRefresh()
     {
         Show();
-        Refresh();
         RoguelikeRunInfoPanel.TryShowAndRefresh();
     }
 
@@ -178,6 +209,7 @@ public class RoguelikeMapPanel : View
 
     public override void Hide()
     {
+        CancelMapIntroScroll(unlockInput: true);
         ClearVisuals();
         base.Hide();
     }
@@ -195,10 +227,11 @@ public class RoguelikeMapPanel : View
             return;
         }
         RoguelikeRunService.StartNewRun(config, band, seed);
+        RequestMapIntroOnNextRefresh(0);
         UIManage.GetView<RoguelikeMapPanel>()?.ShowAndRefresh();
     }
 
-    /// <summary>继续未完成的 Run（需存在 active 存档且 config 能解析）。</summary>
+    /// <summary>继续未完成的 Run（磁盘 active 存档或内存中 HasActiveRun）。</summary>
     public static bool OpenContinuedRun(RunMapConfig config)
     {
         if (config == null)
@@ -206,8 +239,22 @@ public class RoguelikeMapPanel : View
             Debug.LogError("[RoguelikeMapPanel] RunMapConfig 为空");
             return false;
         }
-        if (!RoguelikeRunService.TryContinueRun(config))
+
+        if (RoguelikeRunService.HasContinuableRunSave && !RoguelikeRunService.TryContinueRun(config))
             return false;
+
+        if (!RoguelikeRunService.HasActiveRun)
+            return false;
+
+        return ResumeActiveRunUi();
+    }
+
+    static bool ResumeActiveRunUi()
+    {
+        if (RoguelikeRunService.TryResumePendingNonCombatNode())
+            return true;
+        if (RoguelikeRunService.TryResumePendingCombatNode())
+            return true;
         UIManage.GetView<RoguelikeMapPanel>()?.ShowAndRefresh();
         return true;
     }
@@ -265,9 +312,15 @@ public class RoguelikeMapPanel : View
         BuildLayerColumnsAndPlaceNodes(state, map, maxLayer);
         Canvas.ForceUpdateCanvases();
         DrawLinesUnderLayers(map, maxLayer);
+        SyncLinesRootWithNodesRoot();
 
         if (scrollToFocusOnRefresh)
-            ScheduleScrollToFocus(map, state, maxLayer, contentWidth);
+        {
+            if (TryConsumeMapIntroRequest(state))
+                ScheduleMapIntroScroll(maxLayer, contentWidth);
+            else
+                ScheduleScrollToFocus(map, state, maxLayer, contentWidth);
+        }
     }
 
     static int GetMaxLayer(GeneratedRoguelikeMap map)
@@ -309,7 +362,7 @@ public class RoguelikeMapPanel : View
         SyncLinesRootWithNodesRoot();
     }
 
-    /// <summary>Lines 与 Nodes 必须用同一套锚点/位置，否则连线会整体偏移。</summary>
+    /// <summary>Lines 与 Nodes 同布局；Lines 的 sibling index 必须小于 Nodes，连线才会画在节点下层。</summary>
     void SyncLinesRootWithNodesRoot()
     {
         if (nodesRoot == null)
@@ -324,8 +377,15 @@ public class RoguelikeMapPanel : View
         if (linesRoot.parent != nodesRoot.parent)
             linesRoot.SetParent(nodesRoot.parent, false);
 
-        linesRoot.SetSiblingIndex(nodesRoot.GetSiblingIndex());
         CopyRectTransformLayout(linesRoot, nodesRoot);
+
+        int lineIdx = linesRoot.GetSiblingIndex();
+        int nodeIdx = nodesRoot.GetSiblingIndex();
+        if (lineIdx > nodeIdx)
+            linesRoot.SetSiblingIndex(nodeIdx);
+
+        if (nodesRoot.GetSiblingIndex() <= linesRoot.GetSiblingIndex())
+            nodesRoot.SetSiblingIndex(linesRoot.GetSiblingIndex() + 1);
     }
 
     static void CopyRectTransformLayout(RectTransform dst, RectTransform src)
@@ -412,8 +472,19 @@ public class RoguelikeMapPanel : View
                     showLabelWhenIconPresent);
                 _nodeWidgets.Add(widget);
                 _widgetByNodeId[node.id] = widget;
+                _nodeCenterInDrawRoot[node.id] = ComputeNodeCenterInDrawRoot(layerColumn, localInColumn.y, colW);
             }
         }
+    }
+
+    /// <summary>节点中心在 nodesRoot / linesRoot 本地坐标（与列布局一致，避免 Canvas 世界坐标换算误差）。</summary>
+    Vector2 ComputeNodeCenterInDrawRoot(RectTransform layerColumn, float localY, float colW)
+    {
+        if (layerColumn == null)
+            return Vector2.zero;
+        float centerX = layerColumn.anchoredPosition.x + colW * 0.5f;
+        float centerY = layerColumn.anchoredPosition.y + localY;
+        return new Vector2(centerX, centerY);
     }
 
     RectTransform CreateLayerColumn(int layer, float colW, float colH, float colLeftX)
@@ -449,21 +520,19 @@ public class RoguelikeMapPanel : View
             if (!_widgetByNodeId.TryGetValue(from.id, out var fromWidget))
                 continue;
 
-            var fromRt = fromWidget.transform as RectTransform;
-            if (fromRt == null)
-                continue;
-
-            Vector2 startLocal = WorldCenterToLocal(fromRt, lineRoot);
+            Vector2 startLocal = _nodeCenterInDrawRoot.TryGetValue(from.id, out var fromCenter)
+                ? fromCenter
+                : WorldCenterToLocal(fromWidget.transform as RectTransform, lineRoot);
 
             for (int j = 0; j < from.nextNodeIds.Count; j++)
             {
-                if (!_widgetByNodeId.TryGetValue(from.nextNodeIds[j], out var toWidget))
-                    continue;
-                var toRt = toWidget.transform as RectTransform;
-                if (toRt == null)
+                int toId = from.nextNodeIds[j];
+                if (!_widgetByNodeId.TryGetValue(toId, out var toWidget))
                     continue;
 
-                Vector2 endLocal = WorldCenterToLocal(toRt, lineRoot);
+                Vector2 endLocal = _nodeCenterInDrawRoot.TryGetValue(toId, out var toCenter)
+                    ? toCenter
+                    : WorldCenterToLocal(toWidget.transform as RectTransform, lineRoot);
                 CreateLine(lineRoot, startLocal, endLocal, style, prefabOnly);
             }
         }
@@ -503,14 +572,86 @@ public class RoguelikeMapPanel : View
         return new Vector2(0f, centerY + ry);
     }
 
+    bool TryConsumeMapIntroRequest(RoguelikeRunState state)
+    {
+        if (!mapIntroEnabled || state == null || _pendingMapIntroActIndex < 0)
+            return false;
+        if (_pendingMapIntroActIndex != state.currentActIndex)
+            return false;
+
+        _pendingMapIntroActIndex = -1;
+        return true;
+    }
+
     void ScheduleScrollToFocus(GeneratedRoguelikeMap map, RoguelikeRunState state, int maxLayer, float contentWidth)
     {
+        if (_mapIntroCoroutine != null)
+            return;
+
+        CancelMapIntroScroll(unlockInput: true);
         if (_scrollFocusCoroutine != null)
             StopCoroutine(_scrollFocusCoroutine);
         _scrollFocusCoroutine = StartCoroutine(ScrollToFocusNextFrame(map, state, maxLayer, contentWidth));
     }
 
-    System.Collections.IEnumerator ScrollToFocusNextFrame(
+    void ScheduleMapIntroScroll(int maxLayer, float contentWidth)
+    {
+        if (_scrollFocusCoroutine != null)
+        {
+            StopCoroutine(_scrollFocusCoroutine);
+            _scrollFocusCoroutine = null;
+        }
+        CancelMapIntroScroll(unlockInput: true);
+        _mapIntroCoroutine = StartCoroutine(PlayMapIntroScrollCoroutine(maxLayer, contentWidth));
+    }
+
+    void CancelMapIntroScroll(bool unlockInput)
+    {
+        if (_mapIntroCoroutine != null)
+        {
+            StopCoroutine(_mapIntroCoroutine);
+            _mapIntroCoroutine = null;
+        }
+
+        if (!unlockInput)
+            return;
+
+        _mapInputLocked = false;
+        var scroll = mapScrollRect != null ? mapScrollRect : GetComponentInChildren<ScrollRect>(true);
+        if (scroll != null)
+            scroll.enabled = true;
+    }
+
+    bool TryGetHorizontalNormalizedForLayer(int layer, float contentWidth, out float normalized)
+    {
+        normalized = 0f;
+        var scroll = mapScrollRect != null ? mapScrollRect : GetComponentInChildren<ScrollRect>(true);
+        if (scroll == null)
+            return false;
+
+        var viewport = scroll.viewport != null ? scroll.viewport : scroll.GetComponent<RectTransform>();
+        if (viewport == null)
+            return false;
+
+        float viewportW = viewport.rect.width;
+        if (viewportW <= 0f)
+            return false;
+
+        if (contentWidth <= viewportW)
+        {
+            normalized = 0f;
+            return true;
+        }
+
+        float focusXFromLeft = mapPaddingBottom + layer * LayerColumnStride;
+        float scrollRange = contentWidth - viewportW;
+        float offsetFromLeft = focusXFromLeft - viewportW * scrollFocusViewportFraction;
+        offsetFromLeft = Mathf.Clamp(offsetFromLeft, 0f, scrollRange);
+        normalized = offsetFromLeft / scrollRange;
+        return true;
+    }
+
+    IEnumerator ScrollToFocusNextFrame(
         GeneratedRoguelikeMap map,
         RoguelikeRunState state,
         int maxLayer,
@@ -523,17 +664,6 @@ public class RoguelikeMapPanel : View
         if (scroll == null)
             yield break;
 
-        var viewport = scroll.viewport != null ? scroll.viewport : scroll.GetComponent<RectTransform>();
-        if (viewport == null)
-            yield break;
-
-        float viewportW = viewport.rect.width;
-        if (viewportW <= 0f || contentWidth <= viewportW)
-        {
-            scroll.horizontalNormalizedPosition = 0f;
-            yield break;
-        }
-
         int focusLayer = 0;
         if (state.currentNodeId >= 0)
         {
@@ -542,12 +672,65 @@ public class RoguelikeMapPanel : View
                 focusLayer = cur.layer;
         }
 
-        float focusXFromLeft = mapPaddingBottom + focusLayer * LayerColumnStride;
-        float scrollRange = contentWidth - viewportW;
-        float offsetFromLeft = focusXFromLeft - viewportW * scrollFocusViewportFraction;
-        offsetFromLeft = Mathf.Clamp(offsetFromLeft, 0f, scrollRange);
-        scroll.horizontalNormalizedPosition = offsetFromLeft / scrollRange;
+        if (TryGetHorizontalNormalizedForLayer(focusLayer, contentWidth, out float normalized))
+            scroll.horizontalNormalizedPosition = normalized;
         _scrollFocusCoroutine = null;
+    }
+
+    IEnumerator PlayMapIntroScrollCoroutine(int maxLayer, float contentWidth)
+    {
+        yield return null;
+        Canvas.ForceUpdateCanvases();
+
+        var scroll = mapScrollRect != null ? mapScrollRect : GetComponentInChildren<ScrollRect>(true);
+        if (scroll == null)
+        {
+            _mapIntroCoroutine = null;
+            yield break;
+        }
+
+        scroll.horizontal = true;
+        scroll.vertical = false;
+
+        if (!TryGetHorizontalNormalizedForLayer(0, contentWidth, out float targetNorm))
+        {
+            _mapIntroCoroutine = null;
+            yield break;
+        }
+
+        var viewport = scroll.viewport != null ? scroll.viewport : scroll.GetComponent<RectTransform>();
+        float viewportW = viewport != null ? viewport.rect.width : 0f;
+        if (viewportW <= 0f || contentWidth <= viewportW)
+        {
+            scroll.horizontalNormalizedPosition = targetNorm;
+            _mapIntroCoroutine = null;
+            yield break;
+        }
+
+        float fromNorm = TryGetHorizontalNormalizedForLayer(maxLayer, contentWidth, out float bossNorm)
+            ? bossNorm
+            : 1f;
+
+        scroll.horizontalNormalizedPosition = fromNorm;
+        scroll.enabled = false;
+        _mapInputLocked = true;
+
+        float duration = Mathf.Max(0.01f, mapIntroDuration);
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            float u = mapIntroCurve != null && mapIntroCurve.length > 0
+                ? mapIntroCurve.Evaluate(Mathf.Clamp01(t / duration))
+                : Mathf.Clamp01(t / duration);
+            scroll.horizontalNormalizedPosition = Mathf.Lerp(fromNorm, targetNorm, u);
+            yield return null;
+        }
+
+        scroll.horizontalNormalizedPosition = targetNorm;
+        scroll.enabled = true;
+        _mapInputLocked = false;
+        _mapIntroCoroutine = null;
     }
 
     RoguelikeMapNodeWidget SpawnNodeWidget(Transform parent)
@@ -559,6 +742,13 @@ public class RoguelikeMapPanel : View
 
     static RoguelikeNodeVisualState ResolveVisualState(RoguelikeRunState state, int nodeId, HashSet<int> selectable)
     {
+        if (IsRoguelikeMapTestMode())
+        {
+            if (state.currentNodeId == nodeId)
+                return RoguelikeNodeVisualState.Current;
+            return RoguelikeNodeVisualState.Selectable;
+        }
+
         if (state.currentNodeId == nodeId)
             return RoguelikeNodeVisualState.Current;
         if (state.IsNodeCleared(nodeId))
@@ -570,9 +760,18 @@ public class RoguelikeMapPanel : View
         return RoguelikeNodeVisualState.Locked;
     }
 
+    static bool IsRoguelikeMapTestMode() =>
+        GameManage.instance != null && GameManage.instance.mode == GameMode.Test;
+
     void OnNodeClicked(int nodeId)
     {
-        if (!RoguelikeRunService.TrySelectNextNode(nodeId))
+        if (_mapInputLocked)
+            return;
+
+        bool selected = IsRoguelikeMapTestMode()
+            ? RoguelikeRunService.TrySelectNodeForTest(nodeId)
+            : RoguelikeRunService.TrySelectNextNode(nodeId);
+        if (!selected)
             return;
 
         var node = RoguelikeRunService.State?.currentMap?.GetNode(nodeId);
@@ -583,6 +782,14 @@ public class RoguelikeMapPanel : View
             case MapRoomType.Start:
                 Refresh();
                 return;
+            case MapRoomType.Shop:
+                Hide();
+                RoguelikeRunService.EnterShopNode();
+                break;
+            case MapRoomType.Rest:
+                Hide();
+                RoguelikeRunService.EnterRestNode();
+                break;
             default:
                 if (RoguelikeRunService.ResolveLevelForPendingCombat() == null)
                 {
@@ -609,19 +816,26 @@ public class RoguelikeMapPanel : View
         if (lineParent == null)
             return;
 
+        var coordinateRoot = nodesRoot != null ? nodesRoot : lineParent;
+        var styleRef = style ?? new RoguelikeMapLineStyle();
+
         GameObject go;
-        if (linePrefab != null)
+        if (RoguelikeMapLineWidget.ShouldUseUiImageLine(coordinateRoot))
+        {
+            RoguelikeMapLineWidget.LogOverlayLineRendererWarningOnce();
+            go = RoguelikeMapLineWidget.CreateUiImageLine(lineParent, a, b, styleRef);
+        }
+        else if (linePrefab != null)
         {
             var line = Instantiate(linePrefab, lineParent);
-            line.ApplyBetween(a, b, style, usePrefabAppearanceOnly);
+            line.ApplyBetween(a, b, coordinateRoot, styleRef, usePrefabAppearanceOnly);
             go = line.gameObject;
         }
         else
         {
-            go = new GameObject("Line", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-            go.transform.SetParent(lineParent, false);
-            var lineWidget = go.AddComponent<RoguelikeMapLineWidget>();
-            lineWidget.ApplyBetween(a, b, style, false);
+            var line = RoguelikeMapLineWidget.CreateRuntime(lineParent);
+            line.ApplyBetween(a, b, coordinateRoot, styleRef, false);
+            go = line.gameObject;
         }
 
         go.transform.SetAsFirstSibling();
@@ -652,13 +866,15 @@ public class RoguelikeMapPanel : View
         _layerRowObjects.Clear();
         _layerRowsByLayer.Clear();
         _widgetByNodeId.Clear();
+        _nodeCenterInDrawRoot.Clear();
     }
 
     static string BuildHeaderText(RoguelikeRunState state)
     {
         var act = RoguelikeRunService.ActiveRunConfig?.GetAct(state.currentActIndex);
-        string actName = act != null ? act.displayName : $"Act {state.currentActIndex + 1}";
-        return $"{actName}  |  种子 {state.runSeed}";
+        if (act != null && !string.IsNullOrEmpty(act.displayName))
+            return act.displayName;
+        return $"Act {state.currentActIndex + 1}";
     }
 
     void RefreshHeader(string text)

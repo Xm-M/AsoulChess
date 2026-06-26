@@ -11,10 +11,10 @@ public class RoguelikeMapLineStyle
 
     public Color color = new Color(0.75f, 0.78f, 0.85f, 0.9f);
 
-    [Tooltip("为空则使用 Image 默认白块")]
+    [Tooltip("可选；贴到 LineRenderer 材质 mainTexture（Tile 模式）")]
     public Sprite sprite;
 
-    [Tooltip("为 true 且配置了 linePrefab 时，仅用 prefab 上的 Image，忽略 width/color/sprite")]
+    [Tooltip("为 true 且配置了 linePrefab 时，仅用 prefab 上 LineRenderer 的材质/宽度，忽略 width/color/sprite")]
     public bool usePrefabAppearanceOnly;
 }
 

@@ -12,6 +12,9 @@ public class RoguelikeRewardEntry
     /// <summary>PlantPick 生成条目时掷好的候选（creator.chessName）。</summary>
     public List<string> plantPickOptions = new List<string>();
 
+    /// <summary>Item 条目对应的道具 propId。</summary>
+    public string propId;
+
     public static RoguelikeRewardEntry CreateGold(int amount) =>
         new RoguelikeRewardEntry { kind = RoguelikeRewardEntryKind.Gold, goldAmount = amount };
 
@@ -21,6 +24,9 @@ public class RoguelikeRewardEntry
             kind = RoguelikeRewardEntryKind.PlantPick,
             plantPickOptions = options != null ? new List<string>(options) : new List<string>(),
         };
+
+    public static RoguelikeRewardEntry CreateProp(string propId) =>
+        new RoguelikeRewardEntry { kind = RoguelikeRewardEntryKind.Item, propId = propId };
 }
 
 public enum RoguelikeRewardEntryKind

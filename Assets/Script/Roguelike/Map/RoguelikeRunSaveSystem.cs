@@ -27,10 +27,18 @@ public static class RoguelikeRunSaveSystem
         return File.Exists(GetActivePath());
     }
 
-    public static void Save(RoguelikeRunSaveData data)
+    public static void Save(RoguelikeRunSaveData data) => TrySave(data);
+
+    public static bool TrySave(RoguelikeRunSaveData data)
     {
-        if (SkipSaveLoad || data == null)
-            return;
+        if (data == null)
+            return false;
+
+        if (SkipSaveLoad)
+        {
+            Debug.LogWarning("[RoguelikeRunSaveSystem] Test 模式跳过肉鸽 Run 存档（active.json 不会写入）");
+            return false;
+        }
 
         data.saveVersion = RoguelikeRunSaveData.CurrentSaveVersion;
         data.saveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -40,10 +48,12 @@ public static class RoguelikeRunSaveSystem
             string json = JsonUtility.ToJson(data, true);
             File.WriteAllText(GetActivePath(), json);
             Debug.Log("[RoguelikeRunSaveSystem] 存档成功");
+            return true;
         }
         catch (Exception e)
         {
             Debug.LogError($"[RoguelikeRunSaveSystem] 存档失败: {e.Message}");
+            return false;
         }
     }
 
@@ -76,6 +86,10 @@ public static class RoguelikeRunSaveSystem
                 data.state.clearedNodeIds = new System.Collections.Generic.List<int>();
             if (data.state.ownedPlantCreatorIds == null)
                 data.state.ownedPlantCreatorIds = new System.Collections.Generic.List<string>();
+            if (data.state.ownedPropIds == null)
+                data.state.ownedPropIds = new System.Collections.Generic.List<string>();
+            if (data.state.restUsedNodeIds == null)
+                data.state.restUsedNodeIds = new System.Collections.Generic.List<int>();
 
             data.state.currentMap.RebuildIndex();
             Debug.Log("[RoguelikeRunSaveSystem] 读档成功");

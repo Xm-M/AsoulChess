@@ -1,0 +1,1357 @@
+{
+  "count": 67,
+  "plants": [
+    {
+      "file": "486.asset",
+      "name": "486",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u9F13\\u624B",
+        "\\u65E0\\u523A\\u6709\\u523A"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "e61d4e41eb14adb4fad6442ab7fa907d",
+      "display_name": "486",
+      "prefab_folder": "486",
+      "skills": [
+        "SkillEffect_CreateSunLight"
+      ]
+    },
+    {
+      "file": "H.asset",
+      "name": "H\\u5F39",
+      "price": 50,
+      "hp": 500,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 8,
+      "func": "ExclusivePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "a15618627f088864e848923c3c65b8b9",
+      "display_name": "H\\u5F39",
+      "prefab_folder": "H",
+      "skills": [
+        "SkillEffect_Item"
+      ]
+    },
+    {
+      "file": "M3.asset",
+      "name": "M3",
+      "price": 500,
+      "hp": 300,
+      "atk": 80,
+      "cd": "50",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u9F13\\u624B",
+        "\\u5DF4\\u522B\\u5854"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "5dddc0eca9ca7364782a061a21476a3f",
+      "display_name": "M3",
+      "prefab_folder": "M3",
+      "skills": [
+        "SkillEffect_M3Rebuild",
+        "SkillEffect_Mon3tr"
+      ]
+    },
+    {
+      "file": "Mortis.asset",
+      "name": "\\u82E5\\u53F6\\u7766Moritis",
+      "price": 0,
+      "hp": 4000,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "LevelUpPlant",
+      "tags": [
+        "AveMujica",
+        "\\u5409\\u4ED6"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "bfdc72cf9f1775a42ba83549f5ee1529",
+      "display_name": "\\u82E5\\u53F6\\u7766Moritis",
+      "prefab_folder": "Mortis",
+      "skills": []
+    },
+    {
+      "file": "Oblivionis.asset",
+      "name": "\\u4E30\\u5DDD\\u7965\\u5B50Oblivionis",
+      "price": 475,
+      "hp": 300,
+      "atk": 40,
+      "cd": "50",
+      "plantType": 1,
+      "func": "LevelUpPlant",
+      "tags": [
+        "AveMujica",
+        "\\u952E\\u76D8\\u624B"
+      ],
+      "effect": "baseProperty:",
+      "buy": "OnlyOne",
+      "prefab_guid": "9199429850555d447bc2acdb76552def",
+      "display_name": "\\u4E30\\u5DDD\\u7965\\u5B50Oblivionis",
+      "prefab_folder": "Oblivionis",
+      "skills": [
+        "SkillEffect_Oblivionis"
+      ]
+    },
+    {
+      "file": "Saki.asset",
+      "name": "\\u4E30\\u5DDD\\u7965\\u5B50(\\u821E\\u53F0)",
+      "price": 50,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "0542ed09ad5a8aa47bf2d10a242f1076",
+      "display_name": "\\u4E30\\u5DDD\\u7965\\u5B50(\\u821E\\u53F0)",
+      "prefab_folder": "Saki",
+      "skills": []
+    },
+    {
+      "file": "Soldier.asset",
+      "name": "Soldier",
+      "price": 0,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u58EB\\u5175"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "e9357c824512742489ba1f8519ffd409",
+      "display_name": "Soldier",
+      "prefab_folder": "士兵",
+      "skills": []
+    },
+    {
+      "file": "Tomo.asset",
+      "name": "Tomo",
+      "price": 50,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u65E0\\u523A\\u6709\\u523A",
+        "\\u952E\\u76D8"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "90d27592ba371364ca5469122f0074c0",
+      "display_name": "Tomo",
+      "prefab_folder": "Tomo",
+      "skills": [
+        "SkillEffect_Tomo"
+      ]
+    },
+    {
+      "file": "rupa.asset",
+      "name": "rupa",
+      "price": 75,
+      "hp": 6000,
+      "atk": 20,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u8D1D\\u65AF",
+        "\\u65E0\\u523A\\u6709\\u523A"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "dac0aaaba2699a2428371534d12b35d0",
+      "display_name": "rupa",
+      "prefab_folder": "RUPA",
+      "skills": [
+        "SkillEffect_Rupa"
+      ]
+    },
+    {
+      "file": "三角初华.asset",
+      "name": "\\u4E09\\u89D2\\u521D\\u534E",
+      "price": 50,
+      "hp": 300,
+      "atk": 60,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "AveMujica",
+        "sumimi",
+        "\\u4E3B\\u5531",
+        "\\u5409\\u4ED6"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "3616685f97af8e845b741b50b6400702",
+      "display_name": "\\u4E09\\u89D2\\u521D\\u534E",
+      "prefab_folder": "三角初华",
+      "skills": [
+        "SkillEffect_Mujica_Doloris"
+      ]
+    },
+    {
+      "file": "丰川清告.asset",
+      "name": "\\u4E30\\u5DDD\\u6E05\\u544A",
+      "price": 0,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "",
+      "buy": "",
+      "prefab_guid": "50daab390b5d5594ea968f5518b7c436",
+      "display_name": "\\u4E30\\u5DDD\\u6E05\\u544A",
+      "prefab_folder": "丰川清告",
+      "skills": []
+    },
+    {
+      "file": "丰川祥子.asset",
+      "name": "\\u4E30\\u5DDD\\u7965\\u5B50",
+      "price": 75,
+      "hp": 5000,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u5E93\\u83B1\\u897F\\u88E4",
+        "\\u952E\\u76D8"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "d8a05bd147348324897fa54d61f52d2f",
+      "display_name": "\\u4E30\\u5DDD\\u7965\\u5B50",
+      "prefab_folder": "丰川祥子",
+      "skills": [
+        "SkillEffect_Saki"
+      ]
+    },
+    {
+      "file": "主唱Nina.asset",
+      "name": "\\u4E95\\u82B9\\u4EC1\\u83DC(\\u4E3B\\u5531)",
+      "price": 175,
+      "hp": 300,
+      "atk": 180,
+      "cd": "50",
+      "plantType": 1,
+      "func": "LevelUpPlant",
+      "tags": [
+        "\\u65E0\\u523A\\u6709\\u523A",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": "OnlyOne",
+      "prefab_guid": "e331c6b8e182f4940b391130e4b70eb5",
+      "display_name": "\\u4E95\\u82B9\\u4EC1\\u83DC(\\u4E3B\\u5531)",
+      "prefab_folder": "主唱Nina",
+      "skills": [
+        "SkillEffect_TriggerRain"
+      ]
+    },
+    {
+      "file": "井芹仁菜.asset",
+      "name": "\\u4E95\\u82B9\\u4EC1\\u83DC",
+      "price": 225,
+      "hp": 300,
+      "atk": 20,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u65E0\\u523A\\u6709\\u523A",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "89b78afab3e825a49b91f0557008fa70",
+      "display_name": "\\u4E95\\u82B9\\u4EC1\\u83DC",
+      "prefab_folder": "Nina",
+      "skills": [
+        "SkillEffect_Nina",
+        "SkillEffect_NinaTaunt"
+      ]
+    },
+    {
+      "file": "仪玄.asset",
+      "name": "\\u4EEA\\u7384",
+      "price": 50,
+      "hp": 300000,
+      "atk": 1800,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "NonePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "dbdcbdc8122075646aaba9a920de08a6",
+      "display_name": "\\u4EEA\\u7384",
+      "prefab_folder": "仪玄",
+      "skills": []
+    },
+    {
+      "file": "企鹅高松灯.asset",
+      "name": "\\u4F01\\u9E45\\u9AD8\\u677E\\u706F",
+      "price": 125,
+      "hp": 8000,
+      "atk": 500,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "fb3f11d6ead8b32478d1e3af702d6df5",
+      "display_name": "\\u4F01\\u9E45\\u9AD8\\u677E\\u706F",
+      "prefab_folder": "企鹅高松灯",
+      "skills": [
+        "SkillEffect_Bowling"
+      ]
+    },
+    {
+      "file": "八九寺真宵.asset",
+      "name": "\\u516B\\u4E5D\\u5BFA\\u771F\\u5BB5",
+      "price": 0,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "b50b21ac53d29934e8f7d1b2cd8a2b74",
+      "display_name": "\\u516B\\u4E5D\\u5BFA\\u771F\\u5BB5",
+      "prefab_folder": "八九寺真宵",
+      "skills": []
+    },
+    {
+      "file": "八幡海玲.asset",
+      "name": "\\u516B\\u5E61\\u6D77\\u73B2Timoris",
+      "price": 100,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "AveMujica",
+        "\\u8D1D\\u65AF"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "451bbb9a44649ac459d0372a39a40ec5",
+      "display_name": "\\u516B\\u5E61\\u6D77\\u73B2Timoris",
+      "prefab_folder": "八幡海铃",
+      "skills": [
+        "SkillEffect_Timoris"
+      ]
+    },
+    {
+      "file": "凉.asset",
+      "name": "\\u51C9",
+      "price": 200,
+      "hp": 300,
+      "atk": 180,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u8D1D\\u65AF",
+        "\\u7ED3\\u675F\\u4E50\\u961F"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "dfaa4f79cfc61914498d37659c53f9ef",
+      "display_name": "\\u51C9",
+      "prefab_folder": "凉",
+      "skills": [
+        "SkillEffect_Liang"
+      ]
+    },
+    {
+      "file": "凛御银灰.asset",
+      "name": "\\u51DB\\u5FA1\\u94F6\\u7070",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "",
+      "display_name": "\\u51DB\\u5FA1\\u94F6\\u7070",
+      "prefab_folder": "",
+      "skills": []
+    },
+    {
+      "file": "初音小推车.asset",
+      "name": "\\u521D\\u97F3\\u5C0F\\u63A8\\u8F66",
+      "price": 50,
+      "hp": 50000,
+      "atk": 18000,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u5409\\u4ED6 ",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "961d92d4d6b4e14478ec36c66077d947",
+      "display_name": "\\u521D\\u97F3\\u5C0F\\u63A8\\u8F66",
+      "prefab_folder": "初音小推车",
+      "skills": [
+        "PassiveSkill_Uik"
+      ]
+    },
+    {
+      "file": "千夏.asset",
+      "name": "千夏",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "",
+      "display_name": "千夏",
+      "prefab_folder": "",
+      "skills": []
+    },
+    {
+      "file": "千早爱音.asset",
+      "name": "\\u5343\\u65E9\\u7231\\u97F3",
+      "price": 25,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "Mygo",
+        "\\u5409\\u4ED6"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "449ee772b8b260d4b8771f57f522222a",
+      "display_name": "\\u5343\\u65E9\\u7231\\u97F3",
+      "prefab_folder": "千早爱音",
+      "skills": [
+        "PassiveSkill_MygoPassive_Anon",
+        "SkillEffect_Anon",
+        "SkillEffect_AnonHide"
+      ]
+    },
+    {
+      "file": "南宫羽.asset",
+      "name": "\\u5357\\u5BAB\\u7FBD",
+      "price": 75,
+      "hp": 30000,
+      "atk": 1800,
+      "cd": "7.5",
+      "plantType": 2,
+      "func": "AimTargetPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "7848b3ace0dc0184f8a846115daf07c2",
+      "display_name": "\\u5357\\u5BAB\\u7FBD",
+      "prefab_folder": "南宫羽",
+      "skills": [
+        "SkillEffect_NGskill"
+      ]
+    },
+    {
+      "file": "南瓜罩.asset",
+      "name": "\\u5357\\u74DC\\u7F69",
+      "price": 125,
+      "hp": 4000,
+      "atk": 0,
+      "cd": "30",
+      "plantType": 2,
+      "func": "SupportPlant",
+      "tags": [
+        "\\u4FDD\\u9556"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "c9301cf2f3398454a882a5a80169c4c2",
+      "display_name": "\\u5357\\u74DC\\u7F69",
+      "prefab_folder": "南瓜罩",
+      "skills": []
+    },
+    {
+      "file": "史尔特尔.asset",
+      "name": "\\u53F2\\u5C14\\u7279\\u5C14",
+      "price": 125,
+      "hp": 300,
+      "atk": 180,
+      "cd": "50",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "2f9883fdb3b21b740b8412f82dc256e1",
+      "display_name": "\\u53F2\\u5C14\\u7279\\u5C14",
+      "prefab_folder": "史尔特尔",
+      "skills": [
+        "SkillEffect_Jalapeno"
+      ]
+    },
+    {
+      "file": "叶瞬光.asset",
+      "name": "叶瞬光",
+      "price": 50,
+      "hp": 500,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "",
+      "display_name": "叶瞬光",
+      "prefab_folder": "",
+      "skills": []
+    },
+    {
+      "file": "吃豆凉.asset",
+      "name": "\\u5403\\u8C46\\u51C9",
+      "price": 150,
+      "hp": 500,
+      "atk": 180,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "5c9e1a4efa50a6842bd1810d2a6e8231",
+      "display_name": "\\u5403\\u8C46\\u51C9",
+      "prefab_folder": "吃豆凉",
+      "skills": []
+    },
+    {
+      "file": "吉他英雄.asset",
+      "name": "\\u5409\\u4ED6\\u82F1\\u96C4",
+      "price": 500,
+      "hp": 300,
+      "atk": 140,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "LevelUpPlant",
+      "tags": [
+        "\\u5409\\u4ED6",
+        "\\u7ED3\\u675F\\u4E50\\u961F"
+      ],
+      "effect": "baseProperty:",
+      "buy": "OnlyOne",
+      "prefab_guid": "cfa538eafb4271343a723d6d5ccc8a1f",
+      "display_name": "\\u5409\\u4ED6\\u82F1\\u96C4",
+      "prefab_folder": "吉他英雄",
+      "skills": [
+        "SkillEffect_GitaHero"
+      ]
+    },
+    {
+      "file": "喜多.asset",
+      "name": "\\u559C\\u591A",
+      "price": 150,
+      "hp": 500000,
+      "atk": 180,
+      "cd": "50",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u4E3B\\u5531",
+        "\\u5409\\u4ED6",
+        "\\u7ED3\\u675F\\u4E50\\u961F"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "abade0919dba2c24a822585a43a52825",
+      "display_name": "\\u559C\\u591A",
+      "prefab_folder": "喜多",
+      "skills": [
+        "SkillEffect_KitaExplode"
+      ]
+    },
+    {
+      "file": "喜多遗照.asset",
+      "name": "\\u559C\\u591A\\u7167\\u7247",
+      "price": 75,
+      "hp": 500,
+      "atk": 90,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "dd95bd09c49a3dd489aa33c5d2008fa5",
+      "display_name": "\\u559C\\u591A\\u7167\\u7247",
+      "prefab_folder": "喜多遗照",
+      "skills": [
+        "SkillEffect_KitaExplode"
+      ]
+    },
+    {
+      "file": "嘉然土豆雷.asset",
+      "name": "\\u5609\\u7136\\u571F\\u8C46\\u96F7",
+      "price": 25,
+      "hp": 300,
+      "atk": 1800,
+      "cd": "30",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "0a4c542c8e37e0545be40027f6081e42",
+      "display_name": "\\u5609\\u7136\\u571F\\u8C46\\u96F7",
+      "prefab_folder": "Potato",
+      "skills": [
+        "SkillEffect_PotatoMineArm"
+      ]
+    },
+    {
+      "file": "圣聆初雪.asset",
+      "name": "\\u5723\\u8046\\u521D\\u96EA",
+      "price": 275,
+      "hp": 600,
+      "atk": 80,
+      "cd": "70",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u8C22\\u62C9\\u683C"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "ebb326f0551b26843b706daeb81a58b0",
+      "display_name": "\\u5723\\u8046\\u521D\\u96EA",
+      "prefab_folder": "圣聆初雪",
+      "skills": [
+        "SkillEffect_HatsuyukiUnlockAttack"
+      ]
+    },
+    {
+      "file": "宇宙高松灯.asset",
+      "name": "\\u5B87\\u5B99\\u9AD8\\u677E\\u706F",
+      "price": 125,
+      "hp": 300,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 1,
+      "func": "LevelUpPlant_Mygo",
+      "tags": [
+        "Mygo",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": "OnlyOne",
+      "prefab_guid": "f2fe31e64abdad643b28803236024623",
+      "display_name": "\\u5B87\\u5B99\\u9AD8\\u677E\\u706F",
+      "prefab_folder": "宇宙高松灯",
+      "skills": [
+        "SkillEffect_SummonBlackHole"
+      ]
+    },
+    {
+      "file": "小虹夏.asset",
+      "name": "\\u5C0F\\u8679\\u590F",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "550b0b252a735874c83118df25a3bfab",
+      "display_name": "\\u5C0F\\u8679\\u590F",
+      "prefab_folder": "小虹夏",
+      "skills": [
+        "SkillEffect_CreateSunLight"
+      ]
+    },
+    {
+      "file": "希希芙.asset",
+      "name": "\\u5E0C\\u5E0C\\u8299",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "df5355b043b7d6749b4079dcf3466ebf",
+      "display_name": "\\u5E0C\\u5E0C\\u8299",
+      "prefab_folder": "希希芙",
+      "skills": []
+    },
+    {
+      "file": "常服高松灯.asset",
+      "name": "\\u9AD8\\u677E\\u706F",
+      "price": 25,
+      "hp": 300,
+      "atk": 7,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "Mygo",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "51fa4b4e1b0a1894cb38b0113ae1b06a",
+      "display_name": "\\u9AD8\\u677E\\u706F",
+      "prefab_folder": "常服高松灯",
+      "skills": [
+        "PassiveSkill_MygoPassive_Tomorin",
+        "SkillEffect_ShootBullet"
+      ]
+    },
+    {
+      "file": "平泽唯.asset",
+      "name": "\\u5E73\\u6CFD\\u552F",
+      "price": 175,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u653E\\u5B66\\u540E\\u8336\\u4F1A",
+        "\\u5409\\u4ED6",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "28b0b725fc424c843b909b60eff60ac8",
+      "display_name": "\\u5E73\\u6CFD\\u552F",
+      "prefab_folder": "平泽唯",
+      "skills": [
+        "PassiveSkill_Yui",
+        "SkillEffect_YuiToggleHealMode"
+      ]
+    },
+    {
+      "file": "广井菊里.asset",
+      "name": "\\u5E7F\\u4E95\\u83CA\\u91CC",
+      "price": 100,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "5bb306a58a58e39418c615bbb6098475",
+      "display_name": "\\u5E7F\\u4E95\\u83CA\\u91CC",
+      "prefab_folder": "广井菊里",
+      "skills": []
+    },
+    {
+      "file": "抹茶芭菲.asset",
+      "name": "\\u62B9\\u8336\\u82AD\\u83F2",
+      "price": 75,
+      "hp": 500,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 8,
+      "func": "ConsumePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "b2f2d79e040c9a74c8fa941bb26ed06b",
+      "display_name": "\\u62B9\\u8336\\u82AD\\u83F2",
+      "prefab_folder": "抹茶芭菲",
+      "skills": [
+        "SkillEffect_Item"
+      ]
+    },
+    {
+      "file": "星歌.asset",
+      "name": "\\u4F0A\\u5730\\u77E5\\u661F\\u6B4C",
+      "price": 150,
+      "hp": 300,
+      "atk": 300,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "OnlyOne",
+      "prefab_guid": "38adffc341296f64aa06ee2136c0e498",
+      "display_name": "\\u4F0A\\u5730\\u77E5\\u661F\\u6B4C",
+      "prefab_folder": "星歌",
+      "skills": [
+        "SkillEffect_Xingge"
+      ]
+    },
+    {
+      "file": "桃金娘.asset",
+      "name": "\\u6843\\u91D1\\u5A18",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u9F13\\u624B"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "1939d68d39957ac418c20eb6d7956ecd",
+      "display_name": "\\u6843\\u91D1\\u5A18",
+      "prefab_folder": "桃金娘",
+      "skills": [
+        "SkillEffect_CreateSunLight"
+      ]
+    },
+    {
+      "file": "椎名立希.asset",
+      "name": "\\u690E\\u540D\\u7ACB\\u5E0C",
+      "price": 200,
+      "hp": 300,
+      "atk": 40,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "Mygo",
+        "\\u9F13\\u624B"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "ce8b6fae65799a14d91aae2daf7f23c4",
+      "display_name": "\\u690E\\u540D\\u7ACB\\u5E0C",
+      "prefab_folder": "椎名立希",
+      "skills": [
+        "SkillEffect_TakiFear"
+      ]
+    },
+    {
+      "file": "槌蛇波奇.asset",
+      "name": "\\u69CC\\u86C7\\u6CE2\\u5947(\\u540E\\u85E4\\u4E00\\u91CC)",
+      "price": 25,
+      "hp": 2000,
+      "atk": 20,
+      "cd": "30",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "7e76b60249f86fe4daec3c324f04d760",
+      "display_name": "\\u69CC\\u86C7\\u6CE2\\u5947(\\u540E\\u85E4\\u4E00\\u91CC)",
+      "prefab_folder": "波奇蛇",
+      "skills": []
+    },
+    {
+      "file": "橘福福.asset",
+      "name": "\\u6A58\\u798F\\u798F",
+      "price": 0,
+      "hp": 180000,
+      "atk": 500,
+      "cd": "0",
+      "plantType": 1,
+      "func": "NonePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "75c54b608fab95349a9d3b23d027638a",
+      "display_name": "\\u6A58\\u798F\\u798F",
+      "prefab_folder": "橘福福",
+      "skills": [
+        "SkillEffect_Bowling_"
+      ]
+    },
+    {
+      "file": "河源木桃香.asset",
+      "name": "\\u6CB3\\u6E90\\u6728\\u6843\\u9999",
+      "price": 125,
+      "hp": 500,
+      "atk": 20,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u65E0\\u523A\\u6709\\u523A",
+        "\\u5409\\u4ED6\\u624B"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "9484eb2e9055cf743b46de84a1c5c398",
+      "display_name": "\\u6CB3\\u6E90\\u6728\\u6843\\u9999",
+      "prefab_folder": "河源木桃香",
+      "skills": []
+    },
+    {
+      "file": "波奇.asset",
+      "name": "\\u540E\\u85E4\\u4E00\\u91CC",
+      "price": 50,
+      "hp": 4000,
+      "atk": 0,
+      "cd": "30",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u5409\\u4ED6",
+        "\\u7ED3\\u675F\\u4E50\\u961F"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "93067c60e0cb48b4dabb760e77a243ab",
+      "display_name": "\\u540E\\u85E4\\u4E00\\u91CC",
+      "prefab_folder": "波奇",
+      "skills": []
+    },
+    {
+      "file": "潘引壶.asset",
+      "name": "\\u6F58\\u5F15\\u58F6",
+      "price": 50,
+      "hp": 30000,
+      "atk": 180,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "NonePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "6e05115702646444a98ea16a45591efa",
+      "display_name": "\\u6F58\\u5F15\\u58F6",
+      "prefab_folder": "潘引壶",
+      "skills": []
+    },
+    {
+      "file": "灵感菇.asset",
+      "name": "\\u7075\\u611F\\u83C7",
+      "price": 75,
+      "hp": 500,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "a304d119f4d4f394896d5a5e4c63c7c2",
+      "display_name": "\\u7075\\u611F\\u83C7",
+      "prefab_folder": "灵感菇",
+      "skills": []
+    },
+    {
+      "file": "爱芮.asset",
+      "name": "\\u7231\\u82AE",
+      "price": 50,
+      "hp": 5000,
+      "atk": 180,
+      "cd": "30",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u5984\\u60F3\\u5929\\u4F7F",
+        "\\u4E3B\\u5531"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "5fa9bfa1ade9c784e93cb91ac45963f8",
+      "display_name": "\\u7231\\u82AE",
+      "prefab_folder": "爱芮",
+      "skills": [
+        "SkillEffect_KitaExplode"
+      ]
+    },
+    {
+      "file": "牛肉饭.asset",
+      "name": "\\u725B\\u8089\\u996D",
+      "price": 75,
+      "hp": 300,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 8,
+      "func": "ConsumePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "79645f61fd1653d4b849593ad2b6454f",
+      "display_name": "\\u725B\\u8089\\u996D",
+      "prefab_folder": "牛肉饭",
+      "skills": [
+        "SkillEffect_Item"
+      ]
+    },
+    {
+      "file": "猫猫.asset",
+      "name": "\\u732B\\u732B",
+      "price": 50,
+      "hp": 300,
+      "atk": 10,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "NonePlant",
+      "tags": [],
+      "effect": "",
+      "buy": "",
+      "prefab_guid": "b38c1a4047a986344b7ada2d6a200944",
+      "display_name": "\\u732B\\u732B",
+      "prefab_folder": "猫猫",
+      "skills": []
+    },
+    {
+      "file": "琴吹䌷.asset",
+      "name": "\\u7434\\u5439\\u4337",
+      "price": 75,
+      "hp": 1000,
+      "atk": 50,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u653E\\u5B66\\u540E\\u8336\\u4F1A",
+        "\\u952E\\u76D8"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "2cfcb7b1ebd1c8e419c425ba442590fb",
+      "display_name": "\\u7434\\u5439\\u4337",
+      "prefab_folder": "琴吹䌷",
+      "skills": [
+        "PassiveSkill_Tsumugi",
+        "SkillEffect_TsumugiToggleMode"
+      ]
+    },
+    {
+      "file": "甜甜圈.asset",
+      "name": "\\u751C\\u751C\\u5708",
+      "price": 25,
+      "hp": 300,
+      "atk": 0,
+      "cd": "0",
+      "plantType": 8,
+      "func": "ConsumePlant",
+      "tags": [
+        "sumimi"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "7a251ecb8f6f15b4d933e94b237939a2",
+      "display_name": "\\u751C\\u751C\\u5708",
+      "prefab_folder": "蛋包饭",
+      "skills": [
+        "SkillEffect_Item"
+      ]
+    },
+    {
+      "file": "田井中律.asset",
+      "name": "田井中律",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 0,
+      "func": "",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "",
+      "display_name": "田井中律",
+      "prefab_folder": "",
+      "skills": []
+    },
+    {
+      "file": "睡莲.asset",
+      "name": "\\u7761\\u83B2",
+      "price": 25,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 4,
+      "func": "PotPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "2299ea2f5169bc94b8b4d9e92b93949d",
+      "display_name": "\\u7761\\u83B2",
+      "prefab_folder": "睡莲",
+      "skills": []
+    },
+    {
+      "file": "祐天寺若麦.asset",
+      "name": "\\u7950\\u5929\\u5BFA\\u82E5\\u9EA6",
+      "price": 150,
+      "hp": 300,
+      "atk": 40,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "AveMujica",
+        "\\u9F13\\u624B"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "5c5b9eb88d52a274788a1cf5106ce7ac",
+      "display_name": "\\u7950\\u5929\\u5BFA\\u82E5\\u9EA6",
+      "prefab_folder": "祐天寺若麦",
+      "skills": [
+        "SkillEffect_Mujica_Nyamu"
+      ]
+    },
+    {
+      "file": "秋山澪.asset",
+      "name": "\\u79CB\\u5C71\\u6FAA",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u653E\\u5B66\\u540E\\u8336\\u4F1A",
+        "\\u8D1D\\u65AF"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "0359433830f5fc64d8d4d432ffdadac5",
+      "display_name": "\\u79CB\\u5C71\\u6FAA",
+      "prefab_folder": "秋山澪",
+      "skills": [
+        "PassiveSkill_AkiyamaMioOverflow",
+        "SkillEffect_CreateSunLight",
+        "SkillEffect_MioToggleMode",
+        "SkillEffect_OverflowHeal"
+      ]
+    },
+    {
+      "file": "纯田真奈.asset",
+      "name": "\\u7EAF\\u7530\\u771F\\u5948",
+      "price": 50,
+      "hp": 300,
+      "atk": 50,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u4E3B\\u5531",
+        "sumimi"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "00f0f6467bd3d7a41be97f0b26c258b8",
+      "display_name": "\\u7EAF\\u7530\\u771F\\u5948",
+      "prefab_folder": "纯田真奈",
+      "skills": [
+        "SkillEffect_CreateSunLight"
+      ]
+    },
+    {
+      "file": "苍角.asset",
+      "name": "\\u82CD\\u89D2",
+      "price": 125,
+      "hp": 3000,
+      "atk": 180,
+      "cd": "50",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "64f855da7c647fb4eb714c3fef339f15",
+      "display_name": "\\u82CD\\u89D2",
+      "prefab_folder": "苍角",
+      "skills": [
+        "SkillEffect_IceJalapeno"
+      ]
+    },
+    {
+      "file": "薇薇安.asset",
+      "name": "\\u8587\\u8587\\u5B89",
+      "price": 100,
+      "hp": 300,
+      "atk": 20,
+      "cd": "7.5",
+      "plantType": 2,
+      "func": "SupportPlant",
+      "tags": [
+        "\\u53CD\\u820C\\u9E1F"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "e5afb48083ff2e6499755c110d23be1b",
+      "display_name": "\\u8587\\u8587\\u5B89",
+      "prefab_folder": "薇薇安",
+      "skills": [
+        "PassiveSkill_LettuceUmbrella"
+      ]
+    },
+    {
+      "file": "虹夏.asset",
+      "name": "\\u8679\\u590F",
+      "price": 50,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "\\u9F13\\u624B",
+        "\\u7ED3\\u675F\\u4E50\\u961F"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "838b15b452e9c0a41a4afd36b8b67a8b",
+      "display_name": "\\u8679\\u590F",
+      "prefab_folder": "虹夏",
+      "skills": [
+        "SkillEffect_CreateSunLight"
+      ]
+    },
+    {
+      "file": "蛋包饭.asset",
+      "name": "\\u86CB\\u5305\\u996D",
+      "price": 25,
+      "hp": 300,
+      "atk": 0,
+      "cd": "7.5",
+      "plantType": 8,
+      "func": "ConsumePlant",
+      "tags": [],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "7a251ecb8f6f15b4d933e94b237939a2",
+      "display_name": "\\u86CB\\u5305\\u996D",
+      "prefab_folder": "蛋包饭",
+      "skills": [
+        "SkillEffect_Item"
+      ]
+    },
+    {
+      "file": "要乐奈.asset",
+      "name": "\\u8981\\u4E50\\u5948",
+      "price": 175,
+      "hp": 300,
+      "atk": 20,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "Mygo",
+        "\\u5409\\u4ED6"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "7f2e74a685736d449916c29340384ce2",
+      "display_name": "\\u8981\\u4E50\\u5948",
+      "prefab_folder": "要乐奈",
+      "skills": [
+        "PassiveSkill_MygoPassive_Rana",
+        "SkillEffect_RanaFreezy"
+      ]
+    },
+    {
+      "file": "迈巴赫.asset",
+      "name": "\\u8FC8\\u5DF4\\u8D6B",
+      "price": 50,
+      "hp": 500000,
+      "atk": 10000,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [],
+      "effect": "",
+      "buy": "",
+      "prefab_guid": "277e3c0e75a889c419e32b05f15b32b5",
+      "display_name": "\\u8FC8\\u5DF4\\u8D6B",
+      "prefab_folder": "迈巴赫",
+      "skills": [
+        "SkillEffect_Pingun"
+      ]
+    },
+    {
+      "file": "长崎素世.asset",
+      "name": "\\u957F\\u5D0E\\u7D20\\u4E16",
+      "price": 225,
+      "hp": 2000,
+      "atk": 30,
+      "cd": "0",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "Mygo",
+        "\\u8D1D\\u65AF"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "ebd99213a4ce6604aa2615122dbd6acd",
+      "display_name": "\\u957F\\u5D0E\\u7D20\\u4E16",
+      "prefab_folder": "长崎素世",
+      "skills": [
+        "PassiveSkill_Mygo",
+        "SkillEffect_KitaExplode"
+      ]
+    },
+    {
+      "file": "黄瓜睦.asset",
+      "name": "\\u82E5\\u53F6\\u7766",
+      "price": 75,
+      "hp": 5000000,
+      "atk": 15,
+      "cd": "7.5",
+      "plantType": 1,
+      "func": "MainPlant",
+      "tags": [
+        "AveMujica",
+        "\\u5409\\u4ED6"
+      ],
+      "effect": "baseProperty:",
+      "buy": "",
+      "prefab_guid": "201226b34288b794484d93193f2cb219",
+      "display_name": "\\u82E5\\u53F6\\u7766",
+      "prefab_folder": "黄瓜睦",
+      "skills": [
+        "SkillEffect_TriggerRain"
+      ]
+    }
+  ]
+}

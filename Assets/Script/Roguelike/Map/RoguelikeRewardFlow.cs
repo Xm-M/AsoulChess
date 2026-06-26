@@ -35,6 +35,13 @@ public static class RoguelikeRewardFlow
                 list.Add(RoguelikeRewardEntry.CreatePlantPick(plantOptions));
         }
 
+        if (economy.ShouldGrantPropReward(kind))
+        {
+            var propId = economy.RollPropReward(kind, RoguelikeRunService.State, level);
+            if (!string.IsNullOrEmpty(propId))
+                list.Add(RoguelikeRewardEntry.CreateProp(propId));
+        }
+
         return list;
     }
 
@@ -55,11 +62,60 @@ public static class RoguelikeRewardFlow
                     $"[RoguelikeRewardFlow] 领取 {entry.goldAmount} 金币，当前 {RoguelikeRunService.State.runGold}");
                 return true;
             case RoguelikeRewardEntryKind.PlantPick:
-            case RoguelikeRewardEntryKind.Item:
-                Debug.LogWarning($"[RoguelikeRewardFlow] 奖励类型 {entry.kind} 尚未实现");
+                Debug.LogWarning($"[RoguelikeRewardFlow] 奖励类型 {entry.kind} 请走专用领取流程");
                 return false;
+            case RoguelikeRewardEntryKind.Item:
+                return TryClaimProp(entry);
             default:
                 return false;
         }
+    }
+
+    /// <summary>PlantPick 子面板选卡或跳过后领取。<paramref name="chosenChessName"/> 为空表示跳过。</summary>
+    public static bool TryClaimPlantPick(RoguelikeRewardEntry entry, string chosenChessName)
+    {
+        if (entry == null || entry.claimed || RoguelikeRunService.State == null)
+            return false;
+        if (entry.kind != RoguelikeRewardEntryKind.PlantPick)
+            return false;
+
+        if (!string.IsNullOrEmpty(chosenChessName))
+        {
+            if (entry.plantPickOptions == null || !entry.plantPickOptions.Contains(chosenChessName))
+                return false;
+
+            if (!RoguelikeRunPlantPool.AddPlant(chosenChessName))
+                Debug.LogWarning(
+                    $"[RoguelikeRewardFlow] 植物 {chosenChessName} 加入牌组失败（可能已拥有）");
+            else
+                Debug.Log($"[RoguelikeRewardFlow] 选择植物 {chosenChessName}");
+        }
+        else
+            Debug.Log("[RoguelikeRewardFlow] 跳过 PlantPick");
+
+        entry.claimed = true;
+        RoguelikeRunService.SaveRun();
+        return true;
+    }
+
+    public static bool TryClaimProp(RoguelikeRewardEntry entry)
+    {
+        if (entry == null || entry.claimed || RoguelikeRunService.State == null)
+            return false;
+        if (entry.kind != RoguelikeRewardEntryKind.Item)
+            return false;
+        if (string.IsNullOrEmpty(entry.propId))
+            return false;
+
+        if (!RoguelikeRunPropPool.AddProp(entry.propId))
+        {
+            Debug.LogWarning($"[RoguelikeRewardFlow] 道具 {entry.propId} 加入 Run 失败（可能已拥有）");
+            return false;
+        }
+
+        Debug.Log($"[RoguelikeRewardFlow] 获得道具 {entry.propId}");
+        entry.claimed = true;
+        RoguelikeRunService.SaveRun();
+        return true;
     }
 }

@@ -572,10 +572,22 @@ PrefabInstance:
     - target: {fileID: 2288406265827502082, guid: e40bcc2c54ac86143ab047ca7a7dce41, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: 3e28e68e6ee6b194493f7bc1c2886bdf, type: 3}
     - target: {fileID: 2288406265827502082, guid: e40bcc2c54ac86143ab047ca7a7dce41, type: 3}
       propertyPath: m_Color.a
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2288406265827502082, guid: e40bcc2c54ac86143ab047ca7a7dce41, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2288406265827502082, guid: e40bcc2c54ac86143ab047ca7a7dce41, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2288406265827502082, guid: e40bcc2c54ac86143ab047ca7a7dce41, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4449693881909180192, guid: e40bcc2c54ac86143ab047ca7a7dce41, type: 3}
       propertyPath: m_Color.a
@@ -1149,6 +1161,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 723a4e0a98580bc49b8f337bd10907c6, type: 2}
   - {fileID: 11400000, guid: ef62c63d0c80a2f4987eb617b21b2afb, type: 2}
   - {fileID: 11400000, guid: ef61e5610aef5c141a0e6ffdb1bcc197, type: 2}
+  - {fileID: 11400000, guid: 9bb6bf6800d5bf144b148ad4dffba818, type: 2}
   playerOwnedCreators:
   - {fileID: 11400000, guid: 0b45a281d6f9c4e4bac6cf69f1cc233e, type: 2}
   - {fileID: 11400000, guid: 93e4d5ea07618ee42babdd49a4e6ebc5, type: 2}
@@ -1190,7 +1203,7 @@ MonoBehaviour:
   WhenGameStart:
     m_PersistentCalls:
       m_Calls: []
-  TestLevel: {fileID: 11400000, guid: c3cebb505ad6f74449193f801b39c8f0, type: 2}
+  TestLevel: {fileID: 11400000, guid: 2aca715d45014134681726d5602f2e22, type: 2}
   references:
     version: 2
     RefIds:

@@ -175,6 +175,8 @@ MonoBehaviour:
         - {x: 6, y: 0}
         - {x: 7, y: 0}
         - {x: 8, y: 0}
+        - {x: 9, y: 0}
+        - {x: 10, y: 0}
         boxHalfExtents: {x: 0.56, y: 0.45}
     - rid: 4
       type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
@@ -281,6 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6296076889716557823}
+  BeAttack: {fileID: 0}
   sprite: {fileID: 3690117724320952491}
   dizzynesss: 
   attackStateNameAlt: 

@@ -12,4 +12,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fa2570a2c17b184d9eb27c34048a578, type: 3}
   m_Name: RoguelikeEconomyConfig
   m_EditorClassIdentifier: 
-  goldRules: []
+  goldRules:
+  - kind: 1
+    goldMin: 10
+    goldMax: 20
+    enabled: 1
+  - kind: 2
+    goldMin: 25
+    goldMax: 35
+    enabled: 1
+  - kind: 3
+    goldMin: 95
+    goldMax: 105
+    enabled: 1
+  - kind: 4
+    goldMin: 15
+    goldMax: 30
+    enabled: 1
+  runGoldRewardMultiplier: 1
+  coinVisualUnitLarge: 100
+  coinVisualUnitSmall: 10
+  plantPriceBands:
+    lowMaxPrice: 75
+    midMaxPrice: 125
+  plantPoolFilter:
+    excludeOwnedInRun: 1
+    excludeDuplicatesInOffer: 1
+    excludeLevelUpPlants: 1
+    blacklistCreatorIds: []
+    whitelistPool: []
+  plantPickRules:
+  - kind: 1
+    enabled: 1
+    grantPlantPick: 1
+    optionCount: 3
+    tierWeights:
+      weightLow: 60
+      weightMid: 37
+      weightHigh: 3
+  - kind: 2
+    enabled: 1
+    grantPlantPick: 1
+    optionCount: 3
+    tierWeights:
+      weightLow: 45
+      weightMid: 40
+      weightHigh: 15
+  - kind: 3
+    enabled: 1
+    grantPlantPick: 1
+    optionCount: 3
+    tierWeights:
+      weightLow: 20
+      weightMid: 35
+      weightHigh: 45
+  shopRule:
+    enabled: 1
+    slotCount: 5
+    tierWeights:
+      weightLow: 49
+      weightMid: 37
+      weightHigh: 14
+    minPrice: 25
+    priceMultiplierLow: 1
+    priceMultiplierMid: 1.15
+    priceMultiplierHigh: 1.35
+  propPoolFilter:
+    excludeOwnedInRun: 1
+    blacklistPropIds: []
+    whitelistPool: []
+  propRewardRules:
+  - kind: 1
+    enabled: 1
+    grantPropReward: 0
+  - kind: 2
+    enabled: 1
+    grantPropReward: 1
+  - kind: 3
+    enabled: 1
+    grantPropReward: 1
+  - kind: 4
+    enabled: 1
+    grantPropReward: 0
+  initialLawnMowerCount: 4
+  restLawnMowerBonus: 2

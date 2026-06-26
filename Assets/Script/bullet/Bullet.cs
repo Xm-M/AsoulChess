@@ -41,6 +41,8 @@ public class Bullet : MonoBehaviour
         transform.position = startPos;
         transform.right=moveDir;
         Dm.damageFrom = shooter;
+        if ((Dm.damageElementType & ElementType.Bullet) == 0)
+            Dm.damageElementType = ElementType.Bullet;
         this.rate = rate;
         if (damage == -1)
         {

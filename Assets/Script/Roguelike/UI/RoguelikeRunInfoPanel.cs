@@ -4,56 +4,87 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 肉鸽局内数据面板（HUD / 侧边栏）。布局由你在预制体里搭，本脚本只负责绑定与刷新。
+/// 肉鸽通用 HUD：常驻金币、Act；子物体可挂植物仓库选卡 UI（只读）；设置按钮打开暂停面板。
 /// 预制体：<c>Resources/UIPrefab/RoguelikeRunInfoPanel</c>，根物体 name 须一致。
-/// Run 进行中自动显示；放弃/通关后隐藏。
 /// </summary>
 public class RoguelikeRunInfoPanel : View
 {
     [Header("显示策略")]
+    [Tooltip("Run 进行中时自动 Show 本面板")]
     [SerializeField] bool autoShowWhenRunActive = true;
+    [Tooltip("无 active Run 时自动 Hide")]
     [SerializeField] bool hideWhenNoActiveRun = true;
-    [Tooltip("无 Run 时显示（可选）")]
+    [Tooltip("无 Run 时显示的占位节点（可选）")]
     [SerializeField] GameObject emptyStateRoot;
 
-    [Header("文本绑定（按需拖，不用的留空）")]
-    [SerializeField] TMP_Text bandNameText;
-    [SerializeField] TMP_Text runConfigNameText;
+    [Header("HUD 文本")]
+    [Tooltip("当前 Act 标题，如「前院 (1/3)」")]
     [SerializeField] TMP_Text actTitleText;
-    [SerializeField] TMP_Text runSeedText;
-    [SerializeField] TMP_Text currentNodeText;
-    [SerializeField] TMP_Text pendingNodeText;
-    [SerializeField] TMP_Text selectableNextText;
-    [SerializeField] TMP_Text progressText;
-    [SerializeField] TMP_Text ownedPlantCountText;
+    [Tooltip("本 Run 持有金币")]
     [SerializeField] TMP_Text runGoldText;
-    [SerializeField] TMP_Text summaryText;
+    [Tooltip("本 Run 拥有小推车数量")]
+    [SerializeField] TMP_Text runLawnMowerText;
+    [Tooltip("本 Run 携带格数量（loadout 上限）")]
+    [SerializeField] TMP_Text runLoadoutSlotText;
 
-    [Header("植物图标")]
-    [SerializeField] List<Image> plantIconImages = new List<Image>();
-    [Tooltip("若配置了 Root + Prefab，则动态生成图标；否则用上面固定 Image 列表")]
-    [SerializeField] Transform plantIconRoot;
-    [SerializeField] Image plantIconPrefab;
-    [SerializeField] bool hideEmptyPlantSlots = true;
-    [SerializeField] Color emptyPlantTint = new Color(1f, 1f, 1f, 0.15f);
+    [Header("可选调试文本（玩家 HUD 可不绑）")]
+    [Tooltip("RunMapConfig 资产名")]
+    [SerializeField] TMP_Text runConfigNameText;
+    [Tooltip("本局随机种子")]
+    [SerializeField] TMP_Text runSeedText;
+    [Tooltip("当前地图节点")]
+    [SerializeField] TMP_Text currentNodeText;
+    [Tooltip("待进入战斗的节点")]
+    [SerializeField] TMP_Text pendingNodeText;
+    [Tooltip("可选下一层节点摘要")]
+    [SerializeField] TMP_Text selectableNextText;
+    [Tooltip("地图进度统计")]
+    [SerializeField] TMP_Text progressText;
 
-    [Header("按钮（可选）")]
-    [SerializeField] Button toggleDetailButton;
-    [SerializeField] GameObject detailContentRoot;
-    [SerializeField] Button openMapButton;
-    [SerializeField] Button closeButton;
+    [Header("植物卡组")]
+    [Tooltip("打开卡组弹层")]
+    [SerializeField] Button openDeckButton;
+    [Tooltip("关闭卡组弹层")]
+    [SerializeField] Button closeDeckButton;
+    [Tooltip("卡组弹层根节点（子物体整段植物选择界面，默认隐藏）")]
+    [SerializeField] GameObject deckPanelRoot;
+    [Tooltip("仓库选卡预制体，与 PlantsShop.shopSelectIconPre 相同")]
+    [SerializeField] GameObject shopSelectIconPre;
+    [Tooltip("选卡列表父节点（Grid/Content）")]
+    [SerializeField] Transform selectIconParent;
 
-    readonly List<Image> _spawnedPlantIcons = new List<Image>();
-    bool _detailVisible = true;
+    [Header("植物详情")]
+    [Tooltip("植物名称")]
+    [SerializeField] TMP_Text detailName;
+    [Tooltip("植物立绘/图标")]
+    [SerializeField] Image detailPlantImage;
+    [Tooltip("羁绊/标签")]
+    [SerializeField] TMP_Text detailTags;
+    [Tooltip("属性汇总文本（生命/攻击/护甲等）")]
+    [SerializeField] TMP_Text detailAttributes;
+    [Tooltip("简介 ScrollRect")]
+    [SerializeField] ScrollRect descriptionScroll;
+    [Tooltip("简介正文")]
+    [SerializeField] TMP_Text descriptionText;
+
+    [Header("按钮")]
+    [Tooltip("打开暂停/设置面板（ParsePanel）")]
+    [SerializeField] Button settingsButton;
+    [Tooltip("关闭本 HUD（可选）")]
+    [SerializeField] Button closeHudButton;
+
+    readonly List<ShopSelectIcon> _deckSelectIcons = new List<ShopSelectIcon>();
 
     public override void Init()
     {
-        if (toggleDetailButton != null)
-            toggleDetailButton.onClick.AddListener(ToggleDetail);
-        if (openMapButton != null)
-            openMapButton.onClick.AddListener(OnOpenMap);
-        if (closeButton != null)
-            closeButton.onClick.AddListener(Hide);
+        if (openDeckButton != null)
+            openDeckButton.onClick.AddListener(OpenDeckPanel);
+        if (closeDeckButton != null)
+            closeDeckButton.onClick.AddListener(CloseDeckPanel);
+        if (settingsButton != null)
+            settingsButton.onClick.AddListener(OpenPausePanel);
+        if (closeHudButton != null)
+            closeHudButton.onClick.AddListener(Hide);
     }
 
     void OnEnable()
@@ -102,13 +133,32 @@ public class RoguelikeRunInfoPanel : View
 
     public static void HideForRunEnded()
     {
-        UIManage.GetView<RoguelikeRunInfoPanel>()?.Hide();
+        HideHud();
+    }
+
+    /// <summary>进入战斗关卡前隐藏 HUD（含卡组弹层）。</summary>
+    public static void HideForCombat()
+    {
+        HideHud();
+    }
+
+    static void HideHud()
+    {
+        var panel = UIManage.GetView<RoguelikeRunInfoPanel>();
+        if (panel != null)
+            panel.Hide();
     }
 
     public override void Show()
     {
         base.Show();
         Refresh();
+    }
+
+    public override void Hide()
+    {
+        CloseDeckPanel();
+        base.Hide();
     }
 
     public void Refresh()
@@ -125,21 +175,45 @@ public class RoguelikeRunInfoPanel : View
         var state = RoguelikeRunService.State;
         var config = RoguelikeRunService.ActiveRunConfig;
 
-        SetText(bandNameText, string.IsNullOrEmpty(state.selectedBandName) ? "—" : state.selectedBandName);
-        SetText(runConfigNameText, config != null ? config.name : "—");
         SetText(actTitleText, RoguelikeRunInfoFormatter.FormatActTitle(state, config));
+        SetText(runGoldText, RoguelikeRunInfoFormatter.FormatRunGold(state));
+        SetText(runLawnMowerText, RoguelikeRunInfoFormatter.FormatLawnMowerCount(state));
+        SetText(runLoadoutSlotText, RoguelikeRunInfoFormatter.FormatLoadoutSlotCount(state));
+        SetText(runConfigNameText, config != null ? config.name : "—");
         SetText(runSeedText, state.runSeed.ToString());
         SetText(currentNodeText, RoguelikeRunInfoFormatter.FormatCurrentNode(state));
         SetText(pendingNodeText, RoguelikeRunInfoFormatter.FormatPendingNode(state, RoguelikeRunService.PendingNodeId));
         SetText(selectableNextText, RoguelikeRunInfoFormatter.FormatSelectableNext(state));
         SetText(progressText, RoguelikeRunInfoFormatter.FormatProgress(state));
 
-        int plantCount = state.ownedPlantCreatorIds?.Count ?? 0;
-        SetText(ownedPlantCountText, plantCount.ToString());
-        SetText(runGoldText, RoguelikeRunInfoFormatter.FormatRunGold(state));
-        SetText(summaryText, BuildSummary(state, config, plantCount));
+        if (IsDeckPanelVisible())
+            RefreshDeckList();
+    }
 
-        RefreshPlantIcons(state);
+    /// <summary>仓库选卡（<see cref="ShopSelectIcon.viewOnly"/>）点击时展示详情。</summary>
+    public void ShowPlantDetail(PropertyCreator creator)
+    {
+        if (creator == null)
+        {
+            ClearPlantDetail();
+            return;
+        }
+
+        if (detailName != null)
+            detailName.text = creator.chessName;
+        if (detailPlantImage != null)
+        {
+            detailPlantImage.sprite = creator.chessSprite;
+            detailPlantImage.enabled = creator.chessSprite != null;
+        }
+        if (detailTags != null)
+            detailTags.text = PlantCreatorDetailHelper.BuildTagsText(creator);
+        if (detailAttributes != null)
+            detailAttributes.text = PlantCreatorDetailHelper.BuildAttributeText(creator.baseProperty);
+        if (descriptionText != null)
+            descriptionText.text = PlantCreatorDetailHelper.BuildDescriptionText(creator);
+        if (descriptionScroll != null)
+            descriptionScroll.normalizedPosition = Vector2.up;
     }
 
     void HandleNoActiveRun()
@@ -151,98 +225,102 @@ public class RoguelikeRunInfoPanel : View
             Hide();
     }
 
-    static string BuildSummary(RoguelikeRunState state, RunMapConfig config, int plantCount)
+    void OpenDeckPanel()
     {
-        string band = string.IsNullOrEmpty(state.selectedBandName) ? "未知乐队" : state.selectedBandName;
-        string act = RoguelikeRunInfoFormatter.FormatActTitle(state, config);
-        string node = RoguelikeRunInfoFormatter.FormatCurrentNode(state);
-        return $"{band}\n{act}\n{node}\n金币 {state.runGold} · 植物 {plantCount}";
+        if (deckPanelRoot != null)
+            deckPanelRoot.SetActive(true);
+        RefreshDeckList();
     }
 
-    void RefreshPlantIcons(RoguelikeRunState state)
+    void CloseDeckPanel()
     {
+        if (deckPanelRoot != null)
+            deckPanelRoot.SetActive(false);
+        ClearDeckList();
+        ClearPlantDetail();
+    }
+
+    bool IsDeckPanelVisible() =>
+        deckPanelRoot != null && deckPanelRoot.activeSelf;
+
+    void RefreshDeckList()
+    {
+        ClearDeckList();
+        if (selectIconParent == null || shopSelectIconPre == null)
+            return;
+
+        var state = RoguelikeRunService.State;
         var creators = RoguelikeRunPlantPool.ResolveCreators(state?.ownedPlantCreatorIds);
-        if (plantIconRoot != null && plantIconPrefab != null)
+        if (creators == null || creators.Count == 0)
         {
-            RefreshDynamicPlantIcons(creators);
+            ClearPlantDetail();
             return;
         }
 
-        RefreshFixedPlantIcons(creators);
-    }
-
-    void RefreshFixedPlantIcons(List<PropertyCreator> creators)
-    {
-        if (plantIconImages == null || plantIconImages.Count == 0)
-            return;
-
-        for (int i = 0; i < plantIconImages.Count; i++)
-        {
-            var img = plantIconImages[i];
-            if (img == null)
-                continue;
-
-            bool has = creators != null && i < creators.Count && creators[i] != null;
-            if (has)
-            {
-                img.gameObject.SetActive(true);
-                img.sprite = creators[i].chessSprite;
-                img.color = creators[i].chessSprite != null ? Color.white : emptyPlantTint;
-                img.preserveAspect = true;
-            }
-            else if (hideEmptyPlantSlots)
-            {
-                img.gameObject.SetActive(false);
-            }
-            else
-            {
-                img.gameObject.SetActive(true);
-                img.sprite = null;
-                img.color = emptyPlantTint;
-            }
-        }
-    }
-
-    void RefreshDynamicPlantIcons(List<PropertyCreator> creators)
-    {
-        ClearSpawnedPlantIcons();
-
-        int count = creators != null ? creators.Count : 0;
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < creators.Count; i++)
         {
             var creator = creators[i];
             if (creator == null)
                 continue;
 
-            var img = Instantiate(plantIconPrefab, plantIconRoot);
-            img.gameObject.SetActive(true);
-            img.sprite = creator.chessSprite;
-            img.color = creator.chessSprite != null ? Color.white : emptyPlantTint;
-            img.preserveAspect = true;
-            _spawnedPlantIcons.Add(img);
+            ShopSelectIcon selectIcon;
+            if (creator.PlantEntrepotCardPre == null)
+                selectIcon = Instantiate(shopSelectIconPre, selectIconParent).GetComponent<ShopSelectIcon>();
+            else
+                selectIcon = Instantiate(creator.PlantEntrepotCardPre, selectIconParent).GetComponent<ShopSelectIcon>();
+
+            if (selectIcon == null)
+                continue;
+
+            selectIcon.viewOnly = true;
+            selectIcon.InitSelectIcon(creator);
+            _deckSelectIcons.Add(selectIcon);
         }
+
+        if (_deckSelectIcons.Count > 0 && _deckSelectIcons[0].select != null)
+            ShowPlantDetail(_deckSelectIcons[0].select);
+        else
+            ClearPlantDetail();
     }
 
-    void ClearSpawnedPlantIcons()
+    void ClearDeckList()
     {
-        for (int i = _spawnedPlantIcons.Count - 1; i >= 0; i--)
+        if (selectIconParent != null)
         {
-            if (_spawnedPlantIcons[i] != null)
-                Destroy(_spawnedPlantIcons[i].gameObject);
+            for (int i = selectIconParent.childCount - 1; i >= 0; i--)
+                Destroy(selectIconParent.GetChild(i).gameObject);
         }
-        _spawnedPlantIcons.Clear();
+        _deckSelectIcons.Clear();
     }
 
-    void ToggleDetail()
+    void ClearPlantDetail()
     {
-        _detailVisible = !_detailVisible;
-        if (detailContentRoot != null)
-            detailContentRoot.SetActive(_detailVisible);
+        if (detailName != null)
+            detailName.text = "";
+        if (detailPlantImage != null)
+        {
+            detailPlantImage.sprite = null;
+            detailPlantImage.enabled = false;
+        }
+        if (detailTags != null)
+            detailTags.text = "";
+        if (detailAttributes != null)
+            detailAttributes.text = "";
+        if (descriptionText != null)
+            descriptionText.text = "";
     }
 
-    void OnOpenMap()
+    void OpenPausePanel()
     {
-        UIManage.GetView<RoguelikeMapPanel>()?.ShowAndRefresh();
+        var parsePanel = UIManage.GetView<ParsePanel>();
+        if (parsePanel == null)
+        {
+            Debug.LogWarning("[RoguelikeRunInfoPanel] 未找到 ParsePanel，无法打开暂停面板");
+            return;
+        }
+
+        parsePanel.Show();
+        parsePanel.ShowMenuPanel();
     }
 
     static void SetText(TMP_Text text, string value)
@@ -253,6 +331,6 @@ public class RoguelikeRunInfoPanel : View
 
     void OnDestroy()
     {
-        ClearSpawnedPlantIcons();
+        ClearDeckList();
     }
 }

@@ -1,0 +1,90 @@
+﻿COUNTS: {'1-前排': 4, '2-输出': 12, '3-辅助': 7, '4-产出阳光': 6, '5-过度': 2, '6-缓解压力/灰烬': 8, '7-针对类': 1, '升级卡': 4, '地形/消耗品': 6, '待确认': 12, '未完成/占位': 5}
+
+## 1-前排
+| \u4E95\u82B9\u4EC1\u83DC | 225 | 300 | 20 | MainPlant | SkillEffect_Nina, SkillEffect_NinaTaunt | 高HP(300)低攻 |
+| \u540E\u85E4\u4E00\u91CC | 50 | 4000 | 0 | MainPlant | - | 高HP(4000)低攻 |
+| \u69CC\u86C7\u6CE2\u5947(\u540E\u85E4\u4E00\u91CC) | 25 | 2000 | 20 | MainPlant | - | 高HP(2000)低攻 |
+| rupa | 75 | 6000 | 20 | MainPlant | SkillEffect_Rupa | 高HP(6000)低攻 |
+
+## 2-输出
+| \u4EEA\u7384 | 50 | 300000 | 1800 | NonePlant | - | atk=1800或射击技能 |
+| \u4F01\u9E45\u9AD8\u677E\u706F | 125 | 8000 | 500 | MainPlant | SkillEffect_Bowling | atk=500或射击技能 |
+| \u4F0A\u5730\u77E5\u661F\u6B4C | 150 | 300 | 300 | MainPlant | SkillEffect_Xingge | atk=300或射击技能 |
+| \u516B\u5E61\u6D77\u73B2Timoris | 100 | 300 | 20 | MainPlant | SkillEffect_Timoris | atk=20或射击技能 |
+| \u51C9 | 200 | 300 | 180 | MainPlant | SkillEffect_Liang | atk=180或射击技能 |
+| \u521D\u97F3\u5C0F\u63A8\u8F66 | 50 | 50000 | 18000 | MainPlant | PassiveSkill_Uik | atk=18000或射击技能 |
+| \u5357\u5BAB\u7FBD | 75 | 30000 | 1800 | AimTargetPlant | SkillEffect_NGskill | AimTargetPlant 附着输出 |
+| \u5403\u8C46\u51C9 | 150 | 500 | 180 | MainPlant | - | atk=180或射击技能 |
+| \u5723\u8046\u521D\u96EA | 275 | 600 | 80 | MainPlant | SkillEffect_HatsuyukiUnlockAttack | atk=80或射击技能 |
+| \u6A58\u798F\u798F | 0 | 180000 | 500 | NonePlant | SkillEffect_Bowling_ | atk=500或射击技能 |
+| \u6F58\u5F15\u58F6 | 50 | 30000 | 180 | NonePlant | - | atk=180或射击技能 |
+| \u8FC8\u5DF4\u8D6B | 50 | 500000 | 10000 | MainPlant | SkillEffect_Pingun | atk=10000或射击技能 |
+
+## 3-辅助
+| M3 | 500 | 300 | 80 | MainPlant | SkillEffect_M3Rebuild, SkillEffect_Mon3t | SkillEffect_M3Rebuild SkillEffect_Mon3tr |
+| Tomo | 50 | 300 | 20 | MainPlant | SkillEffect_Tomo | SkillEffect_Tomo |
+| \u4E09\u89D2\u521D\u534E | 50 | 300 | 60 | MainPlant | SkillEffect_Mujica_Doloris | SkillEffect_Mujica_Doloris |
+| \u5357\u74DC\u7F69 | 125 | 4000 | 0 | SupportPlant | - | SupportPlant |
+| \u5E73\u6CFD\u552F | 175 | 300 | 20 | MainPlant | PassiveSkill_Yui, SkillEffect_YuiToggleH | PassiveSkill_Yui SkillEffect_YuiToggleHealMode |
+| \u7950\u5929\u5BFA\u82E5\u9EA6 | 150 | 300 | 40 | MainPlant | SkillEffect_Mujica_Nyamu | SkillEffect_Mujica_Nyamu |
+| \u9AD8\u677E\u706F | 25 | 300 | 7 | MainPlant | PassiveSkill_MygoPassive_Tomorin, SkillE | PassiveSkill_MygoPassive_Tomorin SkillEffect_ShootBullet |
+
+## 4-产出阳光
+| 486 | 50 | 300 | 0 | MainPlant | SkillEffect_CreateSunLight | CreateSunLight |
+| \u5C0F\u8679\u590F | 50 | 300 | 0 | MainPlant | SkillEffect_CreateSunLight | CreateSunLight |
+| \u6843\u91D1\u5A18 | 50 | 300 | 0 | MainPlant | SkillEffect_CreateSunLight | CreateSunLight |
+| \u79CB\u5C71\u6FAA | 50 | 300 | 0 | MainPlant | PassiveSkill_AkiyamaMioOverflow, SkillEf | CreateSunLight |
+| \u7EAF\u7530\u771F\u5948 | 50 | 300 | 50 | MainPlant | SkillEffect_CreateSunLight | CreateSunLight |
+| \u8679\u590F | 50 | 300 | 0 | MainPlant | SkillEffect_CreateSunLight | CreateSunLight |
+
+## 5-过度
+| \u4E30\u5DDD\u7965\u5B50 | 75 | 5000 | 0 | MainPlant | SkillEffect_Saki | SkillEffect_Saki |
+| \u5609\u7136\u571F\u8C46\u96F7 | 25 | 300 | 1800 | MainPlant | SkillEffect_PotatoMineArm | SkillEffect_PotatoMineArm |
+
+## 6-缓解压力/灰烬
+| \u4E95\u82B9\u4EC1\u83DC(\u4E3B\u5531) | 175 | 300 | 180 | LevelUpPlant | SkillEffect_TriggerRain | 爆炸/灰烬类技能 |
+| \u53F2\u5C14\u7279\u5C14 | 125 | 300 | 180 | MainPlant | SkillEffect_Jalapeno | 爆炸/灰烬类技能 |
+| \u559C\u591A | 150 | 500000 | 180 | MainPlant | SkillEffect_KitaExplode | 爆炸/灰烬类技能 |
+| \u559C\u591A\u7167\u7247 | 75 | 500 | 90 | MainPlant | SkillEffect_KitaExplode | 爆炸/灰烬类技能 |
+| \u7231\u82AE | 50 | 5000 | 180 | MainPlant | SkillEffect_KitaExplode | 爆炸/灰烬类技能 |
+| \u82CD\u89D2 | 125 | 3000 | 180 | MainPlant | SkillEffect_IceJalapeno | 爆炸/灰烬类技能 |
+| \u82E5\u53F6\u7766 | 75 | 5000000 | 15 | MainPlant | SkillEffect_TriggerRain | 爆炸/灰烬类技能 |
+| \u957F\u5D0E\u7D20\u4E16 | 225 | 2000 | 30 | MainPlant | PassiveSkill_Mygo, SkillEffect_KitaExplo | 爆炸/灰烬类技能 |
+
+## 7-针对类
+| \u8587\u8587\u5B89 | 100 | 300 | 20 | SupportPlant | PassiveSkill_LettuceUmbrella | 针对/反制 |
+
+## 升级卡
+| \u4E30\u5DDD\u7965\u5B50Oblivionis | 475 | 300 | 40 | LevelUpPlant | SkillEffect_Oblivionis | LevelUpPlant |
+| \u5409\u4ED6\u82F1\u96C4 | 500 | 300 | 140 | LevelUpPlant | SkillEffect_GitaHero | LevelUpPlant |
+| \u5B87\u5B99\u9AD8\u677E\u706F | 125 | 300 | 0 | LevelUpPlant_Mygo | SkillEffect_SummonBlackHole | LevelUpPlant_Mygo |
+| \u82E5\u53F6\u7766Moritis | 0 | 4000 | 0 | LevelUpPlant | - | LevelUpPlant |
+
+## 地形/消耗品
+| H\u5F39 | 50 | 500 | 0 | ExclusivePlant | SkillEffect_Item | ConsumePlant 一次性消耗品 |
+| \u62B9\u8336\u82AD\u83F2 | 75 | 500 | 0 | ConsumePlant | SkillEffect_Item | ConsumePlant 一次性消耗品 |
+| \u725B\u8089\u996D | 75 | 300 | 0 | ConsumePlant | SkillEffect_Item | ConsumePlant 一次性消耗品 |
+| \u751C\u751C\u5708 | 25 | 300 | 0 | ConsumePlant | SkillEffect_Item | ConsumePlant 一次性消耗品 |
+| \u7761\u83B2 | 25 | 300 | 0 | PotPlant | - | PotPlant 地形 |
+| \u86CB\u5305\u996D | 25 | 300 | 0 | ConsumePlant | SkillEffect_Item | ConsumePlant 一次性消耗品 |
+
+## 待确认
+| Soldier | 0 | 300 | 20 | MainPlant | - | 默认待确认 |
+| \u4E30\u5DDD\u6E05\u544A | 0 | 300 | 0 | MainPlant | - | 无攻击，待策划定 |
+| \u4E30\u5DDD\u7965\u5B50(\u821E\u53F0) | 50 | 300 | 20 | MainPlant | - | 默认待确认 |
+| \u516B\u4E5D\u5BFA\u771F\u5BB5 | 0 | 300 | 20 | MainPlant | - | 默认待确认 |
+| \u5343\u65E9\u7231\u97F3 | 25 | 300 | 0 | MainPlant | PassiveSkill_MygoPassive_Anon, SkillEffe | 无攻击，待策划定 |
+| \u5E7F\u4E95\u83CA\u91CC | 100 | 300 | 20 | MainPlant | - | 默认待确认 |
+| \u690E\u540D\u7ACB\u5E0C | 200 | 300 | 40 | MainPlant | SkillEffect_TakiFear | 默认待确认 |
+| \u6CB3\u6E90\u6728\u6843\u9999 | 125 | 500 | 20 | MainPlant | - | 默认待确认 |
+| \u7075\u611F\u83C7 | 75 | 500 | 0 | MainPlant | - | 无攻击，待策划定 |
+| \u7434\u5439\u4337 | 75 | 1000 | 50 | MainPlant | PassiveSkill_Tsumugi, SkillEffect_Tsumug | 默认待确认 |
+| \u8981\u4E50\u5948 | 175 | 300 | 20 | MainPlant | PassiveSkill_MygoPassive_Rana, SkillEffe | 默认待确认 |
+| 叶瞬光 | 50 | 500 | 0 | - | - | 无攻击，待策划定 |
+
+## 未完成/占位
+| \u51DB\u5FA1\u94F6\u7070 | 50 | 300 | 0 | - | - | plantType=0，配置未完成 |
+| \u5E0C\u5E0C\u8299 | 50 | 300 | 0 | - | - | plantType=0，配置未完成 |
+| \u732B\u732B | 50 | 300 | 10 | NonePlant | - | plantType=0，配置未完成 |
+| 千夏 | 50 | 300 | 0 | - | - | plantType=0，配置未完成 |
+| 田井中律 | 50 | 300 | 0 | - | - | plantType=0，配置未完成 |

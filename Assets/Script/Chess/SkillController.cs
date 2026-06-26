@@ -97,7 +97,6 @@ public class SkillContext
     }
     public void AddEvent(UnityAction unityAction)
     {
-        Debug.Log("添加事件");
         OnValueChange.AddListener(unityAction);
     }
     public  void RemoveEvent(UnityAction unityAction)

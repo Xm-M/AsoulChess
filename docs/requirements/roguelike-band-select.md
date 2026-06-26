@@ -33,8 +33,18 @@ StartUI.ContinueRoguelikeRun → 仍直接进地图（不经过选乐队）
 4. 可选：面板或 RunMapConfig 上指定 `RoguelikeBandCatalog`
 5. 成员展示：`RefreshMemberPreviews` 在 each `memberPos` 下 `Instantiate(creator.chessPre)`，逻辑同 `CodexPanel` 预览
 
+## 动画
+
+| 状态名 | 用途 | Animation Event |
+|--------|------|-----------------|
+| `change` | 左右切换乐队 | 0.5s `OnBandSwitchAnimationApply`；1s `OnBandSwitchAnimationFinished` |
+| `leave` | 点击「开始挑战」离场 | 末帧 `OnLeaveAnimationFinished` → 进入地图 |
+
+观众 `livehouse (1)` Animator：开始挑战时播放 `欢呼`。
+
 ## 验收标准
 - [ ] 新开局先进入选乐队，确认后地图正常生成
 - [ ] 所选乐队初始植物写入 Run 植物池
 - [ ] 继续冒险不经过选乐队
 - [ ] 左右切换刷新背景/文案/成员 3D 预览
+- [x] 开始挑战：播放 `leave` + 观众 `欢呼`，期间按钮不可点，动画结束进地图

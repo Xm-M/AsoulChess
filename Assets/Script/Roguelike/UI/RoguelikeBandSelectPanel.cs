@@ -30,6 +30,13 @@ public class RoguelikeBandSelectPanel : View
     [SerializeField] Animator panelAnimator;
     [Tooltip("Animator 状态名，对应 change.anim")]
     [SerializeField] string switchAnimStateName = "change";
+    [Tooltip("点击开始挑战后播放，末帧 Animation Event 调用 OnLeaveAnimationFinished")]
+    [SerializeField] string leaveAnimStateName = "leave";
+
+    [Header("观众")]
+    [SerializeField] Animator audienceAnimator;
+    [Tooltip("开始挑战时观众 Animator 状态名")]
+    [SerializeField] string audienceCheerAnimStateName = "欢呼";
 
     [Header("BGM")]
     [SerializeField] AudioPlayer bandBgmPlayer;
@@ -42,6 +49,10 @@ public class RoguelikeBandSelectPanel : View
     int _currentIndex;
     int _pendingBandDelta;
     bool _bandSwitchInProgress;
+    bool _leaveInProgress;
+    bool _leaveCompletionHandled;
+    BandMes _pendingStartBand;
+    Coroutine _leaveWaitCoroutine;
     string _lastPlayedBgmKey;
     readonly List<GameObject> _spawnedMembers = new List<GameObject>();
 
@@ -99,11 +110,13 @@ public class RoguelikeBandSelectPanel : View
         base.Show();
         _pendingBandDelta = 0;
         _bandSwitchInProgress = false;
+        CancelLeaveFlow();
         RefreshView();
     }
 
     public override void Hide()
     {
+        CancelLeaveFlow();
         _bandSwitchInProgress = false;
         _pendingBandDelta = 0;
         _lastPlayedBgmKey = null;
@@ -123,7 +136,7 @@ public class RoguelikeBandSelectPanel : View
 
     void RequestBandSwitch(int delta)
     {
-        if (_bands.Count <= 1 || _bandSwitchInProgress)
+        if (_bands.Count <= 1 || _bandSwitchInProgress || _leaveInProgress)
             return;
 
         _pendingBandDelta = delta;
@@ -167,11 +180,21 @@ public class RoguelikeBandSelectPanel : View
             nextBandButton.interactable = navEnabled;
     }
 
+    void SetPanelButtonsInteractable(bool enabled)
+    {
+        SetBandNavInteractable(enabled && _bands.Count > 1);
+        if (startChallengeButton != null)
+            startChallengeButton.interactable = enabled && _bands.Count > 0
+                && _bands[_currentIndex].IsValidForRun(out _);
+        if (backButton != null)
+            backButton.interactable = enabled;
+    }
+
     void RefreshView()
     {
         bool hasBands = _bands.Count > 0;
-        if (!_bandSwitchInProgress)
-            SetBandNavInteractable(_bands.Count > 1);
+        if (!_bandSwitchInProgress && !_leaveInProgress)
+            SetPanelButtonsInteractable(true);
 
         if (!hasBands)
         {
@@ -187,6 +210,8 @@ public class RoguelikeBandSelectPanel : View
             ClearMemberPreviews();
             if (startChallengeButton != null)
                 startChallengeButton.interactable = false;
+            if (backButton != null)
+                backButton.interactable = false;
             StopBandBgm();
             return;
         }
@@ -207,7 +232,7 @@ public class RoguelikeBandSelectPanel : View
         RefreshMemberPreviews(band);
         PlayBandBgm(band);
 
-        if (startChallengeButton != null)
+        if (!_leaveInProgress && startChallengeButton != null)
             startChallengeButton.interactable = band.IsValidForRun(out _);
     }
 
@@ -342,7 +367,7 @@ public class RoguelikeBandSelectPanel : View
 
     void OnStartChallenge()
     {
-        if (_bandSwitchInProgress)
+        if (_bandSwitchInProgress || _leaveInProgress)
             return;
 
         if (_activeRunConfig == null)
@@ -364,13 +389,105 @@ public class RoguelikeBandSelectPanel : View
             return;
         }
 
+        BeginLeaveAndStartRun(band);
+    }
+
+    void BeginLeaveAndStartRun(BandMes band)
+    {
+        _pendingStartBand = band;
+        _leaveInProgress = true;
+        _leaveCompletionHandled = false;
+        SetPanelButtonsInteractable(false);
+
+        if (audienceAnimator != null && !string.IsNullOrEmpty(audienceCheerAnimStateName))
+            audienceAnimator.Play(audienceCheerAnimStateName, 0, 0f);
+
+        if (panelAnimator != null && !string.IsNullOrEmpty(leaveAnimStateName))
+        {
+            panelAnimator.Play(leaveAnimStateName, 0, 0f);
+            CancelLeaveWaitCoroutine();
+            _leaveWaitCoroutine = StartCoroutine(WaitLeaveAnimationFallback());
+            return;
+        }
+
+        OnLeaveAnimationFinished();
+    }
+
+    /// <summary>leave.anim 末帧 Animation Event 调用；无动画时由代码直接调用。</summary>
+    public void OnLeaveAnimationFinished()
+    {
+        if (!_leaveInProgress || _leaveCompletionHandled)
+            return;
+
+        _leaveCompletionHandled = true;
+        CancelLeaveWaitCoroutine();
+
+        var band = _pendingStartBand;
+        var config = _activeRunConfig;
+        _pendingStartBand = null;
+        _leaveInProgress = false;
+
+        if (config == null || band == null)
+            return;
+
         Hide();
-        RoguelikeMapPanel.OpenRun(_activeRunConfig, band);
+        RoguelikeMapPanel.OpenRun(config, band);
+    }
+
+    IEnumerator WaitLeaveAnimationFallback()
+    {
+        yield return null;
+
+        if (panelAnimator == null || string.IsNullOrEmpty(leaveAnimStateName))
+        {
+            OnLeaveAnimationFinished();
+            yield break;
+        }
+
+        int stateHash = Animator.StringToHash(leaveAnimStateName);
+        const float maxWaitSeconds = 8f;
+        float elapsed = 0f;
+
+        while (elapsed < maxWaitSeconds)
+        {
+            if (!_leaveInProgress || _leaveCompletionHandled)
+                yield break;
+
+            var info = panelAnimator.GetCurrentAnimatorStateInfo(0);
+            if (info.shortNameHash == stateHash && info.normalizedTime >= 1f)
+            {
+                OnLeaveAnimationFinished();
+                yield break;
+            }
+
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        Debug.LogWarning("[RoguelikeBandSelectPanel] leave 动画等待超时，强制进入地图");
+        OnLeaveAnimationFinished();
+    }
+
+    void CancelLeaveWaitCoroutine()
+    {
+        if (_leaveWaitCoroutine != null)
+        {
+            StopCoroutine(_leaveWaitCoroutine);
+            _leaveWaitCoroutine = null;
+        }
+    }
+
+    void CancelLeaveFlow()
+    {
+        CancelLeaveWaitCoroutine();
+        _leaveInProgress = false;
+        _leaveCompletionHandled = false;
+        _pendingStartBand = null;
     }
 
     void OnBack()
     {
-        if (_bandSwitchInProgress)
+        if (_bandSwitchInProgress || _leaveInProgress)
             return;
 
         StopBandBgm();

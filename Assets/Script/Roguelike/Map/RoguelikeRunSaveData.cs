@@ -6,7 +6,7 @@ using System;
 [Serializable]
 public class RoguelikeRunSaveData
 {
-    public const int CurrentSaveVersion = 1;
+    public const int CurrentSaveVersion = 2;
 
     public int saveVersion = CurrentSaveVersion;
     public long saveTimestamp;

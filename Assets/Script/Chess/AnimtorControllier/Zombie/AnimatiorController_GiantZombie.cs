@@ -49,10 +49,10 @@ public class AnimatiorController_GiantZombie : AnimatorController
             {
                 player?.RandomPlay();
             }
-            Debug.Log(chess.propertyController.GetHpPerCent());
+            //Debug.Log(chess.propertyController.GetHpPerCent());
             if (chess.propertyController.GetHpPerCent() <= 0.6f)
             {
-                Debug.Log("绷带");
+                //Debug.Log("绷带");
                 if (!bengdai.gameObject.activeSelf)
                 {
                     bengdai.gameObject.SetActive(true);

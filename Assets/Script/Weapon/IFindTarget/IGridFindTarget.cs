@@ -17,7 +17,7 @@ public class IGridFindTarget : IFindTarget
     [Tooltip("单格检测盒半尺寸（世界单位）。每格在 Tile 中心做 OverlapBox；约为 tileSize 的一半时刚好一格，略调大可略超出单格（易扫到贴边敌人）；过小易漏判。")]
     public Vector2 boxHalfExtents = new Vector2(1.25f, 1.25f);
 
-    public void FindTarget(Chess user, List<Chess> targets)
+    public virtual void FindTarget(Chess user, List<Chess> targets)
     {
         targets.Clear();
          
@@ -71,7 +71,7 @@ public class IGridFindTarget : IFindTarget
     /// Scene 视图画出与 <see cref="FindTarget"/> 一致的每格 <see cref="Physics2D.OverlapBoxNonAlloc"/> 范围（半宽为 <see cref="boxHalfExtents"/>）。
     /// 由 <see cref="Chess.OnDrawGizmos"/> 调用；线框仅在 Scene 视图显示。
     /// </summary>
-    public void DrawGizmos(Chess user)
+    public virtual void DrawGizmos(Chess user)
     {
         if (user == null) return;
 

@@ -37,6 +37,8 @@ MonoBehaviour:
   outcome:
     rid: -2
   loadSkipToTime: 10
+  roguelikeDifficulty: 0
+  roguelikeKind: 0
   references:
     version: 2
     RefIds:
@@ -64,7 +66,7 @@ MonoBehaviour:
       type: {class: PreParePlugin_ConveyorColumn, ns: , asm: Assembly-CSharp}
       data:
         fixedPrefixCreators:
-        - {fileID: 11400000, guid: 6f110f5d59bd8c847a1b05b973663c54, type: 2}
+        - {fileID: 11400000, guid: 9bb6bf6800d5bf144b148ad4dffba818, type: 2}
         - {fileID: 11400000, guid: 05443962c4f73b14c9c06d32389a7040, type: 2}
         - {fileID: 11400000, guid: 5decb9d7c91cc454183ed7225c2d805f, type: 2}
         - {fileID: 11400000, guid: 1c65ad1695e50444e8da46c81ea76868, type: 2}

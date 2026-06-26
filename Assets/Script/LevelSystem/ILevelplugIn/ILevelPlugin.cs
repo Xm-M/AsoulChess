@@ -41,48 +41,128 @@ public class EnterWarPlugin_CarCreate : ISaveableLevelPlugin
 {
     public PropertyCreator car;
     List<Chess> carses;
+    int _spawnedThisCombat;
+
+    /// <summary>本场战斗实际生成的小推车数量（肉鸽战后损耗结算用）。</summary>
+    public int SpawnedThisCombat => _spawnedThisCombat;
+
+    public static bool TryFindFromLevel(LevelData level, out EnterWarPlugin_CarCreate plugin)
+    {
+        plugin = null;
+        if (level?.EnterMapPlugin == null)
+            return false;
+
+        for (int i = 0; i < level.EnterMapPlugin.Count; i++)
+        {
+            if (level.EnterMapPlugin[i] is EnterWarPlugin_CarCreate carPlugin)
+            {
+                plugin = carPlugin;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int CountSurvivors()
+    {
+        if (carses == null)
+            return 0;
+
+        int count = 0;
+        for (int i = 0; i < carses.Count; i++)
+        {
+            var c = carses[i];
+            if (c != null && !c.IfDeath)
+                count++;
+        }
+
+        return count;
+    }
+
     public void StadgeEffect(LevelController levelController)
     {
         var mapPvz = MapManage.instance as MapManage_PVZ;
         if (mapPvz == null) return;
 
+        _spawnedThisCombat = 0;
+
         if (SaveLoadContext.IsLoadFromSave && SaveLoadContext.CurrentSaveData?.carsSaveData != null)
         {
             RestoreCars(SaveLoadContext.CurrentSaveData.carsSaveData);
+            _spawnedThisCombat = carses?.Count ?? 0;
             return;
         }
 
         carses = new List<Chess>();
-        int carCount = DifficultyManager.GetCarCount();
-        if (carCount >= 0)
-        {
-            var indices = new List<int>();
-            for (int i = 0; i < mapPvz.roomTile.Count; i++) indices.Add(i);
-            for (int k = indices.Count - 1; k > 0; k--)
-            {
-                int j = Random.Range(0, k + 1);
-                (indices[k], indices[j]) = (indices[j], indices[k]);
-            }
-            int take = Mathf.Min(carCount, indices.Count);
-            for (int i = 0; i < take; i++)
-            {
-                var tile = mapPvz.roomTile[indices[i]];
-                Chess cars = ChessTeamManage.Instance.CreateChess(car, tile, "Player");
-                cars.gameObject.layer = 11;
-                ChessTeamManage.Instance.GetTeam("Player").Remove(cars);
-                carses.Add(cars);
-            }
-        }
-        else
+        int carCount = ResolveCarCount(levelController, mapPvz.roomTile.Count);
+        if (carCount <= 0)
+            return;
+
+        if (ShouldSpawnOnAllRows(levelController, carCount, mapPvz.roomTile.Count))
         {
             for (int i = 0; i < mapPvz.roomTile.Count; i++)
-            {
-                Chess cars = ChessTeamManage.Instance.CreateChess(car, mapPvz.roomTile[i], "Player");
-                cars.gameObject.layer = 11;
-                ChessTeamManage.Instance.GetTeam("Player").Remove(cars);
-                carses.Add(cars);
-            }
+                SpawnCarOnTile(mapPvz.roomTile[i]);
         }
+        else
+            SpawnCarsOnRandomRows(mapPvz, carCount);
+
+        _spawnedThisCombat = carses?.Count ?? 0;
+    }
+
+    static bool IsRoguelikeLevel(LevelController levelController) =>
+        RoguelikeRunService.HasActiveRun
+        && levelController?.levelData?.roguelikeKind != RoguelikeLevelKind.None;
+
+    int ResolveCarCount(LevelController levelController, int mapRowCount)
+    {
+        if (IsRoguelikeLevel(levelController))
+        {
+            var state = RoguelikeRunService.State;
+            if (state == null)
+                return 0;
+
+            RoguelikeRunService.NormalizeRunStateFieldsForActiveRun(state);
+            return state.ComputeLawnMowerSpawnCount(mapRowCount);
+        }
+
+        return DifficultyManager.GetCarCount();
+    }
+
+    static bool ShouldSpawnOnAllRows(LevelController levelController, int carCount, int mapRowCount)
+    {
+        if (IsRoguelikeLevel(levelController))
+            return false;
+
+        return carCount < 0 || carCount >= mapRowCount;
+    }
+
+    void SpawnCarsOnRandomRows(MapManage_PVZ mapPvz, int carCount)
+    {
+        var indices = new List<int>();
+        for (int i = 0; i < mapPvz.roomTile.Count; i++)
+            indices.Add(i);
+
+        for (int k = indices.Count - 1; k > 0; k--)
+        {
+            int j = Random.Range(0, k + 1);
+            (indices[k], indices[j]) = (indices[j], indices[k]);
+        }
+
+        int take = Mathf.Min(carCount, indices.Count);
+        for (int i = 0; i < take; i++)
+            SpawnCarOnTile(mapPvz.roomTile[indices[i]]);
+    }
+
+    void SpawnCarOnTile(Tile tile)
+    {
+        if (car == null || tile == null)
+            return;
+
+        Chess cars = ChessTeamManage.Instance.CreateChess(car, tile, "Player");
+        cars.gameObject.layer = 11;
+        ChessTeamManage.Instance.GetTeam("Player").Remove(cars);
+        carses.Add(cars);
     }
 
     public void CaptureTo(GameSaveData saveData)

@@ -48,6 +48,8 @@ public class ParsePanel : View
     public Slider BGM,AudioEffect;
     public AudioPlayer au;
     Coroutine coinDisplayHideCoroutine;
+    Transform _coinDisplayOriginalParent;
+    bool _coinDisplayReparented;
     bool pause;
     bool isFromMainMenu;
     public override void Init()
@@ -132,6 +134,7 @@ public class ParsePanel : View
         }
         if (coinDisplayObject != null)
             coinDisplayObject.SetActive(false);
+        RestoreCoinDisplayParent();
         if (isFromMainMenu)
         {
             isFromMainMenu = false;
@@ -257,10 +260,54 @@ public class ParsePanel : View
     public void ReturnMenu()
     {
         Hide();
-        LevelManage.instance.ReturnMenu();
+        if (RoguelikeRunService.HasActiveRun)
+            RoguelikeRunService.SaveAndExitToMainMenu();
+        else
+            LevelManage.instance.ReturnMenu();
     }
 
-    /// <summary>捡起银币时调用：显示金币数，5秒后隐藏</summary>
+    /// <summary>肉鸽搜刮：暂停面板隐藏时，将金币条挂到 ItemPanel 以便显示 Run 金币。</summary>
+    public void PrepareCoinDisplayForRoguelikeReward()
+    {
+        if (coinDisplayObject == null)
+            return;
+
+        var itemPanel = UIManage.GetView<ItemPanel>();
+        if (itemPanel == null)
+            return;
+
+        if (!_coinDisplayReparented)
+        {
+            _coinDisplayOriginalParent = coinDisplayObject.transform.parent;
+            coinDisplayObject.transform.SetParent(itemPanel.transform, true);
+            _coinDisplayReparented = true;
+        }
+    }
+
+    public void RestoreCoinDisplayAfterRoguelikeReward()
+    {
+        if (coinDisplayHideCoroutine != null)
+        {
+            StopCoroutine(coinDisplayHideCoroutine);
+            coinDisplayHideCoroutine = null;
+        }
+
+        if (coinDisplayObject != null)
+            coinDisplayObject.SetActive(false);
+        RestoreCoinDisplayParent();
+    }
+
+    void RestoreCoinDisplayParent()
+    {
+        if (!_coinDisplayReparented || coinDisplayObject == null)
+            return;
+
+        coinDisplayObject.transform.SetParent(_coinDisplayOriginalParent, true);
+        _coinDisplayReparented = false;
+        _coinDisplayOriginalParent = null;
+    }
+
+    /// <summary>捡起银币时调用：显示主线金币数，5秒后隐藏</summary>
     public void ShowCoinDisplay(int totalCoins)
     {
         if (coinDisplayObject == null || coinText == null) return;
@@ -269,6 +316,13 @@ public class ParsePanel : View
         coinDisplayObject.SetActive(true);
         coinText.text = totalCoins.ToString();
         coinDisplayHideCoroutine = StartCoroutine(HideCoinDisplayAfter(5f));
+    }
+
+    /// <summary>肉鸽搜刮硬币飞抵后：左下角条显示本 Run 的 <c>runGold</c>（非主线 coins）。</summary>
+    public void ShowRunGoldDisplay(int runGold)
+    {
+        PrepareCoinDisplayForRoguelikeReward();
+        ShowCoinDisplay(runGold);
     }
 
     IEnumerator HideCoinDisplayAfter(float seconds)

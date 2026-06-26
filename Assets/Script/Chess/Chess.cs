@@ -86,7 +86,7 @@ public class Chess : MonoBehaviour
         stateController.StateUpdate();
     }
     /// <summary>
-    /// 无论如何 死亡时应该清除所有的绑定事件
+    /// 无论如何 死亡时应该清除所有的绑定事件fe
     /// </summary>
     public virtual void Death()
     {

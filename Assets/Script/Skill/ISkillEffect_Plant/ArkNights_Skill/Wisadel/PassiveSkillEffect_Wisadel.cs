@@ -28,6 +28,10 @@ public class PassiveSkillEffect_Wisadel : ISkillEffect
     [SerializeField, LabelText("爆炸 ATK 比例")]
     float explodeRatio = 1.5f;
 
+    [SerializeField, LabelText("爆炸检测半径"), Min(0.01f)]
+    [Tooltip("世界单位；以触发爆炸的敌人中心为圆心，OverlapCircle 收集范围内敌人")]
+    float explodeRadius = 2f;
+
     [SerializeField, LabelText("召唤特效")]
     GameObject summonEffect;
 
@@ -60,6 +64,9 @@ public class PassiveSkillEffect_Wisadel : ISkillEffect
 
         float atk = WisadelDamageHelper.GetAttack(user);
 
+        // 投掷手原版同一攻击内第二段才吃标记；无职业双段时先挂标再结算余震/好礼
+        Buff_WisadelMark.ApplyOrRefresh(main, user);
+
         if (Buff_WisadelMark.HasMarkFrom(main, user))
         {
             WisadelDamageHelper.DealDamage(user, main, atk * markBonusRatio, ElementType.AOE);
@@ -85,19 +92,16 @@ public class PassiveSkillEffect_Wisadel : ISkillEffect
             if (Random.value > procRate)
                 continue;
 
-            if (!WisadelGridHelper.TryGetStandOrEstimatedTile(victim, out Tile victimTile))
+            if (!WisadelGridHelper.TryGetChessWorldCenter(victim, out Vector2 explodeCenter))
                 continue;
 
-            WisadelGridHelper.CollectNineGridTiles(victimTile, _tileBuffer);
-            WisadelGridHelper.CollectEnemiesOnTiles(user, _tileBuffer, _explodeBuffer);
+            WisadelGridHelper.CollectEnemiesInCircle(user, explodeCenter, explodeRadius, _explodeBuffer);
             for (int j = 0; j < _explodeBuffer.Count; j++)
             {
                 WisadelDamageHelper.DealDamage(
                     user, _explodeBuffer[j], explodeDmg, explodeElement, DamageType.Physical, stunBuff);
             }
         }
-
-        Buff_WisadelMark.ApplyOrRefresh(main, user);
 
         WisadelBurstMode.TryConsumeAmmo(user);
     }

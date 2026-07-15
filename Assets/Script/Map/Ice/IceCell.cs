@@ -20,8 +20,16 @@ public class IceCell : MonoBehaviour
     string iceOwnerTag = "Enemy";
 
     Timer _lifeTimer;
+    Chess _hatsuyukiSource;
     /// <summary><see cref="int.MinValue"/> 表示未纳入 <see cref="Effect_Snow"/>（不应再出现）。</summary>
     Vector2Int _mapPos = new Vector2Int(int.MinValue, 0);
+
+    /// <summary>铺冰来源初雪；仅其存活时 <see cref="Effect_Snow"/> 对踩入者结算进格伤害。</summary>
+    public Chess HatsuyukiSource => _hatsuyukiSource;
+
+    public void SetHatsuyukiSource(Chess source) => _hatsuyukiSource = source;
+
+    public void ClearHatsuyukiSource() => _hatsuyukiSource = null;
 
     /// <summary>世界坐标、来源 tag、存活秒数（≤0 表示不自动消失）、所在格（用于 <see cref="Effect_Snow"/> 注销）。</summary>
     public void Init(Vector3 worldPosition, string ownerTag, float lifetimeSeconds, Vector2Int mapPos)
@@ -84,6 +92,8 @@ public class IceCell : MonoBehaviour
     }
 
     public string IceOwnerTag => iceOwnerTag;
+
+    public Vector2Int MapPos => _mapPos;
 
     void Awake()
     {

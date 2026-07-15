@@ -26,6 +26,8 @@ public class RoguelikeRunInfoPanel : View
     [SerializeField] TMP_Text runLawnMowerText;
     [Tooltip("本 Run 携带格数量（loadout 上限）")]
     [SerializeField] TMP_Text runLoadoutSlotText;
+    [Tooltip("当前地图层（L1、L2…）")]
+    [SerializeField] TMP_Text runMapLayerText;
 
     [Header("可选调试文本（玩家 HUD 可不绑）")]
     [Tooltip("RunMapConfig 资产名")]
@@ -73,7 +75,25 @@ public class RoguelikeRunInfoPanel : View
     [Tooltip("关闭本 HUD（可选）")]
     [SerializeField] Button closeHudButton;
 
+    [Header("HUD 图标说明（悬停 2s / 长按）")]
+    [SerializeField] RectTransform goldStatIconRoot;
+    [SerializeField] RectTransform deckStatIconRoot;
+    [SerializeField] RectTransform lawnMowerStatIconRoot;
+    [SerializeField] RectTransform loadoutStatIconRoot;
+    [SerializeField] RectTransform mapLayerStatIconRoot;
+    [SerializeField] RectTransform tooltipRoot;
+    [SerializeField] TMP_Text tooltipDescriptionText;
+    [SerializeField] Vector2 tooltipScreenOffset = new Vector2(-140f, 0f);
+    [SerializeField] float hudTooltipHoverDelaySeconds = 2f;
+
     readonly List<ShopSelectIcon> _deckSelectIcons = new List<ShopSelectIcon>();
+    RectTransform _tooltipFollowTarget;
+
+    void Awake()
+    {
+        if (tooltipRoot != null)
+            tooltipRoot.gameObject.SetActive(false);
+    }
 
     public override void Init()
     {
@@ -85,6 +105,8 @@ public class RoguelikeRunInfoPanel : View
             settingsButton.onClick.AddListener(OpenPausePanel);
         if (closeHudButton != null)
             closeHudButton.onClick.AddListener(Hide);
+
+        WireStatTooltips();
     }
 
     void OnEnable()
@@ -157,8 +179,86 @@ public class RoguelikeRunInfoPanel : View
 
     public override void Hide()
     {
+        HideHudStatTooltip();
         CloseDeckPanel();
         base.Hide();
+    }
+
+    void LateUpdate()
+    {
+        if (tooltipRoot == null || !tooltipRoot.gameObject.activeSelf || _tooltipFollowTarget == null)
+            return;
+        SyncTooltipPosition();
+    }
+
+    public string GetHudStatTooltipText(RoguelikeRunInfoHudStatKind kind) =>
+        RoguelikeRunInfoFormatter.FormatHudStatTooltip(kind, RoguelikeRunService.State);
+
+    /// <summary>由 <see cref="RoguelikeRunInfoHudTooltipTrigger"/> 调用。</summary>
+    public void ShowHudStatTooltip(RectTransform iconRect, string text)
+    {
+        if (tooltipRoot == null || tooltipDescriptionText == null || iconRect == null)
+            return;
+
+        _tooltipFollowTarget = iconRect;
+        tooltipDescriptionText.text = text ?? string.Empty;
+        tooltipRoot.gameObject.SetActive(true);
+        SyncTooltipPosition();
+    }
+
+    /// <summary>由 <see cref="RoguelikeRunInfoHudTooltipTrigger"/> 调用。</summary>
+    public void HideHudStatTooltip()
+    {
+        _tooltipFollowTarget = null;
+        if (tooltipRoot != null)
+            tooltipRoot.gameObject.SetActive(false);
+    }
+
+    void WireStatTooltips()
+    {
+        WireStatTooltip(goldStatIconRoot, RoguelikeRunInfoHudStatKind.Gold);
+        WireStatTooltip(deckStatIconRoot, RoguelikeRunInfoHudStatKind.Deck);
+        WireStatTooltip(lawnMowerStatIconRoot, RoguelikeRunInfoHudStatKind.LawnMower);
+        WireStatTooltip(loadoutStatIconRoot, RoguelikeRunInfoHudStatKind.LoadoutSlot);
+        WireStatTooltip(mapLayerStatIconRoot, RoguelikeRunInfoHudStatKind.MapLayer);
+    }
+
+    void WireStatTooltip(RectTransform iconRoot, RoguelikeRunInfoHudStatKind kind)
+    {
+        if (iconRoot == null)
+            return;
+
+        var trigger = iconRoot.GetComponent<RoguelikeRunInfoHudTooltipTrigger>();
+        if (trigger == null)
+            trigger = iconRoot.gameObject.AddComponent<RoguelikeRunInfoHudTooltipTrigger>();
+
+        trigger.Configure(this, kind, hudTooltipHoverDelaySeconds);
+
+        var image = iconRoot.GetComponent<Image>();
+        if (image != null)
+            image.raycastTarget = true;
+    }
+
+    void SyncTooltipPosition()
+    {
+        if (_tooltipFollowTarget == null || tooltipRoot == null)
+            return;
+
+        Canvas canvas = tooltipRoot.GetComponentInParent<Canvas>();
+        if (canvas == null)
+        {
+            tooltipRoot.position = _tooltipFollowTarget.position + (Vector3)tooltipScreenOffset;
+            return;
+        }
+
+        var canvasRect = canvas.transform as RectTransform;
+        Camera cam = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+        Vector2 screen = RectTransformUtility.WorldToScreenPoint(cam, _tooltipFollowTarget.position);
+        screen += tooltipScreenOffset;
+        if (RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRect, screen, cam, out Vector3 world))
+            tooltipRoot.position = world;
+        else
+            tooltipRoot.position = _tooltipFollowTarget.position + (Vector3)tooltipScreenOffset;
     }
 
     public void Refresh()
@@ -179,6 +279,7 @@ public class RoguelikeRunInfoPanel : View
         SetText(runGoldText, RoguelikeRunInfoFormatter.FormatRunGold(state));
         SetText(runLawnMowerText, RoguelikeRunInfoFormatter.FormatLawnMowerCount(state));
         SetText(runLoadoutSlotText, RoguelikeRunInfoFormatter.FormatLoadoutSlotCount(state));
+        SetText(runMapLayerText, RoguelikeRunInfoFormatter.FormatMapLayer(state));
         SetText(runConfigNameText, config != null ? config.name : "—");
         SetText(runSeedText, state.runSeed.ToString());
         SetText(currentNodeText, RoguelikeRunInfoFormatter.FormatCurrentNode(state));

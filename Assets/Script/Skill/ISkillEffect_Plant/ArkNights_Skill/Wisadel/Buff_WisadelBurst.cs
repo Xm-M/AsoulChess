@@ -2,11 +2,12 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-/// <summary>爆裂黎明：攻加成 + 标记必爆（通过 Context ExplodeProcRate）。</summary>
+/// <summary>爆裂黎明：攻击力倍率加成 + 标记必爆（通过 Context ExplodeProcRate）。</summary>
 [Serializable]
 public class Buff_WisadelBurst : Buff
 {
-    [SerializeField] float extraAttack = 0.8f;
+    [SerializeField, LabelText("攻击力倍率加成"), Tooltip("叠加 attackRate，10 = attackRate +10")]
+    float attackRateBonus = 10f;
 
     [SerializeField, LabelText("眩晕（爆炸用）")]
     DizznessBuff stunBuff;
@@ -24,7 +25,7 @@ public class Buff_WisadelBurst : Buff
         if (target?.skillController?.context != null)
             target.skillController.context.Set(WisadelKeys.ExplodeProcRate, 1f);
 
-        _attackBuff = new Buff_BaseValueBuff_Attack { extraAttack = extraAttack };
+        _attackBuff = new Buff_BaseValueBuff_Attack { extraAttack = attackRateBonus };
         _attackBuff.target = target;
         _attackBuff.BuffEffect(target);
     }
@@ -45,7 +46,7 @@ public class Buff_WisadelBurst : Buff
     {
         var copy = new Buff_WisadelBurst
         {
-            extraAttack = extraAttack,
+            attackRateBonus = attackRateBonus,
             stunBuff = stunBuff
         };
         return copy;

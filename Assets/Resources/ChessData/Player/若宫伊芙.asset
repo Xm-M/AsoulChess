@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u82E5\u5BAB\u4F0A\u8299"
+  m_EditorClassIdentifier: 
+  chessName: "\u82E5\u5BAB\u4F0A\u8299"
+  chessDescription: 
+  chessShortDescription: 
+  chessEffect: 
+  baseProperty:
+    attack: 20
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 3000
+    HpMax: 3000
+    lifeStealing: 0
+    healRate: 1
+    speed: 0
+    acceleRated: 1
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 2.5
+    price: 100
+    rarity: 4000
+    waveLimit: 1
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 7028708888531256104, guid: 83e03dbd625f7604387cfa3fe843baad, type: 3}
+  chessSprite: {fileID: 715089849, guid: 3cd68cfa5af47e4499b8b1611eda81c7, type: 3}
+  plantTags:
+  - Pastel*Palettes
+  - "\u952E\u76D8"
+  fetterMemberId: "\u82E5\u5BAB\u4F0A\u8299"
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    rid: 782246607790538755
+  plantIfCanBuyCard:
+    rid: -2
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 782246607790538755
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

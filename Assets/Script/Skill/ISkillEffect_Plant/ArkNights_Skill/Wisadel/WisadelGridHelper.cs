@@ -163,6 +163,52 @@ public static class WisadelGridHelper
     public static void CollectEnemiesOnTiles(Chess user, IList<Tile> tiles, List<Chess> enemies, Chess except = null) =>
         CollectChessOverlapOnTiles(user, tiles, enemies, except, clearFirst: true);
 
+    public static bool TryGetChessWorldCenter(Chess chess, out Vector2 center)
+    {
+        center = default;
+        if (chess == null)
+            return false;
+
+        var col = chess.GetComponent<Collider2D>();
+        if (col != null)
+        {
+            center = col.bounds.center;
+            return true;
+        }
+
+        center = chess.transform.position;
+        return true;
+    }
+
+    /// <summary>以世界坐标圆心 + 半径收集敌人（好礼爆炸等 AOE）。</summary>
+    public static void CollectEnemiesInCircle(
+        Chess user,
+        Vector2 center,
+        float radius,
+        List<Chess> enemies,
+        Chess except = null)
+    {
+        enemies.Clear();
+        if (user == null || enemies == null || radius <= 0f)
+            return;
+
+        LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(user.gameObject);
+        Collider2D[] cols = CheckObjectPoolManage.GetColArray(ColPoolSize);
+        int count = Physics2D.OverlapCircleNonAlloc(center, radius, cols, enemyLayer);
+        for (int i = 0; i < count; i++)
+        {
+            if (cols[i] == null)
+                continue;
+            Chess chess = cols[i].GetComponent<Chess>();
+            if (chess == null || chess.IfDeath || chess == except)
+                continue;
+            if (!enemies.Contains(chess))
+                enemies.Add(chess);
+        }
+
+        CheckObjectPoolManage.ReleaseColArray(ColPoolSize, cols);
+    }
+
     public static int ManhattanDistance(Tile a, Tile b)
     {
         if (a == null || b == null)

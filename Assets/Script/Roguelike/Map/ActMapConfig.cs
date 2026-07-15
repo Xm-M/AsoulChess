@@ -66,6 +66,9 @@ public class ActMapConfig : ScriptableObject
     [FoldoutGroup("关卡池"), Tooltip("事件/小游戏关卡（坚果保龄球、锤僵尸等）")]
     public List<LevelData> eventLevelPool = new List<LevelData>();
 
+    [FoldoutGroup("关卡池"), Tooltip("剧情事件（Timeline + 对话，非战斗）")]
+    public List<RoguelikeEventDefinition> eventStoryPool = new List<RoguelikeEventDefinition>();
+
     [FoldoutGroup("关卡池-难度匹配"), Tooltip("layer 0 / 起点侧参考难度（如 1.0）")]
     public float roguelikeDifficultyAtStart = 1f;
 

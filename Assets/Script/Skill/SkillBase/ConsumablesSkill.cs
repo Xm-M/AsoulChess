@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 消耗品技能 虽然说这个技能效果应该绑定在末尾啊 但是实际上在这调用也是可以的
 /// </summary>
-public class ConsumablesSkill : SkillBase<SkillConfig>
+public class ConsumablesSkill : SkillBase<SkillConfig>, ISkillFireUseSkillOnEnter
 {
     public override bool IfSkillReady(Chess user)
     {
@@ -15,6 +15,11 @@ public class ConsumablesSkill : SkillBase<SkillConfig>
     {
         user.UnSelectable();
         base.WhenEnter(user);
+    }
+
+    public void FireUseSkillOnEnter(Chess chess)
+    {
+        UseSkill(chess);
     }
     /// <summary>
     /// 消耗品用完就回收啦~

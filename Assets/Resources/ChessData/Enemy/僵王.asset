@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: "\u50F5\u738B"
   m_EditorClassIdentifier: 
   chessName: "\u50F5\u738B\u535A\u58EB"
-  chessDescription: 
-  chessShortDescription: 
-  chessEffect: 
+  chessDescription: "Boss \u7EA7\u50F5\u738B\u3002"
+  chessShortDescription: "Boss\u3002"
+  chessEffect: "\u591A\u9636\u6BB5 Boss \u6218\uFF1B\u91CA\u653E\u591A\u79CD\u50F5\u5C38\u4E0E\u6280\u80FD\u3002"
   baseProperty:
     attack: 10000
     attackRate: 0
@@ -42,7 +42,8 @@ MonoBehaviour:
     Size: 10000
   chessPre: {fileID: 6027619579597687048, guid: 72a8102da2e22fb40b65a3c8dad185a5, type: 3}
   chessSprite: {fileID: 6091942661261044403, guid: bad35b66128b9e54bb4768b6785a5f9a, type: 3}
-  plantTags: []
+  plantTags:
+  - Boss
   fetterMemberId: 
   chessTileType: 1
   plantType: 0

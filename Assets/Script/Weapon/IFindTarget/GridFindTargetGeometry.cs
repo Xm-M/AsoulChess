@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public static class GridFindTargetGeometry
 {
+    /// <summary>逻辑列：战场左侧 <see cref="MapManage_PVZ.roomTile"/>（小推车列），与主网格 <c>tiles[0,y]</c> 相邻。</summary>
+    public const int LawnMowerColumnMapX = -1;
+
     public static int GetForwardX(Chess user)
     {
         float rx = user.transform.right.x;
@@ -40,18 +43,66 @@ public static class GridFindTargetGeometry
         return true;
     }
 
-    /// <summary>Y 全高有效；X 排除最右一列（下标 mapSize.x - 1）。</summary>
+    /// <summary>
+    /// 小推车列（<see cref="LawnMowerColumnMapX"/>）或主战场格是否可参与格子索敌/铺冰检测。
+    /// Y 全高有效；主网格 X 排除最右一列（下标 mapSize.x - 1）。
+    /// </summary>
     public static bool IsDetectableCell(int x, int y, Vector2Int mapSize)
     {
         if (mapSize.y <= 0)
             return false;
         if (y < 0 || y >= mapSize.y)
             return false;
+        if (x == LawnMowerColumnMapX)
+            return TryGetRoomTile(y, out _);
         if (mapSize.x < 2)
             return false;
         if (x < 0 || x > mapSize.x - 2)
             return false;
         return true;
+    }
+
+    /// <summary>按行取下推车列 <see cref="MapManage_PVZ.roomTile"/>。</summary>
+    public static bool TryGetRoomTile(int rowY, out Tile tile)
+    {
+        tile = null;
+        var pvz = MapManage.instance as MapManage_PVZ;
+        if (pvz?.roomTile == null || rowY < 0 || rowY >= pvz.roomTile.Count)
+            return false;
+        tile = pvz.roomTile[rowY];
+        return tile != null;
+    }
+
+    /// <summary>主网格或推车列解析为 <see cref="Tile"/>。</summary>
+    public static bool TryResolveTileAt(int ax, int ay, MapManage map, out Tile tile)
+    {
+        tile = null;
+        if (map == null)
+            return false;
+        Vector2Int mapSize = map.mapSize;
+        if (ay < 0 || ay >= mapSize.y)
+            return false;
+        if (ax == LawnMowerColumnMapX)
+            return TryGetRoomTile(ay, out tile);
+        if (ax < 0 || ax >= mapSize.x)
+            return false;
+        tile = map.tiles[ax, ay];
+        return tile != null;
+    }
+
+    /// <summary>冰块字典键：推车列用 <c>(-1, roomTile 行索引)</c>，否则 <see cref="Tile.mapPos"/>。</summary>
+    public static Vector2Int TileToIceKey(Tile tile)
+    {
+        if (tile == null)
+            return new Vector2Int(int.MinValue, 0);
+        var pvz = MapManage.instance as MapManage_PVZ;
+        if (pvz?.roomTile != null)
+        {
+            int idx = pvz.roomTile.IndexOf(tile);
+            if (idx >= 0)
+                return new Vector2Int(LawnMowerColumnMapX, idx);
+        }
+        return tile.mapPos;
     }
 
     /// <summary>
@@ -119,8 +170,7 @@ public static class GridFindTargetGeometry
             if (!IsDetectableCell(ax, ay, map.mapSize))
                 continue;
 
-            Tile tile = map.tiles[ax, ay];
-            if (tile == null)
+            if (!TryResolveTileAt(ax, ay, map, out Tile tile))
                 continue;
 
             Vector2 c = GetCellOverlapCenter(tile, ts);
@@ -213,8 +263,7 @@ public static class GridFindTargetGeometry
             if (!IsDetectableCell(ax, ay, map.mapSize))
                 continue;
 
-            Tile tile = map.tiles[ax, ay];
-            if (tile == null)
+            if (!TryResolveTileAt(ax, ay, map, out Tile tile))
                 continue;
 
             centers.Add(GetCellOverlapCenter(tile, ts));

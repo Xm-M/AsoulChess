@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u5C71\u5439\u6C99\u7EEB"
+  m_EditorClassIdentifier: 
+  chessName: "\u5C71\u5439\u6C99\u7EEB"
+  chessDescription: 
+  chessShortDescription: 
+  chessEffect: 
+  baseProperty:
+    attack: 40
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 900
+    HpMax: 900
+    lifeStealing: 0
+    healRate: 1
+    speed: 0
+    acceleRated: 1
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 2.5
+    price: 100
+    rarity: 4000
+    waveLimit: 1
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 5140738979243823372, guid: 6055edba4718e3c4f9fc6ecea09a0c98, type: 3}
+  chessSprite: {fileID: -1416688112, guid: f486232b4f97b394a81ae27e1d65d159, type: 3}
+  plantTags:
+  - "\u68D2\u7403\u6325\u68D2\u624B"
+  - Poppin'Party
+  - "\u9F13\u624B"
+  fetterMemberId: "\u5C71\u5439\u6C99\u7EEB"
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    rid: 782246630012223488
+  plantIfCanBuyCard:
+    rid: -2
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 782246630012223488
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

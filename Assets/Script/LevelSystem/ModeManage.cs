@@ -9,5 +9,6 @@ public enum LevelMode
     SurvivalMode,//生存模式
     BossMode,//Boss 战（单 Boss 血条进度，无波次）
     TestMode,//测试模式
+    StoryMode,//剧情演出（肉鸽事件等非战斗 Timeline 关）
 }
 

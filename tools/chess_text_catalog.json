@@ -1,0 +1,646 @@
+{
+  "plants": {
+    "486": {
+      "chessDescription": "无刺有刺的鼓手，在压力下也能稳定产出阳光。",
+      "chessShortDescription": "产阳光型植物。",
+      "chessEffect": "种植后周期性产生阳光；GBC 羁绊成员压力足够时产阳效率提升。"
+    },
+    "H弹": {
+      "chessDescription": "一次性强化弹，可叠加在同格植物上。",
+      "chessShortDescription": "消耗品。",
+      "chessEffect": "种植在已有植物所在格，为其施加强化 Buff 后消失。"
+    },
+    "Mon3tr": {
+      "chessDescription": "Mon3tr 本体，可召唤重构体并进入强化姿态。",
+      "chessShortDescription": "召唤/切换型主力。",
+      "chessEffect": "与重构体换位进入强化：真伤攻击、九宫格溅射治疗与吸血；技能结束后消耗重构体。"
+    },
+    "若叶睦Moritis": {
+      "chessDescription": "Ave Mujica 的 Mortis 形态升级卡。",
+      "chessShortDescription": "升级植物 · 吉他。",
+      "chessEffect": "濒死时保留 1 点生命并进入 Resume 状态，获得额外 Buff。"
+    },
+    "丰川祥子Oblivionis": {
+      "chessDescription": "祥子的 Oblivionis 升级形态。",
+      "chessShortDescription": "升级植物 · 键盘。",
+      "chessEffect": "合并 Ave Mujica 队友普攻格，扩展自身索敌与攻击范围。"
+    },
+    "丰川祥子(舞台)": {
+      "chessDescription": "舞台形态的祥子，基础输出单位。",
+      "chessShortDescription": "输出型植物。",
+      "chessEffect": "标准近战输出（机制待完善）。"
+    },
+    "Soldier": {
+      "chessDescription": "士兵单位，基础火力支援。",
+      "chessShortDescription": "士兵标签单位。",
+      "chessEffect": "标准攻击型植物（机制待完善）。"
+    },
+    "Tomo": {
+      "chessDescription": "无刺有刺键盘手，擅长范围切割与施压。",
+      "chessShortDescription": "范围伤害 · 键盘。",
+      "chessEffect": "技能对范围内敌人造成切割伤害，并为命中目标施加压力。"
+    },
+    "rupa": {
+      "chessDescription": "无刺有刺贝斯手，高血量控制型前排。",
+      "chessShortDescription": "前排 · 贝斯。",
+      "chessEffect": "攻击附加眩晕效果；高生命值承担伤害。"
+    },
+    "三角初华": {
+      "chessDescription": "Ave Mujica 主唱兼吉他，团队治疗核心。",
+      "chessShortDescription": "治疗 · 主唱/吉他。",
+      "chessEffect": "周期治疗范围内低血友军（优先祥子）；提供 Doloris 相关 Buff。"
+    },
+    "丰川清告": {
+      "chessDescription": "丰川家相关角色，占位单位。",
+      "chessShortDescription": "待确认。",
+      "chessEffect": "机制尚未定稿。"
+    },
+    "丰川祥子": {
+      "chessDescription": "库莱西裤阵营的键盘手，倭瓜式高伤技能。",
+      "chessShortDescription": "技能爆发 · 键盘。",
+      "chessEffect": "释放技能对目标区域造成高额伤害（倭瓜类）。"
+    },
+    "井芹仁菜(主唱)": {
+      "chessDescription": "无刺有刺主唱的升级形态。",
+      "chessShortDescription": "升级 · 主唱。",
+      "chessEffect": "收集队员压力并立刻触发无刺有刺刺雨。"
+    },
+    "井芹仁菜": {
+      "chessDescription": "无刺有刺主唱，擅长闪避与控制。",
+      "chessShortDescription": "主唱 · 控制。",
+      "chessEffect": "被攻击时触发持续闪避，并对周围敌人施加眩晕。"
+    },
+    "仪玄": {
+      "chessDescription": "超高爆发的特殊单位。",
+      "chessShortDescription": "灰烬/压力缓解。",
+      "chessEffect": "极高单次伤害（具体机制以实装为准）。"
+    },
+    "企鹅高松灯": {
+      "chessDescription": "企鹅形态的高松灯，保龄球式冲撞。",
+      "chessShortDescription": "灰烬 · 冲撞。",
+      "chessEffect": "保龄球类技能沿行推进伤害（机制以实装为准）。"
+    },
+    "八九寺真宵": {
+      "chessDescription": "基础输出植物。",
+      "chessShortDescription": "输出型。",
+      "chessEffect": "标准攻击（机制待完善）。"
+    },
+    "八幡海玲Timoris": {
+      "chessDescription": "Ave Mujica 贝斯手 Timoris 形态。",
+      "chessShortDescription": "范围恐惧 · 贝斯。",
+      "chessEffect": "技能造成范围恐惧与多段伤害。"
+    },
+    "凛御银灰": {
+      "chessDescription": "开发中的植物占位。",
+      "chessShortDescription": "未完成。",
+      "chessEffect": "机制尚未实装。"
+    },
+    "初音小推车": {
+      "chessDescription": "超高血量与攻击的特殊推车单位。",
+      "chessShortDescription": "灰烬型。",
+      "chessEffect": "高面板输出（技能以实装为准）。"
+    },
+    "千夏": {
+      "chessDescription": "开发中的植物占位。",
+      "chessShortDescription": "未完成。",
+      "chessEffect": "机制尚未实装。"
+    },
+    "千早爱音": {
+      "chessDescription": "MyGO!!!!! 吉他手，羁绊联动输出。",
+      "chessShortDescription": "输出 · 吉他 · MyGO。",
+      "chessEffect": "MyGO 羁绊相关暴击/吉他技能。"
+    },
+    "南宫羽": {
+      "chessDescription": "针对墓碑与 Stand 目标的特化单位。",
+      "chessShortDescription": "针对 · 墓碑。",
+      "chessEffect": "瞄准并击杀同格 Stand 类目标，清除墓碑威胁。"
+    },
+    "南瓜罩": {
+      "chessDescription": "同格植物的额外护甲壳。",
+      "chessShortDescription": "保镖 · 支援。",
+      "chessEffect": "与同一格 Main 植物共存，替其承受伤害。"
+    },
+    "史尔特尔": {
+      "chessDescription": "整行火焰伤害的灰烬植物。",
+      "chessShortDescription": "灰烬 · 行伤。",
+      "chessEffect": "技能对整行造成火焰伤害，可融冰并清除冰球。"
+    },
+    "叶瞬光": {
+      "chessDescription": "开发中的植物占位。",
+      "chessShortDescription": "未完成。",
+      "chessEffect": "机制尚未实装。"
+    },
+    "吃豆凉": {
+      "chessDescription": "结束乐队相关输出单位。",
+      "chessShortDescription": "输出型。",
+      "chessEffect": "标准攻击（机制待完善）。"
+    },
+    "喜多": {
+      "chessDescription": "结束乐队主唱，范围爆炸的灰烬核心。",
+      "chessShortDescription": "灰烬 · 主唱/吉他。",
+      "chessEffect": "对 3×3 范围内敌人造成大量爆炸伤害。"
+    },
+    "喜多照片": {
+      "chessDescription": "喜多的遗照形态，保留爆炸能力。",
+      "chessShortDescription": "灰烬 · 结束乐队。",
+      "chessEffect": "对范围内敌人造成爆炸伤害。"
+    },
+    "圣聆初雪": {
+      "chessDescription": "谢拉格阵营，铺冰控场输出。",
+      "chessShortDescription": "输出 · 控场。",
+      "chessEffect": "定时铺冰；进场不可普攻，首次主动技能后永久解锁攻击。"
+    },
+    "宇宙高松灯": {
+      "chessDescription": "高松灯的 MyGO 升级形态。",
+      "chessShortDescription": "升级 · 主唱 · MyGO。",
+      "chessEffect": "召唤黑洞吸引并伤害敌人。"
+    },
+    "小虹夏": {
+      "chessDescription": "结束乐队鼓手的幼年形态，产阳光。",
+      "chessShortDescription": "产阳光 · 鼓手。",
+      "chessEffect": "周期性产生阳光。"
+    },
+    "希希芙": {
+      "chessDescription": "开发中的植物占位。",
+      "chessShortDescription": "未完成。",
+      "chessEffect": "机制尚未实装。"
+    },
+    "平泽唯": {
+      "chessDescription": "放学后茶会主唱/吉他，可切换发呆回血模式。",
+      "chessShortDescription": "治疗/输出切换。",
+      "chessEffect": "切换模式：发呆时持续回血并改变寻敌与攻击方式。"
+    },
+    "常服高松灯": {
+      "chessDescription": "MyGO!!!!! 主唱，基础射击输出。",
+      "chessShortDescription": "输出 · 主唱 · MyGO。",
+      "chessEffect": "远程射击攻击；MyGO 羁绊联动。"
+    },
+    "广井菊里": {
+      "chessDescription": "酒鬼标签的贝斯手，基础输出。",
+      "chessShortDescription": "输出 · 贝斯。",
+      "chessEffect": "标准攻击（机制待完善）。"
+    },
+    "爱芮": {
+      "chessDescription": "妄想天使主唱，范围爆炸过渡单位。",
+      "chessShortDescription": "过度 · 主唱。",
+      "chessEffect": "范围爆炸伤害。"
+    },
+    "维什戴尔": {
+      "chessDescription": "明日方舟阵营的高台输出，召唤魂灵协同作战。",
+      "chessShortDescription": "召唤型主力 · 明日方舟。",
+      "chessEffect": "入场召唤魂灵之影；子弹命中后触发余震与额外效果。"
+    },
+    "魂灵之影": {
+      "chessDescription": "维什戴尔召唤物，标记敌人残影。",
+      "chessShortDescription": "维什戴尔召唤物。",
+      "chessEffect": "武器命中后为敌人挂上残影标记，配合本体联动。"
+    },
+    "重构体": {
+      "chessDescription": "M3 召唤的重构体，持续自损但不致死。",
+      "chessShortDescription": "M3 技能召唤。",
+      "chessEffect": "周期自损，生命不会低于阈值；可与 M3 换位。"
+    },
+    "河源木桃香": {
+      "chessDescription": "无刺有刺吉他手，压力与坚毅联动。",
+      "chessShortDescription": "吉他 · 无刺有刺。",
+      "chessEffect": "攻击回触发坚毅技能；被动持续累积压力。"
+    },
+    "苍角": {
+      "chessDescription": "冰系整行伤害的灰烬植物。",
+      "chessShortDescription": "灰烬 · 行伤/冰冻。",
+      "chessEffect": "技能对整行造成伤害并冰冻同行敌人。"
+    },
+    "纯田真奈": {
+      "chessDescription": "sumimi 主唱，稳定产阳光。",
+      "chessShortDescription": "产阳光 · 主唱 · sumimi。",
+      "chessEffect": "周期性产生阳光；sumimi 羁绊联动。"
+    },
+    "甜甜圈": {
+      "chessDescription": "sumimi 羁绊掉落的消耗品。",
+      "chessShortDescription": "消耗品 · sumimi。",
+      "chessEffect": "种植在已有植物格上，为其施加 Buff。"
+    },
+    "薇薇安": {
+      "chessDescription": "反舌鸟阵营的叶子保护伞。",
+      "chessShortDescription": "针对 · 保护伞。",
+      "chessEffect": "弹飞射向保护对象的子弹，可打断蹦极僵尸。"
+    },
+    "田井中律": {
+      "chessDescription": "开发中的 K-ON 鼓手占位。",
+      "chessShortDescription": "未完成。",
+      "chessEffect": "机制尚未实装。"
+    },
+    "琴吹䌷": {
+      "chessDescription": "放学后茶会键盘手，坚毅与回复双形态。",
+      "chessShortDescription": "前排 · 键盘 · 茶会。",
+      "chessEffect": "切换坚毅/回复形态，适应战局。"
+    },
+    "秋山澪": {
+      "chessDescription": "放学后茶会贝斯手，溢出治疗与产阳切换。",
+      "chessShortDescription": "辅助/产阳 · 贝斯 · 茶会。",
+      "chessEffect": "累计溢出治疗；可切换为产阳光模式。"
+    },
+    "灵感菇": {
+      "chessDescription": "被近战命中时会魅惑攻击者的过渡植物。",
+      "chessShortDescription": "过度 · 魅惑。",
+      "chessEffect": "被僵尸近战攻击时魅惑攻击者并自身消失。"
+    },
+    "若叶睦": {
+      "chessDescription": "Ave Mujica 吉他手，可主动触发刺雨。",
+      "chessShortDescription": "输出 · 吉他 · Ave Mujica。",
+      "chessEffect": "释放技能触发无刺有刺刺雨（与 Nina 类似逻辑）。"
+    },
+    "祐天寺若麦": {
+      "chessDescription": "Ave Mujica 鼓手，范围 AOE 输出。",
+      "chessShortDescription": "输出 · 鼓手 · Ave Mujica。",
+      "chessEffect": "技能对索敌范围内敌人造成 AOE 伤害。"
+    },
+    "嘉然土豆雷": {
+      "chessDescription": "埋地武装的过渡爆炸单位。",
+      "chessShortDescription": "过度 · 土豆雷。",
+      "chessEffect": "埋地时不可攻击；主动技能起身武装并可攻击。"
+    },
+    "桃金娘": {
+      "chessDescription": "明日方舟风格产阳光单位。",
+      "chessShortDescription": "产阳光 · 鼓手。",
+      "chessEffect": "周期性产生阳光。"
+    },
+    "睡莲": {
+      "chessDescription": "地形植物，将格子变为草地。",
+      "chessShortDescription": "地形 · 睡莲。",
+      "chessEffect": "种植时把所在格改为草地；移除时还原。"
+    },
+    "波奇": {
+      "chessDescription": "结束乐队吉他手，高血量前排。",
+      "chessShortDescription": "前排 · 吉他 · 结束乐队。",
+      "chessEffect": "受击时按暴击率减免非真实伤害（会心防御）。"
+    },
+    "槌蛇波奇(后藤一里)": {
+      "chessDescription": "后藤一里（波奇）的槌蛇形态，基础前排。",
+      "chessShortDescription": "前排 · 结束乐队。",
+      "chessEffect": "标准攻击（机制待完善）。"
+    },
+    "槌蛇波奇": {
+      "chessDescription": "后藤一里（波奇）的槌蛇形态，基础前排。",
+      "chessShortDescription": "前排 · 结束乐队。",
+      "chessEffect": "标准攻击（机制待完善）。"
+    },
+    "椎名立希": {
+      "chessDescription": "MyGO!!!!! 鼓手，恐惧波控制。",
+      "chessShortDescription": "控制 · 鼓手 · MyGO。",
+      "chessEffect": "MyGO 四人齐时发射恐惧波；标准鼓手输出。"
+    },
+    "长崎素世": {
+      "chessDescription": "MyGO!!!!! 贝斯手，高血爆炸前排。",
+      "chessShortDescription": "前排 · 贝斯 · MyGO。",
+      "chessEffect": "范围爆炸伤害；MyGO 羁绊联动。"
+    },
+    "要乐奈": {
+      "chessDescription": "MyGO!!!!! 吉他手，全场冰冻。",
+      "chessShortDescription": "控制 · 吉他 · MyGO。",
+      "chessEffect": "技能冰冻全场敌人。"
+    },
+    "星歌": {
+      "chessDescription": "结束乐队相关辅助，向队友发射 Buff 钱弹。",
+      "chessShortDescription": "辅助 · 结束乐队。",
+      "chessEffect": "向场上「结束乐队」队友发射附带 Buff 的子弹。"
+    },
+    "凉": {
+      "chessDescription": "结束乐队贝斯手，能吞掉前方僵尸。",
+      "chessShortDescription": "控制 · 贝斯 · 结束乐队。",
+      "chessEffect": "一口吃掉前方所有僵尸，之后长时间咀嚼（技能 CD 较长）。"
+    },
+    "吉他英雄": {
+      "chessDescription": "波奇的升级形态，依场上成员释放不同技能。",
+      "chessShortDescription": "升级 · 吉他 · 结束乐队。",
+      "chessEffect": "根据场上结束乐队成员身份释放对应技能。"
+    },
+    "虹夏": {
+      "chessDescription": "结束乐队鼓手，稳定产阳光。",
+      "chessShortDescription": "产阳光 · 鼓手 · 结束乐队。",
+      "chessEffect": "周期性产生阳光。"
+    },
+    "蛋包饭": {
+      "chessDescription": "一次性增益消耗品。",
+      "chessShortDescription": "消耗品。",
+      "chessEffect": "种植在已有植物格上，为其施加 Buff。"
+    },
+    "抹茶芭菲": {
+      "chessDescription": "一次性增益消耗品。",
+      "chessShortDescription": "消耗品。",
+      "chessEffect": "种植在已有植物格上，为其施加 Buff。"
+    },
+    "牛肉饭": {
+      "chessDescription": "一次性增益消耗品。",
+      "chessShortDescription": "消耗品。",
+      "chessEffect": "种植在已有植物格上，为其施加 Buff。"
+    },
+    "猫猫": {
+      "chessDescription": "开发中的植物占位。",
+      "chessShortDescription": "未完成。",
+      "chessEffect": "机制尚未实装。"
+    },
+    "迈巴赫": {
+      "chessDescription": "超高面板的压力缓解/灰烬单位。",
+      "chessShortDescription": "灰烬型。",
+      "chessEffect": "极高攻击与生命（机制以实装为准）。"
+    },
+    "潘引壶": {
+      "chessDescription": "高血量特殊输出单位。",
+      "chessShortDescription": "灰烬型。",
+      "chessEffect": "受击爆炸类被动（以实装为准）。"
+    },
+    "橘福福": {
+      "chessDescription": "保龄球式冲撞的过度单位。",
+      "chessShortDescription": "过度 · 冲撞。",
+      "chessEffect": "保龄球技能沿行推进（机制以实装为准）。"
+    },
+    "高松灯": {
+      "chessDescription": "MyGO!!!!! 主唱（企鹅形态数据用 fetterMemberId）。",
+      "chessShortDescription": "MyGO 成员。",
+      "chessEffect": "MyGO 羁绊相关（见常服/宇宙形态）。"
+    },
+    "后藤一里": {
+      "chessDescription": "结束乐队吉他手波奇，会心防御前排。",
+      "chessShortDescription": "前排 · 吉他 · 结束乐队。",
+      "chessEffect": "受击时按暴击率减免非真实伤害。"
+    },
+    "伊地知星歌": {
+      "chessDescription": "结束乐队经纪人，远程 Buff 支援。",
+      "chessShortDescription": "辅助 · 结束乐队。",
+      "chessEffect": "向结束乐队队友发射附带 Buff 的子弹。"
+    }
+  },
+  "enemies": {
+    "普通僵尸": {
+      "chessDescription": "最基础的步行僵尸。",
+      "chessShortDescription": "普通僵尸。",
+      "chessEffect": "直线前进，近战啃食植物。"
+    },
+    "路障僵尸": {
+      "chessDescription": "头顶路障的僵尸，更耐打。",
+      "chessShortDescription": "路障僵尸。",
+      "chessEffect": "路障提供额外生命，必须先击破路障。"
+    },
+    "铁桶僵尸": {
+      "chessDescription": "铁桶头盔的高护甲僵尸。",
+      "chessShortDescription": "铁桶僵尸。",
+      "chessEffect": "铁桶大幅减免伤害，需高爆发或对甲手段。"
+    },
+    "小鬼僵尸": {
+      "chessDescription": "体型小、速度快的僵尸。",
+      "chessShortDescription": "小鬼僵尸。",
+      "chessEffect": "常被巨人投掷入场；血量较低。"
+    },
+    "巨人僵尸": {
+      "chessDescription": "血量极高的精英僵尸。",
+      "chessShortDescription": "巨人僵尸。",
+      "chessEffect": "极高生命；死亡时可投出小鬼僵尸。"
+    },
+    "撑杆跳僵尸": {
+      "chessDescription": "持撑杆的跳跃僵尸。",
+      "chessShortDescription": "撑杆跳僵尸。",
+      "chessEffect": "跃过前方首个植物继续推进。"
+    },
+    "潜水僵尸": {
+      "chessDescription": "会在水下潜行的僵尸。",
+      "chessShortDescription": "潜水僵尸。",
+      "chessEffect": "潜行期间规避多数直线攻击，靠岸后啃食。"
+    },
+    "海豚僵尸": {
+      "chessDescription": "骑海豚的僵尸，可跃过障碍。",
+      "chessShortDescription": "海豚僵尸。",
+      "chessEffect": "利用海豚跳过部分植物或地形。"
+    },
+    "冰车僵尸": {
+      "chessDescription": "驾驶冰车的僵尸，碾压并铺冰。",
+      "chessShortDescription": "冰车僵尸。",
+      "chessEffect": "碾压植物并在行上留下冰道。"
+    },
+    "气球小丑僵尸": {
+      "chessDescription": "踩气球前进的小丑僵尸。",
+      "chessShortDescription": "气球小丑。",
+      "chessEffect": "空中移动，需对空或击落空气球。"
+    },
+    "矿工小丑僵尸": {
+      "chessDescription": "从地下挖进阵线的小丑僵尸。",
+      "chessShortDescription": "矿工小丑。",
+      "chessEffect": "挖地道绕后，从左侧出土攻击。"
+    },
+    "投小丑盒僵尸": {
+      "chessDescription": "投掷小丑盒的僵尸。",
+      "chessShortDescription": "投盒僵尸。",
+      "chessEffect": "在阵线内投掷小丑盒造成额外威胁。"
+    },
+    "潘妮怀斯小丑僵尸": {
+      "chessDescription": "潘妮怀斯系列小丑僵尸。",
+      "chessShortDescription": "小丑僵尸。",
+      "chessEffect": "具有小丑类特殊行动（以实装为准）。"
+    },
+    "墓碑": {
+      "chessDescription": "会spawn 僵尸的墓碑障碍。",
+      "chessShortDescription": "墓碑。",
+      "chessEffect": "周期性或条件下释放僵尸；可被墓碑针对技能清除。"
+    },
+    "墓碑普通僵尸": {
+      "chessDescription": "从墓碑中爬出的普通僵尸。",
+      "chessShortDescription": "墓碑 · 普通。",
+      "chessEffect": "由墓碑生成，行为同普通僵尸。"
+    },
+    "墓碑路障僵尸": {
+      "chessDescription": "从墓碑中爬出的路障僵尸。",
+      "chessShortDescription": "墓碑 · 路障。",
+      "chessEffect": "由墓碑生成，带路障护甲。"
+    },
+    "墓碑铁桶僵尸": {
+      "chessDescription": "从墓碑中爬出的铁桶僵尸。",
+      "chessShortDescription": "墓碑 · 铁桶。",
+      "chessEffect": "由墓碑生成，带铁桶护甲。"
+    },
+    "蹦极木偶": {
+      "chessDescription": "被蹦极投下的木偶单位。",
+      "chessShortDescription": "蹦极木偶。",
+      "chessEffect": "空投至后排；可被保护伞弹飞打断。"
+    },
+    "僵王博士": {
+      "chessDescription": "Boss 级僵王。",
+      "chessShortDescription": "Boss。",
+      "chessEffect": "多阶段 Boss 战；释放多种僵尸与技能。"
+    },
+    "小丑僵尸": {
+      "chessDescription": "画着小丑妆的僵尸。",
+      "chessShortDescription": "小丑僵尸。",
+      "chessEffect": "可能携带特殊盒子或技能（以实装为准）。"
+    },
+    "鸭子僵尸": {
+      "chessDescription": "骑着鸭子玩具的僵尸。",
+      "chessShortDescription": "鸭子僵尸。",
+      "chessEffect": "利用鸭子加速或跳跃（以实装为准）。"
+    },
+    "木偶僵尸": {
+      "chessDescription": "基础木偶僵尸。",
+      "chessShortDescription": "木偶。",
+      "chessEffect": "标准近战（机制以实装为准）。"
+    },
+    "木偶园丁": {
+      "chessDescription": "园丁型木偶敌人。",
+      "chessShortDescription": "木偶园丁。",
+      "chessEffect": "具有种植/召唤类行为（以实装为准）。"
+    },
+    "木偶女巫": {
+      "chessDescription": "女巫型木偶敌人。",
+      "chessShortDescription": "木偶女巫。",
+      "chessEffect": "具有诅咒/召唤类行为（以实装为准）。"
+    },
+    "木偶骑士": {
+      "chessDescription": "骑士型木偶敌人。",
+      "chessShortDescription": "木偶骑士。",
+      "chessEffect": "高护甲近战（以实装为准）。"
+    },
+    "旁观者": {
+      "chessDescription": "不直接攻击的旁观单位。",
+      "chessShortDescription": "旁观者。",
+      "chessEffect": "特殊机制单位（以实装为准）。"
+    },
+    "攀附者": {
+      "chessDescription": "会攀附植物或障碍的僵尸。",
+      "chessShortDescription": "攀附者。",
+      "chessEffect": "攀附行动绕过部分防御（以实装为准）。"
+    },
+    "霸凌者": {
+      "chessDescription": "具有霸凌/冲撞行为的精英僵尸。",
+      "chessShortDescription": "霸凌者。",
+      "chessEffect": "对植物造成额外压迫效果（以实装为准）。"
+    },
+    "包庇者": {
+      "chessDescription": "保护其他僵尸的单位。",
+      "chessShortDescription": "包庇者。",
+      "chessEffect": "为附近僵尸提供防护（以实装为准）。"
+    },
+    "木桩": {
+      "chessDescription": "训练用木桩，几乎不移动。",
+      "chessShortDescription": "木桩。",
+      "chessEffect": "高血量靶子，用于测试输出。"
+    },
+    "毒舌妇": {
+      "chessDescription": "远程骚扰型僵尸。",
+      "chessShortDescription": "毒舌妇。",
+      "chessEffect": "远程减益或伤害（以实装为准）。"
+    },
+    "PRTS": {
+      "chessDescription": "明日方舟 PRTS 终端型敌人。",
+      "chessShortDescription": "PRTS。",
+      "chessEffect": "特殊机制敌人（以实装为准）。"
+    },
+    "IceMan": {
+      "chessDescription": "冰系特殊僵尸。",
+      "chessShortDescription": "IceMan。",
+      "chessEffect": "冰系攻击或控场（以实装为准）。"
+    },
+    "拟态机械": {
+      "chessDescription": "会拟态的机械僵尸。",
+      "chessShortDescription": "拟态机械。",
+      "chessEffect": "伪装或变形机制（以实装为准）。"
+    },
+    "普通感染者": {
+      "chessDescription": "基础感染者。",
+      "chessShortDescription": "感染者。",
+      "chessEffect": "标准近战感染者。"
+    },
+    "女士感染者": {
+      "chessDescription": "女性感染者变体。",
+      "chessShortDescription": "女士感染者。",
+      "chessEffect": "标准近战（以实装为准）。"
+    },
+    "胖子感染者": {
+      "chessDescription": "高血量感染者。",
+      "chessShortDescription": "胖子感染者。",
+      "chessEffect": "生命较高，移动较慢。"
+    },
+    "狂暴感染者": {
+      "chessDescription": "进入狂暴的感染者。",
+      "chessShortDescription": "狂暴感染者。",
+      "chessEffect": "攻速或移速提升（以实装为准）。"
+    },
+    "自爆感染者": {
+      "chessDescription": "接近后自爆的感染者。",
+      "chessShortDescription": "自爆感染者。",
+      "chessEffect": "死亡或接近植物时爆炸伤害。"
+    },
+    "博士感染者": {
+      "chessDescription": "博士型感染者精英。",
+      "chessShortDescription": "博士感染者。",
+      "chessEffect": "特殊技能（以实装为准）。"
+    },
+    "普通雪橇僵尸": {
+      "chessDescription": "乘雪橇前进的僵尸。",
+      "chessShortDescription": "雪橇僵尸。",
+      "chessEffect": "雪橇提供额外生命或速度。"
+    },
+    "雪橇僵尸": {
+      "chessDescription": "雪橇队僵尸。",
+      "chessShortDescription": "雪橇僵尸。",
+      "chessEffect": "成群结队推进（以实装为准）。"
+    },
+    "旗帜僵尸": {
+      "chessDescription": "举旗的僵尸，常Leading 一波尸潮。",
+      "chessShortDescription": "旗帜僵尸。",
+      "chessEffect": "标记一波进攻；本身较脆。"
+    },
+    "红色大螃蟹": {
+      "chessDescription": "大型螃蟹变异体。",
+      "chessShortDescription": "红色大螃蟹。",
+      "chessEffect": "高护甲或横向移动（以实装为准）。"
+    },
+    "巨型变异蟹": {
+      "chessDescription": "巨型螃蟹 Boss 级单位。",
+      "chessShortDescription": "巨型变异蟹。",
+      "chessEffect": "高生命与范围攻击（以实装为准）。"
+    },
+    "变异螃蟹": {
+      "chessDescription": "变异螃蟹僵尸。",
+      "chessShortDescription": "变异螃蟹。",
+      "chessEffect": "甲壳减伤（以实装为准）。"
+    },
+    "大兔": {
+      "chessDescription": "大型兔子敌人。",
+      "chessShortDescription": "大兔。",
+      "chessEffect": "跳跃或高移速（以实装为准）。"
+    },
+    "蜘蛛": {
+      "chessDescription": "爬行的蜘蛛型敌人。",
+      "chessShortDescription": "蜘蛛。",
+      "chessEffect": "可能攀墙或加速（以实装为准）。"
+    },
+    "飞鱼": {
+      "chessDescription": "空中游动的飞鱼敌人。",
+      "chessShortDescription": "飞鱼。",
+      "chessEffect": "对空或跳跃路线（以实装为准）。"
+    },
+    "丰川祥子C团": {
+      "chessDescription": "C 团异变体 · 丰川祥子。",
+      "chessShortDescription": "C团僵尸。",
+      "chessEffect": "特殊 C 团机制（以实装为准）。"
+    },
+    "高松灯C团": {
+      "chessDescription": "C 团异变体 · 高松灯。",
+      "chessShortDescription": "C团僵尸。",
+      "chessEffect": "特殊 C 团机制（以实装为准）。"
+    },
+    "长崎素世C团": {
+      "chessDescription": "C 团异变体 · 长崎素世。",
+      "chessShortDescription": "C团僵尸。",
+      "chessEffect": "特殊 C 团机制（以实装为准）。"
+    },
+    "若叶睦C团": {
+      "chessDescription": "C 团异变体 · 若叶睦。",
+      "chessShortDescription": "C团僵尸。",
+      "chessEffect": "特殊 C 团机制（以实装为准）。"
+    },
+    "椎名立希C团": {
+      "chessDescription": "C 团异变体 · 椎名立希。",
+      "chessShortDescription": "C团僵尸。",
+      "chessEffect": "特殊 C 团机制（以实装为准）。"
+    }
+  }
+}

@@ -148,11 +148,10 @@ Refresh()
 
 ## 验收标准
 
-- [ ] 新开局：leave 后进地图，镜头从 Boss 端滚到起点，约 2s，过程不能拖地图、不能点节点
-- [ ] 继续冒险：无 Intro，直接定位当前节点
-- [ ] 战斗胜利回地图：无 Intro，滚到当前节点
-- [ ] 换 Act（若启用）：新地图播一次 Intro
-- [ ] Content 很窄（≤ viewport）时不播或 instant 0
+- [x] 代码：`mapIntroEnabled` + `PlayMapIntroScrollCoroutine` + 滚动锁输入
+- [ ] Play：新开局 leave 后进地图 Boss→起点约 2s
+- [ ] Play：继续冒险 / 战斗返回无 Intro
+- [ ] Play：换 Act 播 Intro（`mapIntroOnActAdvance`）
 
 ## 测试建议
 

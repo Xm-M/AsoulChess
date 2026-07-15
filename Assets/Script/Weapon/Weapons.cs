@@ -45,7 +45,7 @@ public class Weapon_Sample : Weapon
 
     public void TakeDamage(Chess user)
     {
-        //throw new System.NotImplementedException();
+        FindEnemy(user);
         attackFunction.Attack(user, enemys);
         if (targetEffect != null)
         {

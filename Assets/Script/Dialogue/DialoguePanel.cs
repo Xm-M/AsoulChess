@@ -30,6 +30,7 @@ public class DialoguePanel : View
     Coroutine typewriterCoroutine;
     bool isTypewriterComplete;
     string currentFullText;
+    int rangeEndInclusive = -1;
 
     public override void Init()
     {
@@ -58,6 +59,34 @@ public class DialoguePanel : View
         onComplete = onCompleteCallback;
         base.Show();
         DisplayEntry(0);
+    }
+
+    /// <summary>显示对话指定 entry 区间 [startIndex, endIndexInclusive]，结束后调用 onComplete。</summary>
+    public void ShowDialogueRange(DialogueData data, int startIndex, int endIndexInclusive, Action onCompleteCallback)
+    {
+        Cleanup();
+        if (data == null || data.entries == null || data.entries.Count == 0)
+        {
+            onCompleteCallback?.Invoke();
+            return;
+        }
+
+        startIndex = Mathf.Clamp(startIndex, 0, data.entries.Count - 1);
+        endIndexInclusive = Mathf.Clamp(endIndexInclusive, startIndex, data.entries.Count - 1);
+        currentData = data;
+        index = startIndex;
+        rangeEndInclusive = endIndexInclusive;
+        onComplete = onCompleteCallback;
+        base.Show();
+        DisplayEntry(startIndex);
+    }
+
+    void CompleteDialogueSequence()
+    {
+        Hide();
+        var callback = onComplete;
+        Cleanup();
+        callback?.Invoke();
     }
 
     void DisplayEntry(int i)
@@ -151,11 +180,14 @@ public class DialoguePanel : View
         if (currentData == null || string.IsNullOrEmpty(resumeEvent)) return;
         UnlistenResumeEvent();
         index++;
+        if (rangeEndInclusive >= 0 && index > rangeEndInclusive)
+        {
+            CompleteDialogueSequence();
+            return;
+        }
         if (index >= currentData.entries.Count)
         {
-            Hide();
-            Cleanup();
-            onComplete?.Invoke();
+            CompleteDialogueSequence();
         }
         else
         {
@@ -211,11 +243,14 @@ public class DialoguePanel : View
         }
 
         index++;
+        if (rangeEndInclusive >= 0 && index > rangeEndInclusive)
+        {
+            CompleteDialogueSequence();
+            return;
+        }
         if (index >= currentData.entries.Count)
         {
-            Hide();
-            Cleanup();
-            onComplete?.Invoke();
+            CompleteDialogueSequence();
         }
         else
         {
@@ -238,6 +273,7 @@ public class DialoguePanel : View
         waitingEvent = null;
         resumeEvent = null;
         onComplete = null;
+        rangeEndInclusive = -1;
     }
 
     void OnDestroy()

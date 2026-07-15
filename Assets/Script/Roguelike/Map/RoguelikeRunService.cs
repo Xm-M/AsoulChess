@@ -14,6 +14,9 @@ public static class RoguelikeRunService
     /// <summary>当前待进入或正在进行的地图节点（战斗用）。</summary>
     public static int PendingNodeId { get; private set; } = -1;
 
+    /// <summary>当前进行中的剧情事件定义（EnterStoryEventNode 写入，LeaveStoryEventNode 清除）。</summary>
+    public static RoguelikeEventDefinition ActiveStoryEvent { get; private set; }
+
     public static event Action<RoguelikeRunState> OnRunStarted;
     public static event Action<RoguelikeRunState> OnActMapGenerated;
     public static event Action<RoguelikeMapNode> OnNodeEntered;
@@ -630,6 +633,44 @@ public static class RoguelikeRunService
         UIManage.GetView<RoguelikeMapPanel>()?.ShowAndRefresh();
     }
 
+    /// <summary>进入地图剧情事件节点（非战斗 Timeline 演出）。</summary>
+    public static void EnterStoryEventNode()
+    {
+        if (!HasActiveRun || PendingNodeId < 0)
+            return;
+
+        var node = State.currentMap.GetNode(PendingNodeId);
+        if (node == null || node.roomType != MapRoomType.Event)
+            return;
+
+        var def = RoguelikeEventFlow.ResolveStoryEventForPendingNode();
+        if (def?.storyLevel == null)
+            return;
+
+        ActiveStoryEvent = def;
+        SaveRun();
+        RoguelikeRunInfoPanel.HideForCombat();
+        LevelManage.instance.ChangeLevel(def.storyLevel);
+    }
+
+    /// <summary>剧情事件演出结束：标记节点通关并回到地图。</summary>
+    public static void LeaveStoryEventNode()
+    {
+        if (!HasActiveRun || PendingNodeId < 0)
+            return;
+
+        var node = State.currentMap.GetNode(PendingNodeId);
+        if (node == null || node.roomType != MapRoomType.Event)
+            return;
+
+        State.MarkCleared(PendingNodeId);
+        PendingNodeId = -1;
+        ActiveStoryEvent = null;
+        OnNodeResolved?.Invoke(node, true);
+        SaveRun();
+        ReturnToMapUI();
+    }
+
     /// <summary>读档后若停在未完成的非战斗节点，恢复对应 UI。</summary>
     public static bool TryResumePendingNonCombatNode()
     {
@@ -650,6 +691,9 @@ public static class RoguelikeRunService
                 return true;
             case MapRoomType.Rest:
                 EnterRestNode();
+                return true;
+            case MapRoomType.Event:
+                EnterStoryEventNode();
                 return true;
             default:
                 return false;
@@ -674,7 +718,6 @@ public static class RoguelikeRunService
             case MapRoomType.Normal:
             case MapRoomType.Elite:
             case MapRoomType.Boss:
-            case MapRoomType.Event:
                 if (ResolveLevelForPendingCombat() == null)
                     return false;
                 UIManage.GetView<RoguelikeMapPanel>()?.Hide();
@@ -791,6 +834,7 @@ public static class RoguelikeRunService
         RoguelikeRunPlantPool.RestoreMainlinePlantsFromPlayerSave();
         RoguelikeRunPropPool.RestoreMainlinePropsFromPlayerSave();
         PendingNodeId = -1;
+        ActiveStoryEvent = null;
         ActiveRunConfig = null;
         State = null;
     }

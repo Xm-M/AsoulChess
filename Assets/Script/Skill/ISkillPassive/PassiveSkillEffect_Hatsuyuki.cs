@@ -6,6 +6,7 @@ using UnityEngine;
 /// 初雪被动：每间隔 <see cref="placeIceIntervalSeconds"/> 用八向 BFS 铺冰（<see cref="Effect_Snow"/>）；
 /// 冰持续 <see cref="iceDurationSeconds"/>（应大于间隔）。进场后 <see cref="AttackController.AttackAble"/> 为 false；
 /// 主动技能里挂 <see cref="SkillEffect_HatsuyukiUnlockAttack"/>：施放一次后永久解锁普攻（<see cref="AttackController.AttackAble"/> 置 true，之后不再关回）。
+/// 初雪冰对敌对阵营造成踩入伤害：<see cref="iceEnterDamageCoeff"/> × 攻击力。
 /// </summary>
 [Serializable]
 public class PassiveSkillEffect_Hatsuyuki : ISkillEffect
@@ -15,6 +16,10 @@ public class PassiveSkillEffect_Hatsuyuki : ISkillEffect
 
     [Min(0.1f)]
     public float iceDurationSeconds = 15f;
+
+    [Min(0f)]
+    [Tooltip("踩入初雪冰格伤害 = 初雪攻击力 × 本系数")]
+    public float iceEnterDamageCoeff = 0.3f;
 
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
@@ -48,6 +53,8 @@ public class HatsuyukiPassiveRuntime : MonoBehaviour
 
         _user.OnRemove.AddListener(OnChessRemove);
 
+        Effect_Snow.GetInstanceOrNull()?.RegisterHatsuyuki(_user, _cfg.iceEnterDamageCoeff);
+
         float interval = _cfg.placeIceIntervalSeconds;
         if (interval > 0f && GameManage.instance != null && GameManage.instance.timerManage != null)
             _iceTimer = GameManage.instance.timerManage.AddTimer(OnIceTick, interval, true);
@@ -67,7 +74,7 @@ public class HatsuyukiPassiveRuntime : MonoBehaviour
         if (snow == null) return;
 
         Vector2Int start = GetBaseMapPos(_user);
-        snow.TryBfsPlaceFirstEmptyIce(start, _cfg.iceDurationSeconds, "Player");
+        snow.TryBfsPlaceFirstEmptyIce(start, _cfg.iceDurationSeconds, _user.tag, _user);
     }
 
     static Vector2Int GetBaseMapPos(Chess user)
@@ -94,7 +101,11 @@ public class HatsuyukiPassiveRuntime : MonoBehaviour
         }
 
         if (_user != null)
+        {
             _user.OnRemove.RemoveListener(OnChessRemove);
+            Effect_Snow.GetInstanceOrNull()?.UnregisterHatsuyuki(_user);
+        }
+
         _user = null;
         _cfg = null;
     }

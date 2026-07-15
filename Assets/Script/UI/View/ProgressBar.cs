@@ -9,13 +9,19 @@ public class ProgressBar : View
     public UIStatBar uiBar;
     public Text stadgeName;//关卡名
     public List<GameObject> flags;
+    [Tooltip("肉鸽战斗：mintime 过后显示并可点进下一波")]
+    public Button earlyNextWaveButton;
     bool bossHpMode;
+    bool earlyNextWaveHooked;
 
     public override void Init()
     {
         uiBar.SetValue(0, 1);
         EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(),
             Hide);
+        EnsureEarlyNextWaveHook();
+        if (earlyNextWaveButton != null)
+            earlyNextWaveButton.gameObject.SetActive(false);
     }
     public void SetFlag(int n)
     {
@@ -35,6 +41,8 @@ public class ProgressBar : View
     {
         bossHpMode = true;
         ClearFlags();
+        if (earlyNextWaveButton != null)
+            earlyNextWaveButton.gameObject.SetActive(false);
         uiBar.SetValue(current, max);
     }
 
@@ -50,10 +58,51 @@ public class ProgressBar : View
         for (int i = 0; i < flags.Count; i++)
             flags[i].SetActive(false);
     }
+
+    void EnsureEarlyNextWaveHook()
+    {
+        if (earlyNextWaveHooked || earlyNextWaveButton == null)
+            return;
+        earlyNextWaveHooked = true;
+        earlyNextWaveButton.onClick.AddListener(OnEarlyNextWaveClicked);
+    }
+
+    void OnEarlyNextWaveClicked()
+    {
+        LevelManage.instance?.currentController?.TryManualAdvanceWave();
+    }
+
+    /// <summary>由 LevelController 每帧或进波后调用。</summary>
+    public void RefreshEarlyNextWaveButton()
+    {
+        if (earlyNextWaveButton == null)
+            return;
+        if (bossHpMode)
+        {
+            earlyNextWaveButton.gameObject.SetActive(false);
+            return;
+        }
+        var controller = LevelManage.instance?.currentController;
+        if (controller == null || !controller.SupportsManualWaveAdvance())
+        {
+            earlyNextWaveButton.gameObject.SetActive(false);
+            return;
+        }
+        bool show = controller.CanShowManualAdvanceWaveButton();
+        earlyNextWaveButton.gameObject.SetActive(show);
+        if (show)
+            earlyNextWaveButton.interactable = true;
+    }
+
     public override void Show()
     {
         base.Show();
-        stadgeName.text = LevelManage.instance.currentLevel.levelName;
+        EnsureEarlyNextWaveHook();
+        var level = LevelManage.instance?.currentLevel;
+        stadgeName.text = level != null
+            ? RoguelikeRunInfoFormatter.FormatProgressBarStageName(level)
+            : string.Empty;
+        RefreshEarlyNextWaveButton();
     }
 
     public override void Hide()
@@ -63,5 +112,7 @@ public class ProgressBar : View
         ClearFlags();
         uiBar.SetValue(0, 1);
         stadgeName.text = "";
+        if (earlyNextWaveButton != null)
+            earlyNextWaveButton.gameObject.SetActive(false);
     }
 }

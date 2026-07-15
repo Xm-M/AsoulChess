@@ -10,6 +10,9 @@ public class CarArmor : ArmorBase
     public UnityEvent  onHit;
     public Animator anim;
     public float animSpeed=1;
+    [Tooltip("为 false 时碰撞体不造成伤害（如初音小推车等待祥子阶段）")]
+    public bool collisionEnabled = true;
+
     public override void BrokenArmor()
     {
           
@@ -32,7 +35,9 @@ public class CarArmor : ArmorBase
     }
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-       
+        if (!collisionEnabled)
+            return;
+
         if (!collision.CompareTag(user.tag))
         {
             Chess chess =  collision.GetComponent<Chess>();

@@ -3,6 +3,7 @@ using UnityEngine;
 
 /// <summary>
 /// 肉鸽地图休息房：构建选项、执行选择。不进战斗，不经过 <see cref="RoguelikeRewardFlow"/>。
+/// 选项内容来自 <see cref="RoguelikeEconomyConfig.restOptionCatalog"/>（策划配置 + 配图）。
 /// </summary>
 public static class RoguelikeRestFlow
 {
@@ -14,13 +15,48 @@ public static class RoguelikeRestFlow
             return list;
 
         if (!state.IsRestChoiceUsed(nodeId))
-        {
-            list.Add(CreateLawnMowerRestOption(state));
-            list.Add(CreateExpandLoadoutOption(state));
-        }
+            AppendCatalogOptions(state, list);
 
         RoguelikeRestOptionRegistry.AppendAll(nodeId, state, list);
         return list;
+    }
+
+    static void AppendCatalogOptions(RoguelikeRunState state, List<RoguelikeRestOption> list)
+    {
+        var economy = RoguelikeRunService.ResolveEconomyConfig();
+        var catalog = economy?.restOptionCatalog;
+        if (catalog != null)
+        {
+            catalog.AppendRuntimeOptions(state, economy, list);
+            return;
+        }
+
+        Debug.LogWarning(
+            "[RoguelikeRestFlow] RoguelikeEconomyConfig.restOptionCatalog 未配置，使用代码内置休息/扩容（无配图）。");
+        AppendLegacyBuiltinOptions(state, economy, list);
+    }
+
+    static void AppendLegacyBuiltinOptions(
+        RoguelikeRunState state,
+        RoguelikeEconomyConfig economy,
+        List<RoguelikeRestOption> list)
+    {
+        var restDef = ScriptableObject.CreateInstance<RoguelikeRestOptionDefinition>();
+        restDef.optionId = RoguelikeRestOption.BuiltinRestId;
+        restDef.title = "休息";
+        restDef.effectKind = RoguelikeRestEffectKind.LawnMowerBonus;
+        restDef.effectValue = 0;
+
+        var expandDef = ScriptableObject.CreateInstance<RoguelikeRestOptionDefinition>();
+        expandDef.optionId = RoguelikeRestOption.BuiltinExpandId;
+        expandDef.title = "扩容";
+        expandDef.effectKind = RoguelikeRestEffectKind.LoadoutSlotBonus;
+        expandDef.effectValue = 0;
+
+        var rest = RoguelikeRestOptionFactory.FromDefinition(restDef, state, economy);
+        var expand = RoguelikeRestOptionFactory.FromDefinition(expandDef, state, economy);
+        if (rest != null) list.Add(rest);
+        if (expand != null) list.Add(expand);
     }
 
     public static bool TryChooseOption(int nodeId, string optionId)
@@ -52,72 +88,6 @@ public static class RoguelikeRestFlow
         state.MarkRestChoiceUsed(nodeId);
         RoguelikeRunService.SaveRun();
         Debug.Log($"[RoguelikeRestFlow] 休息选项 {optionId}（节点 {nodeId}）");
-        return true;
-    }
-
-    static RoguelikeRestOption CreateLawnMowerRestOption(RoguelikeRunState state)
-    {
-        var economy = RoguelikeRunService.ResolveEconomyConfig();
-        int bonus = economy.GetRestLawnMowerBonus();
-        int current = state.runLawnMowerCount > 0
-            ? state.runLawnMowerCount
-            : economy.GetInitialLawnMowerCount();
-
-        return new RoguelikeRestOption
-        {
-            id = RoguelikeRestOption.BuiltinRestId,
-            title = "休息",
-            description = $"小推车 +{bonus}（当前 {current} → {current + bonus}）",
-            enabled = true,
-            execute = ExecuteLawnMowerRest,
-        };
-    }
-
-    static bool ExecuteLawnMowerRest(RoguelikeRunState state, int nodeId)
-    {
-        if (state == null)
-            return false;
-
-        var economy = RoguelikeRunService.ResolveEconomyConfig();
-        if (state.runLawnMowerCount <= 0)
-            state.runLawnMowerCount = economy.GetInitialLawnMowerCount();
-
-        state.runLawnMowerCount += economy.GetRestLawnMowerBonus();
-        return true;
-    }
-
-    static RoguelikeRestOption CreateExpandLoadoutOption(RoguelikeRunState state)
-    {
-        var economy = RoguelikeRunService.ResolveEconomyConfig();
-        int current = state.GetLoadoutSlotCount(economy);
-        int max = economy.GetMaxLoadoutSlotCount();
-        int bonus = economy.GetRestLoadoutSlotBonus();
-        bool atCap = current >= max;
-
-        return new RoguelikeRestOption
-        {
-            id = RoguelikeRestOption.BuiltinExpandId,
-            title = "扩容",
-            description = atCap
-                ? $"携带格已达上限（{max}）"
-                : $"携带格 +{bonus}（当前 {current} → {Mathf.Min(current + bonus, max)}）",
-            enabled = !atCap,
-            execute = ExecuteExpandLoadout,
-        };
-    }
-
-    static bool ExecuteExpandLoadout(RoguelikeRunState state, int nodeId)
-    {
-        if (state == null)
-            return false;
-
-        var economy = RoguelikeRunService.ResolveEconomyConfig();
-        int current = state.GetLoadoutSlotCount(economy);
-        int max = economy.GetMaxLoadoutSlotCount();
-        if (current >= max)
-            return false;
-
-        state.runLoadoutSlotCount = Mathf.Min(current + economy.GetRestLoadoutSlotBonus(), max);
         return true;
     }
 }

@@ -31,6 +31,11 @@ public class PlantsShop : View
     [FoldoutGroup("初始位置")]
     public RectTransform p1,p2;
 
+    [Header("携带格背景（仅中间 8 格可变，头尾在 Prefab 常亮）")]
+    [SerializeField] private int loadoutBarHeadSlotCount = 6;
+    [SerializeField] private int loadoutBarTailSlotCount = 1;
+    [SerializeField] private GameObject[] loadoutSlotBackgrounds;
+
     [Header("植物详情")]
     [SerializeField] private TMP_Text detailName;
     [SerializeField] private Image detailPlantImage;
@@ -340,10 +345,24 @@ public class PlantsShop : View
             {
                 RoguelikeRunService.NormalizeRunStateFieldsForActiveRun(state);
                 maxCount = state.GetLoadoutSlotCount(RoguelikeRunService.ResolveEconomyConfig());
+                RefreshLoadoutSlotBackgrounds(maxCount);
                 return;
             }
         }
 
         maxCount = _baselineMaxCount;
+        RefreshLoadoutSlotBackgrounds(maxCount);
+    }
+
+    void RefreshLoadoutSlotBackgrounds(int totalSlotCount)
+    {
+        if (loadoutSlotBackgrounds == null) return;
+        int middleVisible = totalSlotCount - loadoutBarHeadSlotCount - loadoutBarTailSlotCount;
+        middleVisible = Mathf.Clamp(middleVisible, 0, loadoutSlotBackgrounds.Length);
+        for (int i = 0; i < loadoutSlotBackgrounds.Length; i++)
+        {
+            if (loadoutSlotBackgrounds[i] != null)
+                loadoutSlotBackgrounds[i].SetActive(i < middleVisible);
+        }
     }
 }

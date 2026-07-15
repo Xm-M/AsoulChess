@@ -21,14 +21,20 @@ public class RoguelikeEconomyConfig : ScriptableObject
     public int runGoldRewardMultiplier = 1;
 
     [FoldoutGroup("金币")]
-    [LabelText("搜刮硬币视觉-大面额")]
-    [Tooltip("Item_Coin 大金币图标对应面额；PvZ×10 时建议 1000")]
+    [LabelText("搜刮硬币视觉-钻石面额")]
+    [Tooltip("Item_Coin 钻石图标对应面额")]
     [MinValue(1)]
-    public int coinVisualUnitLarge = 100;
+    public int coinVisualUnitDiamond = 1000;
 
     [FoldoutGroup("金币")]
-    [LabelText("搜刮硬币视觉-小面额")]
-    [Tooltip("Item_Coin 银币图标对应面额；PvZ×10 时建议 100")]
+    [LabelText("搜刮硬币视觉-金币面额")]
+    [Tooltip("Item_Coin 金币图标对应面额")]
+    [MinValue(1)]
+    public int coinVisualUnitLarge = 50;
+
+    [FoldoutGroup("金币")]
+    [LabelText("搜刮硬币视觉-银币面额")]
+    [Tooltip("Item_Coin 银币图标对应面额")]
     [MinValue(1)]
     public int coinVisualUnitSmall = 10;
 
@@ -88,6 +94,11 @@ public class RoguelikeEconomyConfig : ScriptableObject
     [MinValue(1)]
     public int restLoadoutSlotBonus = 1;
 
+    [FoldoutGroup("休息房")]
+    [LabelText("休息房选项卡池")]
+    [Tooltip("RestOptionDefinition 列表；顺序即面板展示顺序，可配图")]
+    public RoguelikeRestOptionCatalog restOptionCatalog;
+
     public int GetInitialLawnMowerCount() => Mathf.Max(1, initialLawnMowerCount);
 
     public int GetRestLawnMowerBonus() => Mathf.Max(1, restLawnMowerBonus);
@@ -124,13 +135,12 @@ public class RoguelikeEconomyConfig : ScriptableObject
         return rolled * mult;
     }
 
-    /// <summary>搜刮 UI 硬币拆分用面额（大/小）。</summary>
-    public void GetCoinVisualUnits(out int largeUnit, out int smallUnit)
+    /// <summary>搜刮 UI 硬币拆分用面额（钻石/金币/银币）。</summary>
+    public void GetCoinVisualUnits(out int diamondUnit, out int goldUnit, out int silverUnit)
     {
-        largeUnit = Mathf.Max(1, coinVisualUnitLarge);
-        smallUnit = Mathf.Max(1, coinVisualUnitSmall);
-        if (smallUnit > largeUnit)
-            (smallUnit, largeUnit) = (largeUnit, smallUnit);
+        diamondUnit = Mathf.Max(1, coinVisualUnitDiamond);
+        goldUnit = Mathf.Max(1, coinVisualUnitLarge);
+        silverUnit = Mathf.Max(1, coinVisualUnitSmall);
     }
 
     /// <summary>该关卡类型是否应生成 PlantPick 搜刮条目。</summary>
@@ -528,7 +538,8 @@ public class RoguelikeEconomyConfig : ScriptableObject
     public void ResetToStsDefaults()
     {
         runGoldRewardMultiplier = 1;
-        coinVisualUnitLarge = 100;
+        coinVisualUnitDiamond = 1000;
+        coinVisualUnitLarge = 50;
         coinVisualUnitSmall = 10;
         goldRules = new List<RoguelikeGoldRule>
         {
@@ -550,8 +561,9 @@ public class RoguelikeEconomyConfig : ScriptableObject
     public void ResetToPvzCoinDefaults()
     {
         runGoldRewardMultiplier = 10;
-        coinVisualUnitLarge = 1000;
-        coinVisualUnitSmall = 100;
+        coinVisualUnitDiamond = 1000;
+        coinVisualUnitLarge = 50;
+        coinVisualUnitSmall = 10;
         goldRules = new List<RoguelikeGoldRule>
         {
             new RoguelikeGoldRule { kind = RoguelikeLevelKind.Normal, goldMin = 10, goldMax = 20 },
@@ -677,11 +689,11 @@ public class RoguelikePlantPriceBands
 {
     [LabelText("低档 price 上限（含）")]
     [MinValue(0)]
-    public int lowMaxPrice = 75;
+    public int lowMaxPrice = 99;
 
     [LabelText("中档 price 上限（含）")]
     [MinValue(0)]
-    public int midMaxPrice = 125;
+    public int midMaxPrice = 175;
 
     public RoguelikePlantPriceTier GetTier(int price)
     {

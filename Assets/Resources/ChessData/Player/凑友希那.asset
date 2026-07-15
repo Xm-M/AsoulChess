@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u51D1\u53CB\u5E0C\u90A3"
+  m_EditorClassIdentifier: 
+  chessName: "\u51D1\u53CB\u5E0C\u90A3\u5C04\u624B"
+  chessDescription: "\u8FDC\u7A0B\u5C04\u624B\uFF1B\u653B\u51FB\u65F6\u7ED9\u56DB\u90BB\u683C\u53CB\u65B9\u65BD\u52A0\u538B\u529B\u3002"
+  chessShortDescription: "\u8FDC\u7A0B \xB7 \u538B\u529B\u652F\u63F4\u3002"
+  chessEffect: "\u6BCF\u6B21\u653B\u51FB\uFF1A\u4E0A\u4E0B\u5DE6\u53F3\u56DB\u683C\u53CB\u65B9
+    +1 \u538B\u529B\u3002"
+  baseProperty:
+    attack: 20
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 300
+    HpMax: 300
+    lifeStealing: 0
+    healRate: 1
+    speed: 0
+    acceleRated: 1
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 30
+    price: 175
+    rarity: 4000
+    waveLimit: 1
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 2811414589655366307, guid: 7c01afb0373d05c41a2f2ba3632a851a, type: 3}
+  chessSprite: {fileID: 468619901, guid: a57f18c7fd6b45c4a98678cfdfd36b4c, type: 3}
+  plantTags:
+  - Roselia
+  - "\u4E3B\u5531"
+  fetterMemberId: "\u51D1\u53CB\u5E0C\u90A3"
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    rid: 0
+  plantIfCanBuyCard:
+    rid: -2
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

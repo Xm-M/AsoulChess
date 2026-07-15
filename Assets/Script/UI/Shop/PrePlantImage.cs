@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
-using UnityEngine.XR;
+using TMPro;
 
 public class PrePlantImage : MonoBehaviour
 {
@@ -14,6 +14,13 @@ public class PrePlantImage : MonoBehaviour
     public Animator child;
     Dictionary<HandItemType, BaseHandPanel> handDIc;
     public BaseHandPanel currentHand;
+
+    [Tooltip("铲子圆圈检测半径（世界单位）")]
+    [SerializeField] float shovelDetectRadius = 1f;
+    [Tooltip("铲子当前目标名称；可空，运行时会自动创建子节点")]
+    [SerializeField] TMP_Text shovelTargetName;
+
+    public float ShovelDetectRadius => shovelDetectRadius <= 0f ? 1f : shovelDetectRadius;
 
     private void Awake()
     {
@@ -38,7 +45,55 @@ public class PrePlantImage : MonoBehaviour
     private void OnDisable()
     {
         StopAllCoroutines();
+        ClearShovelTargetName();
         OverPlayAnim();
+    }
+
+    public void SetShovelTargetName(string plantName)
+    {
+        EnsureShovelTargetName();
+        if (shovelTargetName == null) return;
+        bool show = !string.IsNullOrEmpty(plantName);
+        if (shovelTargetName.gameObject.activeSelf != show)
+            shovelTargetName.gameObject.SetActive(show);
+        shovelTargetName.text = show ? plantName : string.Empty;
+    }
+
+    public void ClearShovelTargetName()
+    {
+        if (shovelTargetName == null) return;
+        shovelTargetName.text = string.Empty;
+        if (shovelTargetName.gameObject.activeSelf)
+            shovelTargetName.gameObject.SetActive(false);
+    }
+
+    void EnsureShovelTargetName()
+    {
+        if (shovelTargetName != null) return;
+
+        Transform existing = transform.Find("ShovelTargetName");
+        if (existing != null)
+            shovelTargetName = existing.GetComponent<TMP_Text>();
+        if (shovelTargetName != null) return;
+
+        var go = new GameObject("ShovelTargetName", typeof(RectTransform));
+        go.transform.SetParent(transform, false);
+        var rt = (RectTransform)go.transform;
+        rt.anchorMin = new Vector2(0.5f, 0f);
+        rt.anchorMax = new Vector2(0.5f, 0f);
+        rt.pivot = new Vector2(0.5f, 1f);
+        rt.anchoredPosition = new Vector2(0f, -8f);
+        rt.sizeDelta = new Vector2(280f, 48f);
+
+        var tmp = go.AddComponent<TextMeshProUGUI>();
+        tmp.fontSize = 28f;
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.raycastTarget = false;
+        tmp.color = Color.white;
+        if (TMP_Settings.defaultFontAsset != null)
+            tmp.font = TMP_Settings.defaultFontAsset;
+        shovelTargetName = tmp;
+        go.SetActive(false);
     }
     public void TryToPlant(UnityAction CancelPlant,UnityAction<Chess> Plant,PrePlantImage_Data data,HandItemType type)
     {
@@ -87,6 +142,7 @@ public class PrePlantImage : MonoBehaviour
     {
         StopAllCoroutines();
         currentHand = null;
+        ClearShovelTargetName();
         OverPlayAnim();
         gameObject.SetActive(false);
     }
@@ -101,12 +157,14 @@ public class PrePlantImage : MonoBehaviour
 
     public void WhenCancelPlant(UnityAction CancelPlant)
     {
+        ClearShovelTargetName();
         CancelPlant?.Invoke();
         gameObject.SetActive(false);
         currentHand = null;
     }
     public void WhenPlant(Chess chess,UnityAction<Chess> Plant)
     {
+        ClearShovelTargetName();
         Plant?.Invoke(chess);
         gameObject.SetActive(false);
         currentHand = null;

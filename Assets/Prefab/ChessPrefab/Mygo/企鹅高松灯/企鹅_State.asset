@@ -26,13 +26,13 @@ MonoBehaviour:
         rid: 3
       targetState: 5
     - transition:
-        rid: 4
-      targetState: 3
+        rid: 782246495020646403
+      targetState: 1
   - state:
-      rid: 5
+      rid: 782246495020646404
     transitions:
     - transition:
-        rid: 6
+        rid: 782246495020646405
       targetState: 5
   - state:
       rid: 1573513409286111233
@@ -58,15 +58,16 @@ MonoBehaviour:
     - rid: 3
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
       data: 
-    - rid: 4
-      type: {class: IfAnimPlayOverTransition, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 5
-      type: {class: SkillState, ns: , asm: Assembly-CSharp}
+    - rid: 782246495020646403
+      type: {class: IfAnimationOverTransisiton, ns: , asm: Assembly-CSharp}
       data:
-        stateName: 3
+        animName: idle
+    - rid: 782246495020646404
+      type: {class: MoveState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 1
         chess: {fileID: 0}
-    - rid: 6
+    - rid: 782246495020646405
       type: {class: IfDeathTransition, ns: , asm: Assembly-CSharp}
       data: 
     - rid: 1573513409286111233

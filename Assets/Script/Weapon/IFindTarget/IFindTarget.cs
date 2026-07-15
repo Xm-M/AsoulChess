@@ -18,7 +18,9 @@ public class StraightFindTarget:IFindTarget
             user.propertyController.GetAttackRange(),enemyLayer);
         if (hit.collider != null)
         {
-            targets.Add(hit.collider.GetComponent<Chess>());
+            Chess c = hit.collider.GetComponentInParent<Chess>();
+            if (c != null && !c.IfDeath)
+                targets.Add(c);
         }
     }
 }

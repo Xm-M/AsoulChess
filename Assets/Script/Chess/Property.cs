@@ -53,8 +53,9 @@ public class PropertyController:Controller
 
             if (mes.damageType == DamageType.Heal)
             {
-                chess.animatorController.OnGetDamage(mes);
+                // 先回血再通知 Animator，便于 AnimatorController_Nut 等按治疗后比例同步外观档位
                 Heal(mes.damage);
+                chess.animatorController.OnGetDamage(mes);
                 return;
             }
             else if (mes.damageType == DamageType.Miss)

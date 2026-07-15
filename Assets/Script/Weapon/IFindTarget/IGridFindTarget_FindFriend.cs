@@ -14,7 +14,7 @@ public class IGridFindTarget_FindFriend : IGridFindTarget
     [Tooltip("仅检测 mapPos.x 不小于自身的格子（右方阵列）")]
     public bool onlyMapRight = true;
 
-    [Tooltip("为 true 时只返回 HP 比例最低的一名友方（与 StraightFindFirend_Heal_HpMin 一致）")]
+    [Tooltip("为 true 时只返回 HP 比例最低的一名受伤友方（满血友军不作为目标）")]
     public bool pickLowestHpPercent = true;
 
     [Tooltip("选治疗目标时是否排除施法者自身")]
@@ -55,8 +55,7 @@ public class IGridFindTarget_FindFriend : IGridFindTarget
             if (!GridFindTargetGeometry.IsDetectableCell(ax, ay, map.mapSize))
                 continue;
 
-            Tile tile = map.tiles[ax, ay];
-            if (tile == null)
+            if (!GridFindTargetGeometry.TryResolveTileAt(ax, ay, map, out Tile tile))
                 continue;
 
             Vector2 center = GridFindTargetGeometry.GetCellOverlapCenter(tile, ts);
@@ -69,6 +68,8 @@ public class IGridFindTarget_FindFriend : IGridFindTarget
                 if (c == null || c.IfDeath || !IsAlly(user, c))
                     continue;
                 if (excludeSelf && c == user)
+                    continue;
+                if (HealFindTargetUtil.IsAllyAtFullHp(c))
                     continue;
 
                 if (!pickLowestHpPercent)
@@ -136,8 +137,7 @@ public class IGridFindTarget_FindFriend : IGridFindTarget
             if (!GridFindTargetGeometry.IsDetectableCell(ax, ay, map.mapSize))
                 continue;
 
-            Tile tile = map.tiles[ax, ay];
-            if (tile == null)
+            if (!GridFindTargetGeometry.TryResolveTileAt(ax, ay, map, out Tile tile))
                 continue;
 
             Vector2 c = GridFindTargetGeometry.GetCellOverlapCenter(tile, ts);

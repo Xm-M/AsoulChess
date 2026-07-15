@@ -40,15 +40,29 @@ public class RoguelikeMapNodeTypeStyle
 [Serializable]
 public class RoguelikeMapNodeStateStyle
 {
+    [Tooltip("不可达节点半透明遮罩（图标保持亮色，由 overlay 变暗）")]
+    public Color lockedOverlayColor = new Color(0f, 0f, 0f, 0.55f);
+
+    [Tooltip("已走过未通关")]
+    public Color visitedOverlayColor = new Color(0f, 0f, 0f, 0.22f);
+
+    [Tooltip("已通关")]
+    public Color clearedOverlayColor = new Color(0f, 0f, 0f, 0.18f);
+
+    [Tooltip("已通关 ✔ 图标；未配置则不显示")]
+    public Sprite clearedCheckmarkSprite;
+
+    [Tooltip("Legacy：CreateRuntime 无 overlay 时的 Locked 底色")]
     public Color lockedColor = new Color(0.25f, 0.25f, 0.28f, 0.85f);
 
     [Tooltip("与 baseColor 相乘")]
     public Color selectableTint = Color.white;
 
-    [Tooltip("与 baseColor 插值到该色的比例")]
+    [Tooltip("Current 状态图标/底图向白色插值比例")]
     [Range(0f, 1f)]
     public float currentHighlightLerp = 0.35f;
 
+    [Tooltip("Legacy multiply tint；有 overlay 层时不再用于图标")]
     public Color clearedTint = new Color(0.55f, 0.55f, 0.55f, 1f);
     public Color visitedTint = new Color(0.7f, 0.7f, 0.7f, 0.9f);
 }

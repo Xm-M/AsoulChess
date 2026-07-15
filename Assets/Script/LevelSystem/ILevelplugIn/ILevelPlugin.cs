@@ -96,7 +96,8 @@ public class EnterWarPlugin_CarCreate : ISaveableLevelPlugin
 
         carses = new List<Chess>();
         int carCount = ResolveCarCount(levelController, mapPvz.roomTile.Count);
-        if (carCount <= 0)
+        // -1 = 全部行（DifficultyManager）；仅 0 表示不生成
+        if (carCount == 0)
             return;
 
         if (ShouldSpawnOnAllRows(levelController, carCount, mapPvz.roomTile.Count))

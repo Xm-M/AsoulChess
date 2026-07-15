@@ -10,44 +10,45 @@ public static class RoguelikeRewardCoinVisual
     public const float AutoCollectSeconds = 3f;
     const int MaxVisualCoins = 8;
 
-    /// <summary>按大/小面额贪心拆分视觉硬币数量。</summary>
-    public static List<int> SplitGreedy(int amount, int largeUnit, int smallUnit)
+    /// <summary>按钻石/金币/银币面额贪心拆分视觉硬币（仅展示，与 runGold 总额一致近似）。</summary>
+    public static List<int> SplitGreedy(int amount, int diamondUnit, int goldUnit, int silverUnit)
     {
         var list = new List<int>();
         if (amount <= 0)
             return list;
 
-        largeUnit = Mathf.Max(1, largeUnit);
-        smallUnit = Mathf.Max(1, smallUnit);
-        if (smallUnit > largeUnit)
-            (smallUnit, largeUnit) = (largeUnit, smallUnit);
+        diamondUnit = Mathf.Max(1, diamondUnit);
+        goldUnit = Mathf.Max(1, goldUnit);
+        silverUnit = Mathf.Max(1, silverUnit);
+
+        int[] units = { diamondUnit, goldUnit, silverUnit };
+        System.Array.Sort(units, (a, b) => b.CompareTo(a));
 
         int remaining = amount;
-        while (remaining >= largeUnit && list.Count < MaxVisualCoins)
+        for (int u = 0; u < units.Length; u++)
         {
-            list.Add(largeUnit);
-            remaining -= largeUnit;
-        }
-
-        while (remaining >= smallUnit && list.Count < MaxVisualCoins)
-        {
-            list.Add(smallUnit);
-            remaining -= smallUnit;
+            int unit = units[u];
+            while (remaining >= unit && list.Count < MaxVisualCoins)
+            {
+                list.Add(unit);
+                remaining -= unit;
+            }
         }
 
         if (remaining > 0 && list.Count < MaxVisualCoins)
-            list.Add(smallUnit);
+            list.Add(silverUnit);
 
         return list;
     }
 
-    static void ResolveVisualUnits(out int largeUnit, out int smallUnit)
+    static void ResolveVisualUnits(out int diamondUnit, out int goldUnit, out int silverUnit)
     {
-        largeUnit = 100;
-        smallUnit = 10;
+        diamondUnit = 1000;
+        goldUnit = 50;
+        silverUnit = 10;
         var economy = RoguelikeRunService.ActiveRunConfig?.economyConfig;
         if (economy != null)
-            economy.GetCoinVisualUnits(out largeUnit, out smallUnit);
+            economy.GetCoinVisualUnits(out diamondUnit, out goldUnit, out silverUnit);
     }
 
     public static void EnsureRecycleTarget()
@@ -72,7 +73,8 @@ public static class RoguelikeRewardCoinVisual
         int goldAmount,
         RoguelikeRewardEntryWidget widget,
         float scatterRadiusMin = 56f,
-        float scatterRadiusMax = 140f)
+        float scatterRadiusMax = 140f,
+        float scatterDuration = 0.5f)
     {
         if (host == null || goldAmount <= 0)
             return;
@@ -88,11 +90,11 @@ public static class RoguelikeRewardCoinVisual
         float rMin = Mathf.Max(0f, scatterRadiusMin);
         float rMax = Mathf.Max(rMin, scatterRadiusMax);
 
-        ResolveVisualUnits(out int largeUnit, out int smallUnit);
+        ResolveVisualUnits(out int diamondUnit, out int goldUnit, out int silverUnit);
         int runGold = RoguelikeRunService.State?.runGold ?? 0;
         var batch = new RoguelikeRewardCoinBatch(host, runGold);
         Vector2 center = GetWidgetScreenCenter(widget);
-        var amounts = SplitGreedy(goldAmount, largeUnit, smallUnit);
+        var amounts = SplitGreedy(goldAmount, diamondUnit, goldUnit, silverUnit);
 
         for (int i = 0; i < amounts.Count; i++)
         {
@@ -100,7 +102,7 @@ public static class RoguelikeRewardCoinVisual
             float angle = Random.Range(0f, Mathf.PI * 2f);
             float radius = Random.Range(rMin, rMax);
             Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
-            coin.InitRoguelikeRewardScatter(amounts[i], center, offset, batch);
+            coin.InitRoguelikeRewardScatter(amounts[i], center, offset, batch, scatterDuration);
         }
     }
 
@@ -129,6 +131,7 @@ public class RoguelikeRewardCoinBatch
     readonly List<Item_Coin> _coins = new List<Item_Coin>();
     bool _collecting;
     int _flying;
+    int _scatterFinished;
     Coroutine _autoCollectRoutine;
     bool _displayUpdated;
 
@@ -144,8 +147,24 @@ public class RoguelikeRewardCoinBatch
             return;
 
         _coins.Add(coin);
-        if (_autoCollectRoutine == null && _host != null)
-            _autoCollectRoutine = _host.StartCoroutine(AutoCollectAfterDelay());
+    }
+
+    public void OnScatterFinished()
+    {
+        if (_collecting)
+            return;
+
+        _scatterFinished++;
+        if (_scatterFinished >= _coins.Count && _coins.Count > 0)
+            TryStartAutoCollectTimer();
+    }
+
+    void TryStartAutoCollectTimer()
+    {
+        if (_autoCollectRoutine != null || _host == null)
+            return;
+
+        _autoCollectRoutine = _host.StartCoroutine(AutoCollectAfterDelay());
     }
 
     IEnumerator AutoCollectAfterDelay()

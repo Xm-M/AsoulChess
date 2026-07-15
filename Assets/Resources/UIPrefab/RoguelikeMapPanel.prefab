@@ -2131,10 +2131,14 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  nodePrefab: {fileID: 0}
+  nodePrefab: {fileID: 810000006, guid: d4e5f60718293a4b5c6d7e8f901234ab, type: 3}
   showLabelWhenIconPresent: 0
   runtimeNodeLabelFontSize: 16
   nodeStateStyle:
+    lockedOverlayColor: {r: 0, g: 0, b: 0, a: 0.29411766}
+    visitedOverlayColor: {r: 0, g: 0, b: 0, a: 0.18431373}
+    clearedOverlayColor: {r: 0, g: 0, b: 0, a: 0.07450981}
+    clearedCheckmarkSprite: {fileID: 21300000, guid: 5f0dfc9b27b8dc54887fa8f1234c985c, type: 3}
     lockedColor: {r: 0.25, g: 0.25, b: 0.28, a: 0.85}
     selectableTint: {r: 1, g: 1, b: 1, a: 1}
     currentHighlightLerp: 0.35

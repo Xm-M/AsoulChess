@@ -358,6 +358,52 @@ public class LevelController : MonoBehaviour
         return (hpOk && t > mintime) || (t > maxtime);
     }
 
+    /// <summary>肉鸽普关：是否支持 ProgressBar「下一波」按钮（不含显隐/可点判定）。</summary>
+    public virtual bool SupportsManualWaveAdvance()
+    {
+        if (!RoguelikeRunService.IsRoguelikeCombatLevel())
+            return false;
+        return GetType() == typeof(LevelController);
+    }
+
+    /// <summary>mintime 过后且非最后一波、非大波前一波时显示并可点。</summary>
+    public virtual bool CanShowManualAdvanceWaveButton()
+    {
+        if (!SupportsManualWaveAdvance())
+            return false;
+        if (LevelManage.instance == null || !LevelManage.instance.IfGameStart || levelData == null
+            || waveDatas == null || waveDatas.Count == 0)
+            return false;
+        if (currentWave < 0 || currentWave >= levelData.MaxWave - 1 || currentWave >= waveDatas.Count)
+            return false;
+        if (waveDatas[currentWave].Wave % 10 == 9)
+            return false;
+        return t > mintime;
+    }
+
+    /// <summary>与显隐条件相同：mintime 过后即可手动进波（不要求清场/血量阈值）。</summary>
+    public virtual bool CanManualAdvanceWave() => CanShowManualAdvanceWaveButton();
+
+    /// <summary>玩家主动进下一波（与 Update 自动进波共用 DoEnterNextWave）。</summary>
+    public virtual bool TryManualAdvanceWave()
+    {
+        if (!CanManualAdvanceWave())
+            return false;
+        if (waveDatas[currentWave].GetCurrentZombieHpSum() <= 0 && currentWave < levelData.MaxWave - 1)
+            SaveSystem.SaveCurrentLevel();
+        t = 0;
+        DoEnterNextWave();
+        UIManage.GetView<ProgressBar>()?.RefreshEarlyNextWaveButton();
+        return true;
+    }
+
+    protected void RefreshManualAdvanceWaveButton()
+    {
+        if (!SupportsManualWaveAdvance())
+            return;
+        UIManage.GetView<ProgressBar>()?.RefreshEarlyNextWaveButton();
+    }
+
     /// <summary>
     /// 接下来的生成僵尸才是最tm难的地方;
     /// 首先就是波次与生成僵尸的问题
@@ -389,6 +435,7 @@ public class LevelController : MonoBehaviour
                 DoEnterNextWave();
             }
         }
+        RefreshManualAdvanceWaveButton();
     }
     /// <summary>
     /// 游戏结束 生成胜利道具或者失败 生成失败文字

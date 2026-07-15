@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u591A\u9996\u7684\u602A\u7269"
+  m_EditorClassIdentifier: 
+  chessName: "\u591A\u9996\u7684\u602A\u7269"
+  chessDescription: "\u9EC4\u74DC\u7766\u7684\u7B2C\u4E8C\u6761\u5347\u7EA7\u5F62\u6001\uFF1A\u538B\u529B\u53E0\u5206\u8EAB\uFF0C\u591A\u884C\u5C04\u51FB\uFF0C\u6709\u5206\u8EAB\u65F6\u53EF Resume\u3002"
+  chessShortDescription: "\u5347\u7EA7\u690D\u7269 \u00B7 \u5409\u4ED6\u3002"
+  chessEffect: "\u538B\u529B\u6BCF\u6EE1 50 \u6E05\u96F6\u5E76 +1 \u5206\u8EAB\u5934\uFF1B\u672C\u4F53+\u5206\u8EAB\u540C\u6B65\u5C04\u51FB\uFF1B\u81F4\u547D\u4F24\u541E\u5934 Resume\u3002"
+  baseProperty:
+    attack: 15
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 500
+    HpMax: 500
+    lifeStealing: 0
+    healRate: 1
+    speed: 0
+    acceleRated: 1
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 40
+    price: 0
+    rarity: 4000
+    waveLimit: 1
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 2811414589655366307, guid: b9cd8ee37c7ce5e4c83b1c15e25724b2, type: 3}
+  chessSprite: {fileID: 21300000, guid: 331b5e8d3a5393a4cbb5eace084965b2, type: 3}
+  plantTags:
+  - AveMujica
+  - "\u5409\u4ED6"
+  fetterMemberId: "\u82E5\u53F6\u7766"
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    rid: 0
+  plantIfCanBuyCard:
+    rid: -2
+  PlantCardPre: {fileID: 2991298695686272976, guid: 91a77fce93c536448808fdde343467f9, type: 3}
+  PlantEntrepotCardPre: {fileID: 3121051189400196229, guid: 0a232a3f09ea5114a99c4b848888d60c, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: LevelUpPlant, ns: , asm: Assembly-CSharp}
+      data:
+        basePlant: {fileID: 11400000, guid: d47cb005112535b479e233447724e408, type: 2}

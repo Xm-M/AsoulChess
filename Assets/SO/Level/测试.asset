@@ -17,7 +17,8 @@ MonoBehaviour:
   levelName: "\u6D4B\u8BD5\u5173\u5361"
   levelSprit: {fileID: 0}
   levelMode: 5
-  EnterMapPlugin: []
+  EnterMapPlugin:
+  - rid: 782246593363968000
   PreParePlugin:
   - rid: 1
   GameStartPlugin:
@@ -32,6 +33,8 @@ MonoBehaviour:
   outcome:
     rid: -2
   loadSkipToTime: 10
+  roguelikeDifficulty: 0
+  roguelikeKind: 0
   references:
     version: 2
     RefIds:
@@ -50,3 +53,7 @@ MonoBehaviour:
     - rid: 5
       type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
       data: 
+    - rid: 782246593363968000
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}

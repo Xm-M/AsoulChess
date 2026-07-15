@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u8001\u4ED3\u80B2"
+  m_EditorClassIdentifier: 
+  chessName: "\u8001\u4ED3\u80B2"
+  chessDescription: "\u516C\u5F0F\u5E38\u9A7B\u5F39\u9053\u4E3BC\uFF1B\u6280\u80FD\u5237\u65B0\u884C\u5217\u4E0E\u8F68\u8FF9\u5F62\u72B6\u3002"
+  chessShortDescription: "\u6B27\u62C9\u516C\u5F0F\u626B\u5C04"
+  chessEffect: "\u88AB\u52A8\uFF1A\u538B\u529B\u589E\u91CF\u4F20\u5BFC\u516B\u90BB\u683C\u3002\u6280\u80FD\uFF1A\u91CD\u7B97 A/B \u4E0E a:b\u3002"
+  baseProperty:
+    attack: 30
+    attackRate: 1
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 300
+    HpMax: 300
+    lifeStealing: 0
+    healRate: 1
+    speed: 0
+    acceleRated: 1
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 5
+    price: 50
+    rarity: 4000
+    waveLimit: 1
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 8037654820822818511, guid: ddbb7c6964eb4b3458aad797b237bbe5, type: 3}
+  chessSprite: {fileID: 0}
+  plantTags: []
+  fetterMemberId: 
+  chessTileType: 0
+  plantType: 0
+  plantFunction:
+    rid: -2
+  plantIfCanBuyCard:
+    rid: -2
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

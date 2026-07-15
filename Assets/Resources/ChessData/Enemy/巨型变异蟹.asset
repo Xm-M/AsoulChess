@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: "\u5DE8\u578B\u53D8\u5F02\u87F9"
   m_EditorClassIdentifier: 
   chessName: "\u5DE8\u578B\u53D8\u5F02\u87F9"
-  chessDescription: 
-  chessShortDescription: 
-  chessEffect: 
+  chessDescription: "巨型螃蟹 Boss 级单位。"
+  chessShortDescription: "巨型变异蟹。"
+  chessEffect: "高生命与范围攻击（以实装为准）。"
   baseProperty:
     attack: 1800
     attackRate: 0
@@ -42,7 +42,8 @@ MonoBehaviour:
     Size: 1
   chessPre: {fileID: 5696909414064642769, guid: b8be6b7819e4e164e9e62adec27c0e86, type: 3}
   chessSprite: {fileID: 21300000, guid: 8a64131e6e277a74bbcb039200a14440, type: 3}
-  plantTags: []
+  plantTags:
+  - Boss
   fetterMemberId: 
   chessTileType: 5
   plantType: 0

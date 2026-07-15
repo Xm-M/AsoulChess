@@ -138,7 +138,11 @@ public class SkillContext
             || key == ZombieKingContextKeys.Row
             || key == ZombieKingContextKeys.StompBand
             || key == ZombieKingContextKeys.BallVisual
-            || key == ZombieKingContextKeys.SpawnPoolIndex;
+            || key == ZombieKingContextKeys.SpawnPoolIndex
+            || key == MultiHeadMutsumiKeys.CloneHeads
+            || key == MultiHeadMutsumiKeys.GhostList
+            || key == MultiHeadMutsumiKeys.StressTickTimer
+            || key == MultiHeadMutsumiKeys.GhostMaster;
     }
 
     public SkillContextSaveData WriteToSaveData()

@@ -186,7 +186,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3e28e68e6ee6b194493f7bc1c2886bdf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 31120dab2d8e2b8419dadfff5750875d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -386,9 +386,10 @@ MonoBehaviour:
   titleText: {fileID: 0}
   hintText: {fileID: 0}
   optionRoot: {fileID: 2868096345283778060}
+  optionEntryPrefab: {fileID: 7771086241070586120, guid: ba6cea9c5127b264aaa1e321664a2fea, type: 3}
   leaveButton: {fileID: 8822871158157679706}
   secondPermanentSlot: {fileID: 0}
-  optionButtonSize: {x: 420, y: 56}
+  optionButtonSize: {x: 300, y: 200}
   optionSpacing: 10
 --- !u!222 &1948350980988332809
 CanvasRenderer:
@@ -521,7 +522,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1

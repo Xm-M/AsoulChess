@@ -52,16 +52,19 @@ public class MapManage_PVZ : MapManage
         var mode = LevelManage.instance.currentLevel.levelMode;
         bool survival = mode == LevelMode.SurvivalMode;
         bool boss = mode == LevelMode.BossMode;
+        bool story = mode == LevelMode.StoryMode;
         var all = GetComponents<LevelController>();
         LevelController kept = null;
 
         foreach (var c in all)
         {
-            bool correct = survival
-                ? c is LevelController_Endless
-                : boss
-                    ? c is LevelController_Boss
-                    : c is not LevelController_Endless && c is not LevelController_Boss;
+            bool correct = story
+                ? c is LevelController_Story
+                : survival
+                    ? c is LevelController_Endless
+                    : boss
+                        ? c is LevelController_Boss
+                        : c is not LevelController_Endless && c is not LevelController_Boss && c is not LevelController_Story;
             if (correct && kept == null)
             {
                 kept = c;
@@ -73,7 +76,9 @@ public class MapManage_PVZ : MapManage
         if (kept != null)
             return;
 
-        if (survival)
+        if (story)
+            gameObject.AddComponent<LevelController_Story>();
+        else if (survival)
             gameObject.AddComponent<LevelController_Endless>();
         else if (boss)
             gameObject.AddComponent<LevelController_Boss>();

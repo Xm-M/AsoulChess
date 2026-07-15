@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u63ED\u5E55\u55B5\u68A6"
+  m_EditorClassIdentifier: 
+  chessName: "\u63ED\u5E55\u55B5\u68A6\uFF08\u7950\u5929\u5BFA\u82E5\u9EA6\uFF09"
+  chessDescription: "\u7950\u5929\u5BFA\u82E5\u9EA6\u5F02\u5F62\u6001\uFF1A\u79CD\u690D\u540E\u7ACB\u5373\u5BF9
+    3\xD73 \u53CB\u519B\u65BD\u52A0\u538B\u529B\u5E76\u5728\u53CB\u519B\u4F4D\u7F6E\u751F\u6210\u9633\u5149\uFF0C\u968F\u540E\u6D88\u5931\u3002"
+  chessShortDescription: "AveMujica \xB7 \u82E5\u9EA6\u5F62\u6001 \xB7 \u63ED\u5E55\u3002"
+  chessEffect: "\u79CD\u690D\u540E\u5BF9 3\xD73\uFF08\u542B\u81EA\u5DF1\uFF09\u53CB\u519B\u5404\u65BD\u52A0
+    25 \u70B9\u538B\u529B\uFF0C\u5E76\u5728\u6BCF\u540D\u53CB\u519B\u4F4D\u7F6E\u751F\u6210\u9633\u5149\uFF08\u9ED8\u8BA4
+    25\uFF09\u3002"
+  baseProperty:
+    attack: 0
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 300
+    HpMax: 300
+    lifeStealing: 0
+    healRate: 1
+    speed: 0
+    acceleRated: 1
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 0
+    price: 25
+    rarity: 4000
+    waveLimit: 1
+    CD: 30
+    Size: 1
+  chessPre: {fileID: 5120347812904567801, guid: 9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d, type: 3}
+  chessSprite: {fileID: 5743069556333460820, guid: b25af5eb20310584a9f762dddf1b9c33, type: 3}
+  plantTags:
+  - AveMujica
+  - "\u9F13\u624B"
+  fetterMemberId: "\u7950\u5929\u5BFA\u82E5\u9EA6"
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    rid: 0
+  plantIfCanBuyCard:
+    rid: -2
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

@@ -25,12 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 216199374380346239}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -7.082498, y: -0.07489425, z: -0.3479682}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1984552004774067428}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5607227094124317316
 MonoBehaviour:
@@ -171,12 +172,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2482916147486977990}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.32, y: 1.24, z: -1.0322065}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1984552004774067428}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2574060038809358044
 GameObject:
@@ -203,12 +205,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2574060038809358044}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1984552004774067428}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &508762522959783554
 SpriteRenderer:
@@ -221,6 +224,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -309,9 +313,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3991805403020695830}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5850781867055854879}
   - {fileID: 986310237289757188}
@@ -319,7 +325,6 @@ Transform:
   - {fileID: 5461397745500710865}
   - {fileID: 1163057090102550330}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4055832552212940801
 MonoBehaviour:
@@ -338,7 +343,7 @@ MonoBehaviour:
     master: {fileID: 0}
     weaponPos: {fileID: 1163057090102550330}
     weapon:
-      id: 0
+      rid: 0
     OnAttack:
       m_PersistentCalls:
         m_Calls: []
@@ -354,12 +359,15 @@ MonoBehaviour:
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
+    onHealDamage:
+      m_PersistentCalls:
+        m_Calls: []
   skillController:
     user: {fileID: 0}
     passiveSkill:
-      id: 1
+      rid: -2
     activeSkill:
-      id: 2
+      rid: 2
     DM:
       damageFrom: {fileID: 0}
       damageTo: {fileID: 0}
@@ -369,22 +377,23 @@ MonoBehaviour:
       ifCrit: 0
       suppressFloatingDamage: 0
       takeBuff:
-        id: 1
+        rid: -2
     onUseSkill:
       m_PersistentCalls:
         m_Calls: []
     onSkillOver:
       m_PersistentCalls:
         m_Calls: []
+    skillColdFx: {fileID: 0}
     skillEffectFiredThisCast: 0
   stateController:
     currentState:
       state:
-        id: 1
+        rid: -2
       transitions: []
     preState:
       state:
-        id: 1
+        rid: -2
       transitions: []
     stateGraph: {fileID: 11400000, guid: e2ccff8800ef1ca49a95346489261483, type: 2}
     EnterWarState: 4
@@ -396,7 +405,7 @@ MonoBehaviour:
     standTile: {fileID: 0}
     nextTile: {fileID: 0}
     tileMethod:
-      id: 3
+      rid: 3
     OnReachTile:
       m_PersistentCalls:
         m_Calls: []
@@ -411,34 +420,38 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: Weapon_Sample, ns: , asm: Assembly-CSharp}
       data:
         initWeapon:
-          id: 1
+          rid: -2
         findTarget:
-          id: 4
+          rid: 4
         attackFunction:
-          id: 5
-        interval: 0
-    00000001:
-      type: {class: , ns: , asm: }
-    00000002:
+          rid: 5
+        targetEffect: {fileID: 0}
+        selfEffect: {fileID: 0}
+        interval: 3
+    - rid: 2
       type: {class: AttackSkill, ns: , asm: Assembly-CSharp}
       data:
         config: {fileID: 11400000, guid: 179133178ef30a14ca3bfb465e926ea5, type: 2}
         readyChecker:
-          id: 1
+          rid: -2
         effect:
-          id: 6
+          rid: 6
         skillFinish:
-          id: 7
+          rid: 7
         runtime:
-          id: 8
-    00000003:
+          rid: 8
+    - rid: 3
       type: {class: HorMove, ns: , asm: Assembly-CSharp}
-    00000004:
+      data: 
+    - rid: 4
       type: {class: IGridFindTarget, ns: , asm: Assembly-CSharp}
       data:
         relativeCells:
@@ -450,24 +463,25 @@ MonoBehaviour:
         - {x: 0, y: 1}
         - {x: 1, y: 1}
         boxHalfExtents: {x: 1.25, y: 1.25}
-    00000005:
+    - rid: 5
       type: {class: ShootBullet, ns: , asm: Assembly-CSharp}
       data:
         bullet: {fileID: 6348487293743800855, guid: 8f24b198aa245484ab415c4f3dae54c0, type: 3}
-    00000006:
+    - rid: 6
       type: {class: SkillEffect_Saki, ns: , asm: Assembly-CSharp}
       data:
         fearBuff:
-          id: 9
+          rid: 9
         auplayer: {fileID: 5607227094124317316}
         qinggao: {fileID: 11400000, guid: 0365d4e67cd285749a31b904476cb530, type: 2}
-    00000007:
+    - rid: 7
       type: {class: AnimFinish, ns: , asm: Assembly-CSharp}
-    00000008:
+      data: 
+    - rid: 8
       type: {class: SkillRuntimeInfo_Anim, ns: , asm: Assembly-CSharp}
       data:
         currentTime: 0
-    00000009:
+    - rid: 9
       type: {class: Buff_Fear, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u6050\u60E7"
@@ -476,8 +490,8 @@ MonoBehaviour:
         FearEffect: {fileID: 60859552351474783, guid: 5bb58ad649f96fd47b6e29b885d8ff28, type: 3}
         moveRate: 0.5
         speedDownBuff:
-          id: 10
-    0000000A:
+          rid: 10
+    - rid: 10
       type: {class: Buff_BaseValueBuff_AcceleRate, ns: , asm: Assembly-CSharp}
       data:
         buffName: "\u52A0\u901F\u589E\u76CA"
@@ -494,10 +508,29 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.31713533}
+  m_Offset: {x: 0, y: -0.004338652}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.4}
@@ -508,7 +541,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.6342707}
+  m_Size: {x: 1, y: 0.9913226}
   m_EdgeRadius: 0
 --- !u!95 &8382564000308123968
 Animator:
@@ -544,6 +577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8382564000308123968}
+  BeAttack: {fileID: 0}
   sprite: {fileID: 5992515670742096586}
   dizzynesss: 
   attackStateNameAlt: 
@@ -571,12 +605,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5263798042800589270}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1984552004774067428}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5992515670742096586
 SpriteRenderer:
@@ -589,6 +624,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -634,6 +670,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1984552004774067428}
     m_Modifications:
     - target: {fileID: 2673868079073005060, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
@@ -685,6 +722,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cb9055b107484a4e9f4123092314112, type: 3}
 --- !u!4 &3786861702692261438 stripped
 Transform:

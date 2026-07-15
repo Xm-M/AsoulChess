@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
+  m_Name: "\u5DE8\u4EBA\u6D77"
+  m_EditorClassIdentifier: 
+  ifClearStadge: 0
+  sceneName: "\u524D\u9662"
+  levelName: "\u5DE8\u4EBA\u6D77"
+  levelSprit: {fileID: 0}
+  levelMode: 1
+  EnterMapPlugin:
+  - rid: 0
+  - rid: 1
+  PreParePlugin:
+  - rid: 2
+  GameStartPlugin:
+  - rid: 3
+  - rid: 4
+  - rid: 5
+  - rid: 7518340207229534213
+  MaxWave: 10
+  n: 1
+  t: 100
+  zombieList:
+  - {fileID: 11400000, guid: 54b660ca58dee1f45b098cc3f928c826, type: 2}
+  createZombieType: 3
+  nextLevel: {fileID: 0}
+  outcome:
+    rid: -2
+  loadSkipToTime: 10
+  roguelikeDifficulty: 4
+  roguelikeKind: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
+      data:
+        car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
+    - rid: 1
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u9009\u724C"
+        deleyPlayTime: 0
+    - rid: 2
+      type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
+      data:
+        baseSunLight: 50
+        cards: []
+    - rid: 3
+      type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
+      data:
+        audioName: "\u767D\u5929"
+        deleyPlayTime: 3
+    - rid: 4
+      type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
+      data:
+        sunlight: 25
+    - rid: 5
+      type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 7518340207229534213
+      type: {class: GameStartPlugin_Prop, ns: , asm: Assembly-CSharp}
+      data: 

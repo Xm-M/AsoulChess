@@ -742,6 +742,10 @@ public class RoguelikeMapPanel : View
 
     static RoguelikeNodeVisualState ResolveVisualState(RoguelikeRunState state, int nodeId, HashSet<int> selectable)
     {
+        // 已通关优先于 Current：回到地图后立刻显示 ✔，无需先选下一格
+        if (state.IsNodeCleared(nodeId))
+            return RoguelikeNodeVisualState.Cleared;
+
         if (IsRoguelikeMapTestMode())
         {
             if (state.currentNodeId == nodeId)
@@ -751,8 +755,6 @@ public class RoguelikeMapPanel : View
 
         if (state.currentNodeId == nodeId)
             return RoguelikeNodeVisualState.Current;
-        if (state.IsNodeCleared(nodeId))
-            return RoguelikeNodeVisualState.Cleared;
         if (selectable.Contains(nodeId))
             return RoguelikeNodeVisualState.Selectable;
         if (state.IsNodeVisited(nodeId))
@@ -789,6 +791,16 @@ public class RoguelikeMapPanel : View
             case MapRoomType.Rest:
                 Hide();
                 RoguelikeRunService.EnterRestNode();
+                break;
+            case MapRoomType.Event:
+                if (RoguelikeEventFlow.ResolveStoryEventForPendingNode()?.storyLevel == null)
+                {
+                    Debug.LogWarning("[RoguelikeMapPanel] 无法解析剧情事件，请检查 ActMapConfig.eventStoryPool");
+                    Refresh();
+                    return;
+                }
+                Hide();
+                RoguelikeRunService.EnterStoryEventNode();
                 break;
             default:
                 if (RoguelikeRunService.ResolveLevelForPendingCombat() == null)

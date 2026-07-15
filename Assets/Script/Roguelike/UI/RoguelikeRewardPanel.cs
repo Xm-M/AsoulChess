@@ -39,6 +39,8 @@ public class RoguelikeRewardPanel : View
     [Tooltip("硬币相对按钮中心的散开半径（屏幕像素）")]
     [SerializeField] float rewardCoinScatterRadiusMin = 56f;
     [SerializeField] float rewardCoinScatterRadiusMax = 140f;
+    [Tooltip("从按钮中心向外散开的时长（秒）")]
+    [SerializeField] float rewardCoinScatterDuration = 0.5f;
 
     [Header("布局（entryPrefab 为空时 runtime 生成用）")]
     [SerializeField] Vector2 entrySize = new Vector2(420f, 56f);
@@ -310,7 +312,9 @@ public class RoguelikeRewardPanel : View
                 return;
 
             RoguelikeRewardCoinVisual.Spawn(
-                this, amount, widget, rewardCoinScatterRadiusMin, rewardCoinScatterRadiusMax);
+                this, amount, widget,
+                rewardCoinScatterRadiusMin, rewardCoinScatterRadiusMax,
+                rewardCoinScatterDuration);
             AfterEntryClaimed();
             return;
         }

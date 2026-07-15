@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fa2570a2c17b184d9eb27c34048a578, type: 3}
+  m_Name: RoguelikeEconomyConfig
+  m_EditorClassIdentifier: 
+  goldRules:
+  - kind: 1
+    goldMin: 10
+    goldMax: 20
+    enabled: 1
+  - kind: 2
+    goldMin: 250
+    goldMax: 350
+    enabled: 1
+  - kind: 3
+    goldMin: 1000
+    goldMax: 1250
+    enabled: 1
+  - kind: 4
+    goldMin: 300
+    goldMax: 460
+    enabled: 1
+  runGoldRewardMultiplier: 1
+  coinVisualUnitDiamond: 1000
+  coinVisualUnitLarge: 50
+  coinVisualUnitSmall: 10
+  plantPriceBands:
+    lowMaxPrice: 99
+    midMaxPrice: 175
+  plantPoolFilter:
+    excludeOwnedInRun: 1
+    excludeDuplicatesInOffer: 1
+    excludeLevelUpPlants: 1
+    blacklistCreatorIds: []
+    whitelistPool: []
+  plantPickRules:
+  - kind: 1
+    enabled: 1
+    grantPlantPick: 1
+    optionCount: 3
+    tierWeights:
+      weightLow: 60
+      weightMid: 37
+      weightHigh: 3
+  - kind: 2
+    enabled: 1
+    grantPlantPick: 1
+    optionCount: 3
+    tierWeights:
+      weightLow: 45
+      weightMid: 40
+      weightHigh: 15
+  - kind: 3
+    enabled: 1
+    grantPlantPick: 1
+    optionCount: 3
+    tierWeights:
+      weightLow: 20
+      weightMid: 35
+      weightHigh: 45
+  shopRule:
+    enabled: 1
+    slotCount: 5
+    tierWeights:
+      weightLow: 49
+      weightMid: 37
+      weightHigh: 14
+    minPrice: 25
+    priceMultiplierLow: 1
+    priceMultiplierMid: 1.15
+    priceMultiplierHigh: 1.35
+  propPoolFilter:
+    excludeOwnedInRun: 1
+    blacklistPropIds: []
+    whitelistPool: []
+  propRewardRules:
+  - kind: 1
+    enabled: 1
+    grantPropReward: 0
+  - kind: 2
+    enabled: 1
+    grantPropReward: 1
+  - kind: 3
+    enabled: 1
+    grantPropReward: 1
+  - kind: 4
+    enabled: 1
+    grantPropReward: 0
+  initialLawnMowerCount: 6
+  restLawnMowerBonus: 2
+  initialLoadoutSlotCount: 7
+  minLoadoutSlotCount: 7
+  maxLoadoutSlotCount: 15
+  restLoadoutSlotBonus: 1
+  restOptionCatalog: {fileID: 11400000, guid: edf9b1cc94ce31e44ae3f34aeffcb720, type: 2}

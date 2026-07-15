@@ -163,8 +163,7 @@ public static class MujicaDolorisGrid
             if (!GridFindTargetGeometry.IsDetectableCell(ax, ay, map.mapSize))
                 continue;
 
-            Tile tile = map.tiles[ax, ay];
-            if (tile == null)
+            if (!GridFindTargetGeometry.TryResolveTileAt(ax, ay, map, out Tile tile))
                 continue;
 
             Vector2 center = GridFindTargetGeometry.GetCellOverlapCenter(tile, ts);

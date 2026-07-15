@@ -12,6 +12,7 @@ public class RoguelikeRestPanel : View
     [SerializeField] TMP_Text titleText;
     [SerializeField] TMP_Text hintText;
     [SerializeField] Transform optionRoot;
+    [SerializeField] RoguelikeRestOptionWidget optionEntryPrefab;
     [SerializeField] Button leaveButton;
     [Tooltip("二期锻造位，一期隐藏")]
     [SerializeField] GameObject secondPermanentSlot;
@@ -71,51 +72,44 @@ public class RoguelikeRestPanel : View
             if (option == null)
                 continue;
 
-            var go = CreateOptionButton(optionRoot, option, y);
-            _optionButtons.Add(go);
+            var widget = CreateOptionWidget(optionRoot, option, y);
+            if (widget != null)
+                _optionButtons.Add(widget.gameObject);
             y += optionButtonSize.y + optionSpacing;
         }
     }
 
-    GameObject CreateOptionButton(Transform parent, RoguelikeRestOption option, float yOffset)
+    RoguelikeRestOptionWidget CreateOptionWidget(Transform parent, RoguelikeRestOption option, float yOffset)
     {
-        var root = new GameObject($"RestOption_{option.id}", typeof(RectTransform), typeof(Image), typeof(Button));
-        root.transform.SetParent(parent, false);
+        RoguelikeRestOptionWidget widget;
+        if (optionEntryPrefab != null)
+        {
+            widget = Instantiate(optionEntryPrefab, parent);
+            var rt = widget.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                rt.anchorMin = new Vector2(0.5f, 1f);
+                rt.anchorMax = new Vector2(0.5f, 1f);
+                rt.pivot = new Vector2(0.5f, 1f);
+                rt.sizeDelta = optionButtonSize;
+                rt.anchoredPosition = new Vector2(0f, -yOffset);
+            }
+        }
+        else
+        {
+            widget = RoguelikeRestOptionWidget.CreateRuntime(parent, optionButtonSize);
+            var rt = widget.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                rt.anchorMin = new Vector2(0.5f, 1f);
+                rt.anchorMax = new Vector2(0.5f, 1f);
+                rt.pivot = new Vector2(0.5f, 1f);
+                rt.anchoredPosition = new Vector2(0f, -yOffset);
+            }
+        }
 
-        var rt = root.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.5f, 1f);
-        rt.anchorMax = new Vector2(0.5f, 1f);
-        rt.pivot = new Vector2(0.5f, 1f);
-        rt.sizeDelta = optionButtonSize;
-        rt.anchoredPosition = new Vector2(0f, -yOffset);
-
-        var img = root.GetComponent<Image>();
-        img.color = option.enabled
-            ? new Color(0.18f, 0.22f, 0.28f, 0.94f)
-            : new Color(0.12f, 0.12f, 0.12f, 0.55f);
-
-        var btn = root.GetComponent<Button>();
-        btn.targetGraphic = img;
-        if (option.enabled)
-            btn.onClick.AddListener(() => OnOptionClicked(option.id));
-
-        var labelGo = new GameObject("Label", typeof(RectTransform), typeof(TextMeshProUGUI));
-        labelGo.transform.SetParent(root.transform, false);
-        var labelRt = labelGo.GetComponent<RectTransform>();
-        labelRt.anchorMin = Vector2.zero;
-        labelRt.anchorMax = Vector2.one;
-        labelRt.offsetMin = new Vector2(12f, 4f);
-        labelRt.offsetMax = new Vector2(-12f, -4f);
-
-        var label = labelGo.GetComponent<TextMeshProUGUI>();
-        label.alignment = TextAlignmentOptions.MidlineLeft;
-        label.fontSize = 22f;
-        label.color = option.enabled ? Color.white : new Color(0.75f, 0.75f, 0.75f, 0.7f);
-        label.text = string.IsNullOrEmpty(option.description)
-            ? option.title
-            : $"{option.title} — {option.description}";
-
-        return root;
+        widget.Bind(option, OnOptionClicked);
+        return widget;
     }
 
     void OnOptionClicked(string optionId)

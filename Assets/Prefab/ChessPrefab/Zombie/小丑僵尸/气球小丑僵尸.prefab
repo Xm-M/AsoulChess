@@ -802,7 +802,7 @@ MonoBehaviour:
           damageTo: {fileID: 0}
           damage: 0
           damageType: 0
-          damageElementType: 0
+          damageElementType: 1
           ifCrit: 0
           suppressFloatingDamage: 0
           takeBuff:
@@ -1027,6 +1027,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3120455442779294882}
+  BeAttack: {fileID: 0}
   sprite: {fileID: 5529474609249135265}
   dizzynesss: 
   attackStateNameAlt: 

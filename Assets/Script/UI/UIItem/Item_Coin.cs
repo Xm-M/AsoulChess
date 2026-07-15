@@ -45,18 +45,35 @@ public class Item_Coin : UIItem, IPointerEnterHandler
         StartCoroutine(CurveDropThenIdle(startPos, speed));
     }
 
-    /// <summary>肉鸽搜刮：UI 位置 scatter，不加主线 coins；3s 或点击后飞向 Run 金币条。</summary>
-    public void InitRoguelikeRewardScatter(int faceValue, Vector2 screenPos, Vector2 scatterOffset,
-        RoguelikeRewardCoinBatch batch)
+    /// <summary>肉鸽搜刮：从按钮中心外散到 UI 位置，不加主线 coins；停留后飞向 Run 金币条。</summary>
+    public void InitRoguelikeRewardScatter(int faceValue, Vector2 screenCenter, Vector2 scatterOffset,
+        RoguelikeRewardCoinBatch batch, float scatterDuration = 0.5f)
     {
         _roguelikeVisualOnly = true;
         _roguelikeBatch = batch;
         coinAmount = faceValue;
         ifPick = false;
-        ApplyIcon(faceValue);
+        ApplyRoguelikeRewardIcon(faceValue);
         recyclePos = GetRecyclePos();
-        transform.position = screenPos + scatterOffset;
+        transform.position = screenCenter;
         batch?.Register(this);
+        StartCoroutine(RoguelikeScatterThenIdle(screenCenter, screenCenter + scatterOffset, scatterDuration));
+    }
+
+    IEnumerator RoguelikeScatterThenIdle(Vector2 from, Vector2 to, float duration)
+    {
+        duration = Mathf.Max(0.01f, duration);
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / duration));
+            transform.position = Vector2.Lerp(from, to, t);
+            yield return null;
+        }
+
+        transform.position = to;
+        _roguelikeBatch?.OnScatterFinished();
     }
 
     void ApplyIcon(int amount)
@@ -65,6 +82,24 @@ public class Item_Coin : UIItem, IPointerEnterHandler
             return;
 
         Sprite s = amount >= 1000 ? diamondIcon : amount >= 100 ? goldIcon : silverIcon;
+        if (s != null)
+            iconImage.sprite = s;
+    }
+
+    void ApplyRoguelikeRewardIcon(int faceValue)
+    {
+        if (iconImage == null)
+            return;
+
+        int diamond = 1000;
+        int gold = 50;
+        var economy = RoguelikeRunService.ActiveRunConfig?.economyConfig;
+        if (economy != null)
+            economy.GetCoinVisualUnits(out diamond, out gold, out _);
+
+        Sprite s = faceValue >= diamond ? diamondIcon
+            : faceValue >= gold ? goldIcon
+            : silverIcon;
         if (s != null)
             iconImage.sprite = s;
     }
@@ -109,6 +144,7 @@ public class Item_Coin : UIItem, IPointerEnterHandler
 
         ifPick = true;
         _roguelikeBatch = batch;
+        StopAllCoroutines();
         recyclePos = GetRecyclePos();
         StartCoroutine(FlyRoguelikeRoutine());
         return true;

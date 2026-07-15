@@ -193,6 +193,7 @@ MonoBehaviour:
         markBonusRatio: 0.15
         aftershockRatio: 0.5
         explodeRatio: 1.5
+        explodeRadius: 7.5
         summonEffect: {fileID: 0}
     - rid: 4
       type: {class: SkillReady_MouseDown, ns: , asm: Assembly-CSharp}
@@ -207,7 +208,7 @@ MonoBehaviour:
         burstBuff:
           buffName: WisadelBurst
           target: {fileID: 0}
-          extraAttack: 10
+          attackRateBonus: 10
         burstAmmo: 6
         summonEffect: {fileID: 0}
     - rid: 6
@@ -908,10 +909,6 @@ MonoBehaviour:
   subAudio: []
   baseValue: 0
   clipList:
-  - audioKey: 
-    clip: {fileID: 8300000, guid: 837e0d0c21eaf114c9522e2cf24afb9c, type: 3}
-  - audioKey: 
-    clip: {fileID: 8300000, guid: 6fc6911593e172143abd99fa5fa6256b, type: 3}
   - audioKey: 
     clip: {fileID: 8300000, guid: 74d0528489839e940bfed320683b5d20, type: 3}
   _audioUniqueLimit: 3

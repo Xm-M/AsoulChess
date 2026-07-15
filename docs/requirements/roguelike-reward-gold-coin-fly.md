@@ -27,8 +27,9 @@
 战斗胜利 → RoguelikeRewardPanel（仍在战斗场景，RunInfo HUD 已隐藏）
   → 玩家点击金币条目（如 130）
   → TryClaimEntry：runGold += 130（逻辑不变）
-  → 在条目按钮周围生成 N 枚 Item_Coin 视觉（如 2 枚大金币 + 3 枚银币，见下文拆分规则）
-  → 硬币 scatter 在点击区域附近，可停留最多 3s
+  → 在条目按钮中心生成 N 枚 Item_Coin（面额拆分）
+  → 每枚从【按钮中心】SmoothStep 外散 0.5s 到周围（非瞬间闪现）
+  → 全部外散完成后停留最多 3s
   → 3s 到期 或 玩家点击任意硬币 → 全部飞向「左下角 Run 金币条」
   → 汇入后更新条上数字为当前 runGold；播 Coin 音效
   → 金币条目从列表移除（与现有一致）
@@ -43,7 +44,7 @@
 | 加钱目标 | `PlayerSaveData.coins` | **`RoguelikeRunState.runGold`**（已在 TryClaimEntry 加过，视觉仅反馈） |
 | 回收目标 | 左下角 `(80,80)` 或 `RecycleTarget` | **Run 金币条** Transform |
 | 待机 | 等点击/移入 | **最多 3s** 或点击提前收束 |
-| 掉落动画 | 抛物线落地 | **可选简化**：直接在 UI 位置 scatter，不模拟世界抛物线 |
+| 掉落动画 | 抛物线落地 | **从按钮中心外散 0.5s**（SmoothStep），再停留 |
 
 ## 现有业务上下文
 
@@ -71,12 +72,21 @@
 
 ## 硬币数量拆分规则
 
-贪心大/小面额（来自 `RoguelikeEconomyConfig.coinVisualUnitLarge/Small`）：
+三档面额贪心（来自 `RoguelikeEconomyConfig`）：
 
-| 尺度 | 大面额 | 小面额 | 例：1300 runGold |
-|------|--------|--------|------------------|
-| 尖塔（×1） | 100 | 10 | 1 大 + 3 小 |
-| PvZ（×10） | 1000 | 100 | 1 大 + 3 小 |
+| 图标 | 面额 | 字段 |
+|------|------|------|
+| 银币 | **10** | `coinVisualUnitSmall` |
+| 金币 | **50** | `coinVisualUnitLarge` |
+| 钻石 | **1000** | `coinVisualUnitDiamond` |
+
+从大到小贪心拆分，最多 8 枚视觉硬币；余数不足时补 1 枚银币（纯展示）。
+
+| 领取 runGold | 示例拆分 |
+|--------------|----------|
+| 130 | 50×2 + 10×3 |
+| 1300 | 1000×1 + 50×6 |
+| 85 | 50×1 + 10×4（含余数补银） |
 
 ## 可调参数（2026-05-20 增补）
 
@@ -88,27 +98,29 @@
 |------|------|------|
 | `rewardCoinScatterRadiusMin` | 56 | 相对按钮中心最小半径（屏幕像素） |
 | `rewardCoinScatterRadiusMax` | 140 | 最大半径 |
+| `rewardCoinScatterDuration` | **0.5** | 从按钮中心向外散开的时长（秒） |
 
-觉得仍小可调到 **80～200**。
+3s 待机计时在**全部硬币外散完成后**才开始。
 
 ### PvZ 货币尺度（×10）
 
 `RoguelikeEconomyConfig`：
 
-| 字段 | 尖塔 | PvZ 建议 |
-|------|------|----------|
-| `runGoldRewardMultiplier` | 1 | **10**（表内 goldMin/Max 仍用尖塔基数，实际 = 基数×倍率） |
-| `coinVisualUnitLarge` | 100 | **1000**（对应 Item_Coin 大金币图） |
-| `coinVisualUnitSmall` | 10 | **100**（银币图） |
+| 字段 | 默认 | 说明 |
+|------|------|------|
+| `coinVisualUnitDiamond` | 1000 | 钻石图标 |
+| `coinVisualUnitLarge` | 50 | 金币图标 |
+| `coinVisualUnitSmall` | 10 | 银币图标 |
+| `runGoldRewardMultiplier` | 1 | PvZ 建议 **10**（表内 goldMin/Max 基数×倍率） |
 
-一键：`RoguelikeEconomyConfig` Inspector → **重置为 PvZ 尺度（奖励×10 + 视觉面额）**
+一键：`RoguelikeEconomyConfig` Inspector → **重置为 PvZ 尺度（奖励×10）**；视觉面额仍为 1000/50/10。
 
 **注意**：只影响肉鸽 `runGold` 发放与搜刮视觉；主线 `PlayerSaveData.coins` / 僵尸掉币 **不自动×10**（另开需求）。
 
 ## 实现状态（2026-05-20）
 
 - [x] `RoguelikeRewardCoinVisual` + `RoguelikeRewardCoinBatch`
-- [x] `Item_Coin.InitRoguelikeRewardScatter`
+- [x] `Item_Coin.InitRoguelikeRewardScatter` + 外散 0.5s（`RoguelikeScatterThenIdle`）
 - [x] `RoguelikeRewardPanel` 金币条目领取集成 + scatter Inspector
 - [x] `ParsePanel.ShowRunGoldDisplay`
 - [x] `RoguelikeEconomyConfig.runGoldRewardMultiplier` + 视觉面额 + PvZ 预设按钮
@@ -135,11 +147,11 @@
 
 ## 验收标准
 
-- [ ] 肉鸽战斗胜利搜刮：点 130 金币，见硬币出现并飞向左下角，条上为 Run 金币
-- [ ] 主线关卡捡 Item_Coin：仍加 `PlayerSaveData.coins`，左下角仍为 coins
-- [ ] 继续冒险后 runGold 与飞币前一致（只视觉，不重复加钱）
-- [ ] 3s 无操作自动收束；点击硬币提前收束
-- [ ] PlantPick / 道具条目无硬币动画
+- [x] 肉鸽战斗胜利搜刮：硬币从按钮中心外散 0.5s，停留后飞向左下角 Run 金币条
+- [x] 3s 无操作自动收束；点击硬币提前收束
+- [x] 领取后 runGold 数值正确（不重复加钱）
+- [x] PlantPick / 道具条目无硬币动画
+- [x] 主线 Item_Coin 行为不变（仍加 PlayerSaveData.coins）
 
 ## 风险评估
 
@@ -157,9 +169,9 @@
 
 ## 待用户确认
 
-1. **拆分规则**：✅ A — 100/10 贪心（130 → 1×100 + 3×10）
+1. **拆分规则**：✅ 钻石 1000 / 金币 50 / 银币 10 三档贪心
 2. **左下角 UI**：✅ A — 复用 `ParsePanel.coinDisplayObject`，`ShowRunGoldDisplay(runGold)`
-3. **出生动画**：✅ A — UI scatter，无抛物线
+3. **出生动画**：✅ 从按钮中心外散 **0.5s**，再停留后飞左下角
 
 ## 实现状态（2026-05-20）
 

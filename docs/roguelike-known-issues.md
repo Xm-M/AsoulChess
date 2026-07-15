@@ -2,7 +2,7 @@
 
 > **用途**：集中记录当前已发现、尚未关闭的问题（Bug、功能缺口、配置风险、文档偏差）。  
 > **维护**：发现新问题请追加到对应章节；修复后改状态并注明日期/PR。  
-> **最后更新**：2026-05-20  
+> **最后更新**：2026-05-20（Prefab 验收、RG-P03、GP-001/002 closed）
 > **关联**：[制作进度](./roguelike-progress.md) · [策划总览](../肉鸽.md) · [需求目录](./requirements/)
 
 ---
@@ -36,56 +36,19 @@
 
 ## 一、活跃 Bug（影响可玩性）
 
-### GP-001 · 霸凌者几乎只放一次技能
-
-- **状态**：open
-- **优先级**：P1
-- **类型**：bug
-- **发现**：2026-05（关卡/技能排查）
-- **现象**：霸凌者入场后长时间不再放技能，或长时间卡在技能相关动画状态。
-- **分析（待代码验证）**：
-  1. `Assets/SO/Skill/僵尸/霸凌者.asset`：`baseCd: 50000`、`startCd: 49990` → 首次约 10s 后放技能，之后 CD 需再攒满 50000，整局可能只放一次。
-  2. `jump.anim` / `AnimFinish` 时序偏长；`skill` 结束自动切 `jump`；若 `UseSkill` 动画事件未触发，可能长时间停在 `SkillState`。
-  3. `Passive_Zombie_BullyMan.FindTarget` 射线命中无 `Chess` 组件时可能 NRE，导致被动逻辑中断。
-- **建议修复**：
-  - 调整 Skill SO 的 `baseCd` / `startCd` 至合理值。
-  - 核对 `霸凌者.controller` 与 `skill.anim` 动画事件。
-  - `FindTarget` 对无 `Chess` 碰撞体做 null 防护。
-- **关联文件**：`Passive_Zombie_BullyMan.cs`、`ISkillEffect_Zombie_BullyMan.cs`、`霸凌者.prefab`、`霸凌者.controller`
-
----
-
-### GP-002 · 撑杆跳僵尸出生后短暂往后退
-
-- **状态**：open
-- **优先级**：P1
-- **类型**：bug
-- **发现**：2026-05（进场/朝向排查）
-- **现象**：撑杆跳僵尸出现在场地后，会先向错误方向（往后）移动几格，再恢复正常向左进攻。
-- **分析（待代码验证）**：
-  1. `EnemyManage.CreateChess` 在 `WhenChessEnterWar()` **之后**才设置 `transform.right = Vector2.left`。
-  2. 撑杆跳 `EnterWarState: 1`（MoveState）进场即 `StartMoving()`；`HorMove.FindNextTile` 在朝向未设好时按默认 +X 算 `nextTile`。
-  3. `ISkillEffect_Zombie_JumpToTagret` 会提前改 `standTile`，与错误朝向叠加更明显。
-- **建议修复**：
-  - 在 `WhenChessEnterWar` 之前设置敌方朝向；或设朝向后重算 `nextTile`。
-  - 评估 `startCd` 与 `baseCd` 是否导致进场立刻跳技能。
-- **关联文件**：`EnemyManage`（CreateChess）、`ISkillEffect_Zombie_JumpToTagret.cs`、撑杆跳 prefab / Skill SO
+_当前无 open 的 P1 战斗 Bug。GP-001 / GP-002 已于 2026-05-20 关闭，见 §七。_
 
 ---
 
 ## 二、肉鸽功能缺口（非 Bug，但影响完整度）
 
-### RG-001 · 休息房选项无实际收益（待接 v2 效果）
+### RG-001 · 休息房选项无实际收益
 
-- **状态**：open（骨架已完成，效果待开发）
+- **状态**：closed（2026-05-20）
 - **优先级**：P1
 - **类型**：gap
-- **现象**：休息房 UI / 流程已有，但两个常驻选项尚未接入 Run 数值。
-- **策划定稿（2026-05-20）** — 每节点 **二选一**（扩容格下一期）：
-  1. **休息（小推车）**：✅ `runLawnMowerCount += 2`（开局 6；spawn = Min(行数, owned)）
-  2. **扩容（携带格）**：🔲 下一期 RG-008
-- **建议**：优先做此条，顺带落地 RG-008 槽位系统与小推车肉鸽分支。
-- **关联**：`RoguelikeRestFlow.cs`、`RoguelikeRunState.cs`、`EnterWarPlugin_CarCreate`、`PlantsShop.cs`、`docs/requirements/roguelike-rest-node.md` v2
+- **说明**：休息（小推车 +2）、扩容（携带格 +1）已接入；选项内容改 `RoguelikeEconomyConfig.restOptionCatalog` + 配图。
+- **关联**：`RoguelikeRestFlow.cs`、`RoguelikeRestOptionCatalog`、`docs/requirements/roguelike-rest-option-cards.md`
 
 ---
 
@@ -121,14 +84,14 @@
 
 ---
 
-### RG-005 · 战斗场景缺少统一肉鸽 HUD
+### RG-005 · 战斗场景 Run 上下文展示
 
-- **状态**：open
+- **状态**：fixed（2026-05-20，待 Play 验收）
 - **优先级**：P1
 - **类型**：gap
-- **现象**：`RoguelikeRunInfoPanel` 主要在地图场景展示；战斗关内金币/层数/卡组入口不统一。
-- **建议**：战斗场景复用 HUD 或抽「肉鸽通用条」规范（见 RG-007）。
-- **关联**：`RoguelikeRunInfoPanel.cs`
+- **方案**：不整板显示 `RoguelikeRunInfoPanel`；扩展 `ProgressBar.stadgeName` 为肉鸽关 **`Act · Ln · 关卡名`**。
+- **剩余**：战斗内 Run 金币/卡组快捷入口仍无（非本期范围）。
+- **关联**：`ProgressBar.cs`、`RoguelikeRunInfoFormatter.FormatProgressBarStageName`
 
 ---
 
@@ -142,41 +105,34 @@
 
 ---
 
-### RG-007 · 「肉鸽通用面板」规范未落地
+### RG-007 · 「肉鸽通用面板」规范
 
-- **状态**：open
+- **状态**：partial（2026-05-20）
 - **优先级**：P1
 - **类型**：gap
-- **现象**：缺少统一规范：层数、Run 金币、道具栏、查看卡组入口、设置/暂停入口的布局约定。
-- **说明**：`RoguelikeRunInfoPanel` 已覆盖部分字段，但未定义为全模式 SSOT。
-- **关联**：`docs/roguelike-progress.md` UI 未完成第 4 条
+- **已完成**：Act、Run 金币、小推车、携带格、**地图层 Ln**（Prefab 已绑）、卡组、设置。
+- **未完成**：Run **道具栏**。
+- **关联**：`docs/requirements/roguelike-hud-map-layer.md`
 
 ---
 
-### RG-008 · 本关可携带格子固定为 10，无法增减
+### RG-008 · 本关可携带格子增减
 
-- **状态**：open
+- **状态**：closed（2026-05-20）
 - **优先级**：P1
 - **类型**：gap
-- **发现**：2026-05-20
-- **现象**：肉鸽战斗前选卡界面 `PlantsShop.maxCount` 默认 10，Run 内无机制增减「本关可携带植物数」。
-- **期望**（2026-05-20 与 RG-001 对齐）：
-  - Run 字段 `runLoadoutSlotCount`，Clamp **7~15**，开局默认待策划确认（建议 **10**）。
-  - 休息房「扩容」+1；其它来源（Prop/奖励）可后续扩展。
-  - 战斗前 `PlantsShop.maxCount` 读 Run 态，非肉鸽仍用 Inspector 默认。
-- **关联**：`PlantsShop.cs`（`maxCount`）、`PreParePlugun_ShowPlantShop.cs`、`docs/game-design/plant-deckbuilding-design.md` §槽位
+- **说明**：`runLoadoutSlotCount`（7~15）、休息 +1、`PlantsShop.maxCount` + 顶栏中间格 `SetActive` 已落地。
+- **关联**：`PlantsShop.cs`、`docs/requirements/roguelike-loadout-slot-ui.md`
 
 ---
 
-### RG-009 · 肉鸽模式缺少「提前进入下一波」按钮
+### RG-009 · 肉鸽模式「提前进入下一波」按钮
 
-- **状态**：open
+- **状态**：done（2026-05-20）
 - **优先级**：P1
-- **类型**：gap
-- **发现**：2026-05-20
-- **现象**：波次推进仅依赖 `LevelController` 自动条件（清空 + mintime / maxtime 等），肉鸽局内无手动「下一波」入口。
-- **期望**：肉鸽战斗 HUD 提供按钮，在波次可推进条件满足时允许玩家 **提前** 进入下一波（需与 `WaveCanAdvance` / `DoEnterNextWave` 对齐，避免最后一波误触）。
-- **关联**：`LevelController.cs`、`LevelOutCome_Roguelike`、RG-005 战斗 HUD
+- **类型**：gap → 已实现
+- **实现**：`LevelController` 手动进波 API + `ProgressBar.EarlyNextWaveButton`；仅肉鸽普关；mintime 后显隐；保留自动进波
+- **关联**：`LevelController.cs`、`ProgressBar.cs`、`docs/requirements/roguelike-early-next-wave.md`
 
 ---
 
@@ -200,18 +156,14 @@
 | ID | 问题 | 优先级 | 状态 |
 |----|------|--------|------|
 | RG-P01 | 乐队选择「开始挑战」leave 离场 + 观众欢呼 | P1 | fixed（2026-06-11） |
-| RG-P02 | 首次进地图无 Boss→起点 intro 滚动 | P1 | open |
-| RG-P03 | 胜利金币无飘字/强反馈 | P2 | open（代码已有，待验收） |
-| ~~RG-P04~~ | ~~地图连线 BloodLine~~ | — | **cancelled**（2026-05-20：维持 UI Image 折线，不改 Canvas / LineRenderer） |
-| ~~RG-P05~~ | ~~乐队 BGM / AudioClip 未配齐~~ | — | **closed**（2026-05-20 资源已齐） |
-| ~~RG-P06~~ | ~~独立「查看当前卡牌」页~~ | — | **closed**（2026-05-20：`RoguelikeRunInfoPanel` 卡组弹层） |
-| RG-P07 | 地图节点视觉：已通关 ✔、不可达变暗、房间图标保持亮色 | P1 | open |
+| RG-P02 | 首次进地图 Boss→起点 intro 滚动 | P1 | fixed（2026-05-20，`mapIntroEnabled`） |
+| RG-P03 | 胜利金币飞散 / 飞 Run 金币条 | P2 | closed（2026-05-20 验收） |
+| ~~RG-P04~~ | ~~地图连线 BloodLine~~ | — | **cancelled** |
+| ~~RG-P05~~ | ~~乐队 BGM~~ | — | **closed** |
+| ~~RG-P06~~ | ~~独立「查看当前卡牌」页~~ | — | **closed** |
+| RG-P07 | 地图节点视觉 | P1 | closed（2026-05-20；✔ Sprite 已绑） |
 
-**RG-P07 细节**：
-- **已通关（Cleared）**：叠加 ✔ 标记（当前仅 `clearedTint` 整节点变灰，无勾选图标）。
-- **不可达（Locked）**：保持变暗（`lockedColor`），按钮不可点。
-- **所有房间类型**：图标/底图应 **保持亮色** 以区分房间类型；状态差异通过 overlay（✔、边框、变暗层）表达，而非整颗节点发灰（当前 `Cleared`/`Visited` 对底图乘 `clearedTint`/`visitedTint`）。
-- **关联**：`RoguelikeMapNodeWidget.cs`、`RoguelikeMapVisualSettings.cs`、`RoguelikeMapPanel.prefab`
+**RG-P07 备注**：`clearedCheckmarkSprite` 已配置于 MapPanel → Node State Style。
 
 ---
 
@@ -344,19 +296,21 @@
 |----|------|----------|------|
 | RG-F01 | 肉鸽暂停「返回主菜单」不存档、不关地图 | `SaveAndExitToMainMenu` + `ParsePanel` 分支 + `TryResumePendingCombatNode` | 2026-05-30 |
 | RG-F02 | Run 失败/全通无结算页 | `RoguelikeRunEndSummary` + `RoguelikeRewardPanel.ShowRunEnd` | 2026-06-11 |
-| RG-F03 | 乐队切换无动画 / BGM NRE | `RoguelikeBandSelectPanel` change 动画 + `AudioPlayer.EnsureAudioSource` | 2026-05 |
-
----
+| RG-F04 | 休息选项 Catalog 未绑 EconomyConfig | `restOptionCatalog` 指向 `RoguelikeRestOptionCatalog` | 2026-05-20 |
+| RG-F05 | 地图通关 ✔ 需选下一格才显示 | Cleared 优先于 Current | 2026-05-20 |
+| GP-F01 | GP-001 霸凌者几乎只放一次技能 | Skill CD / 动画 / FindTarget | 2026-05-20 |
+| GP-F02 | GP-002 撑杆跳进场往后退 | 敌方朝向在 EnterWar 前设置 | 2026-05-20 |
+| RG-F03 | 乐队切换无动画 / BGM NRE | BandSelect + AudioSource | 2026-05 |
 
 ## 八、建议处理顺序（竖切 Act1）
 
-1. **P0 配置**：RG-C02 配全 Act1 关卡池；RG-C03 Prefab 清单
-2. **P1 玩法**：**RG-001 休息房效果（小推车 +2 / 格 +1）+ RG-008 槽位**；RG-002 事件节点策略定稿
-3. **P1 内容基线**：RG-A01 植物实现审计；RG-C06 / RG-C07 配置补全
-4. **P1 Bug**：GP-001 / GP-002（学校/前院关卡常见僵尸）
-5. **P1 体验**：RG-P02 地图 intro；RG-P07 节点视觉；RG-009 提前进波；RG-005 战斗 HUD
-6. **P1 道具**：RG-013 通用道具 + RG-003 奖励闭环
-7. **文档**：DOC-01～03 与 progress 对齐
+1. **P0 配置**：RG-C02 配全 Act1 关卡池
+2. **P1 玩法**：RG-002 事件节点策略
+3. **P1 道具**：RG-013 + RG-003（RG-007 道具栏）
+4. **P1 内容**：RG-A01 植物审计；RG-C06 / RG-C07
+5. **文档**：DOC-01～03 与 progress 对齐
+
+~~已完成~~：RG-P03 金币飞散；RG-P07 ✔ / HUD 层数 Prefab；GP-001 / GP-002
 
 ---
 
@@ -364,6 +318,7 @@
 
 | 日期 | 变更 |
 |------|------|
-| 2026-05-20 | RG-P04 cancelled；RG-P05/P06 closed；RG-001 v2（小推车 +2 / 扩容格 +1）；需求卡 rest-node v2 |
+| 2026-05-20 | RG-P03 closed；GP-001/002 closed；RG-P07/RG-007 Prefab 验收（✔ Sprite、层数 icon） |
+| 2026-05-20 | RG-001/008 closed；RG-005 fixed；RG-007 partial；RG-P02/P07 fixed |
 | 2026-05-20 | 新增 RG-008/009/013、RG-P07、RG-A01、RG-C06/C07 |
-| 2026-05-30 | 初版：汇总对话排查、progress、requirements 与代码 Warning 路径 |
+| 2026-05-30 | 初版 |

@@ -97,13 +97,7 @@ public class Chess : MonoBehaviour
         //}
         IfDeath = true;
         ResumeSelectable();
-        skillController.WhenControllerLeaveWar();
-        equipWeapon.WhenControllerLeaveWar();
-        buffController.WhenControllerLeaveWar();
-        stateController.WhenControllerLeaveWar();
-        moveController.WhenControllerLeaveWar();
-        propertyController.WhenControllerLeaveWar();
-        animatorController?.WhenControllerLeaveWar();
+        LeaveControllers();
         ChessTeamManage.Instance.RecycleChess(this);
         EventController.Instance.TriggerEvent<Chess>(EventName.WhenDeath.ToString(), this);
         DeathEvent?.RemoveAllListeners();
@@ -111,6 +105,30 @@ public class Chess : MonoBehaviour
         OnRemove.RemoveAllListeners();
         StopAllCoroutines();
        
+    }
+
+    /// <summary>
+    /// 生存轮界/重种：离场回收，不触发死亡事件与掉落。
+    /// </summary>
+    public void RemoveFromFieldSilent()
+    {
+        ResumeSelectable();
+        LeaveControllers();
+        OnRemove?.RemoveAllListeners();
+        DeathEvent?.RemoveAllListeners();
+        StopAllCoroutines();
+        ChessTeamManage.Instance.RecycleChess(this);
+    }
+
+    void LeaveControllers()
+    {
+        skillController.WhenControllerLeaveWar();
+        equipWeapon.WhenControllerLeaveWar();
+        buffController.WhenControllerLeaveWar();
+        stateController.WhenControllerLeaveWar();
+        moveController.WhenControllerLeaveWar();
+        propertyController.WhenControllerLeaveWar();
+        animatorController?.WhenControllerLeaveWar();
     }
     
 
@@ -173,6 +191,17 @@ public class Chess : MonoBehaviour
     {
         if(LevelManage.instance.IfGameStart)
             skillController.UseSkill();
+    }
+
+    /// <summary>
+    /// Animation Event 通用回调：执行 <c>skillController.context["animCallback"]</c> 上的 <see cref="UnityAction"/>。
+    /// 用于变身等一次性演出（如羽川翼 transform / transform_back 末帧）。
+    /// </summary>
+    public void AnimCallback()
+    {
+        if (skillController?.context == null) return;
+        if (skillController.context.TryGet("animCallback", out UnityAction cb))
+            cb?.Invoke();
     }
     /// <summary>
     /// 这个估计是...我也不知道

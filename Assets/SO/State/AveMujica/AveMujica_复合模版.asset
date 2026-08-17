@@ -67,6 +67,12 @@ MonoBehaviour:
     - transition:
         rid: 17
       targetState: 4
+  - state:
+      rid: 131589904812212239
+    transitions:
+    - transition:
+        rid: 131589904812212240
+      targetState: 4
   references:
     version: 2
     RefIds:
@@ -140,3 +146,12 @@ MonoBehaviour:
       type: {class: IWaitTimeTransition, ns: , asm: Assembly-CSharp}
       data:
         WaitTime: 20
+    - rid: 131589904812212239
+      type: {class: ResumeState, ns: , asm: Assembly-CSharp}
+      data:
+        stateName: 7
+        chess: {fileID: 0}
+    - rid: 131589904812212240
+      type: {class: IWaitTimeTransition, ns: , asm: Assembly-CSharp}
+      data:
+        WaitTime: 3

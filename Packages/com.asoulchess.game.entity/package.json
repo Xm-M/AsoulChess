@@ -1,0 +1,37 @@
+{
+  "name": "com.asoulchess.game.entity",
+  "version": "0.6.0",
+  "displayName": "AsoulChess Game Entity",
+  "description": "P1-3: State FSM + Dizzy. P1-2 Buff. P1-1 Property. Lifecycle P1-0.",
+  "unity": "2022.3",
+  "dependencies": {
+    "com.asoulchess.game.core": "0.2.0"
+  },
+  "keywords": [
+    "entity",
+    "chess",
+    "combat",
+    "lifecycle",
+    "asoulchess"
+  ],
+  "author": {
+    "name": "AsoulChess"
+  },
+  "samples": [
+    {
+      "displayName": "Lifecycle Demo",
+      "description": "P1-0: dummy controller through Init → EnterCombat → Tick → Die.",
+      "path": "Samples~/LifecycleDemo"
+    },
+    {
+      "displayName": "Entity Demo",
+      "description": "Register core controllers manually; buff + instant damage skill.",
+      "path": "Samples~/EntityDemo"
+    },
+    {
+      "displayName": "Combat Grid Demo",
+      "description": "Requires Optional/Board + com.asoulchess.game.board. Grid step + attack.",
+      "path": "Samples~/CombatGridDemo"
+    }
+  ]
+}

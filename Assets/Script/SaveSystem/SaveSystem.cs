@@ -9,8 +9,15 @@ using UnityEngine;
 /// </summary>
 public static class SaveSystem
 {
-    /// <summary>关卡存档加载开关，默认关闭。修好存档逻辑后设为 true 启用。</summary>
+    /// <summary>关卡存档加载开关。为 false 时仍允许生存模式存读（survival-save-wave-hud）。</summary>
     public static bool EnableLevelSaveLoad { get; set; } = false;
+
+    /// <summary>是否允许对该关卡做文件存读。</summary>
+    public static bool CanSaveLoadLevel(LevelData levelData)
+    {
+        if (EnableLevelSaveLoad) return true;
+        return levelData != null && levelData.levelMode == LevelMode.SurvivalMode;
+    }
 
     private const string SaveFolder = "LevelSaves";
     private const string SaveExtension = ".json";
@@ -43,12 +50,13 @@ public static class SaveSystem
     }
 
     /// <summary>
-    /// 检查指定关卡是否有存档。Test 模式下返回 false。
+    /// 检查指定关卡是否有存档。
+    /// 非生存关在 Test 模式下返回 false；生存关允许 Test 下存读以便联调。
     /// </summary>
     public static bool HasSaveForLevel(LevelData levelData)
     {
-        if (!EnableLevelSaveLoad) return false;
-        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test) return false;
+        if (!CanSaveLoadLevel(levelData)) return false;
+        if (IsTestModeBlockingNonSurvival(levelData)) return false;
         if (levelData == null) return false;
         string id = GetLevelSaveId(levelData);
         if (string.IsNullOrEmpty(id)) return false;
@@ -61,23 +69,71 @@ public static class SaveSystem
     /// </summary>
     public static void SaveCurrentLevel()
     {
-        if (!EnableLevelSaveLoad) return;
+        WriteLevelSave(requireGameStarted: true);
+    }
+
+    /// <summary>
+    /// 生存模式专用：轮间选卡（IfGameStart=false）离场时仍写入快照，保证场上植物可恢复。
+    /// 若场上已无单位且未在开战（例如主菜单再次点进关触发的 LeaveState），禁止用空档覆盖已有存档。
+    /// </summary>
+    public static void SaveSurvivalSnapshotAllowPaused()
+    {
+        var level = LevelManage.instance?.currentLevel;
+        if (level == null || level.levelMode != LevelMode.SurvivalMode)
+            return;
+
+        if (!LevelManage.instance.IfGameStart && !HasAnyLivingPlayerPlant())
+        {
+            if (HasSaveForLevel(level))
+            {
+                Debug.Log("[SaveSystem] 跳过空快照覆盖生存存档");
+                return;
+            }
+        }
+
+        WriteLevelSave(requireGameStarted: false);
+    }
+
+    static bool HasAnyLivingPlayerPlant()
+    {
+        var team = ChessTeamManage.Instance?.GetTeam("Player");
+        if (team == null) return false;
+        foreach (var chess in team)
+        {
+            if (chess != null && !chess.IfDeath && chess.moveController?.standTile != null)
+                return true;
+        }
+        return false;
+    }
+
+    static bool IsTestModeBlockingNonSurvival(LevelData levelData)
+    {
+        if (GameManage.instance == null || GameManage.instance.mode != GameMode.Test)
+            return false;
+        // 生存模式在 Test 下也允许存读，否则联调永远看不到进度
+        return levelData == null || levelData.levelMode != LevelMode.SurvivalMode;
+    }
+
+    static void WriteLevelSave(bool requireGameStarted)
+    {
+        var level = LevelManage.instance?.currentLevel;
+        if (!CanSaveLoadLevel(level)) return;
         if (RoguelikeRunService.HasActiveRun)
             return;
-        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test)
+        if (IsTestModeBlockingNonSurvival(level))
         {
-            Debug.Log("[SaveSystem] Test 模式，跳过存档");
+            Debug.Log("[SaveSystem] Test 模式，跳过非生存关卡存档");
             return;
         }
-        if (LevelManage.instance == null || LevelManage.instance.currentLevel == null)
+        if (LevelManage.instance == null || level == null)
         {
             Debug.LogWarning("[SaveSystem] 无法保存：LevelManage 或 currentLevel 为空");
             return;
         }
-        if (LevelManage.instance.currentLevel.levelMode == LevelMode.BossMode)
+        if (level.levelMode == LevelMode.BossMode)
             return;
 
-        if (!LevelManage.instance.IfGameStart)
+        if (requireGameStarted && !LevelManage.instance.IfGameStart)
         {
             Debug.Log("[SaveSystem] 游戏未开始，不触发保存");
             return;
@@ -90,7 +146,7 @@ public static class SaveSystem
             return;
         }
 
-        string levelId = GetLevelSaveId(LevelManage.instance.currentLevel);
+        string levelId = GetLevelSaveId(level);
         if (string.IsNullOrEmpty(levelId))
         {
             Debug.LogWarning("[SaveSystem] 关卡名为空，无法保存");
@@ -102,7 +158,7 @@ public static class SaveSystem
         try
         {
             File.WriteAllText(path, json);
-            Debug.Log($"[SaveSystem] 存档成功: {path}");
+            Debug.Log($"[SaveSystem] 存档成功: {path}（植物数={data.playerPlants?.Count ?? 0}）");
         }
         catch (Exception e)
         {
@@ -112,15 +168,15 @@ public static class SaveSystem
 
     /// <summary>
     /// 加载指定关卡的存档。失败时删除损坏的存档文件，并设置 LastLoadFailed / LastLoadError。
-    /// Test 模式下不读档，返回 null。
+    /// 非生存关在 Test 模式下不读档；生存关允许 Test 下读档。
     /// </summary>
     public static GameSaveData LoadSaveData(LevelData levelData)
     {
         LastLoadFailed = false;
         LastLoadError = null;
-        if (GameManage.instance != null && GameManage.instance.mode == GameMode.Test)
+        if (IsTestModeBlockingNonSurvival(levelData))
         {
-            Debug.Log("[SaveSystem] Test 模式，跳过读档");
+            Debug.Log("[SaveSystem] Test 模式，跳过非生存关卡读档");
             return null;
         }
         if (levelData == null) return null;
@@ -153,7 +209,7 @@ public static class SaveSystem
             {
                 Debug.LogWarning($"[SaveSystem] 存档版本不兼容: {data.saveVersion}，当前 {CurrentSaveVersion}");
             }
-            Debug.Log($"[SaveSystem] 读档成功: {path} (v{data.saveVersion})");
+            Debug.Log($"[SaveSystem] 读档成功: {path} (v{data.saveVersion}，植物数={data.playerPlants?.Count ?? 0})");
             return data;
         }
         catch (Exception e)
@@ -272,11 +328,33 @@ public static class SaveSystem
         var team = ChessTeamManage.Instance?.GetTeam("Player");
         if (team == null) return list;
 
+        bool survival = LevelManage.instance?.currentLevel != null &&
+                        LevelManage.instance.currentLevel.levelMode == LevelMode.SurvivalMode;
+
         foreach (var chess in team)
         {
             if (chess == null || chess.IfDeath) continue;
             var tile = chess.moveController?.standTile;
             if (tile == null) continue;
+
+            if (survival)
+            {
+                list.Add(new ChessSaveData
+                {
+                    creatorId = chess.propertyController?.creator?.chessName ?? "",
+                    tileX = tile.mapPos.x,
+                    tileY = tile.mapPos.y,
+                    hp = chess.propertyController.GetHp(),
+                    hpMax = chess.propertyController.GetMaxHp(),
+                    buffs = new System.Collections.Generic.List<BuffSaveData>(),
+                    stateName = (int)StateName.IdleState,
+                    skillEffectFired = false,
+                    skillContextData = null,
+                    skillStateData = null,
+                    skillRuntimeData = null
+                });
+                continue;
+            }
 
             var buffs = chess.buffController?.GetSaveData();
             var state = chess.stateController?.currentState?.state?.stateName ?? StateName.IdleState;

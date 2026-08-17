@@ -1,0 +1,27 @@
+{
+  "name": "com.asoulchess.game.core",
+  "version": "0.2.0",
+  "displayName": "AsoulChess Game Core",
+  "description": "L0 gameplay foundation: event bus, gameplay timers, object pool, Physics2D query buffers, audio registry, UI shell, scene loading. No chess/level/save/content.",
+  "unity": "2022.3",
+  "keywords": [
+    "core",
+    "events",
+    "timer",
+    "object-pool",
+    "scene",
+    "audio",
+    "ui",
+    "asoulchess"
+  ],
+  "author": {
+    "name": "AsoulChess"
+  },
+  "samples": [
+    {
+      "displayName": "Core Demo",
+      "description": "Minimal demo: event → delay → pool get/release.",
+      "path": "Samples~/CoreDemo"
+    }
+  ]
+}

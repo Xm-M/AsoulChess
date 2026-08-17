@@ -13,6 +13,8 @@ public class TextPanel : View
     public AudioPlayer manage;
     public GameObject zombieWave;
     public GameObject lastWave;
+     
+    public GameObject moreZombiesComing;
     public GameObject gameOver;
 
     [Header("失败 UI")]
@@ -154,6 +156,16 @@ public class TextPanel : View
         lastWave.SetActive(true);
     }
 
+    /// <summary>生存轮间过渡：更多僵尸要来了（独立 GO，需在 Prefab 上绑定）。</summary>
+    public void MoreZombiesComing()
+    {
+        if (moreZombiesComing == null)
+            return;
+        // 先关再开，便于 OnEnable / Animator 重播
+        moreZombiesComing.SetActive(false);
+        moreZombiesComing.SetActive(true);
+    }
+
     public void GameOver()
     {
         animator.Play("gameover");
@@ -186,6 +198,11 @@ public class TextPanel : View
 
     public void GameStart()
     {
+        if (ReadyToPlantBanner.SkipOnce)
+        {
+            ReadyToPlantBanner.Clear();
+            return;
+        }
         manage.PlayAudio("准备种植");
         animator.Play("gamestart");
     }

@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ifClearStadge: 0
   sceneName: "\u524D\u9662"
-  levelName: 1-9
+  levelName: 1-10
   levelSprit: {fileID: 0}
   levelMode: 0
   EnterMapPlugin:
-  - id: 0
-  - id: 1
+  - rid: 0
+  - rid: 1
   PreParePlugin:
-  - id: 2
+  - rid: 2
   GameStartPlugin:
-  - id: 3
-  - id: 4
-  - id: 5
+  - rid: 3
+  - rid: 4
+  - rid: 5
   MaxWave: 20
   n: 1
   t: 1
@@ -37,34 +37,38 @@ MonoBehaviour:
   createZombieType: 0
   nextLevel: {fileID: 0}
   outcome:
-    id: 6
+    rid: -2
   loadSkipToTime: 10
+  roguelikeDifficulty: 0
+  roguelikeKind: 0
   references:
-    version: 1
-    00000000:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
       type: {class: EnterWarPlugin_CarCreate, ns: , asm: Assembly-CSharp}
       data:
         car: {fileID: 11400000, guid: 91a3ece78c4a454459a24b89ec914a61, type: 2}
-    00000001:
+    - rid: 1
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:
         audioName: "\u9009\u724C"
         deleyPlayTime: 0
-    00000002:
+    - rid: 2
       type: {class: PreParePlugun_ShowPlantShop, ns: , asm: Assembly-CSharp}
       data:
         baseSunLight: 50
         cards: []
-    00000003:
+    - rid: 3
       type: {class: GameStartPlugin_PlayAudio, ns: , asm: Assembly-CSharp}
       data:
         audioName: "\u767D\u5929"
         deleyPlayTime: 3
-    00000004:
+    - rid: 4
       type: {class: GameStartPlugin_CreateSunlight, ns: , asm: Assembly-CSharp}
       data:
         sunlight: 25
-    00000005:
+    - rid: 5
       type: {class: GameStartPlugin_Fetter, ns: , asm: Assembly-CSharp}
-    00000006:
-      type: {class: , ns: , asm: }
+      data: 

@@ -3,9 +3,13 @@ using UnityEngine;
 
 /// <summary>
 /// 无尽模式波次数据：从 segmentPool 预生成，使用有效稀有度加权。
+/// InitWave 的 wave 为<strong>全局波号</strong>（跨轮累计），用于预算与 waveLimit；不是本轮内 1..N。
 /// </summary>
 public class WaveData_Endless : WaveData
 {
+    /// <summary>约等于原版每波最多 500 只普僵 × 25 进制价值。</summary>
+    public const int MaxZombieValuePerWave = 12500;
+
     readonly EndlessRunState runState;
 
     public WaveData_Endless(EndlessRunState runState)
@@ -15,6 +19,7 @@ public class WaveData_Endless : WaveData
 
     public override void InitWave(int wave, LevelData data)
     {
+        // wave = 全局波号（例：每轮 10 波、第 3 轮第 1 波 → 21）
         if (runState == null || runState.segmentPool == null || runState.segmentPool.Count == 0)
         {
             base.InitWave(wave, data);
@@ -96,6 +101,8 @@ public class WaveData_Endless : WaveData
         }
         maxZombieValue *= 25;
         maxZombieValue = Mathf.RoundToInt(maxZombieValue * DifficultyManager.GetZombieMultiplier());
+        if (maxZombieValue > MaxZombieValuePerWave)
+            maxZombieValue = MaxZombieValuePerWave;
 
         int num = 0;
         int targetZombieValue = maxZombieValue;

@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u7AE0\u9C7C\u7965"
+  m_EditorClassIdentifier: 
+  chessName: "\u7AE0\u9C7C\u7965"
+  chessDescription: "\u57FA\u7840\u8F93\u51FA\u690D\u7269\u3002\u653B\u51FB\u6709\u6982\u7387\u81F4\u76F2\u76EE\u6807\u3002"
+  chessShortDescription: "\u8F93\u51FA\u578B\u3002\u81F4\u76F2\u3002"
+  chessEffect: "\u653B\u51FB\u670925%\u6982\u7387\u65BD\u52A02\u79D2\u81F4\u76F2\u3002"
+  baseProperty:
+    attack: 20
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0.1
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 300
+    HpMax: 300
+    lifeStealing: 0
+    healRate: 1
+    speed: 0
+    acceleRated: 1
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 8.75
+    price: 25
+    rarity: 4000
+    waveLimit: 1
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 1707223667279099340, guid: df87d60d887c7a7488c376e88e0ecab0, type: 3}
+  chessSprite: {fileID: -432915079, guid: 33d90312abf001e4990c66a3127b2cbc, type: 3}
+  plantTags: []
+  fetterMemberId: 
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    rid: 0
+  plantIfCanBuyCard:
+    rid: -2
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
   m_Name: "\u6218\u573A\u539F\u9ED1\u4EEA"
   m_EditorClassIdentifier: 
-  chessName: 
-  chessDescription: 
-  chessShortDescription: 
-  chessEffect: 
+  chessName: "\u6218\u573A\u539F\u9ED1\u4EEA"
+  chessDescription: "\u653B\u51FB\u968F\u673A\u53D1\u5C04\u6587\u5177\uFF1B\u538B\u529B\u6BCF20\u70B9\u989D\u5916+1\u53D1\u4E14\u4F53\u578B-1\u3002"
+  chessShortDescription: "\u968F\u673A\u6587\u5177\u5F39"
+  chessEffect: "\u94C5\u7B14/\u5C3A\u5B50/\u8BA2\u4E66\u673A/\u6A61\u76AE\u64E6\u3002\u538B\u529B\u5347\u964D\u53CC\u5411\u540C\u6B65\u8FDE\u53D1\u4E0E\u4F53\u578B\u3002"
   baseProperty:
-    attack: 0
-    attackRate: 0
+    attack: 30
+    attackRate: 1
     crit: 0
     critDamage: 1.3
     dodgeRate: 0
@@ -34,20 +34,20 @@ MonoBehaviour:
     moveAcceleRated: 1
     dizzinessTime: 0
     tenacity: 0
-    attackRange: 1
-    price: 225
+    attackRange: 30
+    price: 150
     rarity: 4000
     waveLimit: 1
     CD: 7.5
     Size: 1
-  chessPre: {fileID: 0}
-  chessSprite: {fileID: 0}
+  chessPre: {fileID: 6730732262485938058, guid: 96154fb3a534ef9409d7fde9599a09a5, type: 3}
+  chessSprite: {fileID: 1157060927, guid: 5c1ba037b95067249b229ec47f0b8813, type: 3}
   plantTags: []
   fetterMemberId: 
-  chessTileType: 0
-  plantType: 0
+  chessTileType: 1
+  plantType: 1
   plantFunction:
-    rid: -2
+    rid: 8545388264904196104
   plantIfCanBuyCard:
     rid: -2
   PlantCardPre: {fileID: 0}
@@ -57,3 +57,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 8545388264904196104
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

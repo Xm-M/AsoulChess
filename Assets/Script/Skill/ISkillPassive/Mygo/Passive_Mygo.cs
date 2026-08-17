@@ -41,14 +41,14 @@ public class PassiveSkill_Mygo : ISkillEffect
             }
             Tile near = MapManage_PVZ.instance.tiles[tile.mapPos.x + dx[i], tile.mapPos.y + dx[3 - i]];
             if (near.stander != null) {
-                string chessName = near.stander.propertyController.creator.chessName;
-                if (chessName.Contains("高松灯")) chessName = "高松灯";
-                if ( near.stander.propertyController.creator.plantTags.Contains("Mygo")
-                    && chessName != user.propertyController.creator.chessName
-                    && !nearChess.Contains(chessName))
-                {
-                    nearChess.Add(chessName);
-                }
+                PropertyCreator nearCreator = near.stander.propertyController.creator;
+                if (nearCreator?.plantTags == null || !nearCreator.plantTags.Contains("Mygo"))
+                    continue;
+                string memberId = TomoriChessKeys.ResolveMemberId(nearCreator);
+                string selfId = TomoriChessKeys.ResolveMemberId(user.propertyController.creator);
+                // 不含自身成员；重复成员只计 1（fetterMemberId 去重）
+                if (memberId != selfId && !nearChess.Contains(memberId))
+                    nearChess.Add(memberId);
             }
         }
         user.skillController.context.Set<int>("mygo", nearChess.Count);

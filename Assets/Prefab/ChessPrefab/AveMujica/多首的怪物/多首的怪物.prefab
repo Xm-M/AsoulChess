@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1085677853463906539}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.37, y: 1.21, z: 0}
+  m_LocalPosition: {x: 0.37, y: 1.21, z: 0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1149915625
   m_SortingLayer: 3
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 5524c4eccb5a6584e83fc745987c6dc4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -577,6 +577,7 @@ MonoBehaviour:
         stressLimit: 145
         extraStress: 0
         stressTextPre: {fileID: 0}
+        stressDeathFxPre: {fileID: 0}
     - rid: 12
       type: {class: ResumeBuff, ns: , asm: Assembly-CSharp}
       data:
@@ -616,6 +617,7 @@ MonoBehaviour:
         stressLimit: 145
         extraStress: 1
         stressTextPre: {fileID: 0}
+        stressDeathFxPre: {fileID: 0}
     - rid: 782246789340725248
       type: {class: SkillFinish_MultiHeadGhostBurst, ns: , asm: Assembly-CSharp}
       data: 

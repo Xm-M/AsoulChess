@@ -46,7 +46,7 @@ public class AnimatorController_SampleZombie : AnimatorController
         _spawnedHeadStageVfx = false;
         float n = UnityEngine.Random.Range(0, randomSpeed);
         chess.propertyController.ChangeAcceleRate(n);
-        if (chess != null && chess.GetComponentInChildren<IceCarArmor>() == null)
+        if (!ShouldSkipHpVisualTierSync())
             SyncVisualTierToAnimator();
     }
 
@@ -57,8 +57,8 @@ public class AnimatorController_SampleZombie : AnimatorController
 
     public override void OnGetDamage(DamageMessege dm)
     {
-        bool hasIceCar = chess != null && chess.GetComponentInChildren<IceCarArmor>() != null;
-        if (!hasIceCar && (dm.damageElementType & ElementType.Explode) != 0 && chess.propertyController.GetHpPerCent() <= 0)
+        bool skipHpVisual = ShouldSkipHpVisualTierSync();
+        if (!skipHpVisual && (dm.damageElementType & ElementType.Explode) != 0 && chess.propertyController.GetHpPerCent() <= 0)
         {
             deathfire = true;
             SyncVisualTierToAnimator();
@@ -97,21 +97,30 @@ public class AnimatorController_SampleZombie : AnimatorController
             }
         }
 
-        if (!hasIceCar)
+        if (!skipHpVisual)
             SyncVisualTierToAnimator();
     }
 
     /// <summary>
     /// 与血量档一致：&gt;0.6 完整；&lt;=0.6 且 &gt;0.25 断手；&lt;=0.25 断头。外观由 Animator Blend Tree + <see cref="visualTierParameterName"/> 驱动。
-    /// 带 <see cref="IceCarArmor"/> 时由护甲血量驱动，此处不写入（见 IceCarArmor）。
+    /// 带 <see cref="IceCarArmor"/> 或未破的 <see cref="HeadArmor_VisualTier"/> 时由护甲驱动，此处不写入。
     /// </summary>
     void SyncVisualTierToAnimator()
     {
         if (chess == null || chess.propertyController == null) return;
-        if (chess.GetComponentInChildren<IceCarArmor>() != null) return;
+        if (ShouldSkipHpVisualTierSync()) return;
         float hp = chess.propertyController.GetHpPerCent();
         float tier = TierFromDamagePhaseRatio(hp);
         SetVisualTier(tier, visualTierParameterName);
+    }
+
+    /// <summary>IceCar 全程接管；头盔 VisualTier 护甲在未破甲前接管（含爆炸仍打本体的情况）。</summary>
+    bool ShouldSkipHpVisualTierSync()
+    {
+        if (chess == null) return false;
+        if (chess.GetComponentInChildren<IceCarArmor>() != null) return true;
+        var helmet = chess.GetComponentInChildren<HeadArmor_VisualTier>();
+        return helmet != null && !helmet.IsBroken;
     }
 
     /// <summary>由 IceCarArmor 按护甲比例写入，使用本类配置的 <see cref="visualTierParameterName"/>。</summary>
@@ -183,7 +192,7 @@ public class BloodBuff : Buff
     }
     public void BloodDamage()
     {
-        dm.damage = leftHp * 0.03f / speed;
+        dm.damage = Mathf.Max(leftHp * 0.03f / speed, 0.99f);
         if (!target.IfDeath)
             target.propertyController.GetDamage(dm);
     }

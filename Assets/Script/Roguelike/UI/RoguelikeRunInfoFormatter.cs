@@ -160,6 +160,12 @@ public static class RoguelikeRunInfoFormatter
                        $"已拥有：{plantCount} 种\n" +
                        "点击查看本 Run 已获得的所有植物。进战斗前从中选择本关 loadout。";
 
+            case RoguelikeRunInfoHudStatKind.Props:
+                int propCount = state?.ownedPropIds?.Count ?? 0;
+                return "道具\n" +
+                       $"已拥有：{propCount} 个\n" +
+                       "点击查看本 Run 已获得的道具及其稀有度与效果。进战斗后自动生效。";
+
             case RoguelikeRunInfoHudStatKind.LawnMower:
                 return "小推车\n" +
                        $"拥有：{FormatLawnMowerCount(state)}\n" +

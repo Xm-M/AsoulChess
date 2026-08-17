@@ -175,6 +175,8 @@ MonoBehaviour:
       type: {class: PassiveSkillEffect_MultiHeadGhost, ns: , asm: Assembly-CSharp}
       data:
         chaseInterval: 0.05
+        separationRadius: 0.5
+        separationStrength: 1.4
     - rid: 782246789340725250
       type: {class: RandomMove, ns: , asm: Assembly-CSharp}
       data: 

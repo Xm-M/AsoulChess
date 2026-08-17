@@ -18,6 +18,13 @@ public class Buff_Mujica_Doloris : Buff
     public override void BuffEffect(Chess target)
     {
         base.BuffEffect(target);
+        // 读档无法还原 runtime Chess 引用时跳过，避免 NRE
+        if (buffFrom == null || buffFrom.propertyController == null ||
+            target == null || target.propertyController == null)
+        {
+            BuffOver();
+            return;
+        }
         if (buffFrom.propertyController.creator == target.propertyController.creator)
         {
             BuffOver();

@@ -79,9 +79,11 @@ public class LevelController : MonoBehaviour
     }
 
     /// <summary>
-    /// 读档时恢复场上玩家植物
+    /// 读档/生存轮界恢复场上玩家植物。
     /// </summary>
-    public virtual void RestorePlayerPlants(List<ChessSaveData> plants)
+    /// <param name="restoreRuntimeState">是否恢复 buffs/技能中途状态（冒险中途读档）；生存为 false</param>
+    /// <param name="forDisplayOnly">仅展示：不 EnterWar（无攻击/被动 Timer）；开战重种时为 false</param>
+    public virtual void RestorePlayerPlants(List<ChessSaveData> plants, bool restoreRuntimeState = true, bool forDisplayOnly = false)
     {
         if (plants == null || MapManage.instance == null) return;
         SkillContext.PendingChessRefs.Clear();
@@ -91,11 +93,15 @@ public class LevelController : MonoBehaviour
             if (creator == null) continue;
             if (!MapManage.instance.IfInMapRange(p.tileX, p.tileY)) continue;
             var tile = MapManage.instance.tiles[p.tileX, p.tileY];
-            var chess = ChessTeamManage.Instance.CreateChess(creator, tile, "Player", forRestore: true);
+            bool forRestore = forDisplayOnly || restoreRuntimeState;
+            var chess = ChessTeamManage.Instance.CreateChess(
+                creator, tile, "Player", forRestore: forRestore, skipEnterWar: forDisplayOnly);
             if (chess.CompareTag("Player"))
                 tile.PlantChess(chess);
             chess.propertyController.ChangeHPMax(p.hpMax - chess.propertyController.GetMaxHp());
             chess.propertyController.ChangeHp(p.hp);
+            if (!restoreRuntimeState || forDisplayOnly)
+                continue;
             if (p.buffs != null)
             {
                 foreach (var b in p.buffs)
@@ -122,7 +128,8 @@ public class LevelController : MonoBehaviour
             else if (savedState == StateName.ResumeState)
                 chess.stateController.ChangeState(StateName.ResumeState);
         }
-        RestorePendingChessRefsNextFrame();
+        if (restoreRuntimeState && !forDisplayOnly)
+            RestorePendingChessRefsNextFrame();
     }
 
     void RestorePendingChessRefsNextFrame()
@@ -900,5 +907,22 @@ public class WaveData
             if (z != null && !z.IfDeath)
                 z.Death();
         }
+    }
+
+    /// <summary>取本波列表中最后一只仍有物体的僵尸世界坐标（含已死亡未销毁）。</summary>
+    public bool TryGetLastZombieWorldPos(out Vector3 pos)
+    {
+        pos = Vector3.zero;
+        if (waveZombies == null)
+            return false;
+        for (int i = waveZombies.Count - 1; i >= 0; i--)
+        {
+            var z = waveZombies[i];
+            if (z == null)
+                continue;
+            pos = z.transform.position;
+            return true;
+        }
+        return false;
     }
 }

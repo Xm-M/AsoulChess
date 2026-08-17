@@ -28,7 +28,7 @@ public class ChessManage : IManager
     {
          
     }
-    public virtual Chess CreateChess(PropertyCreator creator,Tile tile, bool forRestore = false)
+    public virtual Chess CreateChess(PropertyCreator creator,Tile tile, bool forRestore = false, bool skipEnterWar = false)
     {
         Chess chess = GameManage.instance.chessFactory.ChessCreate(creator.GetPre(),creator.chessName);
         chesses.Add(chess);
@@ -37,9 +37,10 @@ public class ChessManage : IManager
         chess.gameObject.layer=LayerMask.NameToLayer(playerTag);
          
         chess.gameObject.SetActive(true);
-        chess.WhenChessEnterWar(!forRestore);
+        if (!skipEnterWar)
+            chess.WhenChessEnterWar(!forRestore);
          
-        if (!forRestore)
+        if (!forRestore && !skipEnterWar)
             EventController.Instance.TriggerEvent<Chess>(EventName.WhenPlantChess.ToString(),chess);
         return chess;
     }
@@ -68,9 +69,9 @@ public class ChessManage : IManager
 [Serializable]
 public class EnemyManage:ChessManage
 {
-    public override Chess CreateChess(PropertyCreator creator, Tile tile, bool forRestore = false)
+    public override Chess CreateChess(PropertyCreator creator, Tile tile, bool forRestore = false, bool skipEnterWar = false)
     {
-        Chess c= base.CreateChess(creator, tile, forRestore);
+        Chess c= base.CreateChess(creator, tile, forRestore, skipEnterWar);
         c.transform.right = Vector2.left;
         //Debug.Log("Create Enemy" + c.name);
         return c;
@@ -151,15 +152,15 @@ public class ChessTeamManage
             return player.chesses;
         }
     }
-    public Chess CreateChess(PropertyCreator creator, Tile tile,string tag, bool forRestore = false)
+    public Chess CreateChess(PropertyCreator creator, Tile tile,string tag, bool forRestore = false, bool skipEnterWar = false)
     {
         if (tag==enemy.playerTag)
         {
-            return enemy.CreateChess(creator, tile,forRestore);
+            return enemy.CreateChess(creator, tile,forRestore, skipEnterWar);
         }
         else
         {
-            return player.CreateChess(creator, tile, forRestore);
+            return player.CreateChess(creator, tile, forRestore, skipEnterWar);
         }
     }
     public void ChangeTeam(Chess chess)

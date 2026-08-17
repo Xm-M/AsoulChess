@@ -43,26 +43,32 @@ public class RoguelikeRunInfoPanel : View
     [Tooltip("地图进度统计")]
     [SerializeField] TMP_Text progressText;
 
-    [Header("植物卡组")]
+    [Header("植物卡组 / 道具弹层（共用左列表右详情骨架）")]
     [Tooltip("打开卡组弹层")]
     [SerializeField] Button openDeckButton;
-    [Tooltip("关闭卡组弹层")]
+    [Tooltip("打开道具弹层")]
+    [SerializeField] Button openPropsButton;
+    [Tooltip("关闭弹层（卡组/道具共用）")]
     [SerializeField] Button closeDeckButton;
-    [Tooltip("卡组弹层根节点（子物体整段植物选择界面，默认隐藏）")]
+    [Tooltip("可选：单独关闭道具；为空则用 closeDeckButton")]
+    [SerializeField] Button closePropsButton;
+    [Tooltip("卡组/道具弹层根节点（默认隐藏）")]
     [SerializeField] GameObject deckPanelRoot;
     [Tooltip("仓库选卡预制体，与 PlantsShop.shopSelectIconPre 相同")]
     [SerializeField] GameObject shopSelectIconPre;
-    [Tooltip("选卡列表父节点（Grid/Content）")]
+    [Tooltip("道具列表图标预制体（PropIcon）")]
+    [SerializeField] GameObject propIconPre;
+    [Tooltip("选卡/道具列表父节点（Grid/Content）")]
     [SerializeField] Transform selectIconParent;
 
-    [Header("植物详情")]
-    [Tooltip("植物名称")]
+    [Header("详情（植物与道具共用）")]
+    [Tooltip("名称")]
     [SerializeField] TMP_Text detailName;
-    [Tooltip("植物立绘/图标")]
+    [Tooltip("立绘/图标")]
     [SerializeField] Image detailPlantImage;
-    [Tooltip("羁绊/标签")]
+    [Tooltip("羁绊/标签；道具模式下显示稀有度")]
     [SerializeField] TMP_Text detailTags;
-    [Tooltip("属性汇总文本（生命/攻击/护甲等）")]
+    [Tooltip("属性汇总文本（生命/攻击/护甲等）；道具模式下清空")]
     [SerializeField] TMP_Text detailAttributes;
     [Tooltip("简介 ScrollRect")]
     [SerializeField] ScrollRect descriptionScroll;
@@ -78,6 +84,7 @@ public class RoguelikeRunInfoPanel : View
     [Header("HUD 图标说明（悬停 2s / 长按）")]
     [SerializeField] RectTransform goldStatIconRoot;
     [SerializeField] RectTransform deckStatIconRoot;
+    [SerializeField] RectTransform propsStatIconRoot;
     [SerializeField] RectTransform lawnMowerStatIconRoot;
     [SerializeField] RectTransform loadoutStatIconRoot;
     [SerializeField] RectTransform mapLayerStatIconRoot;
@@ -86,7 +93,16 @@ public class RoguelikeRunInfoPanel : View
     [SerializeField] Vector2 tooltipScreenOffset = new Vector2(-140f, 0f);
     [SerializeField] float hudTooltipHoverDelaySeconds = 2f;
 
+    enum OverlayMode
+    {
+        None,
+        Deck,
+        Props,
+    }
+
     readonly List<ShopSelectIcon> _deckSelectIcons = new List<ShopSelectIcon>();
+    readonly List<PropIcon> _propIcons = new List<PropIcon>();
+    OverlayMode _overlayMode;
     RectTransform _tooltipFollowTarget;
 
     void Awake()
@@ -99,8 +115,12 @@ public class RoguelikeRunInfoPanel : View
     {
         if (openDeckButton != null)
             openDeckButton.onClick.AddListener(OpenDeckPanel);
+        if (openPropsButton != null)
+            openPropsButton.onClick.AddListener(OpenPropsPanel);
         if (closeDeckButton != null)
-            closeDeckButton.onClick.AddListener(CloseDeckPanel);
+            closeDeckButton.onClick.AddListener(CloseOverlayPanel);
+        if (closePropsButton != null)
+            closePropsButton.onClick.AddListener(CloseOverlayPanel);
         if (settingsButton != null)
             settingsButton.onClick.AddListener(OpenPausePanel);
         if (closeHudButton != null)
@@ -180,7 +200,7 @@ public class RoguelikeRunInfoPanel : View
     public override void Hide()
     {
         HideHudStatTooltip();
-        CloseDeckPanel();
+        CloseOverlayPanel();
         base.Hide();
     }
 
@@ -218,6 +238,7 @@ public class RoguelikeRunInfoPanel : View
     {
         WireStatTooltip(goldStatIconRoot, RoguelikeRunInfoHudStatKind.Gold);
         WireStatTooltip(deckStatIconRoot, RoguelikeRunInfoHudStatKind.Deck);
+        WireStatTooltip(propsStatIconRoot, RoguelikeRunInfoHudStatKind.Props);
         WireStatTooltip(lawnMowerStatIconRoot, RoguelikeRunInfoHudStatKind.LawnMower);
         WireStatTooltip(loadoutStatIconRoot, RoguelikeRunInfoHudStatKind.LoadoutSlot);
         WireStatTooltip(mapLayerStatIconRoot, RoguelikeRunInfoHudStatKind.MapLayer);
@@ -287,8 +308,13 @@ public class RoguelikeRunInfoPanel : View
         SetText(selectableNextText, RoguelikeRunInfoFormatter.FormatSelectableNext(state));
         SetText(progressText, RoguelikeRunInfoFormatter.FormatProgress(state));
 
-        if (IsDeckPanelVisible())
-            RefreshDeckList();
+        if (IsOverlayVisible())
+        {
+            if (_overlayMode == OverlayMode.Props)
+                RefreshPropsList();
+            else if (_overlayMode == OverlayMode.Deck)
+                RefreshDeckList();
+        }
     }
 
     /// <summary>仓库选卡（<see cref="ShopSelectIcon.viewOnly"/>）点击时展示详情。</summary>
@@ -296,7 +322,7 @@ public class RoguelikeRunInfoPanel : View
     {
         if (creator == null)
         {
-            ClearPlantDetail();
+            ClearDetail();
             return;
         }
 
@@ -317,6 +343,32 @@ public class RoguelikeRunInfoPanel : View
             descriptionScroll.normalizedPosition = Vector2.up;
     }
 
+    /// <summary>道具列表点击时展示详情（名称 / 稀有度 / 效果）。</summary>
+    public void ShowPropDetail(PropItemData prop)
+    {
+        if (prop == null)
+        {
+            ClearDetail();
+            return;
+        }
+
+        if (detailName != null)
+            detailName.text = string.IsNullOrEmpty(prop.displayName) ? prop.GetPropId() : prop.displayName;
+        if (detailPlantImage != null)
+        {
+            detailPlantImage.sprite = prop.icon;
+            detailPlantImage.enabled = prop.icon != null;
+        }
+        if (detailTags != null)
+            detailTags.text = prop.GetRarityDisplayName();
+        if (detailAttributes != null)
+            detailAttributes.text = string.Empty;
+        if (descriptionText != null)
+            descriptionText.text = prop.effectDescription ?? string.Empty;
+        if (descriptionScroll != null)
+            descriptionScroll.normalizedPosition = Vector2.up;
+    }
+
     void HandleNoActiveRun()
     {
         if (emptyStateRoot != null)
@@ -328,25 +380,35 @@ public class RoguelikeRunInfoPanel : View
 
     void OpenDeckPanel()
     {
+        _overlayMode = OverlayMode.Deck;
         if (deckPanelRoot != null)
             deckPanelRoot.SetActive(true);
         RefreshDeckList();
     }
 
-    void CloseDeckPanel()
+    void OpenPropsPanel()
     {
+        _overlayMode = OverlayMode.Props;
         if (deckPanelRoot != null)
-            deckPanelRoot.SetActive(false);
-        ClearDeckList();
-        ClearPlantDetail();
+            deckPanelRoot.SetActive(true);
+        RefreshPropsList();
     }
 
-    bool IsDeckPanelVisible() =>
+    void CloseOverlayPanel()
+    {
+        _overlayMode = OverlayMode.None;
+        if (deckPanelRoot != null)
+            deckPanelRoot.SetActive(false);
+        ClearOverlayList();
+        ClearDetail();
+    }
+
+    bool IsOverlayVisible() =>
         deckPanelRoot != null && deckPanelRoot.activeSelf;
 
     void RefreshDeckList()
     {
-        ClearDeckList();
+        ClearOverlayList();
         if (selectIconParent == null || shopSelectIconPre == null)
             return;
 
@@ -354,7 +416,7 @@ public class RoguelikeRunInfoPanel : View
         var creators = RoguelikeRunPlantPool.ResolveCreators(state?.ownedPlantCreatorIds);
         if (creators == null || creators.Count == 0)
         {
-            ClearPlantDetail();
+            ClearDetail();
             return;
         }
 
@@ -381,10 +443,60 @@ public class RoguelikeRunInfoPanel : View
         if (_deckSelectIcons.Count > 0 && _deckSelectIcons[0].select != null)
             ShowPlantDetail(_deckSelectIcons[0].select);
         else
-            ClearPlantDetail();
+            ClearDetail();
     }
 
-    void ClearDeckList()
+    void RefreshPropsList()
+    {
+        ClearOverlayList();
+        if (selectIconParent == null || propIconPre == null)
+        {
+            if (descriptionText != null)
+                descriptionText.text = propIconPre == null ? "未配置道具图标预制体" : string.Empty;
+            return;
+        }
+
+        var state = RoguelikeRunService.State;
+        var props = RoguelikeRunPropPool.ResolveProps(state?.ownedPropIds);
+        if (props == null || props.Count == 0)
+        {
+            ClearDetail();
+            if (detailName != null)
+                detailName.text = "暂无道具";
+            if (descriptionText != null)
+                descriptionText.text = "精英 / Boss 战斗奖励可获得道具。";
+            return;
+        }
+
+        PropItemData firstProp = null;
+        for (int i = 0; i < props.Count; i++)
+        {
+            var prop = props[i];
+            if (prop == null)
+                continue;
+
+            var go = Instantiate(propIconPre, selectIconParent);
+            var icon = go.GetComponent<PropIcon>();
+            if (icon == null)
+            {
+                Destroy(go);
+                continue;
+            }
+
+            icon.ShowPropIcon(prop);
+            icon.onClicked = ShowPropDetail;
+            _propIcons.Add(icon);
+            if (firstProp == null)
+                firstProp = prop;
+        }
+
+        if (firstProp != null)
+            ShowPropDetail(firstProp);
+        else
+            ClearDetail();
+    }
+
+    void ClearOverlayList()
     {
         if (selectIconParent != null)
         {
@@ -392,9 +504,10 @@ public class RoguelikeRunInfoPanel : View
                 Destroy(selectIconParent.GetChild(i).gameObject);
         }
         _deckSelectIcons.Clear();
+        _propIcons.Clear();
     }
 
-    void ClearPlantDetail()
+    void ClearDetail()
     {
         if (detailName != null)
             detailName.text = "";
@@ -432,6 +545,6 @@ public class RoguelikeRunInfoPanel : View
 
     void OnDestroy()
     {
-        ClearDeckList();
+        ClearOverlayList();
     }
 }

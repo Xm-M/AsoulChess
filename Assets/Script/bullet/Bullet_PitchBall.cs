@@ -61,5 +61,6 @@ public class Bullet_PitchBall : Bullet
         base.InitBullet(shooter, position, target, moveDir, 0f, rate);
         Dm.damageType = DamageType.Miss;
         Dm.damage = 0f;
+        Dm.suppressFloatingDamage = true;
     }
 }

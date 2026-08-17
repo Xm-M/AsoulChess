@@ -307,8 +307,11 @@ public class Buff_BaseValueBuff_TimeValueBuff : TimeBuff
     public override void BuffOver()
     {
         base.BuffOver();
-        //target.buffController.RemoveBuff(valueBuff);
-        target.buffController.buffDic[valueBuff.buffName].BuffOver();
+        // ResetList 可能已先结束子 Buff 并从 dic 移除；不可硬下标
+        if (target?.buffController?.buffDic == null || valueBuff == null)
+            return;
+        if (target.buffController.buffDic.TryGetValue(valueBuff.buffName, out var nested) && nested != null)
+            nested.BuffOver();
     }
 }
 

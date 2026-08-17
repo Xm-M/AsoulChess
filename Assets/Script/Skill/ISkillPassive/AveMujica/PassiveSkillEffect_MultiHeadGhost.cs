@@ -24,8 +24,12 @@ public class PassiveSkillEffect_MultiHeadGhost : ISkillEffect
 
     Chess _user;
     Chess _master;
+    Chess _followTarget;
+    Vector3 _lastFollowTargetPos;
+    bool _hasLastFollowPos;
     Timer _chaseTimer;
     UnityAction<Chess> _onRemove;
+    UnityAction<Chess> _onAttack;
 
     public void SkillEffect(Chess user, SkillConfig config, List<Chess> targets)
     {
@@ -41,12 +45,51 @@ public class PassiveSkillEffect_MultiHeadGhost : ISkillEffect
             user.moveController.tileMethod = null;
         }
 
+        if (user.equipWeapon != null)
+        {
+            _onAttack = OnGhostAttack;
+            user.equipWeapon.OnAttack.AddListener(_onAttack);
+        }
+
         if (GameManage.instance?.timerManage != null)
             _chaseTimer = GameManage.instance.timerManage.AddTimer(ChaseTick, Mathf.Max(0.02f, chaseInterval), true);
 
         _onRemove = OnRemove;
         user.OnRemove.AddListener(_onRemove);
         ChaseTick();
+    }
+
+    /// <summary>普攻结算后追加：数值 = 主人当前压力的真实伤害；压力 ≤0 不追加。</summary>
+    void OnGhostAttack(Chess attacker)
+    {
+        if (attacker != _user || _master == null || _master.IfDeath)
+            return;
+
+        int stress = MultiHeadMutsumiKeys.GetCurrentStress(_master);
+        if (stress <= 0)
+            return;
+
+        if (attacker.equipWeapon?.weapon is not Weapon_Sample weapon || weapon.enemys == null)
+            return;
+
+        ElementType element = ElementType.CloseAttack;
+        if (weapon.attackFunction is CloseAttack closeAttack && closeAttack.DM != null)
+            element = closeAttack.DM.damageElementType;
+
+        for (int i = 0; i < weapon.enemys.Count; i++)
+        {
+            Chess target = weapon.enemys[i];
+            if (target == null || target.IfDeath)
+                continue;
+
+            var bonus = new DamageMessege(
+                attacker,
+                target,
+                stress,
+                DamageType.Real,
+                element);
+            attacker.propertyController.TakeDamage(bonus);
+        }
     }
 
     void ChaseTick()
@@ -68,45 +111,35 @@ public class PassiveSkillEffect_MultiHeadGhost : ISkillEffect
             ? Mathf.Max(0.1f, _user.propertyController.GetMoveSpeed())
             : 2f;
 
-        // 攻击中：不抢动画，只做轻量分离，避免围殴叠模
-        if (sn == StateName.AttackState)
-        {
-            ApplySeparationOnly(speed, dt);
-            return;
-        }
-
-        Chess enemy = FindTarget_NearestEnemyInRange.FindNearestEnemy(_user, out float dist);
-        if (enemy == null)
-        {
-            ApplySeparationOnly(speed, dt);
-            return;
-        }
-
         float range = _user.propertyController != null
             ? _user.propertyController.GetAttackRange()
             : 1f;
 
-        Vector3 pos = _user.transform.position;
-        Vector3 sep = ComputeSeparation(pos);
-        Vector3 delta;
-
-        if (dist <= range)
+        Chess enemy = ResolveFollowTarget(sn, out float dist);
+        if (enemy == null)
         {
-            // 已进距：停追，仅分离（围在目标周围而不是叠点）
-            delta = sep * (speed * separationStrength * dt);
-            if (delta.sqrMagnitude < 1e-8f)
-                return;
-            _user.transform.position = pos + delta;
+            ClearFollowTarget();
+            ApplySeparationOnly(speed, dt);
             return;
         }
 
+        SyncFollowTarget(enemy);
+
+        // 进距或攻击中：随目标位移并保持在近战范围内，避免站桩脱战
+        if (sn == StateName.AttackState || dist <= range)
+        {
+            ApplyFollowEngaged(enemy, range, speed, dt, sn);
+            return;
+        }
+
+        Vector3 pos = _user.transform.position;
+        Vector3 sep = ComputeSeparation(pos);
         Vector3 toEnemy = enemy.transform.position - pos;
         Vector3 seek = toEnemy.sqrMagnitude > 1e-6f
             ? toEnemy.normalized * (speed * dt)
             : Vector3.zero;
-        delta = seek + sep * (speed * separationStrength * dt);
+        Vector3 delta = seek + sep * (speed * separationStrength * dt);
 
-        // 限制本帧最大位移，避免分离过猛飞出
         float maxStep = speed * dt * (1f + separationStrength);
         if (delta.sqrMagnitude > maxStep * maxStep)
             delta = delta.normalized * maxStep;
@@ -114,6 +147,77 @@ public class PassiveSkillEffect_MultiHeadGhost : ISkillEffect
         _user.UpdateFacingFromHorizontalMove((Vector2)toEnemy);
         _user.transform.position = pos + delta;
         EnsurePlayRun();
+    }
+
+    /// <summary>攻击态优先锁 weapon 目标，否则最近敌人。</summary>
+    Chess ResolveFollowTarget(StateName sn, out float dist)
+    {
+        dist = float.MaxValue;
+        if (_user == null)
+            return null;
+
+        if (sn == StateName.AttackState
+            && _user.equipWeapon?.weapon is Weapon_Sample weapon
+            && weapon.enemys != null)
+        {
+            for (int i = 0; i < weapon.enemys.Count; i++)
+            {
+                Chess locked = weapon.enemys[i];
+                if (locked == null || locked.IfDeath)
+                    continue;
+                dist = Vector2.Distance(_user.transform.position, locked.transform.position);
+                return locked;
+            }
+        }
+
+        return FindTarget_NearestEnemyInRange.FindNearestEnemy(_user, out dist);
+    }
+
+    void SyncFollowTarget(Chess enemy)
+    {
+        if (_followTarget == enemy)
+            return;
+        _followTarget = enemy;
+        _hasLastFollowPos = false;
+    }
+
+    void ClearFollowTarget()
+    {
+        _followTarget = null;
+        _hasLastFollowPos = false;
+    }
+
+    /// <summary>贴随目标：叠加目标本帧位移 + 超出栓绳距离时补追击；攻击态不切 run 动画。</summary>
+    void ApplyFollowEngaged(Chess enemy, float range, float speed, float dt, StateName sn)
+    {
+        Vector3 pos = _user.transform.position;
+        Vector3 enemyPos = enemy.transform.position;
+        Vector3 sep = ComputeSeparation(pos);
+        Vector3 delta = Vector3.zero;
+
+        if (_hasLastFollowPos)
+            delta += enemyPos - _lastFollowTargetPos;
+
+        Vector3 toEnemy = enemyPos - pos;
+        float dist = toEnemy.magnitude;
+        float leash = range * 0.92f;
+        if (dist > leash && toEnemy.sqrMagnitude > 1e-6f)
+            delta += toEnemy.normalized * Mathf.Min(dist - leash, speed * dt);
+
+        delta += sep * (speed * separationStrength * dt);
+
+        if (delta.sqrMagnitude > 1e-8f)
+        {
+            if (Mathf.Abs(toEnemy.x) > 0.01f)
+                _user.UpdateFacingFromHorizontalMove((Vector2)toEnemy);
+            _user.transform.position = pos + delta;
+        }
+
+        _lastFollowTargetPos = enemyPos;
+        _hasLastFollowPos = true;
+
+        if (sn != StateName.AttackState)
+            EnsurePlayRun();
     }
 
     void ApplySeparationOnly(float speed, float dt)
@@ -203,6 +307,9 @@ public class PassiveSkillEffect_MultiHeadGhost : ISkillEffect
             _chaseTimer = null;
         }
 
+        if (_user?.equipWeapon != null && _onAttack != null)
+            _user.equipWeapon.OnAttack.RemoveListener(_onAttack);
+
         // 从主人幽灵表摘除（用字段 _master：自身 context 在 OnRemove 前已 Clear）
         if (_master != null
             && MultiHeadMutsumiKeys.TryGetGhostList(_master, out List<Chess> list))
@@ -215,5 +322,6 @@ public class PassiveSkillEffect_MultiHeadGhost : ISkillEffect
         _user = null;
         _master = null;
         _onRemove = null;
+        _onAttack = null;
     }
 }

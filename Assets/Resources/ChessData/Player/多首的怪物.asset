@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: "\u591A\u9996\u7684\u602A\u7269"
   m_EditorClassIdentifier: 
   chessName: "\u591A\u9996\u7684\u602A\u7269"
-  chessDescription: "\u9EC4\u74DC\u7766\u7684\u7B2C\u4E8C\u6761\u5347\u7EA7\u5F62\u6001\uFF1A\u538B\u529B\u53E0\u5206\u8EAB\uFF0C\u591A\u884C\u5C04\u51FB\uFF0C\u6709\u5206\u8EAB\u65F6\u53EF Resume\u3002"
-  chessShortDescription: "\u5347\u7EA7\u690D\u7269 \u00B7 \u5409\u4ED6\u3002"
-  chessEffect: "\u538B\u529B\u6BCF\u6EE1 50 \u6E05\u96F6\u5E76 +1 \u5206\u8EAB\u5934\uFF1B\u672C\u4F53+\u5206\u8EAB\u540C\u6B65\u5C04\u51FB\uFF1B\u81F4\u547D\u4F24\u541E\u5934 Resume\u3002"
+  chessDescription: 
+  chessShortDescription: "\u5347\u7EA7\u690D\u7269 \xB7 \u5409\u4ED6\u3002"
+  chessEffect: "\u538B\u529B\u6BCF\u6EE1 50 \u6E05\u96F6\u5E76 +1 \u5206\u8EAB\u5934\uFF1B\u672C\u4F53+\u5206\u8EAB\u540C\u6B65\u5C04\u51FB\uFF1B\u81F4\u547D\u4F24\u541E\u5934
+    Resume\u3002"
   baseProperty:
     attack: 15
     attackRate: 0
@@ -25,8 +26,8 @@ MonoBehaviour:
     extraDamge: 0
     AR: 0
     extraDefence: 0
-    Hp: 500
-    HpMax: 500
+    Hp: 300
+    HpMax: 300
     lifeStealing: 0
     healRate: 1
     speed: 0
@@ -35,13 +36,13 @@ MonoBehaviour:
     dizzinessTime: 0
     tenacity: 0
     attackRange: 40
-    price: 0
+    price: 125
     rarity: 4000
     waveLimit: 1
-    CD: 7.5
+    CD: 50
     Size: 1
   chessPre: {fileID: 2811414589655366307, guid: b9cd8ee37c7ce5e4c83b1c15e25724b2, type: 3}
-  chessSprite: {fileID: 21300000, guid: 331b5e8d3a5393a4cbb5eace084965b2, type: 3}
+  chessSprite: {fileID: 1420513411, guid: 08a3511c4270a8146bada48816617647, type: 3}
   plantTags:
   - AveMujica
   - "\u5409\u4ED6"

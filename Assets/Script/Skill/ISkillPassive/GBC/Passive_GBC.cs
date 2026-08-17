@@ -35,11 +35,14 @@ public class Buff_StressBuff_Death : Buff
     public int extraStress=1;
     [LabelText("压力值显示器")]
     public GameObject stressTextPre;
+    [LabelText("压力致死特效")]
+    public GameObject stressDeathFxPre;
 
     protected int stress;
     protected Chess user;
     protected GameObject stressTextGO;
     protected TMP_Text stressText;
+    bool stressDeathTriggered;
     public Buff_StressBuff_Death()
     {
         buffName = "压力";
@@ -48,6 +51,7 @@ public class Buff_StressBuff_Death : Buff
     {
         base.BuffEffect(target);
         stress = 0;
+        stressDeathTriggered = false;
         this.user = target;
         user.skillController.context.AddEvent(OnStressChange);
         if (stressTextPre == null)
@@ -72,6 +76,10 @@ public class Buff_StressBuff_Death : Buff
         }
         if (stress > stressLimit)
         {
+            if (stressDeathTriggered || user == null || user.IfDeath)
+                return;
+            stressDeathTriggered = true;
+            SpawnStressDeathFx();
             DamageMessege DM = new DamageMessege();
             DM.damageTo = user;
             DM.damageFrom = user;
@@ -82,6 +90,19 @@ public class Buff_StressBuff_Death : Buff
            
             //user.Death();
         }
+    }
+    void SpawnStressDeathFx()
+    {
+        if (user == null)
+            return;
+        if (stressDeathFxPre == null)
+            stressDeathFxPre = Resources.Load<GameObject>("Effect/StressDeathFX");
+        if (stressDeathFxPre == null)
+            return;
+        GameObject fx = ObjectPool.instance.Create(stressDeathFxPre);
+        if (fx == null)
+            return;
+        fx.transform.position = user.transform.position;
     }
     public override void BuffReset(Buff resetBuff)
     {

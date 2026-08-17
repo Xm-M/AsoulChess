@@ -4,12 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Sirenix.OdinInspector;
-public class AudioPlayer : MonoBehaviour
+using AsoulChess.Game.Core.Audio;
+
+public class AudioPlayer : MonoBehaviour, IFrameworkAudioPlayer
 {
     public AudioType autype;
     public AudioSource audioSource;
     public List<GameObject> subAudio;
     public float baseValue;
+
+    FrameworkAudioType IFrameworkAudioPlayer.AudioType =>
+        autype == AudioType.BGM ? FrameworkAudioType.BGM : FrameworkAudioType.SoundEffect;
+
+    void IFrameworkAudioPlayer.ApplyMasterVolume(float soundEffectMaster, float bgmMaster)
+    {
+        EnsureAudioSource();
+        if (audioSource == null) return;
+        audioSource.volume = (autype == AudioType.SoundEffect ? soundEffectMaster : bgmMaster) * baseValue;
+    }
+
+    void IFrameworkAudioPlayer.PauseSelf() => Pause();
+
+    void IFrameworkAudioPlayer.ResumeSelf() => UnPause();
+
+    void IFrameworkAudioPlayer.StopSelf() => Stop();
 
     void EnsureAudioSource()
     {

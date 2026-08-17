@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
+  m_Name: "\u5609\u8F9B\u5854"
+  m_EditorClassIdentifier: 
+  chessName: "\u5609\u8F9B\u5854"
+  chessDescription: "\u6280\u80FD\u671F\u95F4\u4EA7\u9633\u5149\uFF0C\u5E76\u5F39\u5F00\u5468\u56F4\u654C\u5F39\u3002"
+  chessShortDescription: "\u6280\u80FD\u4EA7\u9633 \xB7 \u6280\u80FD\u6321\u5F39"
+  chessEffect: "\u5E38\u6001\u4E0D\u653B\u51FB\u3002\u4E3B\u52A8\u6301\u7EED 25 \u79D2\uFF1A\u52A8\u753B\u4EA7\u9633\uFF08\u5355\u6B21
+    20\uFF09\uFF0C\u540C\u65F6\u5F39\u5F00 3\xD73 \u8303\u56F4\u5185\u654C\u65B9\u5B50\u5F39\uFF08\u53EF\u6253\u65AD\u8E66\u6781\uFF09\u3002\u7ED3\u675F\u540E\u51B7\u5374
+    15 \u79D2\u3002"
+  baseProperty:
+    attack: 0
+    attackRate: 0
+    crit: 0
+    critDamage: 1.3
+    dodgeRate: 0
+    extraDamge: 0
+    AR: 0
+    extraDefence: 0
+    Hp: 300
+    HpMax: 300
+    lifeStealing: 0
+    healRate: 1
+    speed: 0
+    acceleRated: 1
+    moveAcceleRated: 1
+    dizzinessTime: 0
+    tenacity: 0
+    attackRange: 1
+    price: 50
+    rarity: 4000
+    waveLimit: 1
+    CD: 7.5
+    Size: 1
+  chessPre: {fileID: 2617536274799139505, guid: eb1807077d942884d99a2509affa03ff, type: 3}
+  chessSprite: {fileID: -1487377924, guid: d0f0eab63a3e86440add102b22a33777, type: 3}
+  plantTags:
+  - "\u6491\u4F1E"
+  fetterMemberId: 
+  chessTileType: 1
+  plantType: 1
+  plantFunction:
+    rid: 0
+  plantIfCanBuyCard:
+    rid: -2
+  PlantCardPre: {fileID: 0}
+  PlantEntrepotCardPre: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

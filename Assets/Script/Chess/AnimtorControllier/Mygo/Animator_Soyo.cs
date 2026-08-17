@@ -13,6 +13,7 @@ public class Animator_Soyo : AnimatorController
  
     protected override void Update()
     {
+        base.Update();
         LayerMask enemyLayer = ChessTeamManage.Instance.GetEnemyLayer(chess.gameObject);
         RaycastHit2D hit = Physics2D.Raycast(chess.transform.position, chess.transform.right,
             chess.propertyController.GetAttackRange()*2, enemyLayer);

@@ -3,6 +3,7 @@ public enum RoguelikeRunInfoHudStatKind
 {
     Gold,
     Deck,
+    Props,
     LawnMower,
     LoadoutSlot,
     MapLayer,

@@ -34,10 +34,14 @@ public class MapManage_PVZ : MapManage
         base.Start();
         lightBase = GlobleLight.intensity;
         lightRate = 1;
-        if (SaveLoadContext.IsLoadFromSave && dir != null)
-        {
+        if (!SaveLoadContext.IsLoadFromSave || dir == null)
+            return;
+
+        bool survival = LevelManage.instance?.currentLevel?.levelMode == LevelMode.SurvivalMode;
+        if (survival)
+            StartCoroutine(SurvivalLoadPlayTimelineFlow());
+        else
             StartCoroutine(SkipTimelineAndRunLoadFlow());
-        }
     }
 
     /// <summary>
@@ -112,6 +116,59 @@ public class MapManage_PVZ : MapManage
         LevelManage.instance?.currentController?.GameStart();
     }
 
+    /// <summary>
+    /// 生存读档：不走冒险 loadSkipToTime 旁路，从轮间起点正常播 Timeline，
+    /// 由信号驱动 EnterMap（恢复植物）→ GamePrepare（保留阳光/手牌）→ 开战 → GameStart 插件。
+    /// </summary>
+    IEnumerator SurvivalLoadPlayTimelineFlow()
+    {
+        yield return null;
+        if (SaveLoadContext.LoadFlowExecuted) yield break;
+        if (LevelManage.instance?.currentLevel == null) yield break;
+
+        SaveLoadContext.LoadFlowExecuted = true;
+        EnsureLevelController();
+
+        var endless = LevelManage.instance.currentController as LevelController_Endless;
+        endless?.PrepareSurvivalLoadFromSave(SaveLoadContext.CurrentSaveData);
+
+        if (dir == null || dir.playableAsset == null)
+        {
+            var controller = LevelManage.instance.currentController;
+            controller?.EnterMap();
+            controller?.GamePrepare();
+            yield break;
+        }
+
+        for (int i = 0; i < 3 && dir.duration <= 0; i++)
+            yield return null;
+
+        float startTime = ResolveSurvivalRoundTimelineStartTime();
+        double duration = dir.duration;
+        if (duration > 0)
+            startTime = Mathf.Clamp(startTime, 0f, Mathf.Max(0f, (float)duration - 0.05f));
+
+        dir.Stop();
+        dir.time = startTime;
+        dir.Evaluate();
+        dir.Play();
+    }
+
+    static float ResolveSurvivalRoundTimelineStartTime()
+    {
+        var level = LevelManage.instance?.currentLevel;
+        if (level?.EnterMapPlugin == null) return 0f;
+        for (int i = 0; i < level.EnterMapPlugin.Count; i++)
+        {
+            if (level.EnterMapPlugin[i] is EnterMapPlugin_EndlessSpawnConfig cfg)
+                return cfg.roundTimelineStartTime;
+        }
+        return 0f;
+    }
+
+    /// <summary>
+    /// 冒险读档旁路：跳到 loadSkipToTime，直接 EnterMap/Prepare/GameStart（生存不再走此路径）。
+    /// </summary>
     private System.Collections.IEnumerator SkipTimelineAndRunLoadFlow()
     {
         yield return null;
@@ -140,9 +197,7 @@ public class MapManage_PVZ : MapManage
             SaveLoadContext.LoadFlowExecuted = true;
             controller.EnterMap();
             controller.GamePrepare();
-            bool survival = LevelManage.instance.currentLevel.levelMode == LevelMode.SurvivalMode;
-            if (!survival)
-                controller.GameStart();
+            controller.GameStart();
         }
     }
   

@@ -12,12 +12,17 @@ public class PropItemData : ScriptableObject
     [LabelText("显示名称")]
     public string displayName;
 
+    [LabelText("稀有度")]
+    public PropRarity rarity = PropRarity.Common;
+
     [LabelText("图标")]
     public Sprite icon;
 
     [LabelText("效果说明")]
     [Multiline]
     public string effectDescription;
+
+    public string GetRarityDisplayName() => PropRarityUtil.GetDisplayName(rarity);
 
     [LabelText("进局效果")]
     [SerializeReference]

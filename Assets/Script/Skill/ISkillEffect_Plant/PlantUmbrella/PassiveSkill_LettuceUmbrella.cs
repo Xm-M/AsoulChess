@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
@@ -5,6 +6,7 @@ using Sirenix.OdinInspector;
 /// <summary>
 /// 莴苣保护伞被动：保护范围内弹飞子弹/打断蹦极；更大预警范围内提前播放伞面动画。
 /// </summary>
+[Serializable]
 public class PassiveSkill_LettuceUmbrella : ISkillEffect
 {
     static readonly List<Tile> TileBuffer = new List<Tile>(9);
@@ -261,13 +263,21 @@ public class PassiveSkill_LettuceUmbrella : ISkillEffect
 
     void OnChessRemove(Chess chess)
     {
+        StopUmbrella();
+    }
+
+    /// <summary>停止挡弹 Tick（持续技技能结束时调用）。</summary>
+    public void StopUmbrella()
+    {
         _timer?.Stop();
         _timer = null;
         _knockedBullets.Clear();
         _bungeeFirstSeenTime.Clear();
         _bungeeRetreatTriggered.Clear();
         if (_user != null)
+        {
             _user.OnRemove.RemoveListener(OnChessRemove);
-        _user = null;
+            _user = null;
+        }
     }
 }

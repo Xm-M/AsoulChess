@@ -18,7 +18,7 @@
 | 开局乐队 | `RoguelikeBandSelectPanel` + `BandMes` / `RoguelikeBandCatalog` |
 | Run 存档 | `RoguelikeRunSaveSystem` 单槽继续；地图、`runGold`、商店货单可恢复 |
 | Meta 进度 | `RoguelikeMetaProgress` → `PlayerSaveData` |
-| 局内 HUD | `RoguelikeRunInfoPanel`：Act、金币、小推车、携带格、地图层 Ln（Prefab 已绑）、卡组、设置 |
+| 局内 HUD | `RoguelikeRunInfoPanel`：Act、金币、小推车、携带格、地图层 Ln、卡组、**道具**、设置 |
 | 战斗进度条标题 | RG-005：`ProgressBar` 肉鸽关显示 `Act · Ln · 关卡名` |
 | 战斗结算 | `LevelOutCome_Roguelike`：胜利搜刮、失败结束 Run |
 | 战斗奖励 | `RoguelikeRewardPanel`：金币领取/跳过、硬币飞散（RG-P03）；PlantPick 三选一 |
@@ -39,7 +39,7 @@
 
 ### UI / 体验
 
-- [ ] **肉鸽通用面板 UI（剩余）** — Run **道具栏**（RG-007 / RG-003）
+- [x] **肉鸽通用面板 UI** — 卡组 + **道具栏**（RG-007，含四档稀有度显示）
 - [x] **肉鸽战斗「提前进下一波」** — RG-009（ProgressBar「下一波」按钮，mintime 后显示，仅肉鸽普关）
 
 ### 通用战斗 Bug（非肉鸽专属，影响肉鸽关卡池）
@@ -54,8 +54,8 @@
 ### 结算与 Meta
 
 - [ ] **Meta 解锁 UI** — RG-006
-- [ ] **遗物系统** — RG-004
-- [ ] **道具奖励闭环** — RG-003 + RG-013
+- [ ] **「遗物」** — RG-004（**与 Prop 同一套**，勿另起 Relic 框架；内容见 RG-013）
+- [ ] **道具内容与奖励池** — RG-013（扩道具）+ RG-003（经济池/领取体验收尾）
 
 ### 内容配置（策划 / 数据）
 
@@ -75,7 +75,7 @@
 
 | 模块 | 现状 | 缺口 |
 |------|------|------|
-| RG-007 通用 HUD | 地图/商店/休息：金币、Act、层数、卡组、设置（Prefab 已绑） | 道具栏 |
+| RG-007 通用 HUD | 地图/商店/休息：金币、Act、层数、卡组、**道具**、设置 | — |
 | RG-005 战斗 HUD | ProgressBar 显示 Act·层·关卡名 | 战斗内 Run 金币/卡组入口仍无（若需要再扩展） |
 | 事件节点 | 可走 `eventLevelPool` 进战斗 | 无事件选项 UI |
 | 关卡内容 | 前院、Ring、学校等已有资产 | 剧院等文件夹可能仍偏空 |

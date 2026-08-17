@@ -130,11 +130,26 @@ public class ManualInitMap : IInitMapManage
     public List<Tile> tileList;
     public void InitMap(Tile[,] tiles, Vector2Int mapSize, Vector2 tileSize)
     {
-        //tiles = new Tile[mapSize.x, mapSize.y];
+        if (tileList == null || tiles == null)
+            return;
+
         for (int i = 0; i < tileList.Count; i++)
         {
             Tile tile = tileList[i];
-            tiles[tile.mapPos.x, tile.mapPos.y] = tile;
+            if (tile == null)
+                continue;
+
+            int x = tile.mapPos.x;
+            int y = tile.mapPos.y;
+            if (x < 0 || x >= mapSize.x || y < 0 || y >= mapSize.y)
+            {
+                Debug.LogError(
+                    $"[ManualInitMap] Tile「{tile.name}」mapPos=({x},{y}) 超出 mapSize=({mapSize.x},{mapSize.y})，已跳过。请检查场景格子坐标或 MapManage.mapSize。",
+                    tile);
+                continue;
+            }
+
+            tiles[x, y] = tile;
         }
     }
 }

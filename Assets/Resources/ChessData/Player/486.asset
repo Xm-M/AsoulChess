@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
   m_Name: 486
   m_EditorClassIdentifier: 
-  chessName: 486
-  chessDescription: "无刺有刺的鼓手，在压力下也能稳定产出阳光。"
-  chessShortDescription: "产阳光型植物。"
-  chessEffect: "种植后周期性产生阳光；GBC 羁绊成员压力足够时产阳效率提升。"
+  chessName: "\u5B89\u548C\u6634"
+  chessDescription: 
+  chessShortDescription: 
+  chessEffect: "\u538B\u529B\u503C\u5230\u8FBE30\u65F6\u4F1A\u751F\u6210\u4E00\u4E2A\u9633\u5149\uFF1B\u4F1A\u4E3A3*3\u8303\u56F4\u5185\u7684\u53CB\u519B\u5206\u644A\u538B\u529B\u503C"
   baseProperty:
     attack: 0
     attackRate: 0
@@ -31,6 +31,7 @@ MonoBehaviour:
     healRate: 1
     speed: 0
     acceleRated: 1
+    moveAcceleRated: 1
     dizzinessTime: 0
     tenacity: 0
     attackRange: 3.75
@@ -48,14 +49,16 @@ MonoBehaviour:
   chessTileType: 1
   plantType: 1
   plantFunction:
-    id: 0
+    rid: 0
   plantIfCanBuyCard:
-    id: 1
+    rid: -2
   PlantCardPre: {fileID: 0}
   PlantEntrepotCardPre: {fileID: 0}
   references:
-    version: 1
-    00000000:
-      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
-    00000001:
+    version: 2
+    RefIds:
+    - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
   m_Name: Tomo
   m_EditorClassIdentifier: 
-  chessName: Tomo
-  chessDescription: "无刺有刺键盘手，擅长范围切割与施压。"
-  chessShortDescription: "范围伤害 · 键盘。"
-  chessEffect: "技能对范围内敌人造成切割伤害，并为命中目标施加压力。"
+  chessName: "\u6D77\u8001\u585A\u667A"
+  chessDescription: 
+  chessShortDescription: 
+  chessEffect: "\u5E38\u6001\u6CBB\u75973*3\u8303\u56F4\u7684\u53CB\u519B\u3002\u6280\u80FD\u5BF93*3\u8303\u56F4\u5185\u6240\u6709\u5355\u4F4D\u9020\u6210\u5207\u5272\u4F24\u5BB3\uFF0C\u5E76\u4E3A\u547D\u4E2D\u76EE\u6807\u65BD\u52A0\u6301\u7EED\u538B\u529B\u3002"
   baseProperty:
     attack: 20
     attackRate: 0
@@ -49,14 +49,16 @@ MonoBehaviour:
   chessTileType: 1
   plantType: 1
   plantFunction:
-    id: 0
+    rid: 0
   plantIfCanBuyCard:
-    id: 1
+    rid: -2
   PlantCardPre: {fileID: 0}
   PlantEntrepotCardPre: {fileID: 0}
   references:
-    version: 1
-    00000000:
-      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
-    00000001:
+    version: 2
+    RefIds:
+    - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 

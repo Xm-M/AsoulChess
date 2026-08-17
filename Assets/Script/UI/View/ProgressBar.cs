@@ -34,6 +34,7 @@ public class ProgressBar : View
     {
         bossHpMode = false;
         uiBar.SetValue(cur, max);
+        RefreshStageName();
     }
 
     /// <summary>Boss 关：隐藏波次旗，进度条表示 Boss 剩余血量。</summary>
@@ -98,11 +99,39 @@ public class ProgressBar : View
     {
         base.Show();
         EnsureEarlyNextWaveHook();
-        var level = LevelManage.instance?.currentLevel;
-        stadgeName.text = level != null
-            ? RoguelikeRunInfoFormatter.FormatProgressBarStageName(level)
-            : string.Empty;
+        RefreshStageName();
         RefreshEarlyNextWaveButton();
+    }
+
+    void RefreshStageName()
+    {
+        if (stadgeName == null) return;
+        var level = LevelManage.instance?.currentLevel;
+        if (level == null)
+        {
+            stadgeName.text = string.Empty;
+            return;
+        }
+
+        if (level.levelMode == LevelMode.SurvivalMode)
+        {
+            string name = level.levelName ?? string.Empty;
+            if (LevelManage.instance?.currentController is LevelController_Endless endless)
+            {
+                int round = endless.GetRoundDisplay();
+                int maxRounds = endless.GetMaxRoundsDisplay();
+                stadgeName.text = maxRounds > 0
+                    ? $"{name} · 第{round}/{maxRounds}轮"
+                    : $"{name} · 第{round}轮";
+            }
+            else
+            {
+                stadgeName.text = name;
+            }
+            return;
+        }
+
+        stadgeName.text = RoguelikeRunInfoFormatter.FormatProgressBarStageName(level);
     }
 
     public override void Hide()

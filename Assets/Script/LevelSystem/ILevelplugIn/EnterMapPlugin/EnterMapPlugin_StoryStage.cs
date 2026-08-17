@@ -6,7 +6,7 @@ using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
 /// <summary>
-/// 剧情关编排：Instantiate stage → Play Timeline → Signal 暂停对话 → Complete → Outcome。
+/// 剧情关编排：Instantiate stage → Play Timeline → Signal 暂停对话/Motion → Complete → Outcome。
 /// stage 预制体内已含 PlayableDirector、StoryActor、Timeline 绑定。
 /// </summary>
 [Serializable]
@@ -25,12 +25,16 @@ public class EnterMapPlugin_StoryStage : ILevelPlugin
     Coroutine _runCoroutine;
     bool _completed;
     bool _waitingDialogue;
+    bool _waitingMotion;
+    int _pendingMotions;
 
     public void StadgeEffect(LevelController levelController)
     {
         _controller = levelController;
         _completed = false;
         _waitingDialogue = false;
+        _waitingMotion = false;
+        _pendingMotions = 0;
         if (_controller != null)
             _runCoroutine = _controller.StartCoroutine(RunStory());
     }
@@ -60,7 +64,7 @@ public class EnterMapPlugin_StoryStage : ILevelPlugin
         _director.Play();
         while (!_completed && _director != null)
         {
-            if (_waitingDialogue || _director.state == PlayState.Paused)
+            if (_waitingDialogue || _waitingMotion || _director.state == PlayState.Paused)
             {
                 yield return null;
                 continue;
@@ -92,16 +96,90 @@ public class EnterMapPlugin_StoryStage : ILevelPlugin
         else
             _bridge.Register(StorySignalNames.SequenceComplete, CompleteSequence);
 
-        if (dialogueRanges == null)
+        if (dialogueRanges != null)
+        {
+            for (int i = 0; i < dialogueRanges.Count; i++)
+            {
+                var binding = dialogueRanges[i];
+                if (binding?.signal == null)
+                    continue;
+                _bridge.Register(binding.signal, () => OnDialogueSignal(binding));
+            }
+        }
+
+        RegisterMotionSignals();
+    }
+
+    void RegisterMotionSignals()
+    {
+        var binder = _stageRoot != null
+            ? _stageRoot.GetComponentInChildren<StoryMotionBinder>(true)
+            : null;
+        if (binder?.bindings == null || binder.bindings.Count == 0)
             return;
 
-        for (int i = 0; i < dialogueRanges.Count; i++)
+        var groups = new Dictionary<string, List<StoryMotionSignalBinding>>();
+        for (int i = 0; i < binder.bindings.Count; i++)
         {
-            var binding = dialogueRanges[i];
-            if (binding?.signal == null)
+            var b = binder.bindings[i];
+            if (b?.signal == null || b.preset == null || b.player == null)
                 continue;
-            _bridge.Register(binding.signal, () => OnDialogueSignal(binding));
+
+            string key = b.signal.name;
+            if (!groups.TryGetValue(key, out var list))
+            {
+                list = new List<StoryMotionSignalBinding>();
+                groups[key] = list;
+            }
+
+            list.Add(b);
         }
+
+        foreach (var pair in groups)
+        {
+            var group = pair.Value;
+            var signal = group[0].signal;
+            _bridge.Register(signal, () => OnMotionSignal(group));
+        }
+    }
+
+    void OnMotionSignal(List<StoryMotionSignalBinding> group)
+    {
+        if (group == null || group.Count == 0)
+            return;
+
+        _director?.Pause();
+        _waitingMotion = true;
+        _pendingMotions = group.Count;
+
+        for (int i = 0; i < group.Count; i++)
+        {
+            var binding = group[i];
+            if (binding.player == null || binding.preset == null)
+            {
+                OnOneMotionFinished();
+                continue;
+            }
+
+            binding.player.Play(binding.preset, binding.targetAnchor, OnOneMotionFinished);
+        }
+    }
+
+    void OnOneMotionFinished()
+    {
+        _pendingMotions--;
+        if (_pendingMotions > 0)
+            return;
+
+        _pendingMotions = 0;
+        _waitingMotion = false;
+        if (_director == null)
+            return;
+
+        if (_director.state == PlayState.Paused)
+            _director.Resume();
+        else if (_director.state != PlayState.Playing)
+            _director.Play();
     }
 
     void OnDialogueSignal(StoryDialogueRangeBinding binding)
@@ -144,6 +222,7 @@ public class EnterMapPlugin_StoryStage : ILevelPlugin
             return;
 
         _completed = true;
+        StopAllMotions();
         _director?.Stop();
 
         var outcome = LevelManage.instance?.currentLevel?.outcome;
@@ -151,6 +230,18 @@ public class EnterMapPlugin_StoryStage : ILevelPlugin
             outcome.HandleOutcome(true, Vector3.zero);
         else
             RoguelikeRunService.LeaveStoryEventNode();
+    }
+
+    void StopAllMotions()
+    {
+        _waitingMotion = false;
+        _pendingMotions = 0;
+        if (_stageRoot == null)
+            return;
+
+        var players = _stageRoot.GetComponentsInChildren<StoryMotionPlayer>(true);
+        for (int i = 0; i < players.Length; i++)
+            players[i]?.Stop();
     }
 
     public void OverPlugin(LevelController levelController)
@@ -161,6 +252,7 @@ public class EnterMapPlugin_StoryStage : ILevelPlugin
             _runCoroutine = null;
         }
 
+        StopAllMotions();
         _bridge?.ClearHandlers();
         if (_stageRoot != null)
             UnityEngine.Object.Destroy(_stageRoot);
@@ -170,5 +262,7 @@ public class EnterMapPlugin_StoryStage : ILevelPlugin
         _controller = null;
         _completed = false;
         _waitingDialogue = false;
+        _waitingMotion = false;
+        _pendingMotions = 0;
     }
 }

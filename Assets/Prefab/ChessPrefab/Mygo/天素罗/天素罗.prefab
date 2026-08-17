@@ -151,6 +151,9 @@ MonoBehaviour:
     onSetDamage:
       m_PersistentCalls:
         m_Calls: []
+    onBeforeTakeDamage:
+      m_PersistentCalls:
+        m_Calls: []
     onTakeDamage:
       m_PersistentCalls:
         m_Calls: []
@@ -228,7 +231,7 @@ MonoBehaviour:
       type: {class: PassiveSkillEffect_TianSuoLuo, ns: , asm: Assembly-CSharp}
       data:
         soyorinCreator: {fileID: 11400000, guid: 28a34a04535ef9146a949aa5f236b329, type: 2}
-        delaySeconds: 18
+        delaySeconds: 180
 --- !u!61 &4334396476387016433
 BoxCollider2D:
   m_ObjectHideFlags: 0

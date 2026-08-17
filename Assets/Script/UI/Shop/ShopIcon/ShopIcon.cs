@@ -68,9 +68,12 @@ public class ShopIcon : MonoBehaviour
         price = creator.baseProperty.price;
         goodPrice.text = creator.baseProperty.price.ToString();
         coldDown=good.baseProperty.CD;
+        // 换卡后按新植物 CD 重新起转（与正常买卡后冷却一致）；CD&lt;30 的卡原逻辑会直接就绪
         if (coldDown < 30) t = coldDown;
         else t = 0;
-        ifCanbuy=true;
+        // 强制按 Update 重算亮/灰，避免换卡后卡在错误 ifCanbuy
+        ifCanbuy = false;
+        SetClearColor();
     }
     public void ChangePrice(int changePrice)
     {
@@ -143,6 +146,11 @@ public class ShopIcon : MonoBehaviour
         var shop = UIManage.GetView<PlantsShop>();
         if (!LevelManage.instance.IfGameStart&&!shop.SelectOver)
         {
+            if (!shop.CanRemoveSelection(selectIcon))
+            {
+                Audio?.PlayAudio("CantPlant");
+                return;
+            }
             selectIcon.UnselectCard();
             shop.shopAudio.PlayAudio("tap");
             shop.RemoveSelection(selectIcon);

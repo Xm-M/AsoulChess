@@ -52,7 +52,9 @@ public class SkillReady_MouseDown : ISkillReady
 
     public bool IfSkillReady(Chess user, SkillConfig config, List<Chess> targets)
     {
-        //user.animatorController.ChangeFlash(0.5f);
+        // 暂停 / 未开战（GamePause 会置 IfGameStart=false）时点击不放技能
+        if (LevelManage.instance == null || !LevelManage.instance.IfGameStart)
+            return false;
         if (!Input.GetMouseButtonDown(0))
             return false;
         //Debug.Log("点击了");

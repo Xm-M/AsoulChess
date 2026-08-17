@@ -3,18 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 生存/无尽模式关卡控制器：多轮 20 波循环，末波 70s 硬限时，轮末清怪后 Timeline 衔接下一轮。
+/// 生存/无尽模式关卡控制器：多轮循环；轮末 ClearTime + 双次种植（展示→插件→重种挂 Buff）。
 /// </summary>
 public class LevelController_Endless : LevelController
 {
     public EndlessRunState RunState { get; } = new EndlessRunState();
     EnterMapPlugin_EndlessSpawnConfig spawnConfig;
     bool roundTransitioning;
+    /// <summary>轮末/读档植物快照（无 buff）；供展示种与开战重种。</summary>
+    List<ChessSaveData> plantSnapshot;
 
     public void ApplySpawnConfig(EnterMapPlugin_EndlessSpawnConfig config)
     {
         spawnConfig = config;
         RunState.BindConfig(config);
+    }
+
+    /// <summary>
+    /// 生存读档：Timeline 播放前先灌入轮次与手牌缓存；植物在 EnterMap 信号时再种。
+    /// </summary>
+    public void PrepareSurvivalLoadFromSave(GameSaveData save)
+    {
+        if (save == null) return;
+        if (save.levelData != null)
+        {
+            if (save.levelData.selectionIndex > 0)
+                RunState.selectionIndex = save.levelData.selectionIndex;
+            RunState.totalWavesCleared = save.levelData.totalWavesCleared;
+        }
+        SyncShopHandFromSave(save);
+        plantSnapshot = ClonePlantList(save.playerPlants);
+        // 轮界存档：本轮从进关开始，不续波
+        currentWave = -1;
+        t = 0;
     }
 
     public override void EnterMap()
@@ -29,9 +50,19 @@ public class LevelController_Endless : LevelController
         {
             RestoreLevelProgress(SaveLoadContext.CurrentSaveData.levelData);
             BuffDatabase.RestoreRegistry(SaveLoadContext.CurrentSaveData.buffRegistry);
-            RestorePlayerPlants(SaveLoadContext.CurrentSaveData.playerPlants);
+            if (plantSnapshot == null || plantSnapshot.Count == 0)
+                plantSnapshot = ClonePlantList(SaveLoadContext.CurrentSaveData.playerPlants);
             RestoreSunLightFromSave(SaveLoadContext.CurrentSaveData);
             SyncShopHandFromSave(SaveLoadContext.CurrentSaveData);
+            currentWave = -1;
+            t = 0;
+        }
+
+        // 选卡前：静默清场 + 无 Buff 展示种（同会话轮间与读档统一）
+        if (plantSnapshot != null && plantSnapshot.Count > 0)
+        {
+            SilentClearPlayerPlants();
+            RestorePlayerPlants(plantSnapshot, restoreRuntimeState: false, forDisplayOnly: true);
         }
 
         if (levelData.EnterMapPlugin != null)
@@ -43,8 +74,70 @@ public class LevelController_Endless : LevelController
         RunRoundEnter();
     }
 
+    static List<ChessSaveData> ClonePlantList(List<ChessSaveData> src)
+    {
+        if (src == null || src.Count == 0)
+            return new List<ChessSaveData>();
+        return new List<ChessSaveData>(src);
+    }
+
+    static void SilentClearPlayerPlants()
+    {
+        var team = ChessTeamManage.Instance?.GetTeam("Player");
+        if (team == null) return;
+        var list = new List<Chess>(team);
+        for (int i = 0; i < list.Count; i++)
+        {
+            var c = list[i];
+            if (c == null) continue;
+            c.RemoveFromFieldSilent();
+        }
+    }
+
+    void CapturePlantSnapshotFromField()
+    {
+        plantSnapshot = new List<ChessSaveData>();
+        var team = ChessTeamManage.Instance?.GetTeam("Player");
+        if (team == null) return;
+        foreach (var chess in team)
+        {
+            if (chess == null || chess.IfDeath) continue;
+            var tile = chess.moveController?.standTile;
+            if (tile == null) continue;
+            plantSnapshot.Add(new ChessSaveData
+            {
+                creatorId = chess.propertyController?.creator?.chessName ?? "",
+                tileX = tile.mapPos.x,
+                tileY = tile.mapPos.y,
+                hp = chess.propertyController.GetHp(),
+                hpMax = chess.propertyController.GetMaxHp(),
+                buffs = new List<BuffSaveData>(),
+                stateName = (int)StateName.IdleState
+            });
+        }
+    }
+
+    /// <summary>GameStart 插件后：灭展示种 → 完整进战重种（挂 Buff/Timer）。</summary>
+    void ReplantForCombatAfterPlugins()
+    {
+        if (plantSnapshot == null || plantSnapshot.Count == 0)
+            return;
+        SilentClearPlayerPlants();
+        RestorePlayerPlants(plantSnapshot, restoreRuntimeState: false, forDisplayOnly: false);
+    }
+
     void RunRoundEnter()
     {
+        // 生存读档/轮界：始终从本轮进关开始，不续局内波次
+        bool preserveWave = SaveLoadContext.IsLoadFromSave
+            && currentWave >= 0
+            && levelData != null
+            && levelData.levelMode != LevelMode.SurvivalMode;
+        int waveToKeep = currentWave;
+        float tToKeep = t;
+        float minToKeep = mintime;
+        float maxToKeep = maxtime;
+
         RestoreRunStateForLoadIfNeeded();
         RunState.segmentPool.Clear();
         RunState.RebuildSegmentPool(levelData, RunState.selectionIndex);
@@ -53,9 +146,20 @@ public class LevelController_Endless : LevelController
         ClearZombiePreviews();
         CreateRoundWaves();
         RefreshZombiePreviewTiles(RunState.segmentPool);
-        t = 0;
-        currentWave = -1;
         roundTransitioning = false;
+
+        if (preserveWave)
+        {
+            currentWave = Mathf.Clamp(waveToKeep, -1, waveDatas != null ? waveDatas.Count - 1 : -1);
+            t = tToKeep;
+            mintime = minToKeep;
+            maxtime = maxToKeep;
+        }
+        else
+        {
+            t = 0;
+            currentWave = -1;
+        }
     }
 
     void RestoreRunStateForLoadIfNeeded()
@@ -78,10 +182,13 @@ public class LevelController_Endless : LevelController
         int waves = levelData.MaxWave;
         if (spawnConfig != null && spawnConfig.wavesPerRound > 0)
             waves = Mathf.Min(spawnConfig.wavesPerRound, levelData.MaxWave);
+        // 全局波号：已清波次 + 本轮序号 → 预算 / waveLimit 随轮次递增
+        int globalBase = Mathf.Max(0, RunState.totalWavesCleared);
         for (int i = 0; i < waves; i++)
         {
             var waveData = new WaveData_Endless(RunState);
-            waveData.InitWave(i + 1, levelData);
+            int globalWave = globalBase + i + 1;
+            waveData.InitWave(globalWave, levelData);
             waveDatas.Add(waveData);
         }
     }
@@ -112,6 +219,9 @@ public class LevelController_Endless : LevelController
                 levelData.GameStartPlugin[i].StadgeEffect(this);
         }
 
+        // 插件基于展示种跑完后，全灭再重种以挂 Buff / 攻击 Timer
+        ReplantForCombatAfterPlugins();
+
         TryLockShopHand();
         LevelManage.instance.GameStart();
         roundTransitioning = false;
@@ -127,7 +237,9 @@ public class LevelController_Endless : LevelController
         }
 
         if (isLoadFromSave)
+        {
             SceneManage.instance.LoadOver();
+        }
     }
 
     void TryLockShopHand()
@@ -155,6 +267,46 @@ public class LevelController_Endless : LevelController
             if (levelData.PreParePlugin[i] is PreParePlugun_ShowPlantShop shop)
                 shop.SyncLockedHandFromSave(save);
         }
+    }
+
+    public int GetWavesPerRoundDisplay()
+    {
+        if (waveDatas != null && waveDatas.Count > 0)
+            return waveDatas.Count;
+        if (spawnConfig != null && spawnConfig.wavesPerRound > 0)
+            return spawnConfig.wavesPerRound;
+        return levelData != null ? levelData.MaxWave : 1;
+    }
+
+    /// <summary>当前轮次（从 1 起）。</summary>
+    public int GetRoundDisplay() => Mathf.Max(1, RunState.selectionIndex);
+
+    /// <summary>最大轮次；无尽（survivalMaxWave&lt;0）返回 -1。</summary>
+    public int GetMaxRoundsDisplay()
+    {
+        if (spawnConfig == null || spawnConfig.survivalMaxWave < 0)
+            return -1;
+        int perRound = spawnConfig.wavesPerRound > 0 ? spawnConfig.wavesPerRound : levelData.MaxWave;
+        if (perRound <= 0) perRound = 1;
+        return Mathf.Max(1, Mathf.CeilToInt(spawnConfig.survivalMaxWave / (float)perRound));
+    }
+
+    protected override void DoEnterNextWave()
+    {
+        if (waveDatas == null || waveDatas.Count == 0 || levelData == null)
+            return;
+
+        int nextIndex = currentWave + 1;
+        if (nextIndex >= waveDatas.Count)
+            return;
+
+        t = -2;
+        int roundMax = GetWavesPerRoundDisplay();
+        UIManage.GetView<ProgressBar>()?.MoveBar(nextIndex + 1, roundMax);
+        waveDatas[nextIndex].EnterWave();
+        currentWave++;
+        mintime = 4;
+        maxtime = UnityEngine.Random.Range(0, 6) + 23;
     }
 
     int LastWaveIndex => waveDatas != null && waveDatas.Count > 0 ? waveDatas.Count - 1 : 0;
@@ -201,7 +353,10 @@ public class LevelController_Endless : LevelController
             currentWave++;
             t = 0;
             UIManage.Show<ProgressBar>();
-            UIManage.GetView<ProgressBar>().SetFlag(levelData.MaxWave / 10);
+            var bar = UIManage.GetView<ProgressBar>();
+            int roundMax = GetWavesPerRoundDisplay();
+            bar.SetFlag(Mathf.Max(1, roundMax / 10));
+            bar.MoveBar(currentWave + 1, roundMax);
         }
         else if (currentWave >= 0 && currentWave < waveDatas.Count && WaveCanAdvance())
         {
@@ -227,10 +382,22 @@ public class LevelController_Endless : LevelController
             yield return null;
         }
 
+        // 通关奖杯落点：清场前取最后一只僵尸位（已全灭时仍可从 waveZombies 取位）
+        Vector3 victoryPos = CaptureLastZombieWorldPos();
+
         // 70s 强切时立刻清残怪；自然清场时此处通常已无敌人
         ForceClearRoundEnemies();
+        ClearFieldSunLights();
+        // 整表清 Timer；下一轮靠展示种→插件→重种重建
+        if (GameManage.instance?.timerManage != null)
+            GameManage.instance.timerManage.ClearTime();
 
-        // 等待期间保持 IfGameStart=true，场上植物等照常运行；仅阻止 Update 推进波次
+        bool willWin = WillSurviveWinAfterThisRound();
+        // 非通关轮：ClearTime 后立刻播「更多僵尸要来了」，再等 transitionDelay
+        if (!willWin)
+            ShowMoreZombiesComingBanner();
+
+        // 等待期间保持 IfGameStart=true；Timer 已清，仅阻止 Update 推进波次
         float transitionDelay = spawnConfig != null ? spawnConfig.roundTransitionDelay : 4f;
         if (transitionDelay > 0f)
             yield return new WaitForSeconds(transitionDelay);
@@ -238,11 +405,15 @@ public class LevelController_Endless : LevelController
         RoundOverPlugins();
 
         RunState.totalWavesCleared += waveDatas.Count;
+        CapturePlantSnapshotFromField();
 
-        if (CheckSurvivalWin())
+        if (willWin || IsSurvivalWinReached())
         {
             RunState.selectionIndex++;
-            SaveSystem.SaveCurrentLevel();
+            currentWave = -1;
+            t = 0;
+            // 掉落奖杯；玩家点击后再 GameOver(true)。删档后不再存档。
+            SpawnSurvivalVictoryReward(victoryPos);
             LevelManage.instance.GamePause();
             UIManage.Close<ProgressBar>();
             roundTransitioning = false;
@@ -250,14 +421,69 @@ public class LevelController_Endless : LevelController
         }
 
         RunState.selectionIndex++;
-        SaveSystem.SaveCurrentLevel();
-        LevelManage.instance.GamePause();
-        UIManage.Close<ProgressBar>();
         currentWave = -1;
         t = 0;
         ClearZombiePreviews();
+        SaveSystem.SaveCurrentLevel();
+        LevelManage.instance.GamePause();
+        UIManage.Close<ProgressBar>();
 
         yield return PlayRoundTimeline();
+    }
+
+    /// <summary>本轮结束后（累加本轮波数后）是否达到 survivalMaxWave。</summary>
+    bool WillSurviveWinAfterThisRound()
+    {
+        if (spawnConfig == null || spawnConfig.survivalMaxWave < 0)
+            return false;
+        int wavesThisRound = waveDatas != null ? waveDatas.Count : 0;
+        return RunState.totalWavesCleared + wavesThisRound >= spawnConfig.survivalMaxWave;
+    }
+
+    bool IsSurvivalWinReached()
+    {
+        if (spawnConfig == null || spawnConfig.survivalMaxWave < 0)
+            return false;
+        return RunState.totalWavesCleared >= spawnConfig.survivalMaxWave;
+    }
+
+    static void ShowMoreZombiesComingBanner()
+    {
+        UIManage.Show<TextPanel>();
+        var panel = UIManage.GetView<TextPanel>();
+        panel?.MoreZombiesComing();
+    }
+
+    Vector3 CaptureLastZombieWorldPos()
+    {
+        if (waveDatas != null)
+        {
+            for (int w = waveDatas.Count - 1; w >= 0; w--)
+            {
+                if (waveDatas[w] != null && waveDatas[w].TryGetLastZombieWorldPos(out var pos))
+                    return pos;
+            }
+        }
+        var map = MapManage_PVZ.instance;
+        if (map != null && map.tiles != null && MapManage.instance != null)
+        {
+            var size = MapManage.instance.mapSize;
+            int cx = Mathf.Clamp(size.x / 2, 0, Mathf.Max(0, size.x - 1));
+            int cy = Mathf.Clamp(size.y / 2, 0, Mathf.Max(0, size.y - 1));
+            var tile = map.tiles[cx, cy];
+            if (tile != null)
+                return tile.transform.position;
+        }
+        return Vector3.zero;
+    }
+
+    /// <summary>
+    /// 生存通关奖励。WaveData.SpawnVictoryReward 只在波次对象上，控制器需走 levelData.outcome。
+    /// </summary>
+    void SpawnSurvivalVictoryReward(Vector3 lastZombiePos)
+    {
+        SaveSystem.DeleteSave(LevelManage.instance.currentLevel);
+        (levelData?.outcome ?? new LevelOutCome_Trophy()).HandleOutcome(true, lastZombiePos);
     }
 
     /// <summary>
@@ -309,18 +535,23 @@ public class LevelController_Endless : LevelController
             wave.ForceClearRemaining();
     }
 
-    bool CheckSurvivalWin()
+    /// <summary>轮末回收场上阳光；SunLight.OnDisable 会 Stop 自动拾取 Timer。</summary>
+    static void ClearFieldSunLights()
     {
-        if (spawnConfig == null || spawnConfig.survivalMaxWave < 0)
-            return false;
-        if (RunState.totalWavesCleared < spawnConfig.survivalMaxWave)
-            return false;
-        LevelManage.instance.GameOver(true);
-        return true;
+        var panel = UIManage.GetView<ItemPanel>();
+        if (panel == null) return;
+        var lights = panel.GetComponentsInChildren<SunLight>(true);
+        for (int i = 0; i < lights.Length; i++)
+        {
+            var light = lights[i];
+            if (light == null) continue;
+            light.Recycle();
+        }
     }
 
     public override void GameOver(bool win)
     {
+        // 无尽（survivalMaxWave < 0）不允许胜利结算直接离关
         if (win && spawnConfig != null && spawnConfig.survivalMaxWave < 0)
             return;
         base.GameOver(win);

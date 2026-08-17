@@ -1,16 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
-using System.Linq;
+using AsoulChess.Game.Core.Pooling;
+using AsoulChess.Game.Core.Services;
+
 public class ObjectPool : MonoBehaviour
 {
     public static ObjectPool instance;
     public Scene poolScene;
-    Dictionary<string, Stack<GameObject>> objectPool;
-    Dictionary<Type, Stack<object>> otherPool;
-    private void Awake()
+
+    IGameObjectPool CorePool
+    {
+        get
+        {
+            if (GameServices.Pool == null)
+                GameServices.RegisterDefaults();
+            return GameServices.Pool;
+        }
+    }
+
+    void Awake()
     {
         if (instance == null)
             instance = this;
@@ -19,104 +30,37 @@ public class ObjectPool : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        objectPool = new Dictionary<string, Stack<GameObject>>();
-        poolScene = SceneManager.CreateScene(name);
-        otherPool = new Dictionary<Type, Stack<object>>();
-        //EventController.Instance.AddListener(EventName.WhenLeaveLevel.ToString(), ClearPool);
+
+        if (GameServices.Pool == null)
+            GameServices.RegisterDefaults();
+
         EventController.Instance.AddListener(EventName.GameStart.ToString(), ClearPool);
     }
-    //
-    IEnumerator AddMember(Chess c, Tile tile)
-    {
-        yield return null;
-        tile.ChessEnter(c);
 
-    }
-    public GameObject Create(GameObject a)
+    void SyncForceDestroy()
     {
-        if (a == null)
-        {
-            Debug.LogWarning("[ObjectPool] Create called with null prefab");
-            return null;
-        }
-        GameObject creat;
-        if (objectPool.ContainsKey(a.name))
-        {
-            if (objectPool[a.name].Count != 0)
-            {
-                creat= objectPool[a.name].Pop();
-                if (creat != null)
-                {
-                    creat.SetActive(true);
-                    return creat;
-                }
-            }          
-        }
-        else
-        {
-            objectPool.Add(a.name, new Stack<GameObject>());
-        }        
-        creat = Instantiate(a);
-        SceneManager.MoveGameObjectToScene(creat, poolScene);
-        return creat;
+        CorePool.ForceDestroyOnRelease = GameManage.instance != null && GameManage.instance.IsDestroy;
     }
-    public void Recycle(GameObject a)
-    {
-        if (a == null) return;
-        if (GameManage.instance != null && GameManage.instance.IsDestroy)
-        {
-            Destroy(a);
-            return;
-        }
-        string name = a.name.Replace("(Clone)", "");
-        if (objectPool.ContainsKey(name)&&!objectPool[name].Contains(a))
-        {           
-            objectPool[name].Push(a);
-        }
-        else
-        {
-            //Destroy(a);
-            Debug.LogWarning("没有这个物体" + a.name);
-            Destroy(a);
 
-        }
-        a.SetActive(false);
-    }
-    public object CreateObject(Type type)
+    public GameObject Create(GameObject prefab)
     {
-        if (otherPool.ContainsKey(type))
-        {
-            if (otherPool[type].Count != 0)
-                return otherPool[type].Pop();
-            else return Activator.CreateInstance(type);
-        }
-        else
-        {
-            otherPool.Add(type, new Stack<object>());
-            return Activator.CreateInstance(type);
-        }
+        SyncForceDestroy();
+        return CorePool.Get(prefab);
     }
-    public void ReycleObject(object obj)
+
+    public void Recycle(GameObject go)
     {
-        Type type = obj.GetType();
-        if (otherPool.ContainsKey(type))
-        {
-            otherPool[type].Push(obj);
-        }
+        SyncForceDestroy();
+        CorePool.Release(go);
     }
+
+    public object CreateObject(Type type) => Activator.CreateInstance(type);
+
+    public void ReycleObject(object obj) { }
+
     public void ClearPool()
     {
         Debug.Log("ObjectPool清理完成");
-        
-        foreach(var stack in objectPool)
-        {
-            while (stack.Value.Count > 0)
-            {
-                GameObject obj = stack.Value.Pop();
-                Destroy(obj);
-            }
-        }
-        otherPool.Clear();
-        objectPool.Clear();
+        CorePool.Clear(true);
     }
 }

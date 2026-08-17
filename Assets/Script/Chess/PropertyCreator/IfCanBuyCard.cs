@@ -61,3 +61,18 @@ public class LevelUp_Limit : IfCanBuyCard
         return false;
     }
 }
+
+/// <summary>
+/// 灯棋子买卡上限：场上棋子数 &lt; 全场 MyGO 单位数（不去重）。
+/// </summary>
+public class TomoriChessCap_Limit : IfCanBuyCard
+{
+    public bool BuyCard(PropertyCreator creator)
+    {
+        if (creator == null)
+            return false;
+        int onField = TomoriChessKeys.CountFieldPieces(creator);
+        int cap = TomoriChessKeys.CountMygoUnitsOnField();
+        return onField < cap;
+    }
+}

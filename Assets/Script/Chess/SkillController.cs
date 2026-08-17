@@ -142,7 +142,9 @@ public class SkillContext
             || key == MultiHeadMutsumiKeys.CloneHeads
             || key == MultiHeadMutsumiKeys.GhostList
             || key == MultiHeadMutsumiKeys.StressTickTimer
-            || key == MultiHeadMutsumiKeys.GhostMaster;
+            || key == MultiHeadMutsumiKeys.GhostMaster
+            || key == TomoriChessKeys.SpawnedPieces
+            || key == "hitagi_stationery_salvo";
     }
 
     public SkillContextSaveData WriteToSaveData()

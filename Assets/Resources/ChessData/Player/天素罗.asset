@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e596984b40d88a8498df0e6faaeb28f7, type: 3}
   m_Name: "\u5929\u7D20\u7F57"
   m_EditorClassIdentifier: 
-  chessName: "\u5929\u7D20\u7F57\uFF08\u957F\u5D0E\u7D20\u4E16\uFF09"
-  chessDescription: "\u957F\u5D0E\u7D20\u4E16\u5F02\u5F62\u6001\uFF1A\u4F4E\u4EF7\u9AD8\u9632\u6321\u8DEF\uFF1B\u5230\u671F\u540E\u8F6C\u5316\u4E3A\u5B8C\u6574\u957F\u5D0E\u7D20\u4E16\u3002"
-  chessShortDescription: "MyGO \xB7 \u7D20\u4E16\u5F62\u6001 \xB7 \u5C0F\u575A\u679C\u3002"
-  chessEffect: "\u79CD\u690D\u540E\u9AD8\u9632\u6321\u8DEF\uFF1B\u53EF\u914D\u5019\u65F6\u95F4\u5230\u671F\u81EA\u706D\u5E76\u5728\u540C\u683C\u751F\u6210\u957F\u5D0E\u7D20\u4E16\u3002"
+  chessName: "\u5929\u7D20\u7F57"
+  chessDescription: 
+  chessShortDescription: 
+  chessEffect: "\u62E5\u6709\u575A\u679C\u7684\u786C\u5EA6\uFF0C180s\u540E\u53D8\u4E3A\u957F\u5D0E\u7D20\u4E16"
   baseProperty:
     attack: 0
     attackRate: 0
@@ -38,10 +38,10 @@ MonoBehaviour:
     price: 50
     rarity: 4000
     waveLimit: 1
-    CD: 7.5
+    CD: 30
     Size: 1
   chessPre: {fileID: 8483807014571963174, guid: a03ce97c34122b840b81c0cc6972881e, type: 3}
-  chessSprite: {fileID: 0}
+  chessSprite: {fileID: 2002928655, guid: 3617cf3166187284381c0072c086508b, type: 3}
   plantTags:
   - Mygo
   - "\u8D1D\u65AF"

@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>10.2 Demo 打卡日程</title>
+  <style>
+    :root {
+      --paper: #f4efe4;
+      --ink: #2a241c;
+      --muted: #6b6156;
+      --line: #d9d0c2;
+      --stamp: #c4452f;
+      --ok: #2f7d4a;
+      --prog: #3b6ea5;
+      --unit: #3d7a4a;
+      --content: #b86a1a;
+      --art: #6b4ea3;
+      --plan: #5c5852;
+      --check: #8b2e22;
+      --today: #e8c56b;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #cfc4b2;
+      color: var(--ink);
+    }
+    .page {
+      max-width: 1180px;
+      margin: 24px auto;
+      padding: 28px 28px 48px;
+      background: var(--paper);
+      box-shadow: 0 12px 40px rgba(60, 40, 20, .22);
+      border: 1px solid #e7ddcd;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      letter-spacing: .04em;
+    }
+    header p { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+    .meta {
+      display: flex; flex-wrap: wrap; gap: 10px 18px;
+      margin: 14px 0 18px; font-size: 14px;
+    }
+    .meta b { font-variant-numeric: tabular-nums; }
+    .bar {
+      height: 10px; background: #e6ddd0; border-radius: 99px; overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .bar > i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, #c4452f, #e08a3c);
+      transition: width .25s;
+    }
+    .toolbar {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      margin-bottom: 16px;
+    }
+    button, select {
+      font: inherit; color: var(--ink);
+      background: #fffaf2; border: 1px solid #cbbda8;
+      border-radius: 6px; padding: 6px 10px; cursor: pointer;
+    }
+    button:hover { background: #fff; }
+    .hint { font-size: 12px; color: var(--muted); }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 22px;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      .layout { grid-template-columns: 1fr; }
+      .page { margin: 0; padding: 16px; }
+    }
+    .month { margin-bottom: 18px; }
+    .month h2 { margin: 0 0 8px; font-size: 16px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+    .dow, .cell {
+      min-height: 54px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .dow {
+      min-height: 0; text-align: center; color: var(--muted);
+      font-weight: 600; padding: 2px 0;
+    }
+    .cell {
+      background: #fffdf8;
+      border: 1px solid var(--line);
+      padding: 6px 7px;
+      position: relative;
+    }
+    .cell.empty { background: transparent; border: none; }
+    .cell.weekend {
+      background: #eee8dc; color: var(--muted); cursor: default;
+    }
+    .cell.artday {
+      background: #f3eef8;
+      border-color: #d4c6e4;
+    }
+    .cell.work { cursor: pointer; }
+    .cell.work:hover { border-color: #b9a78c; }
+    .cell.today { box-shadow: inset 0 0 0 2px var(--today); }
+    .cell.done {
+      background: #f8ece6;
+      border-color: #e0b3a8;
+    }
+    .cell.selected { outline: 2px solid var(--stamp); }
+    .cell .d { font-weight: 700; font-size: 14px; }
+    .cell .p { color: var(--muted); margin-top: 2px; }
+    .cell .stamp {
+      position: absolute; right: 4px; top: 4px;
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid var(--stamp); color: var(--stamp);
+      font-size: 10px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      transform: rotate(-12deg); opacity: .9;
+    }
+    .cell.weekend .tag { font-size: 11px; }
+    .panel {
+      background: #fffdf8;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px 16px 12px;
+      position: sticky; top: 12px;
+    }
+    .panel h3 { margin: 0 0 4px; font-size: 18px; }
+    .goal {
+      background: #f7f0e4; border-left: 3px solid var(--stamp);
+      padding: 8px 10px; margin: 10px 0 12px; font-size: 13px;
+    }
+    .task {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 8px;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .task:last-child { border-bottom: none; }
+    .task input { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--stamp); }
+    .task.checked .title { text-decoration: line-through; color: var(--muted); }
+    .role {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 1px 6px; border-radius: 99px; color: #fff; margin-right: 6px;
+    }
+    .role.程序 { background: var(--prog); }
+    .role.单位 { background: var(--unit); }
+    .role.内容 { background: var(--content); }
+    .role.美术 { background: var(--art); }
+    .role.策划 { background: var(--plan); }
+    .role.验收 { background: var(--check); }
+    .title { font-size: 14px; font-weight: 650; line-height: 1.4; }
+    .how { margin: 4px 0 0; font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .legend { margin-top: 16px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+    .cut {
+      margin-top: 22px; font-size: 13px; color: var(--muted);
+      border-top: 1px dashed var(--line); padding-top: 12px;
+    }
+    .cut b { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>10.2 Demo 打卡日程</h1>
+      <p>2026-08-13（四）→ 2026-10-02（五）　工作日做关卡/单位　周末画下周要用的角色图</p>
+      <p>勾选保存在本机浏览器。双击本文件即可打开，不必开服务器。</p>
+    </header>
+    <div class="meta">
+      <span>总进度 <b id="overall">0 / 0</b></span>
+      <span>已完成天数 <b id="daysDone">0</b></span>
+      <span>距 10/2 <b id="left">—</b> 天</span>
+      <span id="todayLabel"></span>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="toolbar">
+      <button type="button" id="btnToday">跳到今天</button>
+      <button type="button" id="btnExport">导出打卡</button>
+      <button type="button" id="btnImport">导入打卡</button>
+      <button type="button" id="btnReset">清空打卡</button>
+      <span class="hint">紫格子=周末画角色图　★=周五验收　国庆若放假：9/30 必须有可玩包</span>
+    </div>
+    <div class="layout">
+      <div>
+        <div id="calendars"></div>
+        <div class="cut">
+          <b>来不及就砍：</b>植物保半成品 8 + 点名 9 + 池子无废卡；僵尸保现有 57 + 两个 Boss；学校剧情只留 3 段；事件图可 3 张轮换；剧院 10 关 / 冒险选章整包砍。
+        </div>
+      </div>
+      <aside class="panel" id="panel">
+        <h3>点左边日期打卡</h3>
+        <p class="hint">点日期打卡。周末是角色图（卡面/立绘），给下周单位贴 Prefab。</p>
+      </aside>
+    </div>
+  </div>
+<script>
+const KEY = "avz-oct2-punch-v1";
+const SHIP = new Date(2026, 9, 2);
+
+const DAYS = [
+  {
+    date: "2026-08-13", week: "第0周 开工", milestone: false,
+    goal: "摸清现状：冒险链、生存怎么拆三档、半成品缺什么、美术要出哪些尺寸。",
+    tasks: [
+      { role: "策划", title: "把这张日程过一遍，记下 Ring 幕 Boss 两个候选", how: "写在任意地方即可：潘妮怀斯 / 巨型变异蟹。本周内必须二选一，今天先记下。" },
+      { role: "程序", title: "把冒险关的跳转链列成一张表", how: "写清每关的 nextLevel：1-10 现在显示什么名字、2-1 是不是 Ring、有没有 2-2～2-8。表能给别人看就算完。" },
+      { role: "程序", title: "弄清生存关要改哪些字段才能拆成三档", how: "对着现有「前院生存」记下：普通 5 波、困难 10 波、无尽不限波（survivalMaxWave = 5 / 10 / -1）。明天才能复制关卡。" },
+      { role: "美术", title: "列出首页、按钮、卷轴、事件插画的尺寸", how: "按现有 StartUI 和 RoguelikeMapPanel 量：首页底图、四个模式按钮、肉鸽卷轴长图、事件插画比例。出一张尺寸清单。" },
+      { role: "单位", title: "打开 8 张半成品植物，记下各缺什么", how: "田井中律、老仓育、羽川翼、战场原黑仪、叶瞬光、可露希尔、千夏、凛御银灰。每张写：缺 Prefab / 缺技能 / 种下去报错 / 只是数值不对。" }
+    ]
+  },
+  {
+    date: "2026-08-14", week: "第0周 开工", milestone: true,
+    goal: "周五验收：主菜单能进生存三档；点冒险不会误进 Ring。",
+    tasks: [
+      { role: "程序", title: "把现在的 2-1（Ring）移出冒险主线", how: "从草坪通关后再也进不去这张 Ring。Ring 只留在肉鸽和迷雾池。" },
+      { role: "程序", title: "修好 1-10 的显示名", how: "关卡列表/通关界面不再显示错误名字。打开游戏看一眼 1-10 标题即可。" },
+      { role: "内容", title: "生存模式做成三张关并挂进列表", how: "普通 5 轮、困难 10 轮、无尽。三张都出现在 SurvivalMode 列表里。" },
+      { role: "程序", title: "点进生存三档都能开打", how: "普通/困难能正常开局；无尽不会因为波次上限被判胜利。各进一次即可。" },
+      { role: "美术", title: "首页线稿或色稿 1 张 + 四个按钮草稿", how: "能给程序看「大概长这样」。不要求进包。" },
+      { role: "验收", title: "周五演示：生存三档 + 冒险不再进错 Ring", how: "从主菜单点一遍。过不了就当天修，不要留到下周。" }
+    ]
+  },
+  {
+    date: "2026-08-15", week: "周末补图 · 给第1周", milestone: false, artWeekend: true,
+    goal: "画出下周（8/17–21）要接线的半成品角色图。单位周一贴 Prefab，没有图就只能继续粉人。",
+    tasks: [
+      { role: "美术", title: "画田井中律角色图", how: "一张能贴进植物 Prefab / 卡面的立绘。线稿+平涂即可，不要求动画。体量靠近茶会已有卡（澪 / 䌷 / 唯）。" },
+      { role: "美术", title: "画老仓育角色图", how: "能贴 Prefab。压力体系。文件名用角色名交给单位。" },
+      { role: "美术", title: "画羽川翼角色图", how: "能贴 Prefab。压力体系。线稿+平涂即可。" }
+    ]
+  },
+  {
+    date: "2026-08-16", week: "周末补图 · 给第1周", milestone: false, artWeekend: true,
+    goal: "把第1周剩下两张半成品角色图画完。",
+    tasks: [
+      { role: "美术", title: "画战场原黑仪角色图", how: "能贴 Prefab。压力体系、偏高费。线稿+平涂即可。" },
+      { role: "美术", title: "画叶瞬光角色图", how: "能贴 Prefab。飞天体系，体量靠近惊蛰。" }
+    ]
+  },
+  {
+    date: "2026-08-17", week: "第1周 草坪链 + 外壳", milestone: false,
+    goal: "草坪十关开始能往后跳；半成品从田井中律做起。",
+    tasks: [
+      { role: "程序", title: "把 1-1 到 1-10 用 nextLevel 串起来", how: "通关一关会进下一关，并且写入 completedLevelIds。从编辑器看链，或打 1-1 通关验证。" },
+      { role: "程序", title: "1-10 通关指向未来的学校 2-1", how: "学校 2-1 文件可以是空壳，但指针要先指过去，不要再指 Ring。" },
+      { role: "内容", title: "标出草坪哪几关要对话", how: "至少标三个关号：开局教学、中段、章末。今天只写关号，不写正文。" },
+      { role: "美术", title: "首页底图上色，四个按钮继续画", how: "比周五草稿更完整。仍可以不进包。" },
+      { role: "单位", title: "田井中律做到能种", how: "测试关种下去不报缺 Prefab，技能能触发一次。数值不对也可以打勾。" }
+    ]
+  },
+  {
+    date: "2026-08-18", week: "第1周 草坪链 + 外壳", milestone: false,
+    goal: "事件面板有骨架；草坪前三关能打。",
+    tasks: [
+      { role: "程序", title: "从 1-1 打到 1-3，修断链和空名字", how: "三关都能进、能结束、标题不是空白。断了就当天接上。" },
+      { role: "程序", title: "搭事件面板骨架（插图 + 正文 + 2～3 个按钮）", how: "新面板对标商店/休息房那种单页。今天能在编辑器里打开看到布局即可，可以先不进肉鸽。" },
+      { role: "内容", title: "写事件槽 01 的占位文案", how: "一段正文 + 两个选项：一个给金币，一个什么都不拿。名字可以叫「事件01」。" },
+      { role: "美术", title: "定事件插画比例，并画卷轴横向构图", how: "插画按面板框来；卷轴是肉鸽地图后面那张长图。出比例和构图，不要求完成稿。" },
+      { role: "单位", title: "老仓育做到能种", how: "测试关能种、不缺 Prefab、技能能触发一次。" }
+    ]
+  },
+  {
+    date: "2026-08-19", week: "第1周 草坪链 + 外壳", milestone: false,
+    goal: "点事件选项能回到地图；按钮图能贴进首页。",
+    tasks: [
+      { role: "程序", title: "事件选项点完回到肉鸽地图，节点算通过", how: "不进战斗。点选项 → 关面板 → 地图上这个「？」不再卡住。用临时数据测一次。" },
+      { role: "程序", title: "旧事件数据改成指向图文（插画+正文+选项）", how: "RoguelikeEventDefinition 能挂新面板要用的数据。旧 Timeline/过场方案不要用。" },
+      { role: "内容", title: "草坪 1-1 对话做成最小可播", how: "没有正式稿就写三句占位。进 1-1 能弹出并点完即可。" },
+      { role: "美术", title: "四个模式按钮图能贴进 StartUI", how: "程序把图拖进去不变形、能看清是哪个模式。可以是草稿精度。" },
+      { role: "单位", title: "羽川翼做到能种", how: "测试关能种、不缺 Prefab、技能能触发一次。" }
+    ]
+  },
+  {
+    date: "2026-08-20", week: "第1周 草坪链 + 外壳", milestone: false,
+    goal: "首页换皮进游戏；草坪打到 1-7；卷轴有第一版。",
+    tasks: [
+      { role: "程序", title: "首页底图和四个按钮换上新图", how: "只换 Sprite，不改 StartUI 逻辑。进游戏主菜单能看见新皮。" },
+      { role: "程序", title: "打通 1-4 到 1-7", how: "四关都能进、能结束、nextLevel 不断。发现问题当天修。" },
+      { role: "内容", title: "写出四类道具的字段规格", how: "开局阳光、携带格、冷却、乐器增伤。每类写：改哪个数、稀有度怎么分、用什么 tag。给程序明天做脚本用。" },
+      { role: "美术", title: "卷轴底图第一版", how: "三幕可以先共用这一张。能贴到 RoguelikeMapPanel 的 mapBackgroundImage。" },
+      { role: "单位", title: "战场原黑仪做到能种", how: "测试关能种、不缺 Prefab、技能能触发一次。" }
+    ]
+  },
+  {
+    date: "2026-08-21", week: "第1周 草坪链 + 外壳", milestone: true,
+    goal: "周五验收：新档打完草坪十关；主菜单已换皮；肉鸽「？」能弹出事件。",
+    tasks: [
+      { role: "程序", title: "打通 1-8 到 1-10，新档能从开头打到章末", how: "新建存档，从 1-1 连打到 1-10。中途断链当天修。" },
+      { role: "程序", title: "肉鸽地图点「？」弹出事件面板", how: "有一条事件即可。能打开、能关掉。选项结算可以还很简陋。" },
+      { role: "内容", title: "事件槽 01 正式放进随机池", how: "肉鸽里能随到这一条。文案可以丑，流程要对。" },
+      { role: "美术", title: "首页+按钮进包，并交事件插画 01", how: "主菜单不再是占位皮。插画 01 能显示在事件面板上，占位风格也可以。" },
+      { role: "单位", title: "叶瞬光做到能种", how: "测试关能种、不缺 Prefab、技能能触发一次。" },
+      { role: "验收", title: "录或演示：草坪十关 + 换皮主菜单 + 「？」开关", how: "三件事都能当场点出来。" }
+    ]
+  },
+  {
+    date: "2026-08-22", week: "周末补图 · 给第2周", milestone: false, artWeekend: true,
+    goal: "画出下周（8/24–28）要做完的半成品角色图。",
+    tasks: [
+      { role: "美术", title: "画可露希尔角色图", how: "能贴 Prefab。召唤物体系。线稿+平涂即可。" },
+      { role: "美术", title: "画千夏角色图", how: "能贴 Prefab。妄想天使体系，体量靠近爱芮 / 南宫羽。" }
+    ]
+  },
+  {
+    date: "2026-08-23", week: "周末补图 · 给第2周", milestone: false, artWeekend: true,
+    goal: "银灰给第2周用；老师立绘提前给第3周，避免学校周才开始画 Boss。",
+    tasks: [
+      { role: "美术", title: "画凛御银灰角色图", how: "能贴 Prefab。通用半成品最后一张。线稿+平涂即可。" },
+      { role: "美术", title: "画息事宁人者角色图（老师 Boss）", how: "一张 Boss 立绘，能贴进僵尸 Prefab。可以先出完成度 70% 的稿，下周末再修。学校五种小怪下周再画。" }
+    ]
+  },
+  {
+    date: "2026-08-24", week: "第2周 Act1 + 道具", milestone: false,
+    goal: "Act1 池子干净、Boss 是僵王、肉鸽关都会带道具。",
+    tasks: [
+      { role: "程序", title: "Act1 关卡池只留能打的前院关", how: "绑 RogueMode/前院。19 关里占位关、缺 Prefab 的关删掉或修到能打。" },
+      { role: "程序", title: "Act1 Boss 关改成僵王博士", how: "Boss 节点进战是僵王，用 LevelController_Boss。能进这关即可，数值可后调。" },
+      { role: "程序", title: "肉鸽战斗关统一挂上道具插件", how: "每张肉鸽战斗 LevelData 都有 GameStartPlugin_Prop。缺一张列出来补上。" },
+      { role: "内容", title: "做「开局阳光」三档道具", how: "三张 SO：+25 / +50 / +75。名字可以叫阳光小/中/大。进游戏能在道具列表里看见。" },
+      { role: "单位", title: "可露希尔做到能种", how: "测试关能种、不缺 Prefab、技能能触发一次。" },
+      { role: "美术", title: "把卷轴贴进肉鸽地图背景", how: "打开肉鸽地图能看见新底图，不要拉伸得看不出构图。" }
+    ]
+  },
+  {
+    date: "2026-08-25", week: "第2周 Act1 + 道具", milestone: false,
+    goal: "Act1 能从起点点到 Boss；事件加到 3 条。",
+    tasks: [
+      { role: "程序", title: "打一局 Act1：从起点点到 Boss 节点", how: "不一定要打赢 Boss，但路径能点到。中途缺关、进不去就修。" },
+      { role: "内容", title: "做携带格 +1/+2，冷却 5%/10%/15% 五张道具", how: "五张 SO 进列表。效果可以先填数，程序明天接进战斗。" },
+      { role: "内容", title: "写事件槽 02、03 并进池", how: "两条都要有选项。奖励至少覆盖：给道具、给植物 各出现一次。" },
+      { role: "美术", title: "交事件插画 02、03", how: "两张能挂上面板。主题图占位也算。" },
+      { role: "单位", title: "千夏做到能种", how: "测试关能种、不缺 Prefab、技能能触发一次。" }
+    ]
+  },
+  {
+    date: "2026-08-26", week: "第2周 Act1 + 道具", milestone: false,
+    goal: "阳光/冷却/携带格在战斗里真的生效；8 张半成品全部能种并移出抽卡禁用。",
+    tasks: [
+      { role: "程序", title: "开局阳光、冷却、携带格要在战斗里生效", how: "带对应道具进战斗：阳光变多、冷却变短、能多带植物。ApplyRunPropsToGame 接上这三类。" },
+      { role: "内容", title: "乐器增伤先做吉他/鼓手/贝斯各一档", how: "三张 SO。先做一档数值，另外两档以后复制。" },
+      { role: "内容", title: "写事件槽 04 并进池", how: "正文+2～3 选项，肉鸽能随到。现在事件池应有 4 条。" },
+      { role: "美术", title: "交事件插画 04；钉耙/闪电图标可复用分档", how: "插画 04 能挂上。道具分档可以暂时共用旧图标。" },
+      { role: "单位", title: "凛御银灰能种，并且 8 张半成品都移出禁用名单", how: "律、育、翼、黑仪、叶瞬光、可露希尔、千夏、银灰都能种。抽卡池不要再把它们当禁用半成品（它们现在是成品）。" }
+    ]
+  },
+  {
+    date: "2026-08-27", week: "第2周 Act1 + 道具", milestone: false,
+    goal: "商店/奖励/事件都能发出道具；道具大约 20 张；舞台祥子移出可选池。",
+    tasks: [
+      { role: "程序", title: "商店、战斗奖励、事件三条路都能发道具", how: "钉耙、闪电、新阳光三档至少能从其中两条路拿到。进一局验证背包里出现。" },
+      { role: "内容", title: "钉耙、闪电做成更好/更多次数的分档", how: "同一效果不同强度，各至少一档变体。不要新写脚本。" },
+      { role: "内容", title: "把道具 SO 数点到大约 20 张", how: "打开道具目录数一遍。不够就复制已有效果改数值/稀有度。" },
+      { role: "单位", title: "舞台祥子（Saki）从可选池删掉", how: "肉鸽抽卡和冒险选卡都不应再出现。这张是弃用，不是半成品。" },
+      { role: "美术", title: "回头修事件插画 01～04", how: "四张比例一致、能看清。不要求精修到最终。" }
+    ]
+  },
+  {
+    date: "2026-08-28", week: "第2周 Act1 + 道具", milestone: true,
+    goal: "周五验收：能录「换皮主菜单 → 草坪 → 肉鸽 Act1（含 Boss 和一次事件）」。",
+    tasks: [
+      { role: "程序", title: "打完一局完整 Act1", how: "含 Boss，路上至少遇到 1 个「？」。能打完或能稳定打到 Boss。" },
+      { role: "内容", title: "确认事件池 4 条都能被随到", how: "多开几局或看权重。没有死数据、没有空事件。" },
+      { role: "单位", title: "抽卡池里没有半成品废卡、没有 Saki", how: "把当前可选植物名单过一遍。8 张已能种的要在池里；Saki 不在。" },
+      { role: "验收", title: "录一段：主菜单换皮 → 草坪 → Act1 → 事件+道具", how: "四段都能在同一天点出来。这是给外人看的第一段 Demo。" }
+    ]
+  },
+  {
+    date: "2026-08-29", week: "周末补图 · 给第3周", milestone: false, artWeekend: true,
+    goal: "学校周要用的老师定稿 + 五种校园僵尸角色图。",
+    tasks: [
+      { role: "美术", title: "息事宁人者角色图定稿", how: "上周草稿上色/修形，能正式贴 Prefab。不要再是线稿。" },
+      { role: "美术", title: "画校园五种僵尸角色图：旁观者、毒舌妇、霸凌者、包庇者、攀附者", how: "可以同一套校园风、五种换脸或换装。每只都要能单独贴 Prefab，不要五只共用一张图看不清是谁。" }
+    ]
+  },
+  {
+    date: "2026-08-30", week: "周末补图 · 给第3周", milestone: false, artWeekend: true,
+    goal: "画出下周茶会三张新卡角色图（梓、梓升级、佐和子）。",
+    tasks: [
+      { role: "美术", title: "画中野梓角色图", how: "能贴 Prefab。放学后茶会治疗线。体量靠近澪 / 䌷 / 唯。" },
+      { role: "美术", title: "画中野梓升级角色图", how: "和基础梓能一眼分开（换装/体型/武器即可）。能贴 Prefab。" },
+      { role: "美术", title: "画山中佐和子角色图", how: "能贴 Prefab。茶会最后一张点名卡。" }
+    ]
+  },
+  {
+    date: "2026-08-31", week: "第3周 学校战斗", milestone: false,
+    goal: "学校 8 战文件建好；校园五种僵尸进池；老师 Boss 开始做。",
+    tasks: [
+      { role: "程序", title: "新建冒险学校 2-1～2-8（学校图）", how: "八张 LevelData。原来那张 Ring 的 2-1 不要进这条链。" },
+      { role: "内容", title: "按章鱼噼篇文档把 8 战对上关卡", how: "哪关出什么怪写在关卡上。缺新背景就用现有学校图。" },
+      { role: "程序", title: "校园五种僵尸进这 8 关的出怪池", how: "旁观者、毒舌妇、霸凌者、包庇者、攀附者。关里能刷出来，不要白模。" },
+      { role: "单位", title: "息事宁人者做出 SO + Prefab 骨架", how: "能放进场景看见。技能可以明天再挂。" },
+      { role: "美术", title: "事件插画 05 出草稿", how: "文案可以还没有。先画主题图。" }
+    ]
+  },
+  {
+    date: "2026-09-01", week: "第3周 学校战斗", milestone: false,
+    goal: "草坪能进学校；2-1、2-2 能打；老师第一个技能挂上。",
+    tasks: [
+      { role: "程序", title: "接上 1-10 → 学校 2-1 → … → 2-8", how: "从 1-10 通关能进学校第一关。后面七关指针先串上。" },
+      { role: "程序", title: "打 2-1、2-2，修出怪和胜利条件", how: "两关能开打、能结束。刷怪不对就改表。" },
+      { role: "单位", title: "息事宁人者挂上技能 1", how: "用 ISkillEffect，禁止运行时 AddComponent。进测试关能看见技能触发。" },
+      { role: "内容", title: "做开局 HP / 减伤 小中大三张道具", how: "三张 SO 进目录。效果数字先填，程序稍后接。" },
+      { role: "美术", title: "交事件插画 05 能挂面板的版本", how: "草稿精度可以，但比例要对。" }
+    ]
+  },
+  {
+    date: "2026-09-02", week: "第3周 学校战斗", milestone: false,
+    goal: "学校打到 2-4；老师 Boss 关能建；中野梓开工。",
+    tasks: [
+      { role: "程序", title: "2-3、2-4 打到能通关", how: "能进、能结束、不缺 Prefab。" },
+      { role: "单位", title: "息事宁人者技能 2 + Boss 关卡文件", how: "Boss 关能进场景。两个技能都挂上，数值可后调。" },
+      { role: "内容", title: "写事件槽 05、06 并进池", how: "现在事件应有 6 条。选项能点。" },
+      { role: "美术", title: "交事件插画 06", how: "能挂上面板。" },
+      { role: "单位", title: "新植物中野梓做到能种（茶会治疗）", how: "SO + Prefab + 技能。测试关能种、治疗或技能能触发一次。" }
+    ]
+  },
+  {
+    date: "2026-09-03", week: "第3周 学校战斗", milestone: false,
+    goal: "学校打到 2-6；老师 Boss 能打赢或打输；中野梓升级能种。",
+    tasks: [
+      { role: "程序", title: "2-5、2-6 打到能通关", how: "能进、能结束、不缺 Prefab。" },
+      { role: "程序", title: "老师 Boss 关：能进、能被打死、玩家也能输", how: "不要卡死。数值可以很假，流程要通。" },
+      { role: "内容", title: "小推车 +1/+2，以及 MyGO 增伤一档", how: "三张 SO。不要新写一堆脚本，能复用就复用。" },
+      { role: "单位", title: "中野梓升级形态做到能种", how: "和基础梓分开算一张。测试关能种。" },
+      { role: "美术", title: "交事件插画 07", how: "能挂上面板。" }
+    ]
+  },
+  {
+    date: "2026-09-04", week: "第3周 学校战斗", milestone: true,
+    goal: "周五验收：从草坪点进学校，8 战打完（可以没有对话）。",
+    tasks: [
+      { role: "程序", title: "2-7 能通关，2-8 打息事宁人者", how: "2-8 就是老师 Boss。能进、能结束。" },
+      { role: "内容", title: "写事件槽 07 并进池", how: "事件池到 7 条。" },
+      { role: "单位", title: "山中佐和子做到能种", how: "测试关能种、不缺 Prefab、技能能触发一次。" },
+      { role: "验收", title: "从草坪一直点到学校 8 战打完", how: "对话可以没有。中途进不去就当天修。" }
+    ]
+  },
+  {
+    date: "2026-09-05", week: "周末补图 · 给第4周", milestone: false, artWeekend: true,
+    goal: "画出下周撑伞三张：柚也、嘉辛塔、莴苣。",
+    tasks: [
+      { role: "美术", title: "画柚也角色图", how: "能贴 Prefab。撑伞体系，体量靠近薇薇安。" },
+      { role: "美术", title: "画嘉辛塔角色图", how: "能贴 Prefab。撑伞体系。" },
+      { role: "美术", title: "画莴苣角色图", how: "能贴 Prefab。撑伞三张的最后一张。" }
+    ]
+  },
+  {
+    date: "2026-09-06", week: "周末补图 · 给第4周", milestone: false, artWeekend: true,
+    goal: "画出下周飞天两张：凯尔希、思衡托（安洁莉娜留给下下周末，因为下周一才接线）。",
+    tasks: [
+      { role: "美术", title: "画凯尔希角色图", how: "能贴 Prefab。飞天体系，体量靠近惊蛰 / 叶瞬光。" },
+      { role: "美术", title: "画思衡托角色图", how: "能贴 Prefab。飞天体系。周五单位要种这张，必须这周末出图。" }
+    ]
+  },
+  {
+    date: "2026-09-07", week: "第4周 Act2 + 点名植物", milestone: false,
+    goal: "Act2 用学校关；Boss 共用老师；柚也能种。",
+    tasks: [
+      { role: "程序", title: "Act2 池子绑 RogueMode/学校，删不能打的关", how: "现有约 9 关逐关点一遍。不能打的修或删。" },
+      { role: "程序", title: "Act2 Boss 用息事宁人者（和冒险同一只）", how: "肉鸽 Boss 节点进的是老师，不要再拷一份无关 Boss。" },
+      { role: "内容", title: "写事件槽 08 并进池", how: "事件池到 8 条。" },
+      { role: "美术", title: "交事件插画 08", how: "能挂上面板。" },
+      { role: "单位", title: "柚也做到能种（撑伞）", how: "测试关能种、技能能触发一次。" }
+    ]
+  },
+  {
+    date: "2026-09-08", week: "第4周 Act2 + 点名植物", milestone: false,
+    goal: "Act1 打完能进 Act2；道具大约 28 张；嘉辛塔能种。",
+    tasks: [
+      { role: "程序", title: "Act1 通关后切到 Act2，存档能继续", how: "打完 Act1 Boss → 下一幕是学校。关掉游戏再开还在 Act2。" },
+      { role: "内容", title: "道具补到大约 28 张（键盘/主唱/结束乐队增伤）", how: "数目录。缺的用已有效果复制改 tag 和数值。" },
+      { role: "单位", title: "嘉辛塔做到能种", how: "测试关能种、不缺 Prefab、技能能触发一次。" },
+      { role: "美术", title: "学校战斗背景没有就继续占位；有空出学校版卷轴", how: "不挡战斗。卷轴分幕不是必须，有时间再做。" }
+    ]
+  },
+  {
+    date: "2026-09-09", week: "第4周 Act2 + 点名植物", milestone: false,
+    goal: "Act2 能打到 Boss；莴苣能种；事件 05～08 能读。",
+    tasks: [
+      { role: "程序", title: "打一局 Act2 直到 Boss", how: "从 Act2 起点点到老师。不一定打赢，路径要通。" },
+      { role: "单位", title: "莴苣做到能种", how: "测试关能种、技能能触发一次。" },
+      { role: "内容", title: "把事件 05～08 的正文改到能给人读", how: "不要「占位占位」。选项意思要能看懂。" },
+      { role: "美术", title: "事件插画 05～08 收一遍", how: "四张比例统一、没有明显裁切错误。" }
+    ]
+  },
+  {
+    date: "2026-09-10", week: "第4周 Act2 + 点名植物", milestone: false,
+    goal: "凯尔希能种；休息相关道具补上；每张肉鸽关都挂了道具插件。",
+    tasks: [
+      { role: "单位", title: "凯尔希做到能种（飞天）", how: "测试关能种、技能能触发一次。" },
+      { role: "内容", title: "做产阳速度类道具，再复制 4 个变体", how: "同效果不同数值/稀有度。道具总数继续往 35 靠近。" },
+      { role: "程序", title: "再扫一遍：每张肉鸽战斗关都有道具插件", how: "漏挂的补上。用清单打勾，不要凭记忆。" },
+      { role: "美术", title: "事件插画 09 出草稿", how: "文案可以后补。" }
+    ]
+  },
+  {
+    date: "2026-09-11", week: "第4周 Act2 + 点名植物", milestone: true,
+    goal: "周五验收：一局肉鸽打完 Act1+Act2；学校冒险 8 战仍然通。",
+    tasks: [
+      { role: "单位", title: "思衡托做到能种", how: "测试关能种、技能能触发一次。" },
+      { role: "内容", title: "道具大约 35 张，事件池 8 条都在", how: "数 SO、数事件表。差几张当天用复制补齐。" },
+      { role: "验收", title: "一局肉鸽打完两幕；再确认学校 8 战没断", how: "Act1 Boss → Act2 Boss。然后从冒险进学校扫一眼。" }
+    ]
+  },
+  {
+    date: "2026-09-12", week: "周末补图 · 给第5周", milestone: false, artWeekend: true,
+    goal: "安洁莉娜给下周一；Ring Boss 还没锁定，两名候选都出小稿，周一选定后再加细。",
+    tasks: [
+      { role: "美术", title: "画安洁莉娜角色图", how: "能贴 Prefab。飞天点名卡最后一张。下周一单位要种。" },
+      { role: "美术", title: "画 Ring Boss 候选 A：潘妮怀斯角色图小稿", how: "能看清是谁的立绘即可，完成度 50% 也行。周一锁定后只修中选的那张。" },
+      { role: "美术", title: "画 Ring Boss 候选 B：巨型变异蟹角色图小稿", how: "同上。两张都要有，避免锁定后才从零开始。" }
+    ]
+  },
+  {
+    date: "2026-09-13", week: "周末补图 · 给第5周", milestone: false, artWeekend: true,
+    goal: "提前画出结束乐队 3 张新卡角色图（未点名用临时代号）。下周四单位就要种第 1 张。",
+    tasks: [
+      { role: "美术", title: "画结束乐队-新1 角色图", how: "没点名就用这个文件名。能贴 Prefab。体量靠近结束乐队已有卡（一里 / 虹夏 / 凉）。" },
+      { role: "美术", title: "画结束乐队-新2 角色图", how: "能贴 Prefab。和「新1」要能分清。" },
+      { role: "美术", title: "画结束乐队-新3 角色图", how: "能贴 Prefab。三张都交给单位，点名后只改文件名。" }
+    ]
+  },
+  {
+    date: "2026-09-14", week: "第5周 剧情 + Act3 + 满额", milestone: false,
+    goal: "学校只做 3 段关键剧情；安洁莉娜能种；今天必须定 Ring Boss。",
+    tasks: [
+      { role: "内容", title: "学校 9 段剧情里先做开场、Boss 前、结局三段", how: "其余用「……」占位。三段要有能播的句子，不是文件名。" },
+      { role: "程序", title: "三段对话接到 2-1、Boss 前、2-8 之后", how: "进对应节点能弹出。点完能继续游戏。" },
+      { role: "单位", title: "安洁莉娜做到能种", how: "点名新植物最后一张。测试关能种。" },
+      { role: "策划", title: "锁定 Ring 幕 Boss（今天必须定）", how: "潘妮怀斯或巨型变异蟹，写进需求卡片。不定明天单位没法做。" },
+      { role: "美术", title: "交事件插画 09", how: "能挂上面板。" }
+    ]
+  },
+  {
+    date: "2026-09-15", week: "第5周 剧情 + Act3 + 满额", milestone: false,
+    goal: "Act3 用 Ring 关；Ring Boss 开工；小游戏缺的 4 关先起名字。",
+    tasks: [
+      { role: "程序", title: "Act3 池子绑 RogueMode/Ring，16 关能打的留下", how: "逐关点。不能打的修或删。" },
+      { role: "单位", title: "按昨天定的人选，开始做 Ring Boss（SO+Prefab+技能）", how: "今天有骨架并能进测试关。技能可以还不完整。" },
+      { role: "内容", title: "写事件槽 09、10 并进池", how: "事件池到 10 条。" },
+      { role: "美术", title: "交事件插画 10；Ring 卷轴可仍用同一张", how: "分幕卷轴有空再做，不挡验收。" },
+      { role: "内容", title: "给小游戏缺的 4 关起名并写规则一句话", how: "可以抄现有机制改规则。四关要有名字，明天开始做 LevelData。" }
+    ]
+  },
+  {
+    date: "2026-09-16", week: "第5周 剧情 + Act3 + 满额", milestone: false,
+    goal: "Ring Boss 能打；一局能三幕打到 Boss；小游戏先做 2 关。",
+    tasks: [
+      { role: "程序", title: "Ring Boss 关能进、能打、能结束", how: "不要卡死。数值可后调。" },
+      { role: "程序", title: "一局肉鸽能 Act1→2→3 点到最终 Boss", how: "三幕切换和存档继续都要通。不一定打赢。" },
+      { role: "内容", title: "写事件槽 11、12 并进池", how: "事件满 12 条。之后只改文案不新加。" },
+      { role: "美术", title: "交事件插画 11、12", how: "12 张插画只差收尾。" },
+      { role: "内容", title: "小游戏新关 1、2 做成可进的 LevelData", how: "MiniMode 列表能点进去开打。" }
+    ]
+  },
+  {
+    date: "2026-09-17", week: "第5周 剧情 + Act3 + 满额", milestone: false,
+    goal: "小游戏 20 关；道具约 50；12 张事件图齐；结束乐队新卡开工。",
+    tasks: [
+      { role: "内容", title: "小游戏新关 3、4 做完，列表共 20 关", how: "原来 16 + 新 4。四关都有名字和能结束的条件。" },
+      { role: "程序", title: "20 关都能进、都能结束、都不缺 Prefab", how: "从列表点一遍。坏关当天修或暂时隐藏并记下来。" },
+      { role: "内容", title: "道具用复制铺到大约 50 张", how: "同效果不同稀有度。数目录到 ~50 即可，不要新写第 13 种效果脚本。" },
+      { role: "单位", title: "结束乐队新卡第 1 张能种", how: "没名字就叫「结束乐队-新1」。测试关能种。" },
+      { role: "美术", title: "12 张事件插画齐", how: "占位主题图也算齐。面板 12 条都能看到图，不要破图。" }
+    ]
+  },
+  {
+    date: "2026-09-18", week: "第5周 剧情 + Act3 + 满额", milestone: true,
+    goal: "周五验收：主菜单 → 小游戏一关 → 学校三段剧情 → 肉鸽三幕 → 生存一档。",
+    tasks: [
+      { role: "内容", title: "草坪关键对话 3 段能播", how: "开局 / 中段 / 章末。进对应关能点完对话。" },
+      { role: "程序", title: "核对：小游戏 20、事件 12、道具 ~50、三幕三 Boss", how: "四项打开数一遍。缺的当天补或写进已知问题并砍范围。" },
+      { role: "验收", title: "完整走一遍四种模式的最小路径", how: "主菜单换皮还在；小游戏能打一关；冒险能看到学校结局三段；肉鸽能点到三幕 Boss；生存能进一档。" }
+    ]
+  },
+  {
+    date: "2026-09-19", week: "周末补图 · 给第6周", milestone: false, artWeekend: true,
+    goal: "画出下周棒球 3 张 + 无刺有刺新卡。没点名用临时代号。",
+    tasks: [
+      { role: "美术", title: "画棒球-新1、新2、新3 三张角色图", how: "能贴 Prefab。体量靠近莉莎 / 沙绫。三张要能分清。没点名就用临时代号当文件名。" },
+      { role: "美术", title: "画无刺有刺-新1 角色图（有第 2 张规划就一起画）", how: "能贴 Prefab。压力向。槽位是 1～2 张：只做一张就画一张，并在文件名标「仅一张」。" }
+    ]
+  },
+  {
+    date: "2026-09-20", week: "周末补图 · 给第6周", milestone: false, artWeekend: true,
+    goal: "召唤物 3 张 + 通用新卡先画 3 张占位角色图（前排 / 辅助 / 产阳）。点名后改文件名。",
+    tasks: [
+      { role: "美术", title: "画召唤物-新1、新2、新3 三张角色图", how: "这三张算独立植物，不是衍生物。能贴 Prefab。体量靠近可露希尔 / M3。" },
+      { role: "美术", title: "画通用角色图 3 张：前排、辅助、产阳各一张", how: "还没点名。用「通用-前排」「通用-辅助」「通用-产阳」当文件名。下周三策划定名后改名即可，不要等名字才开工。" }
+    ]
+  },
+  {
+    date: "2026-09-21", week: "第6周 植物冲量 + 僵尸", milestone: false,
+    goal: "结束乐队再 2 张 + 无刺有刺；三幕出怪没有白模。",
+    tasks: [
+      { role: "单位", title: "结束乐队新卡第 2、第 3 张能种；无刺有刺第 1 张能种", how: "没名字用「结束乐队-新2/新3」「无刺有刺-新1」。三张都能种。" },
+      { role: "单位", title: "息事宁人者收尾进正式池；已进则改打 Ring Boss 数值", how: "老师不要再是测试专用。若已在池里，今天改 Ring Boss 打得动。" },
+      { role: "程序", title: "前院、学校、Ring 各打 1 关，查白模僵尸", how: "出现粉盒/缺 Prefab 就记名字当天补或从这关池子拿掉。" },
+      { role: "内容", title: "无刺有刺第 2 张：有规划就做，没有就跳过", how: "这槽位本来是 1～2 张。不做要在植物表里写「本张砍掉」。" }
+    ]
+  },
+  {
+    date: "2026-09-22", week: "第6周 植物冲量 + 僵尸", milestone: false,
+    goal: "棒球三张能种；僵尸补 4 只；抽卡禁用名单正确。",
+    tasks: [
+      { role: "单位", title: "棒球新卡 3 张能种", how: "没名字用「棒球-新1/2/3」。三张测试关能种。" },
+      { role: "单位", title: "新做或补全僵尸 4 只（可占位名）", how: "给机制/池子用。要有 Prefab，不要白模。名字可以是「补缺僵尸1」。" },
+      { role: "程序", title: "肉鸽抽卡禁用：半成品、召唤物、食物、Saki", how: "打开抽卡确认。能种的成品不要误伤；废卡不要漏出。" }
+    ]
+  },
+  {
+    date: "2026-09-23", week: "第6周 植物冲量 + 僵尸", milestone: false,
+    goal: "召唤物三张能种；再补 4 只僵尸；通用新卡先定 6 张定位。",
+    tasks: [
+      { role: "单位", title: "召唤物新卡 3 张能种", how: "这三张算独立植物，不是衍生物。测试关能种。" },
+      { role: "单位", title: "再补僵尸 4 只", how: "累计本周补缺到 8。有 Prefab，能刷出来。" },
+      { role: "内容", title: "通用新卡先定 6 张的七类定位", how: "优先前排 / 针对 / 辅助 / 产阳（输出已经够多）。写出 6 个名字或临时代号 + 职业。" }
+    ]
+  },
+  {
+    date: "2026-09-24", week: "第6周 植物冲量 + 僵尸", milestone: false,
+    goal: "通用新卡 6 张能种；僵尸总数大约 70。",
+    tasks: [
+      { role: "单位", title: "通用新卡 1～6 做成能种的最小实现", how: "SO + 最小 Prefab + 一个技能。数值可以很假。" },
+      { role: "单位", title: "再补僵尸到大约 70 只（本批约 5 只）", how: "Enemy 目录数一遍。从 57 补到 ~70。白模不算数。" },
+      { role: "程序", title: "对照已知问题清单，把本包已覆盖的项勾掉", how: "docs 里 RG-002 / 003 / 013 相关、本 Demo 范围内的，做了就勾。没做的留着。" }
+    ]
+  },
+  {
+    date: "2026-09-25", week: "第6周 植物冲量 + 僵尸", milestone: true,
+    goal: "周五验收：植物 ≥90 可种并有差额清单；三幕联调 2 局；僵尸无白模。",
+    tasks: [
+      { role: "单位", title: "通用新卡 7～12 能种；点名现在有多少可种", how: "目标 ≥90，能冲 100 更好。写出还差哪几张。" },
+      { role: "程序", title: "连打两局三幕肉鸽（道具、事件、Boss、存档继续）", how: "两局都要能走完或稳定打到最终 Boss。记下崩溃和断链。" },
+      { role: "验收", title: "植物差额清单 + 三幕出怪无白模", how: "清单给人能接着做。前院/学校/Ring 各看一眼刷怪。" }
+    ]
+  },
+  {
+    date: "2026-09-26", week: "周末补图 · 给出包周", milestone: false, artWeekend: true,
+    goal: "补通用后半角色图，并扫一遍还在用粉人/占位的卡。",
+    tasks: [
+      { role: "美术", title: "再画通用角色图 3 张：针对、输出、灰烬各一张（或按还缺的职业）", how: "文件名「通用-针对」等。若周五已经点名，直接用真名。能贴 Prefab。" },
+      { role: "美术", title: "列出仍在用占位图的植物 / 僵尸 / Boss", how: "写一张清单：谁还是粉人、谁图和名字对不上。明天按清单换图，不要凭记忆。" }
+    ]
+  },
+  {
+    date: "2026-09-27", week: "周末补图 · 给出包周", milestone: false, artWeekend: true,
+    goal: "把能换的占位角色图换掉；Ring Boss 按已锁定人选出完成稿。",
+    tasks: [
+      { role: "美术", title: "按昨天清单，换掉还能赶上的占位角色图", how: "优先：半成品 8、点名 9、两个 Boss、校园五僵尸。来不及的留在已知问题，不要假装有图。" },
+      { role: "美术", title: "Ring Boss 按锁定人选出完成稿", how: "9/14 已锁定潘妮怀斯或巨型变异蟹。把那张小稿画到能见人、能贴 Prefab。落选那张可以扔。" }
+    ]
+  },
+  {
+    date: "2026-09-28", week: "第7周 打磨出包", milestone: false,
+    goal: "植物差额补完或书面砍范围；修联调 bug；12 条事件选项别写错。",
+    tasks: [
+      { role: "单位", title: "把植物差额补完，或书面砍到「可玩且抽卡无废卡」", how: "要么到 100，要么在植物表写清砍了哪几张、为什么还能发 Demo。" },
+      { role: "程序", title: "修本周联调 bug：断链、空事件、道具没挂上", how: "只修这类。不新做系统。修一条勾一条。" },
+      { role: "内容", title: "12 条事件从头点一遍，选项不要全写反", how: "代价/奖励对得上。点错会拿到怪东西的当天改文案。" }
+    ]
+  },
+  {
+    date: "2026-09-29", week: "第7周 打磨出包", milestone: false,
+    goal: "四种模式各通一条；占位图尽量换成正式图；生存三档再打一遍。",
+    tasks: [
+      { role: "程序", title: "小游戏、冒险、肉鸽、生存各完整走一条路径", how: "四条都能从主菜单点到结束或到关键节点。坏的当天修。" },
+      { role: "美术", title: "首页、按钮、卷轴、事件图：能换的占位都换掉", how: "实在来不及的留 3 张事件图轮换，但主菜单必须是能见人的皮。" },
+      { role: "内容", title: "生存三档再打一遍", how: "5 轮能赢、10 轮能赢、无尽不会因为上限被判胜。不对就改波次字段。" }
+    ]
+  },
+  {
+    date: "2026-09-30", week: "第7周 打磨出包", milestone: true,
+    goal: "出预发布包。若 10/1–2 放假，今天就是发版日。",
+    tasks: [
+      { role: "程序", title: "打出预发布包，并列出已知问题", how: "不修的也写进已知问题，不要口头说「我记得」。包要能在另一台机器或干净目录打开。" },
+      { role: "策划", title: "砍单定稿：来不及的植物、剧院 10 关保持 P1", how: "写进 Demo 说明。不要假装还在做。" },
+      { role: "验收", title: "如果国庆放假：今天发出去", how: "有安装/压缩包 + 怎么玩四模式 + 已知问题。没有就加班到有。" }
+    ]
+  },
+  {
+    date: "2026-10-01", week: "第7周 打磨出包", milestone: false,
+    goal: "只修崩溃、进不去、缺 Prefab。禁止新做单位。",
+    tasks: [
+      { role: "程序", title: "只修：崩溃、关卡进不去、缺 Prefab", how: "别的 bug 进已知问题。不要趁机加植物。" },
+      { role: "单位", title: "今天不新做植物/僵尸", how: "被拉去修缺 Prefab 可以。新卡一律不做。" }
+    ]
+  },
+  {
+    date: "2026-10-02", week: "第7周 打磨出包", milestone: true,
+    goal: "发出 Demo 包。",
+    tasks: [
+      { role: "程序", title: "打安装包或压缩包，附游玩说明", how: "说明里写：四种模式怎么点、已知问题不超过 10 条。" },
+      { role: "内容", title: "更新进度文档和已知问题文档", how: "docs/roguelike-progress.md 和 docs/roguelike-known-issues.md 与今天发出的包一致。" },
+      { role: "验收", title: "把包发给要玩的人", how: "发出去才算完，不是「包在我电脑里」。" }
+    ]
+  }
+];
+
+const byDate = Object.fromEntries(DAYS.map((d) => [d.date, d]));
+const state = load();
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY) || "{}"); }
+  catch { return {}; }
+}
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(state));
+}
+
+function pad(n) { return String(n).padStart(2, "0"); }
+function iso(y, m, d) { return `${y}-${pad(m)}-${pad(d)}`; }
+function parseIso(s) {
+  const [y, m, d] = s.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+function todayIso() {
+  const t = new Date();
+  return iso(t.getFullYear(), t.getMonth() + 1, t.getDate());
+}
+function taskKey(date, i) { return `${date}#${i}`; }
+function dayStats(day) {
+  const n = day.tasks.length;
+  let c = 0;
+  day.tasks.forEach((_, i) => { if (state[taskKey(day.date, i)]) c++; });
+  return { n, c, done: n > 0 && c === n };
+}
+
+function renderCalendars() {
+  const root = document.getElementById("calendars");
+  root.innerHTML = "";
+  [
+    { y: 2026, m: 8, title: "2026 年 8 月" },
+    { y: 2026, m: 9, title: "2026 年 9 月" },
+    { y: 2026, m: 10, title: "2026 年 10 月（只到 2 号）" }
+  ].forEach((month) => root.appendChild(renderMonth(month)));
+}
+
+function renderMonth({ y, m, title }) {
+  const wrap = document.createElement("section");
+  wrap.className = "month";
+  wrap.innerHTML = `<h2>${title}</h2>`;
+  const grid = document.createElement("div");
+  grid.className = "grid";
+  ["一","二","三","四","五","六","日"].forEach((w) => {
+    const el = document.createElement("div");
+    el.className = "dow";
+    el.textContent = w;
+    grid.appendChild(el);
+  });
+  const first = new Date(y, m - 1, 1);
+  const lastDate = new Date(y, m, 0).getDate();
+  let mon0 = first.getDay() === 0 ? 6 : first.getDay() - 1;
+  for (let i = 0; i < mon0; i++) {
+    const el = document.createElement("div");
+    el.className = "cell empty";
+    grid.appendChild(el);
+  }
+  const selected = document.querySelector(".cell.selected")?.dataset.date;
+  const tIso = todayIso();
+  for (let d = 1; d <= lastDate; d++) {
+    if (m === 10 && d > 2) break;
+    const date = iso(y, m, d);
+    const dt = new Date(y, m - 1, d);
+    const weekend = dt.getDay() === 0 || dt.getDay() === 6;
+    const day = byDate[date];
+    const el = document.createElement("div");
+    el.className = "cell";
+    el.dataset.date = date;
+    if (weekend && !day) {
+      el.classList.add("weekend");
+      el.innerHTML = `<div class="d">${d}</div><div class="tag">缓冲</div>`;
+    } else if (day) {
+      const st = dayStats(day);
+      el.classList.add("work");
+      if (day.artWeekend) el.classList.add("artday");
+      if (date === tIso) el.classList.add("today");
+      if (st.done) el.classList.add("done");
+      if (date === selected) el.classList.add("selected");
+      el.innerHTML = `<div class="d">${d}${day.milestone ? " ★" : ""}${day.artWeekend ? " 画" : ""}</div>
+        <div class="p">${st.c}/${st.n}</div>
+        ${st.done ? `<span class="stamp">完</span>` : ""}`;
+      el.addEventListener("click", () => openDay(date));
+    } else {
+      el.classList.add("weekend");
+      el.innerHTML = `<div class="d">${d}</div>`;
+    }
+    grid.appendChild(el);
+  }
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+function openDay(date) {
+  const day = byDate[date];
+  if (!day) return;
+  document.querySelectorAll(".cell.selected").forEach((el) => el.classList.remove("selected"));
+  document.querySelector(`.cell[data-date="${date}"]`)?.classList.add("selected");
+  const dt = parseIso(date);
+  const weekNames = ["日","一","二","三","四","五","六"];
+  const st = dayStats(day);
+  const panel = document.getElementById("panel");
+  panel.innerHTML = `
+    <h3>${date.slice(5).replace("-", "/")} 周${weekNames[dt.getDay()]}${day.milestone ? " · 周五验收" : ""}${day.artWeekend ? " · 画角色图" : ""}</h3>
+    <div class="hint">${day.week}　${st.c} / ${st.n} 已打卡</div>
+    <div class="goal"><b>今天要做到：</b>${day.goal}</div>
+    <div id="tasks"></div>
+  `;
+  const box = panel.querySelector("#tasks");
+  day.tasks.forEach((task, i) => {
+    const key = taskKey(date, i);
+    const row = document.createElement("label");
+    row.className = "task" + (state[key] ? " checked" : "");
+    row.innerHTML = `
+      <input type="checkbox" ${state[key] ? "checked" : ""} />
+      <div>
+        <div class="title"><span class="role ${task.role}">${task.role}</span>${task.title}</div>
+        <div class="how">打勾标准：${task.how}</div>
+      </div>
+    `;
+    const input = row.querySelector("input");
+    input.addEventListener("change", () => {
+      if (input.checked) state[key] = true;
+      else delete state[key];
+      save();
+      refresh();
+      openDay(date);
+    });
+    box.appendChild(row);
+  });
+}
+
+function refreshMeta() {
+  let total = 0, done = 0, daysDone = 0;
+  DAYS.forEach((day) => {
+    const st = dayStats(day);
+    total += st.n;
+    done += st.c;
+    if (st.done) daysDone++;
+  });
+  document.getElementById("overall").textContent = `${done} / ${total}`;
+  document.getElementById("daysDone").textContent = `${daysDone} / ${DAYS.length}`;
+  document.getElementById("bar").style.width = (total ? (done / total * 100) : 0) + "%";
+  const t = new Date();
+  t.setHours(0,0,0,0);
+  const left = Math.ceil((SHIP - t) / 86400000);
+  document.getElementById("left").textContent = String(left);
+  const tIso = todayIso();
+  document.getElementById("todayLabel").textContent = byDate[tIso]
+    ? `今天 ${tIso.slice(5)} 有任务`
+    : `今天 ${tIso.slice(5)} 无排期（周末缓冲或已过发版）`;
+}
+
+function refresh() {
+  const keep = document.querySelector(".cell.selected")?.dataset.date;
+  renderCalendars();
+  refreshMeta();
+  if (keep && byDate[keep]) {
+    document.querySelector(`.cell[data-date="${keep}"]`)?.classList.add("selected");
+  }
+}
+
+function jumpToday() {
+  const t = todayIso();
+  if (byDate[t]) openDay(t);
+  else {
+    const next = DAYS.find((d) => d.date >= t) || DAYS[DAYS.length - 1];
+    openDay(next.date);
+  }
+}
+
+document.getElementById("btnToday").onclick = jumpToday;
+document.getElementById("btnReset").onclick = () => {
+  if (!confirm("清空本机全部打卡？")) return;
+  Object.keys(state).forEach((k) => delete state[k]);
+  save();
+  refresh();
+  jumpToday();
+};
+document.getElementById("btnExport").onclick = () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "oct2-punch.json";
+  a.click();
+};
+document.getElementById("btnImport").onclick = () => {
+  const inp = document.createElement("input");
+  inp.type = "file";
+  inp.accept = "application/json";
+  inp.onchange = () => {
+    const file = inp.files[0];
+    if (!file) return;
+    file.text().then((text) => {
+      Object.keys(state).forEach((k) => delete state[k]);
+      Object.assign(state, JSON.parse(text));
+      save();
+      refresh();
+      jumpToday();
+    });
+  };
+  inp.click();
+};
+
+refresh();
+jumpToday();
+</script>
+</body>
+</html>

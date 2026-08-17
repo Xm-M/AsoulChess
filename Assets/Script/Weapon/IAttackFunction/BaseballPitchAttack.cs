@@ -60,6 +60,7 @@ public class BaseballPitchAttack : IAttackFunction
             bullet.InitBullet(user, user.equipWeapon.weaponPos.position, batter, user.transform.right, 0f, 1f);
             bullet.Dm.damageType = DamageType.Miss;
             bullet.Dm.damage = 0f;
+            bullet.Dm.suppressFloatingDamage = true;
             bullet.Dm.damageTo = batter;
         }
     }

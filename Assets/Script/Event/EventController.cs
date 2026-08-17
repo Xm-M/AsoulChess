@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using AsoulChess.Game.Core.Events;
+using AsoulChess.Game.Core.Services;
+
 public enum EventName
 {
     WhenChessDestroy,
@@ -44,75 +47,67 @@ public enum EventName
     WhenLeaveLevel,
     PauseGame,
     ResumeGame,
-    /// <summary>贪吃蛇：触发眩晕时统一派发（越界 / 咬自己 / 撞大体型敌）；载荷见 <see cref="SnakeGameEventId"/>。</summary>
     SnakeHitWall,
-    /// <summary>贪吃蛇：吃掉关卡食物；载荷为 <see cref="SnakeEatFoodPayload"/>（棋子名 + 分隔符 + 描述文案），UI 图标仍由插件里 SnakeEatFood 绑定提供。</summary>
     SnakeEatFood,
-    /// <summary>贪吃蛇：吃掉更小体型敌方；载荷为 <see cref="SnakeGameEventId.EatZombie"/>。</summary>
     SnakeEatZombie,
-    /// <summary>贪吃蛇：场上新生成食物；载荷为 <see cref="SnakeGameEventId.FoodSpawned"/>。</summary>
     SnakeFoodSpawned,
     EnterMap,
 }
 
+public interface IEventAction { }
 
-public interface IEventAction
-{
-}
-public class EventAction:IEventAction
+public class EventAction : IEventAction
 {
     public UnityAction action;
 }
+
 public class EventAction<T> : IEventAction
 {
     public UnityAction<T> action;
 }
-public class EventController 
+
+/// <summary>
+/// AVZ facade over <see cref="GameServices.Events"/> (Core EventBus).
+/// </summary>
+public class EventController
 {
-    static EventController instance;
+    static EventController _instance;
+
     public static EventController Instance
     {
         get
         {
-            if (instance == null) instance = new EventController();
-            return instance;
+            if (_instance == null)
+                _instance = new EventController();
+            return _instance;
         }
-    }
-    public Dictionary<string, IEventAction> eventActionDic=new Dictionary<string, IEventAction>();
-    //���Ӽ���
-    public void AddListener(string name,UnityAction action)
-    {
-        if (!eventActionDic.ContainsKey(name)) eventActionDic.Add(name, new EventAction());
-        (eventActionDic[name] as EventAction).action += action;
-    }
-    public void AddListener<T>(string name, UnityAction<T> action)
-    {
-        if (!eventActionDic.ContainsKey(name)) eventActionDic.Add(name, new EventAction<T>());
-        (eventActionDic[name] as EventAction<T>).action += action;
-    }
-    //�Ƴ�����
-    public void RemoveListener(string name,UnityAction action)
-    {
-        if(eventActionDic.ContainsKey(name))
-        (eventActionDic[name] as EventAction).action -= action;
-    }
-    public void RemoveListener<T>(string name, UnityAction<T> action)
-    {
-        if (eventActionDic.ContainsKey(name))
-            (eventActionDic[name] as EventAction<T>).action -= action;
     }
 
-    public void TriggerEvent(string name)
+    EventBus Bus
     {
-        if (eventActionDic.ContainsKey(name))
-            (eventActionDic[name] as EventAction).action?.Invoke();
-    }
-    public void TriggerEvent<T>(string name,T message)
-    {
-        
-        if (eventActionDic.ContainsKey(name))
+        get
         {
-            (eventActionDic[name] as EventAction<T>).action?.Invoke(message);
+            if (GameServices.Events is EventBus bus)
+                return bus;
+            if (GameServices.Events == null)
+                GameServices.RegisterDefaults();
+            if (GameServices.Events is EventBus created)
+                return created;
+            var fallback = new EventBus();
+            GameServices.Register(fallback);
+            return fallback;
         }
     }
+
+    public void AddListener(string name, UnityAction action) => Bus.AddListener(name, action);
+
+    public void AddListener<T>(string name, UnityAction<T> action) => Bus.AddListener(name, action);
+
+    public void RemoveListener(string name, UnityAction action) => Bus.RemoveListener(name, action);
+
+    public void RemoveListener<T>(string name, UnityAction<T> action) => Bus.RemoveListener(name, action);
+
+    public void TriggerEvent(string name) => Bus.Trigger(name);
+
+    public void TriggerEvent<T>(string name, T message) => Bus.Trigger(name, message);
 }

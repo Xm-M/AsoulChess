@@ -168,8 +168,8 @@ public class AnimatorController : MonoBehaviour,Controller
     }
     public virtual void PlaySkill()
     {
-   
-        animator.Play("skill");
+        if (animator == null) return;
+        animator.Play("skill", 0, 0f);
     }
     public virtual void ChangeSpeed(float value)
     {

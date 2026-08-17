@@ -109,4 +109,13 @@ public class FreezyBuff : DizznessBuff
         }
         target.buffController.AddBuff(buff);
     }
+    public override void BuffReset(Buff resetBuff)
+    {
+        base.BuffReset(resetBuff);
+        if (this.FreezyEffect != null)
+        {
+            GameObject cold = ObjectPool.instance.Create(FreezyEffect);
+            cold.transform.position = target.transform.position;
+        }
+    }
 }

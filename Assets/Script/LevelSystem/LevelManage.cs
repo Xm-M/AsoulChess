@@ -15,6 +15,9 @@ public class LevelManage: MonoBehaviour
     public LevelData currentLevel;
     public LevelData menu;
     public bool IfGameStart {  get;  set; }
+    /// <summary>重新开始时跳过离场生存补存，避免 DeleteSave 后又写入。</summary>
+    bool skipSurvivalLeaveSave;
+
     private void Awake()
     {
         if(instance== null)
@@ -33,6 +36,14 @@ public class LevelManage: MonoBehaviour
     public void ChangeLevel(LevelData levelData)
     {
         StopAllCoroutines();
+        if (currentLevel != null
+            && currentLevel.levelMode == LevelMode.SurvivalMode
+            && levelData != currentLevel)
+        {
+            SaveSystem.SaveSurvivalSnapshotAllowPaused();
+            ClearShowPlantShopLockedHand();
+            skipSurvivalLeaveSave = true;
+        }
         currentLevel = levelData;
         LeaveState();
         // 进入关卡前检查是否有存档，若有则设置读档上下文（在 LeaveState 之后设置，避免被 Clear 掉）
@@ -45,13 +56,17 @@ public class LevelManage: MonoBehaviour
         {
             SaveLoadContext.IsLoadFromSave = false;
             SaveLoadContext.CurrentSaveData = null;
+            ClearShowPlantShopLockedHand();
         }
         GameManage.instance.sceneManage.LoadScene(currentLevel.sceneName);
     }
     public void RestartLevel()
     {
         StopAllCoroutines();
+        ClearShowPlantShopLockedHand();
         SaveSystem.DeleteSave(currentLevel);
+        skipSurvivalLeaveSave = true;
+        SaveLoadContext.Clear();
         GameManage.instance.sceneManage.LoadScene(currentLevel.sceneName, null, () => {  LeaveState(); });
     }
     public void ReturnMenu()
@@ -92,10 +107,14 @@ public class LevelManage: MonoBehaviour
     public void LeaveState()
     {
         Debug.Log("LeaveLevel");
+        if (!skipSurvivalLeaveSave)
+            SaveSystem.SaveSurvivalSnapshotAllowPaused();
+        skipSurvivalLeaveSave = false;
         IfGameStart = false;
         SaveLoadContext.Clear();
         if(currentController != null)
             currentController.OverPlugin ();
+        ClearShowPlantShopLockedHand();
         EventController.Instance.TriggerEvent(EventName.WhenLeaveLevel.ToString());
     }
     public void SetController(LevelController levelController)
@@ -104,5 +123,14 @@ public class LevelManage: MonoBehaviour
         levelController.levelData = this.currentLevel;
     }
 
-
+    void ClearShowPlantShopLockedHand()
+    {
+        var level = currentLevel;
+        if (level?.PreParePlugin == null) return;
+        for (int i = 0; i < level.PreParePlugin.Count; i++)
+        {
+            if (level.PreParePlugin[i] is PreParePlugun_ShowPlantShop shop)
+                shop.ClearLockedHand();
+        }
+    }
 }

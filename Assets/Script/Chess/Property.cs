@@ -17,6 +17,7 @@ public class PropertyController:Controller
     //这几个都是只能在战斗中添加事件 因为结束的时候会被清除 所以不能在游戏开始前在Inspector面板添加事件
     [HideInInspector] public UnityEvent<DamageMessege> onGetDamage;//受到伤害的事件
     [HideInInspector] public UnityEvent<DamageMessege> onSetDamage;//受到伤害前的事件(主要是增伤或者缓和，还有护甲抵挡等问题)
+    [HideInInspector] public UnityEvent<DamageMessege> onBeforeTakeDamage;//造成伤害前（暴击/增伤/GetDamage 之前），可改写 damageType
     [HideInInspector] public UnityEvent<DamageMessege> onTakeDamage;//造成伤害的事件
     [HideInInspector] public UnityEvent<DamageMessege> onHealDamage;//造成伤害的事件
     [ShowInInspector, ReadOnly]
@@ -27,6 +28,7 @@ public class PropertyController:Controller
     {
         Data = creator.GetClone();
         this.chess = chess;
+        onBeforeTakeDamage ??= new UnityEvent<DamageMessege>();
     }
 
     public void WhenControllerEnterWar()
@@ -37,6 +39,7 @@ public class PropertyController:Controller
     public void WhenControllerLeaveWar()
     {
         onGetDamage?.RemoveAllListeners();
+        onBeforeTakeDamage?.RemoveAllListeners();
         onTakeDamage?.RemoveAllListeners();
         onSetDamage?.RemoveAllListeners();
         onHealDamage?.RemoveAllListeners();
@@ -58,9 +61,14 @@ public class PropertyController:Controller
                 chess.animatorController.OnGetDamage(mes);
                 return;
             }
-            else if (mes.damageType == DamageType.Miss)
+            if (mes.damageType == DamageType.Miss)
+            {
                 mes.damage = 0;
-            else if (mes.damageType != DamageType.Real)
+                if (!mes.suppressFloatingDamage)
+                    UIManage.GetView<DamagePanel>().ShowMiss(mes);
+                return;
+            }
+            if (mes.damageType != DamageType.Real)
                 mes.damage *= (1 - (Data.AR / (Data.AR + 100)));
 
             mes.damage *= (1 - Data.extraDefence);
@@ -103,6 +111,7 @@ public class PropertyController:Controller
         {
             if (mes.damageType != DamageType.Heal)
             {
+                onBeforeTakeDamage?.Invoke(mes);
                 //暴击伤害
                 float n = UnityEngine.Random.Range(0, 1f);
                 if (n < GetCrit())
@@ -322,6 +331,12 @@ public class PropertyController:Controller
     {
         Data.Size += value;
         Data.Size = Mathf.Max(Data.Size, 1);
+    }
+
+    /// <summary>直接设置体型，无下限（战场原黑仪等允许负数）。</summary>
+    public void SetSizeRaw(int size)
+    {
+        Data.Size = size;
     }
     public float GetHpPerCent()
     {

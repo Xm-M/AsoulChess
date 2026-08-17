@@ -12,6 +12,10 @@ using TMPro;
 /// </summary>
 public class PlantsShop : View
 {
+    public const int SurvivalCoreSlotCount = 10;
+    public const int SurvivalFlexSlotCount = 3;
+    public static int SurvivalMaxCount => SurvivalCoreSlotCount + SurvivalFlexSlotCount;
+
     public GameObject shopSelectIconPre;//植物选择卡牌
     public Transform selectIconParent;//这个是选牌的时候的那个栏
     public GameObject shopIconPre;//植物卡牌
@@ -22,6 +26,8 @@ public class PlantsShop : View
     public GameObject Shovel;//铲子 
     public int maxCount=10;
     int _baselineMaxCount = 10;
+    /// <summary>生存轮间：前 <see cref="SurvivalCoreSlotCount"/> 张不可卸下。</summary>
+    bool survivalCoreLockActive;
     public Animator anim;
     /// <summary>Show 前设置则使用此列表作为仓库卡池，Show 后自动清空</summary>
     public static List<PropertyCreator> OverrideCreators;
@@ -122,6 +128,7 @@ public class PlantsShop : View
         p1.anchoredPosition = startPos1;
         p2.anchoredPosition = startPos2;
         SelectOver = false;
+        survivalCoreLockActive = false;
         ClearPlantDetail();
         base.Hide();
     }
@@ -165,6 +172,50 @@ public class PlantsShop : View
     public void RemoveSelection(ShopSelectIcon selectIcon){
         currentSelectIcons.Remove(selectIcon);
     }
+
+    /// <summary>生存轮间锁定核心携带格（按当前选中顺序的前 10 张）。</summary>
+    public void EnableSurvivalCoreLock()
+    {
+        if (!IsSurvivalLevel()) return;
+        survivalCoreLockActive = true;
+    }
+
+    public void ClearSurvivalCoreLock() => survivalCoreLockActive = false;
+
+    /// <summary>选卡阶段是否允许卸下该仓库选项（核心锁定期内前 10 不可卸）。</summary>
+    public bool CanRemoveSelection(ShopSelectIcon selectIcon)
+    {
+        if (!survivalCoreLockActive || selectIcon == null) return true;
+        int idx = currentSelectIcons.IndexOf(selectIcon);
+        if (idx < 0) return true;
+        return idx >= SurvivalCoreSlotCount;
+    }
+
+    /// <summary>羁绊人数统计用 roster：生存仅核心格；其它模式为全部手牌。</summary>
+    public List<PropertyCreator> GetFetterRosterCreators()
+    {
+        var list = new List<PropertyCreator>();
+        if (currentShopIcons == null) return list;
+        int limit = IsSurvivalLevel()
+            ? Mathf.Min(SurvivalCoreSlotCount, currentShopIcons.Count)
+            : currentShopIcons.Count;
+        for (int i = 0; i < limit; i++)
+        {
+            var icon = currentShopIcons[i];
+            if (icon != null && icon.good != null)
+                list.Add(icon.good);
+        }
+        return list;
+    }
+
+    public bool CanConfirmSurvivalLoadout()
+    {
+        if (!IsSurvivalLevel()) return true;
+        return currentSelectIcons != null && currentSelectIcons.Count >= SurvivalCoreSlotCount;
+    }
+
+    static bool IsSurvivalLevel() =>
+        LevelManage.instance?.currentLevel?.levelMode == LevelMode.SurvivalMode;
     /// <summary>
     /// 这是铲掉植物
     /// </summary>
@@ -195,7 +246,7 @@ public class PlantsShop : View
     }
 
     /// <summary>
-    /// 恢复已锁定手牌。生存轮间 Prepare 用 autoStart=false，等玩家点开战。
+    /// 恢复已锁定手牌（冒险读档 autoStart=true；生存读档/轮间现已走完整选卡，此路径主要保留兼容）。
     /// </summary>
     public void ShowLockedHand(PlantsShopSaveData data, bool autoStart, bool restoreSunLight)
     {
@@ -273,6 +324,11 @@ public class PlantsShop : View
     /// 这个是button调用的
     /// </summary>
     public void GameStart(){
+        if (!CanConfirmSurvivalLoadout())
+        {
+            Debug.LogWarning($"生存模式需选满 {SurvivalCoreSlotCount} 张核心携带才能开战（当前 {currentSelectIcons?.Count ?? 0}）");
+            return;
+        }
         (MapManage_PVZ.instance as MapManage_PVZ ).WhenGameStart();
         for(int i = 0; i < shopIconParent.childCount; i++)
         {
@@ -280,6 +336,7 @@ public class PlantsShop : View
         }
         anim.Play("gameStart");
         SelectOver = true;
+        survivalCoreLockActive = false;
     }
     public void Pause()
     {
@@ -348,6 +405,13 @@ public class PlantsShop : View
                 RefreshLoadoutSlotBackgrounds(maxCount);
                 return;
             }
+        }
+
+        if (IsSurvivalLevel())
+        {
+            maxCount = SurvivalMaxCount;
+            RefreshLoadoutSlotBackgrounds(maxCount);
+            return;
         }
 
         maxCount = _baselineMaxCount;

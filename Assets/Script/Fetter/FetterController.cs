@@ -63,12 +63,8 @@ public class FetterController
         Debug.Log("检查羁绊人数中");
         UIManage.Show<FetterPanel>();
 
-        var roster = new List<PropertyCreator>();
         var shop = UIManage.GetView<PlantsShop>();
-        for (int i = 0; i < shop.currentShopIcons.Count; i++)
-        {
-            roster.Add(shop.currentShopIcons[i].good);
-        }
+        var roster = shop != null ? shop.GetFetterRosterCreators() : new List<PropertyCreator>();
 
         foreach (var kv in fetterDataList)
         {

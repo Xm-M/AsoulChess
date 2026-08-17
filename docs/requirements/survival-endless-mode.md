@@ -47,7 +47,7 @@
 | 场景 | 可换 | **同场景** | 同场景 |
 | `MaxWave` | 5～40 | **20**（本轮 ProgressBar） | — |
 | 胜负 | 通关 `GameOver(true)` | **轮次完成** → 下一轮 | `survivalMaxWave=-1` **永不通关** |
-| 选卡 | 开局一次 | 每轮 Timeline Prepare（插件自判） | 羁绊 10 张锁定（P1） |
+| 选卡 | 开局一次 | **每轮完整选卡**（可改卡并点开战；预勾上轮手牌） | 羁绊 10 张锁定（P1） |
 | 出怪池 | `zombieList` 每波 Init | **本轮 `segmentPool` 预生成 20 波** | 轮间饱和递进 |
 
 ---
@@ -212,7 +212,7 @@ EndlessRunState.selectionIndex
 
 | 插件 | 行为 |
 |------|------|
-| `PreParePlugun_ShowPlantShop` | 轮次>1：P0 不换卡；P1 仅 flex 槽 |
+| `PreParePlugun_ShowPlantShop` | **每轮完整选卡**（轮间保留阳光、预勾上轮手牌；开战覆盖写入 `plantsShopData`） |
 | `EnterWarPlugin_CarCreate` | 轮次>1：不执行 |
 | `GameStartPlugin_Fetter` | **不修改**（手牌不变） |
 | `EnterMapPlugin_EndlessSpawnConfig` | 每轮 EnterMap 执行；写 config + 触发 Rebuild |
@@ -223,7 +223,7 @@ EndlessRunState.selectionIndex
 
 | 阶段 | 策略 |
 |------|------|
-| **P0** | 仅开局选卡；轮间 Prepare 走流程但商店插件不换 10 张；Fetter 每轮 GameStart 结果相同 |
+| **P0** | **每轮完整选卡**（Timeline 暂停点依赖开战按钮；轮间不重置阳光）；Fetter 按当轮手牌重新结算 |
 | **P1** | 10 张羁绊锁定 + 2 张额外可换且 **不计入** `CheckFetter` |
 
 ### 4.8 出怪与数值
@@ -244,7 +244,7 @@ EndlessRunState.selectionIndex
 | `totalWavesCleared` | 累计完成波次 |
 | `currentWave` / `t` / … | 本轮内进度（已有） |
 | `playerPlants` | 场上植物（已有） |
-| `plantsShopData` | 首次选卡（已有） |
+| `plantsShopData` | 当前手牌（每轮开战覆盖写入） |
 
 ---
 

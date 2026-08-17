@@ -1,5 +1,27 @@
 {
   "dependencies": {
+    "com.asoulchess.game.board": {
+      "version": "file:com.asoulchess.game.board",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.asoulchess.game.core": "0.1.0"
+      }
+    },
+    "com.asoulchess.game.core": {
+      "version": "file:com.asoulchess.game.core",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.asoulchess.game.entity": {
+      "version": "file:com.asoulchess.game.entity",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.asoulchess.game.core": "0.2.0"
+      }
+    },
     "com.coplaydev.unity-mcp": {
       "version": "file:com.coplaydev.unity-mcp",
       "depth": 0,

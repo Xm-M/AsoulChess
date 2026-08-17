@@ -217,4 +217,14 @@ public static class MultiHeadMutsumiKeys
     {
         user?.skillController?.context?.Set(CloneCount, Mathf.Max(0, n));
     }
+
+    /// <summary>主人 SkillContext 中的当前压力值（&lt;see cref="StressThreshold"/&gt;）；无则 0。</summary>
+    public static int GetCurrentStress(Chess user)
+    {
+        if (user?.skillController?.context == null)
+            return 0;
+        return user.skillController.context.TryGet(StressThreshold, out int stress)
+            ? Mathf.Max(0, stress)
+            : 0;
+    }
 }

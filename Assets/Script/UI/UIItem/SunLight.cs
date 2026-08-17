@@ -143,11 +143,7 @@ public class SunLight : UIItem, IPointerEnterHandler
             SunLightPanel.instance.ChangeSunLight(SunLightNum);
             StartCoroutine(Recycles());
             ifPick = true;
-            if (timer != null)
-            {
-                timer.Stop();
-                timer = null;
-            }
+            StopPickTimer();
         }
     }
 
@@ -158,30 +154,38 @@ public class SunLight : UIItem, IPointerEnterHandler
             SunLightPanel.instance.ChangeSunLight(SunLightNum);
             StartCoroutine(Recycles());
             ifPick = true;
-            if (timer != null)
-            {
-                timer.Stop();
-                timer = null;
-            }
+            StopPickTimer();
         }
     }
     public void PickSunlight()
     {
+        // Destroy 后 Unity 伪 null：避免清场后残留 Timer 回调再 StartCoroutine
+        if (this == null) return;
         if (!ifPick)
         {
             
             SunLightPanel.instance.ChangeSunLight(SunLightNum);
             StartCoroutine(Recycles());
             ifPick = true;
-            if (timer != null)
-            {
-                timer.Stop();
-                timer = null;
-            }
+            StopPickTimer();
         }
     }
+
+    void OnDisable()
+    {
+        StopPickTimer();
+    }
+
+    void StopPickTimer()
+    {
+        if (timer == null) return;
+        timer.Stop();
+        timer = null;
+    }
+
     public override void Recycle()
     {
+        StopPickTimer();
         //Debug.Log("回收阳光");
         UIManage.GetView<ItemPanel>().Recycle<SunLight>(this);
     }

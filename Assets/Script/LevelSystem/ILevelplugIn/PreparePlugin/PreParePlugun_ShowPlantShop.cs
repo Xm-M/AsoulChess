@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 准备阶段打开植物商店。冒险关每次完整选卡；生存关首轮选卡后锁定，轮间只恢复顶栏等待开战。
+/// 准备阶段打开植物商店。冒险关每次完整选卡；生存关 13 格（前 10 核心锁 / 后 3 机动可换）。
 /// </summary>
 public class PreParePlugun_ShowPlantShop : ISaveableLevelPlugin, IRoundEndPlugin
 {
     public int baseSunLight = 50;
     public List<PropertyCreator> cards;
 
-    /// <summary>生存模式：首轮开战后的锁定手牌（内存缓存，读档时从 plantsShopData 同步）。</summary>
+    /// <summary>生存模式：最近一轮开战时的手牌（内存缓存，读档时从 plantsShopData 同步）。</summary>
     PlantsShopSaveData lockedHand;
 
     public void CaptureTo(GameSaveData saveData)
@@ -19,23 +19,37 @@ public class PreParePlugun_ShowPlantShop : ISaveableLevelPlugin, IRoundEndPlugin
         SyncLockedHandFromSaveIfNeeded();
         int sun = SunLightPanel.instance != null ? SunLightPanel.instance.sunLight : 0;
 
-        // 生存模式：选卡只写一次，阳光每轮末更新
+        // 生存模式：优先写当前商店手牌；否则写缓存并刷新阳光
         if (IsSurvivalLevel() && HasLockedCards())
         {
-            lockedHand.sunLight = sun;
-            saveData.plantsShopData = CloneHand(lockedHand);
-            return;
+            var shop = UIManage.GetView<PlantsShop>();
+            if (shop != null && shop.currentShopIcons != null && shop.currentShopIcons.Count > 0)
+            {
+                EnsureLockedHandFromShop();
+                if (lockedHand != null)
+                    lockedHand.sunLight = sun;
+            }
+            else if (lockedHand != null)
+            {
+                lockedHand.sunLight = sun;
+            }
+
+            if (lockedHand != null)
+            {
+                saveData.plantsShopData = CloneHand(lockedHand);
+                return;
+            }
         }
 
-        var shop = UIManage.GetView<PlantsShop>();
-        if (shop == null) return;
+        var liveShop = UIManage.GetView<PlantsShop>();
+        if (liveShop == null) return;
 
         var captured = new PlantsShopSaveData
         {
             selectedCreatorIds = new List<string>(),
             sunLight = sun
         };
-        foreach (var icon in shop.currentShopIcons)
+        foreach (var icon in liveShop.currentShopIcons)
         {
             if (icon != null && icon.good != null)
                 captured.selectedCreatorIds.Add(icon.good.chessName);
@@ -58,18 +72,18 @@ public class PreParePlugun_ShowPlantShop : ISaveableLevelPlugin, IRoundEndPlugin
         }
 
         SyncLockedHandFromSaveIfNeeded();
-        int round = GetRoundIndex(levelController);
-
-        if (round <= 1 && !HasLockedCards())
-            RunFirstRoundPrepare(levelController);
-        else
-            RunSurvivalRoundPrepare();
+        RunSurvivalPrepare(levelController);
     }
 
-    /// <summary>生存模式开战时锁定手牌（仅写内存，轮末存档写入文件）。</summary>
+    /// <summary>清空选卡内存缓存（重新开始 / 无档进关时调用，避免 LevelData 插件残留）。</summary>
+    public void ClearLockedHand()
+    {
+        lockedHand = null;
+    }
+
+    /// <summary>生存模式开战时锁定手牌（覆盖写入，支持轮间重选）。</summary>
     public void EnsureLockedHandFromShop()
     {
-        if (HasLockedCards()) return;
         var shop = UIManage.GetView<PlantsShop>();
         if (shop == null || shop.currentShopIcons == null || shop.currentShopIcons.Count == 0)
             return;
@@ -112,32 +126,54 @@ public class PreParePlugun_ShowPlantShop : ISaveableLevelPlugin, IRoundEndPlugin
         }
     }
 
-    void RunFirstRoundPrepare(LevelController levelController)
+    /// <summary>
+    /// 生存每轮完整选卡：Timeline 暂停点依赖开战按钮；轮间保留阳光，并预勾上一轮手牌方便改卡。
+    /// </summary>
+    void RunSurvivalPrepare(LevelController levelController)
     {
         if (cards != null && cards.Count > 0)
             PlantsShop.OverrideCreators = cards;
         UIManage.Show<PlantsShop>();
         PlantsShop.OverrideCreators = null;
-        if (!SaveLoadContext.IsLoadFromSave)
-        {
+
+        int round = GetRoundIndex(levelController);
+        bool firstFreshSelect = round <= 1 && !HasLockedCards() && !SaveLoadContext.IsLoadFromSave;
+
+        if (firstFreshSelect)
             SunLightPanel.instance.SetSunLight(baseSunLight);
+
+        PrefillPreviousHand(levelController);
+
+        if (!SaveLoadContext.IsLoadFromSave)
             RunAutoSelectIfFewCards();
-        }
     }
 
-    void RunSurvivalRoundPrepare()
+    void PrefillPreviousHand(LevelController levelController)
     {
-        var hand = GetLockedHandForDisplay();
-        if (hand == null)
-        {
-            Debug.LogWarning("[ShowPlantShop] 生存轮间 Prepare 无锁定手牌，回落首轮选卡");
-            RunFirstRoundPrepare(null);
+        // 无档新开局（第1轮）不得用 SO 上残留的 lockedHand
+        if (!SaveLoadContext.IsLoadFromSave && GetRoundIndex(levelController) <= 1)
             return;
+
+        var hand = GetLockedHandForDisplay();
+        var shop = UIManage.GetView<PlantsShop>();
+        if (hand?.selectedCreatorIds == null || hand.selectedCreatorIds.Count == 0 || shop == null)
+            return;
+
+        foreach (var id in hand.selectedCreatorIds)
+        {
+            if (string.IsNullOrEmpty(id)) continue;
+            foreach (var icon in shop.allSelectIcons)
+            {
+                if (icon == null || icon.select == null || icon.ifSelect) continue;
+                if (icon.select.chessName != id) continue;
+                icon.SelectCard();
+                break;
+            }
         }
 
-        var shop = UIManage.GetView<PlantsShop>();
-        if (shop != null)
-            shop.ShowLockedHand(hand, autoStart: false, restoreSunLight: false);
+        // 轮间/读档：按预填顺序锁定前 10 核心格
+        if (shop.currentSelectIcons != null && shop.currentSelectIcons.Count > 0)
+            shop.EnableSurvivalCoreLock();
     }
 
     void RunAutoSelectIfFewCards()
@@ -149,6 +185,10 @@ public class PreParePlugun_ShowPlantShop : ISaveableLevelPlugin, IRoundEndPlugin
                 ? GameManage.instance.playerOwnedCreators
                 : GameManage.instance?.allChess);
         if (shop == null || creators == null || creators.Count == 0 || creators.Count >= shop.maxCount)
+            return;
+
+        // 生存：卡池不足核心格数时不能自动开战
+        if (IsSurvivalLevel() && creators.Count < PlantsShop.SurvivalCoreSlotCount)
             return;
 
         foreach (var icon in shop.allSelectIcons)

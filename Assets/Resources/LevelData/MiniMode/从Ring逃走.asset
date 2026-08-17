@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4586a889b3befa4bb73f4479119a9aa, type: 3}
   m_Name: "\u4ECERing\u9003\u8D70"
   m_EditorClassIdentifier: 
-  ifClearStadge: 0
+  ifClearStadge: 1
   sceneName: Ring
   levelName: "\u4ECERing\u9003\u8D70"
   levelSprit: {fileID: 0}
@@ -25,14 +25,16 @@ MonoBehaviour:
   GameStartPlugin:
   - rid: 3
   - rid: 4
-  MaxWave: 10
+  MaxWave: 20
   n: 1
   t: 2
   zombieList:
   - {fileID: 11400000, guid: 2b6a62a6e966a7d48b4c62fa06b67eea, type: 2}
   - {fileID: 11400000, guid: 895c68db05cf2d7489a61f83bd3b78ed, type: 2}
   - {fileID: 11400000, guid: ae5039e4a3290274e985148dba09a9fd, type: 2}
-  - {fileID: 11400000, guid: f7c21de36f6fffc48a56a33d10b30c84, type: 2}
+  - {fileID: 11400000, guid: 54b660ca58dee1f45b098cc3f928c826, type: 2}
+  - {fileID: 11400000, guid: c0cb6e1f0882bfb449d5418e67da900b, type: 2}
+  - {fileID: 11400000, guid: 8d77ec938caad1b48b1376aa6fa41b12, type: 2}
   createZombieType: 0
   nextLevel: {fileID: 11400000, guid: 140961d11b67652419992b49babb6469, type: 2}
   outcome:

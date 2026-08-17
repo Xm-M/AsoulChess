@@ -107,12 +107,11 @@ _当前无 open 的 P1 战斗 Bug。GP-001 / GP-002 已于 2026-05-20 关闭，�
 
 ### RG-007 · 「肉鸽通用面板」规范
 
-- **状态**：partial（2026-05-20）
+- **状态**：done（2026-08-12，道具栏已落地）
 - **优先级**：P1
-- **类型**：gap
-- **已完成**：Act、Run 金币、小推车、携带格、**地图层 Ln**（Prefab 已绑）、卡组、设置。
-- **未完成**：Run **道具栏**。
-- **关联**：`docs/requirements/roguelike-hud-map-layer.md`
+- **类型**：gap → 已实现
+- **已完成**：Act、Run 金币、小推车、携带格、**地图层 Ln**、卡组、**道具查看弹层（含四档稀有度）**、设置。
+- **关联**：`docs/requirements/roguelike-run-prop-panel.md`、`RoguelikeRunInfoPanel.cs`
 
 ---
 

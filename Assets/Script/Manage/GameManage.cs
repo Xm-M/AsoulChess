@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
+using AsoulChess.Game.Core.Services;
 
 /// <summary>
 /// GameManage就更像是一个用来保存各种Manage数据的地方了
@@ -52,6 +53,8 @@ public class GameManage : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
+        GameServices.RegisterDefaults();
+
         if (mode == GameMode.Phone)
             ApplyPhoneLandscapeOrientation();
         audioManage = new AudioManage();
@@ -61,9 +64,9 @@ public class GameManage : MonoBehaviour
         chessTeamManage = new ChessTeamManage();
         cameraManage = new GameCameraManage();
         cameraManage.SetCamera(mainCamera);
- 
- 
 
+        if (sceneManage == null)
+            sceneManage = FindObjectOfType<SceneManage>();
     }
     private void Start()
     {

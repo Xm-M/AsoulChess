@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: "\u4F01\u9E45\u9AD8\u677E\u706F"
   m_EditorClassIdentifier: 
   chessName: "\u4F01\u9E45\u9AD8\u677E\u706F"
-  chessDescription: "企鹅形态的高松灯，保龄球式冲撞。"
-  chessShortDescription: "灰烬 · 冲撞。"
-  chessEffect: "保龄球类技能沿行推进伤害（机制以实装为准）。"
+  chessDescription: "\u4F01\u9E45\u5F62\u6001\u7684\u9AD8\u677E\u706F\uFF0C\u4FDD\u9F84\u7403\u5F0F\u51B2\u649E\u3002"
+  chessShortDescription: "\u7070\u70EC \xB7 \u51B2\u649E\u3002"
+  chessEffect: "\u91CD\u88C5\u4E00\u6761\u76F4\u7EBF\u7684\u6240\u6709\u50F5\u5C38\u3002"
   baseProperty:
     attack: 500
     attackRate: 0
@@ -31,6 +31,7 @@ MonoBehaviour:
     healRate: 1
     speed: 4
     acceleRated: 1
+    moveAcceleRated: 1
     dizzinessTime: 0
     tenacity: 0
     attackRange: 1
@@ -46,14 +47,16 @@ MonoBehaviour:
   chessTileType: 1
   plantType: 1
   plantFunction:
-    id: 0
+    rid: 0
   plantIfCanBuyCard:
-    id: 1
+    rid: -2
   PlantCardPre: {fileID: 0}
   PlantEntrepotCardPre: {fileID: 0}
   references:
-    version: 1
-    00000000:
-      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
-    00000001:
+    version: 2
+    RefIds:
+    - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 0
+      type: {class: MainPlant, ns: , asm: Assembly-CSharp}
+      data: 
